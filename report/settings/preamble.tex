@@ -1,15 +1,15 @@
-\documentclass[11pt, a4paper]{memoir}
+\documentclass[openright,twoside,10pt]{memoir}
 \usepackage{fontspec}
 
 % DOCUMENT LAYOUT
 \setromanfont[Ligatures={Common},Numbers={OldStyle}]{Adobe Caslon Pro}
 \setmonofont[Scale=0.8]{Monaco}
-\setsansfont[Scale=0.9]{Optima Regular}
+\setsansfont[Scale=0.9]{Optima}
 
 % LANGUAGE
 \usepackage{polyglossia} %XeTeX babel
-\setdefaultlanguage{danish}
-%\setdefaultlanguage[variant=us]{english}
+%\setdefaultlanguage{danish}
+\setdefaultlanguage[variant=uk]{english}
 
 % FONTS
 \usepackage{xunicode}
@@ -17,7 +17,6 @@
 % PARAGRAPH SPACING
 \parskip=5pt plus 2pt minus 1pt
 \parindent=0pt
-\frenchspacing % 1 mellemrum efter sætning, kolon, semikolon, fjern hvis engelsk
 
 % CHANGE BULLETS IN ITEMIZE
 \renewcommand{\labelitemi}{$\bullet$}
@@ -29,4 +28,6 @@
 % OTHER
 \usepackage{enumitem} % for [noitemsep] in enumerate/itemize lists
 \graphicspath{ {images/} }
+\usepackage{multicol}
+\usepackage{hyperref}
 
