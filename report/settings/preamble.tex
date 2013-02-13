@@ -13,6 +13,12 @@
 % FONTS
 \usepackage{xunicode}
 
+% OTHER
+\usepackage{enumitem} % for [noitemsep] in enumerate/itemize lists
+\graphicspath{ {images/} }
+\usepackage{multicol}
+\usepackage{hyperref}
+
 % PARAGRAPH SPACING
 \parskip=5pt plus 2pt minus 1pt
 \parindent=0pt
@@ -20,15 +26,7 @@
 % CHANGE BULLETS IN ITEMIZE
 \renewcommand{\labelitemi}{$\bullet$}
 \renewcommand{\labelitemii}{$\circ$}
-\renewcommand{\labelitemiii}{$\centerdot$}
-
-% Add fancy lstlisting stuff from P3 settings.tex if needed
-
-% OTHER
-\usepackage{enumitem} % for [noitemsep] in enumerate/itemize lists
-\graphicspath{ {images/} }
-\usepackage{multicol}
-\usepackage{hyperref}
+\renewcommand{\labelitemiii}{$\cdot$}
 
 % macros
 \input{settings/macros}
