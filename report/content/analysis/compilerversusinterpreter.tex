@@ -1,19 +1,42 @@
 \section{Compiler versus interpreter}
 
-Along with the design of the program language \productname{}, we also want to make it possible to play games that have been written in \productname{}. There is a number of ways in which we can make people capable of playing the games written in \productname{}. Some of the options can be seen here as well as advantages for each:
+Along with the design of the programing language \productname{}, we also want to make it possible to play a game once it has been written in \productname{}. There are a number of ways in which we can make people capable of playing the games written in \productname{}. Some of the options can be seen here as well as advantages of each:
 \begin{itemize}
 \item A \productname{} compiler that targets a specific system arcitechture and creates a playable game written in machine code
-\begin{itemize}
-\item Give us full control over what machine code that will be produced.
-\end{itemize}
+	\begin{itemize}
+	\item Pros
+		\begin{itemize}	
+		\item Gives us full control over what machine code that will be produced.
+		\item Makes us able to design for a specific platform and advantage from the features provided by the platform. E.g. styling, use of right click on mouse.
+		\end{itemize}
+	\item Cons
+		\begin{itemize}	
+		\item For every machine arcitecthure we want the \productname{} programming language to be able to compile to, we must make a compiler that targets that specific machine arcitecthure.
+		\end{itemize}
+	\end{itemize}
 \item A \productname{} compiler that compiles to an intermediate language, for instance C.
-\begin{itemize}
-\item We can target many different platforms if we compile to a language that does so, C e.g.
+	\begin{itemize}
+	\item Pros
+		\begin{itemize}
+		\item Lets \productname{} target many different platforms if the compiler compiles to a language that does so, C e.g.
+		\end{itemize}
+	\item Cons
+		\begin{itemize}	
+		\item We cannot fully control what kind of optimisations is done by the intermediate language compiler.
+		\item We can only target those platforms that is targeted by the intermediate language compilers.
+		\end{itemize}
+	\end{itemize}
+\item An interpreter that provides features for simulating all games written in \productname{}.
+	\begin{itemize}
+	\item Pros
+		\begin{itemize}
+		\item We can at all times modify our interpreter, for instance if we want to include new skins for the board, allow networked multiplayer, e.g, without people need to recompile their games. 
+		\item The interpreter can be written in a language like C that targets many different platforms.
+		\end{itemize}
+	\item Cons
+		\begin{itemize}
+		\item Slower execution of games written in \productname{}, since they must be interpreted at run time.
+		\item An interpreter is needed to play games written in \productname{}. A finished game can however be combined with the interpreter as a seemingly single executeable.
+		\end{itemize}
+	\end{itemize}
 \end{itemize}
-\item An interpreter that provides a virtual machine for simulating all games written in \productname{}.
-\begin{itemize}
-\item We can at all times modify our interpreter, for instance if we want to include new skins for the board, allow networked multiplayer, e.g, without people need to recompile their game. 
-\item The interpreter can be written in a language like C that targets many different platforms.
-\end{itemize}
-\end{itemize}
-There are both advantages and disadvantages related each option we can chose
