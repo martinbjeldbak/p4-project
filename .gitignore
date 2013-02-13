@@ -1,7 +1,8 @@
-report/*.aux
-report/*.log
-report/*.out
+*.aux
+*.log
+*.out
 report/*.pdf
-report/*.toc
-report/*.bak
-report/*.synctex.gz
+*.toc
+*.bak
+*.synctex.gz
+docs/gruppekontrakt.pdf
