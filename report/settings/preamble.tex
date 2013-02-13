@@ -2,7 +2,7 @@
 \usepackage{fontspec}
 
 % DOCUMENT LAYOUT
-\setromanfont[Ligatures=TeX,Numbers={OldStyle}]{Adobe Caslon Pro}
+\setromanfont[Ligatures=TeX,Numbers={OldStyle}]{Garamond}
 \setmonofont[Scale=0.8]{Monaco}
 \setsansfont[Scale=0.9]{Optima}
 
@@ -29,4 +29,10 @@
 \graphicspath{ {images/} }
 \usepackage{multicol}
 \usepackage{hyperref}
+
+% 
+\renewcommand*{\chaptitlefont}{\normalfont\HUGE\bfseries}
+\setsecheadstyle{\normalfont\huge\bfseries}
+\setsubsecheadstyle{\normalfont\Large\bfseries}
+\setsubsubsecheadstyle{\normalfont\large\bfseries}
 
