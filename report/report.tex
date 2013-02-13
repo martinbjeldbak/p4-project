@@ -7,11 +7,11 @@
 \frontmatter
 \selectlanguage{danish}
 \pagestyle{empty}
-\input{formalia/forside}
-\input{formalia/titelblad}
+\input{formalia/frontpage}
+\input{formalia/titlepage}
 \cleardoublepage
 \pagestyle{ruled}
-\input{indhold/forord}
+\input{content/preface}
 
 \cleardoublepage
 
@@ -22,8 +22,8 @@
 \pagenumbering{arabic}
 \mainmatter
 \settocdepth{section}
-\input{indhold/indledning}
-
+\input{content/introduction}
+\input{content/analysis/analysis}
 \cleardoublepage
 	
 \bibliographystyle{plain}
@@ -31,10 +31,10 @@
 %\bibliography{kildeliste}
 
 \settocdepth{chapter}
-\part*{Bilag}
-\addcontentsline{toc}{part}{Bilag}
+\part*{Appendix}
+\addcontentsline{toc}{part}{Appendix}
 
 \appendix
-\input{indhold/bilag/appendiks}
+\input{content/appendix/appendix}
 
 \end{document}
