@@ -1,16 +1,16 @@
 \section{Compiler versus interpreter}
 
-Along with the design of the program language \productname, we also want to make it possible to play games that have been written in \productname. There is a number of ways in which we can make people capable of playing the games written in \productname. Some of the options can be seen here as well as advantages for each:
+Along with the design of the program language \productname{}, we also want to make it possible to play games that have been written in \productname{}. There is a number of ways in which we can make people capable of playing the games written in \productname{}. Some of the options can be seen here as well as advantages for each:
 \begin{itemize}
-\item A \productname compiler that targets a specific system arcitechture and creates a playable game written in machine code
+\item A \productname{} compiler that targets a specific system arcitechture and creates a playable game written in machine code
 \begin{itemize}
 \item Give us full control over what machine code that will be produced.
 \end{itemize}
-\item A \productname compiler that compiles to an intermediate language, for instance C.
+\item A \productname{} compiler that compiles to an intermediate language, for instance C.
 \begin{itemize}
 \item We can target many different platforms if we compile to a language that does so, C e.g.
 \end{itemize}
-\item An interpreter that provides a virtual machine for simulating all games written in \productname.
+\item An interpreter that provides a virtual machine for simulating all games written in \productname{}.
 \begin{itemize}
 \item We can at all times modify our interpreter, for instance if we want to include new skins for the board, allow networked multiplayer, e.g, without people need to recompile their game. 
 \item The interpreter can be written in a language like C that targets many different platforms.
