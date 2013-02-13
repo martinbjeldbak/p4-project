@@ -4,3 +4,4 @@ report/*.out
 report/*.pdf
 report/*.toc
 report/*.bak
+report/*.synctex.gz
