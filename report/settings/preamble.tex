@@ -33,3 +33,15 @@
 \input{settings/chapstyles}
 
 \chapterstyle{daleif1}
+
+% Parts
+\renewcommand*{\partnamefont}{\color{white}}
+\renewcommand*{\partnumfont}{\color{white}}
+\renewcommand*{\parttitlefont}{
+  \hspace{100pt}
+  \resizebox{!}{80pt}{\fboxsep=1pt%
+    \colorbox{nicered}{\color{white} \bfseries\sffamily
+    \fontspec{OptimusPrinceps} Appendix}%
+  }%
+  \HUGE\color{nicered}
+}
