@@ -1,6 +1,10 @@
 \section{Why board games?}
-So why are board games interesting f
+So what do board games have to do with designing, defining, and implementing a programming language? If you're able to describe how board games work on a very generic and general level, it would theoretically be possible to abstract away from that to describe all games in general; something that could be very beneficial for game designers in many different ways.
 
-If you're able to describe how board games work on a very generic level, it would be possible to abstract away from that to describe other games in general.
+If a language purely concentrates on allowing the programmer (i.e. game designer) to express how his game works, it would be quicker and easier to pick up and develop shorter and more precise programs rather than having to reimplement everything from scratch in an already existing high-level language. Furthermore, data structures and special statements specifically designed to help define board games would greatly increase the readability and writability of such a program.
 
-% You could make it easy, quick to develop and describe a game, portability
+A language designed with board games in mind would also allow the game designer to, relatively quickly, explore new ideas for a board game with a simple implementation. He/she could then efficiently modify the code according to a new rule or idea, and the implementation would stay exactly the same.  If the language also took multiple platforms into account, it would open up the possibility to run the same game across multiple devices.
+
+This could enable AI creation for the language that understands the rules, so you can test an early implementation of your game without the need of other human players.
+
+An example could be four-person chess. If you already had an implementation of chess in the programming language set up with a board and separate rules for each piece, then it could be as simple as changing the piece location and player count (and maybe editing the rules for one or two of the pieces so it's a little more fair) followed by running the program again.
