@@ -1,5 +1,6 @@
 # Design, definition og implementation af programmeringssprog
 Projektrapportdatabase: [link](http://projekter.aau.dk/projekter/da/educations/bachelor-i-datalogi(b7a3856d-0def-4e67-aab5-9f338738bddf).html)
+Den gode kravspecifikation: [link](http://www.infoark.dk/article.php?alias=kravspec)
 
 ## Formål
 At den studerende lærer, hvordan man kan designe og implementere et programmeringssprog og hvordan denne proces kan understøttes af formelle definitioner af sprogets syntaks og semantik og teknikker og metoder til oversætterkonstruktion
