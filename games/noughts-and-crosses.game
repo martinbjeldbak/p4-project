@@ -15,10 +15,10 @@ game {
     ]
   }
   winCondition (
-    notEmpty(findSquares([friend n friend n friend]))
-      or notEmpty(findSquares([friend e friend e friend]))
-      or notEmpty(findSquares([friend nw friend nw friend]))
-      or notEmpty(findSquares([friend ne friend ne friend]))
+    notEmpty(findSquares(/friend n friend n friend/))
+      or notEmpty(findSquares(/friend e friend e friend/))
+      or notEmpty(findSquares(/friend nw friend nw friend/))
+      or notEmpty(findSquares(/friend ne friend ne friend/))
   )
   drawCondition (
     isFull(board)
