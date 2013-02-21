@@ -1,5 +1,5 @@
 game {
-  name “TicTacToe”
+  title “Noughts and Crosses”
   players [Noughts Crosses]
   turnOrder [Crosses Noughts]
   board {
