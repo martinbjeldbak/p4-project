@@ -1,15 +1,18 @@
 \subsection{Similarities and differences}
 \label{subsec:differences}
-From looking at the 3 board games: Chess, Kalah, and Naughts \& Crosses, many different game elements have been recognised. For a programming language that allows all of the 3 games to be described, all of the game elements in each of those must be able to be designed in the programming language. Some of the elements are very similar, in which case a more generalised description has been provided. For example, the rook piece and the bishop piece in chess do not have equal moves but their moves have been generalised to just \textit{movement by patterns}. The general game elements in the earlier mentioned board games can be seen here:
-\begin{itemize} [noitemsep]
+From looking at the three board games (Chess, Kalah, and Naughts \& Crosses) many different game elements have been recognised. For a programming language that allows all of the three games to be described, all of the game elements in each of those must be able to be designed in the programming language. Some of the elements are very similar, in which case a more generalised description has been provided. For example, the rook piece and the bishop piece in chess do not have equal moves but their moves have been generalised to just \textit{movement by patterns}. The general game elements in the earlier mentioned board games can be seen here:
+\begin{itemize}[noitemsep]
   \item The game has a single board.
-  \item The board contains squares in a 2-dimensional grid.
+  \item The board contains squares in a two-dimensional grid.
   \item The game contains one or more types of pieces.
   \item The game has an initial setup.
   \item There are no dice.
   \item There are no cards.
-  \item A piece can be either on the board or off the board. If a piece is on the board it is positioned on one specific square.
+  \item A piece can be either on the board or off the board. 
+  \begin{itemize}[noitemsep]
+  \item If a piece is on the board it is positioned on one specific square.
   \item A piece that is off the board may be put on the board.
+  \end{itemize}
   \item A piece belongs to a player.
   \item A pattern may consider the position of occupied squares, empty squares or other pieces on the board in relation to a specific square or a specific piece on the board.
   \item A piece has a set of moves which might be an empty set. The possible moves may be based on a pattern.
@@ -21,20 +24,14 @@ From looking at the 3 board games: Chess, Kalah, and Naughts \& Crosses, many di
   \item A game can be a tie if the game is in one or more specific states, which can consider a pattern.
 \end{itemize}
 
-The above-mentioned list will be used to set up the requirements for the
-design of our programming language. Herein lie a few design restraints
-that prevent an implementation of quite a few different kinds of games.
-Granted, many games have these things, but we are deciding to ignore
-these to make our grasp of implementing a programming language more
-realistic, while still allowing the programmer to implement a large
-collection of board games. Monopoly or any form of card games are an
-example of restraints we have added to our definition of a board game.
+The above-mentioned list will be used to set up the requirements for the design of our programming language. 
+Herein lie a few design restraints that prevent an implementation of quite a few different kinds of games. 
+Granted, many games have these things, but we are deciding to ignore these to make our grasp of implementing a programming language more realistic, while still allowing the programmer to implement a large collection of board games. 
+Monopoly or any form of card games are an example of restraints we have added to our definition of a board game.
 
 This has allowed us to create our own definition of board games that our language design will reflect. Our definition is:
 \begin{quote}
-  ``Board games are games played on a single rectangle-shaped board with any amount of players taking turns in placing or moving either one piece or multiple pieces. Pieces have movement patterns to describe the way they behave on the board. There are rules that define the patterns and exchanging of pieces on a board. Winning or tying is achieved by placing the game in a certain state. Board games do not have dice or cards involved.''
+``Board games are games played on a single rectangle-shaped board with any amount of players taking turns in placing or moving either one or multiple pieces. Pieces have movement patterns to describe the way they behave on the board. There are rules that define the patterns and exchanging of pieces on a board. Winning or tying is achieved by placing the game in a certain state. Board games do not have dice or cards involved.''
 \end{quote}
 
-This definition attempts to be relatively specific, but still leaves
-room for interpretation, considering the fact that there are thousands
-of different types of board games with many different elements mixed in.
+This definition attempts to be relatively specific, but still leaves room for interpretation, considering the fact that there are thousands of different types of board games with many different elements mixed in.
