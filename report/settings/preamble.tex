@@ -23,6 +23,26 @@
 \parskip=5pt plus 2pt minus 1pt
 \parindent=0pt
 
+% WIDER MARGINS
+\let\oldmarginpar\marginpar
+\renewcommand\marginpar[1]{\-\oldmarginpar[\raggedleft\footnotesize #1]%
+{\raggedright\footnotesize\color{red} #1}}
+% Margins
+\setstocksize{11in}{8.5in}
+\settrimmedsize{11in}{8.5in}{*}
+\settrims{0in}{0in}
+\settypeblocksize{9.0in}{6in}{*}
+\setlrmargins{1.25in}{*}{*}
+\setulmargins{1.0in}{*}{*}
+\setheadfoot{14pt}{26pt}
+\setheaderspaces{*}{13pt}{*}
+
+% Fra settings.tex
+\setlrmarginsandblock{3.5cm}{2.5cm}{*}
+\setulmarginsandblock{2.5cm}{3.0cm}{*}
+
+\checkandfixthelayout
+
 % CHANGE BULLETS IN ITEMIZE
 \renewcommand{\labelitemi}{$\bullet$}
 \renewcommand{\labelitemii}{$\circ$}
