@@ -9,3 +9,19 @@
 \newcommand{\itemref}[1]{element \ref{#1}}
 \newcommand{\pseudoref}[1]{algorithm \ref{#1}}
 \newcommand{\capt}[1]{\caption{\emph{#1}}}
+
+\newcommand{\todo}[1]{\colorbox{yellow}{\color{red}\textbf{TODO:} \hspace{1ex} #1}}
+
+\newenvironment{ebnf} {
+  \begin{tabular}{l c l}
+}{
+  \end{tabular}
+}
+
+\newcommand{\grule}[2]{#1 & $\rightarrow$ & #2 \\}
+\newcommand{\galt}[1]{& | & #1 \\}
+\newcommand{\grange}{$\cdots$}
+\newcommand{\gcomment}[1]{\em{#1}}
+
+
+\newcommand{\classref}[1]{\textbf{#1}}

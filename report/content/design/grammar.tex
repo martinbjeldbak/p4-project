@@ -1,0 +1,92 @@
+\section{Grammar}
+
+
+\subsection{Character classes}
+\begin{ebnf}
+\grule{decimal}{``0'' | ``1'' | \grange | ``9''}
+\grule{lowercase}{``a'' | ``b'' | \grange | ``z''}
+\grule{uppercase}{``A'' | ``B'' | \grange | ``Z''}
+\grule{anycase}{lowercase | uppercase}
+\grule{unichar}{\gcomment{any unicode character}}
+\grule{strchar}{unichar \gcomment{except for ``\textbackslash\textbackslash'' and ``\textbackslash"''}}
+\end{ebnf}
+\subsection{Reserved tokens}
+\begin{ebnf}
+%reserved
+\grule{keyword}{``game'' | ``piece'' | ``this| ``width'' | ``height''}
+\galt{``title'' | ``players'' | ``turnOrder'' | ``board''}
+\galt{``grid'' | ``setup'' | ``wall'' | ``name'' | ``possibleDrops''}
+\galt{``possibleMoves'' | ``winCondition'' | ``tieCondition''}
+\grule{operator}{``and'' | ``or''}
+\grule{pattern\_keyword}{``friend'' | ``foe'' | ``this'' | ``empty''}
+\grule{pattern\_operator}{``*'' | ``?'' | ``+'' | ``!''}
+\end{ebnf}
+\subsection{Literals}
+\begin{ebnf}
+%Literals
+\grule{integer}{deimal \{decimal\}}
+\grule{direction}{``n'' | ``s'' | ``e'' | ``w'' | ``ne'' | ``nw''}
+\galt{``se'' | ``sw''}
+\grule{coordinate}{upperccase \{uppercase\} decimal \{decimal\}}
+\grule{string}{``\textbackslash"'' \{strchar | ``\textbackslash\textbackslash'' unichar\} ``\textbackslash"''}
+\end{ebnf}
+\subsection{Identifiers}
+\begin{ebnf}
+%Identifiers
+\grule{function}{lowercase anycase \{anycase\}}
+\grule{identifier}{uppercase \{anycase\}}
+\grule{variable}{``\$'' anycase \{anycase\}}
+\end{ebnf}
+\subsection{Program structure}
+\begin{ebnf}
+%Program structure
+\grule{program}{\{function\_def\} game\_decl}
+\grule{function\_def}{``define'' function ``$[$'' \{variable\} ``$]$'' expression}
+\grule{game\_decl}{``game'' declaration\_struct}
+\grule{declaration\_struct}{``\{'' declaration \{declaration\} ``\}''}
+\grule{declaration}{\( keyword | identifer \) structure}
+\grule{structure}{declaration\_struct | expression}
+\end{ebnf}
+\subsection{Expressions}
+\begin{ebnf}
+%Expressions
+\grule{expression}{function\_call}
+\galt{element operator expression}
+\galt{if\_expr}
+\galt{lambda\_expr}
+\galt{element}
+\grule{element}{``('' expression ``)''}
+\galt{variable}
+\galt{list}
+\galt{pattern}
+\galt{keyword}
+\galt{direction}
+\galt{coordinate}
+\galt{integer}
+\galt{string}
+\galt{identifier}
+\grule{function\_call}{function list}
+\grule{if\_expr}{``if'' expression ``then'' expression ``else'' expression}
+\grule{lambda\_expr}{``\#'' \{variable\} ``=>'' expression}
+\grule{list}{``$[$ \{element\} ``$]$''}
+\end{ebnf}
+\subsection{Patterns}
+\begin{ebnf}
+%Patterns
+\grule{pattern}{``/'' pattern\_expr ``/''}
+\grule{pattern\_expr}{pattern\_expr \{pattern\_expr\}}
+\galt{``('' pattern\_expr ``)''}
+\galt{``('' pattern\_expr ``)'' integer}
+\galt{pattern\_expr ``*''}
+\galt{pattern\_expr ``?''}
+\galt{pattern\_expr ``+''}
+\galt{pattern\_val}
+\grule{pattern\_val}{direction}
+\galt{pattern\_check}
+\galt{``!'' pattern\_check}
+\grule{patterh\_check}{``friend''}
+\galt{``foe''}
+\galt{``empty''}
+\galt{``this''}
+\galt{identifier}
+\end{ebnf}
