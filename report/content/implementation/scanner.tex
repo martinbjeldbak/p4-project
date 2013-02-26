@@ -1,4 +1,4 @@
-\chapter{Scanner}
+\section{Scanner}
 The scanner is the first part of the interpreter that analyses the input. The input for the scanner is a raw source code for a program written in \productname{}. The main purpose of the scanner is to validate the lexically correctness of a \productname{} program. The scanner must analyse the input and find tokens existing in \productname{}. If an input is met which can not be recognized as a valid token, the source code is not a valid program in \productname{}. The strings that are converted to tokens are called lexemes. Many lexemes can be converted to the same type of token. Some programs contains many different identifiers, which in \productname{} all will have a token instantiated with the type \textit{IDENTIFIER}. Consider the example of a single line from a chess game written in \productname{}. The raw input is:
 \begin{lstlisting}
 Black{ Pawn [A7 B7 C7 D7 E7 F7 G7 H7] }
