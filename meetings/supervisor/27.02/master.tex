@@ -1,0 +1,26 @@
+\input{standard}
+
+\date{Tirsdag 26 februar, 2013}
+
+\begin{document}
+\maketitle
+
+Her er en kort opsummering af arbejdet siden sidste møde til vejledermødet d. 27.02.13.
+
+\section{Syntaks}
+Her vises et lille eksempel på Tic Tac Toe implementeret i vores sprog, så du har en fornemmelse af syntaksen. Det ses her:
+
+\VerbatimInput{p4-26-02-13/games/noughts-and-crosses.game}
+
+\section{Grammar}
+Vi er begyndt at specificere en formel grammatik til sproget, da vi endelig er kommet på en syntaks, der giver mening for alle gruppemedlemmer. Dette arbejdes på i løbet af i dag (26/02/13), så derfor kan der godt være nogle finurligheder (fx\ vores egen version af EBNF). Vi begynder at dokumentere syntaksen i rapporten i løbet af denne uge. Udkastet ses her:
+
+\includepdf[pages={1,2}]{formalgrammar.pdf}
+
+\section{Scanner}
+Der er også blevet lavet første fungerende udkast til en scanner ud fra de tokens, vi har har defineret i syntaksen. Vi er nu gået i gang med at dokumentere scanneren i rapporten.
+
+\section{Parser}
+Vi er lige begyndt på parseren. Meningen er, at den nuværende version inden for dette sprint ``kun'' skal kunne parse nogle terminals, vi ved skal være der, da vi er stadig lidt usikre på nogle non-terminals.
+
+\end{document}

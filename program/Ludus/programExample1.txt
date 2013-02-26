@@ -1,6 +1,6 @@
 game {
 	title "Noughts and crosses"
-	players [Noughts Crosses]
+	players [Noughts Crosses] 
 	turnOrder [Crosses Noughts]
 	board {
 		grid {
