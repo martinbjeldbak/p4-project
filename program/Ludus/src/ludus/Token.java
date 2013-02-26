@@ -7,6 +7,7 @@ public class Token {
       MINUSOP,
       PATTERNOP,
       MULTOP,
+      LAMBDABEGIN,
       LAMBDAOP,
       NOTOP,
       OROP,
