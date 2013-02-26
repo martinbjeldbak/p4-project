@@ -1,64 +1,49 @@
 \section{Requirements}
 
-This section presents a set of requirements for this project. The purpose of a requirements specification is to make sure that the final product does what is was intended to do and meets the specified requirements. 
+This section presents a set of requirements for this project. The purpose of a requirements specification is to make sure that the final product does what is was intended to do and meets the specified requirements. It is used throughout the development phases and requirements are added as the project moves along and new challenges arise.
 
-The requirements specification consists of three main points: functional requirements, non-functional requirements and solution goals. 
+The requirements specification consists of three main points: functional requirements, non-functional requirements and solution goals. Functional requirements define what the final system should be able to do. Non-functional requirements define different constraints and boundaries for the entire project. Lastly, solution goals are overall requirements that help us define the correct solution to our problem statement \cite{requirementsGuide}.
 
 %Besvar spørgsmålet: “hvorfor?” for hvert krav
 %Prioritere krav ved hjælp af MoSCoW (Must have, should have, could have, won’t have)
 
 \paragraph*{Functional requirements:}
 \begin{itemize}[noitemsep]
-\item The programming language will be used to program board games \textbf{(Must have)}
-%Programmeringssproget skal bruges til at programmere brætspil 
-\item The programming language should as a minimum make it possible to implement chess \textbf{(Must have)}
-%Man skal som minimum kunne implementere skak 
-\item It must be possible to play the programmed board games in a graphical simulation \textbf{(Must have)}
-%De programmerede brætspil skal kunne spilles vha. grafisk simulation 
-\item The programming language must be built in such a way that it will be possible to keep track of the move history \textbf{(Must have)}
-%Sproget skal være opbygget så det er muligt at holde styr på trækhistorik 
-\item It must be possible to play over a network in the simulation \textbf{(Wont have)}
-%Man skal i simulatoren kunne spille over netværk 
-\item Players must have the possibility to undo a move in the simulation \textbf{(Could have)}
-%Man skal kunne fortryde træk i simulatoren 
+  \item The programming language will be used to program board games \textbf{(Must have)}
+  \item The programming language should as a minimum make it possible to implement chess and the special rules of chess \textbf{(Must have)}
+  \item It must be possible to play the created board games in a graphical simulation \textbf{(Must have)}
+  \item The programming language must be designed in such a way that it will be possible to keep track of the move history \textbf{(Must have)}
+  \item It must be possible to play over a network in the simulation \textbf{(Wont have)}
+  \item Players must have the possibility to undo a move in the simulation \textbf{(Could have)}
 \end{itemize}
 
 The list of requirements also have \textbf{non-functional requirements} which is split into two topics - performance limitations and project limitations.
 
-\paragraph*{Performance limitation:}
+\paragraph*{Performance limitations:}
 \begin{itemize}[noitemsep]
-\item The programming language must be easy to learn by programmers \textbf{(Must have)}
-%Programmører skal let kunne sætte sig ind i \productname 
-\item Programmers must be able to be able to implement af board game with relatively few lines of code \textbf{(Must have)}
-%Programmører skal vha. af relativt få linjers kode kunne implementere et brætspil
-\item The programming language must not be an extension of another programming language \textbf{(Must have)}
-%\productname må ikke bare være en overbygning på et andet programmeringssprog 
-\item The board games should as a minimum consist of two players \textbf{(Must have)}
-%De brætspil, der skal implementeres skal minimum bestå af 2 spillere (Must have)
-\item The source code of a board game must be written in one file \textbf{(Must have)}
-%De programmerede brætspil skal kunne beskrives i én fil 
-\item The formal definition of the programming language must be described in Extended Backus-Naur Form (EBNF) \textbf{(Must have)}
-%Sprogets formelle definitioner skal beskrives vha. Extended Backus-Naur Form (EBNF)
-\item The programming language must either be compiled (by a compiler) or interpreted (by an interpreter) \textbf{(Must have)}
-%Sproget skal enten oversættes (vha. en compiler) eller fortolkes (vha. en interpreter) 
+    % How do we follow up on the requirement below?
+  \item The programming language must be easy to learn and use by novice programmers \textbf{(Must have)}
+  \item Programmers must be able to be able to implement board games with relatively few lines of code \textbf{(Must have)}
+  \item The programming language must not be an extension of another programming language \textbf{(Must have)}
+  \item The board games should as a minimum consist of two players \textbf{(Must have)}
+  \item The source code of a single board game must be written in one file \textbf{(Must have)}
+  \item The formal definition of the programming language must be described in Extended Backus-Naur Form (EBNF) \textbf{(Must have)}
+  \item The programming language must either be compiled (by a compiler) or interpreted (by an interpreter) \textbf{(Must have)}
 \end{itemize}
 
 \paragraph*{Project limitations:}
 \begin{itemize}[noitemsep]
-\item The programming language must be functional and operable no later than 29th of May 2013
-%\productname skal være funktionsdygtigt og anvendeligt senest d. 29. maj 2013
-\item There group has approximately 20 hours per week for the project
-%Der er ca. 20 timer om ugen til arbejde med projektet
-\item The project is limited by the group members' skills in the development of programming languages
-%Projektet er begrænset af gruppemedlemmernes kompetencer mht. udvikling af programmeringssprog
-\item The programming language must have a catchy name and logo \textbf{(Could have)}
-%Det skal have et fangende navn og logo 
+  \item The programming language must be functional and operable no later than 29th of May 2013
+  \item There group has approximately 20 hours per week to work on the project 
+  \item The project is limited by the group members' skills in the design development of programming languages
+  \item The project (and hence programming language) must have a catchy name and logo
 \end{itemize}
 
 \paragraph*{Solution goals:}
 \begin{itemize}[noitemsep]
-\item The programming language must make it easy and quick for programmers to develop board games which are within the scope of the defined problem \textbf{(Must have)}
-%\productname skal gøre det let og hurtigt for programmører at udvikle brætspil, der er inden for det afgrænsede problem 
-\item The board games must be playable on different operating systems \textbf{(Should have)}
-%Man skal kunne spille på forskellige styresystemer 
+  \item The programming language must make it easy and quick for programmers to develop board games which are within the scope of the defined problem statement \textbf{(Must have)}
+  \item The board games must be playable on different operating systems \textbf{(Should have)}
 \end{itemize}
+
+\todo{Sum up here. What are the most important points?}
+
