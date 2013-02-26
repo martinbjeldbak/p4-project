@@ -203,6 +203,8 @@ public class Scanner {
           return new Token(Type.QUESTOP, line, offset);
         case "|":
           return new Token(Type.OROP, line, offset);
+        case "#":
+          return new Token(Type.LAMBDABEGIN, line, offset);
       }
         switch (value) { //these operators are ambiguous so they are first evaluated when nextChar is not an operator
         case "=>":
