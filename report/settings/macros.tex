@@ -10,6 +10,13 @@
 \newcommand{\pseudoref}[1]{algorithm \ref{#1}}
 \newcommand{\capt}[1]{\caption{\emph{#1}}}
 
+%code-like refs
+\newcommand{\tokenref}[1]{{\textbf{#1}}-token}
+\newcommand{\classref}[1]{\textbf{{#1}}}
+\newcommand{\methodref}[1]{\textbf{{#1}}}
+\newcommand{\varref}[1]{\textbf{{#1}}}
+\newcommand{\typeref}[1]{\textbf{{#1}}}
+
 \newcommand{\todo}[1]{\colorbox{yellow}{\color{red}\textbf{TODO:} \hspace{1ex} #1}}
 
 \newenvironment{ebnf} {
@@ -23,5 +30,5 @@
 \newcommand{\grange}{$\cdots$}
 \newcommand{\gcomment}[1]{\em{#1}}
 
-
-\newcommand{\classref}[1]{\textbf{#1}}
+%small font for lstlistings
+\newcommand{\kentlstformat}{[basicstyle=\footnotesize\ttfamily]}
