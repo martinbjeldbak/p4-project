@@ -1,6 +1,7 @@
 package dk.aau.cs.d402f13.parser;
 import java.util.LinkedList;
-import ludus.Token;
+
+import dk.aau.cs.d402f13.scanner.Token;
 
 
 public class Parser {
@@ -78,10 +79,12 @@ public class Parser {
 	    return currentToken;
 	  }
 	  if(nextToken == null){
-	    throw new SyntaxError("Empty token stream, expected " + type);
+	    throw new SyntaxError("Empty token stream, expected " + type, null);
 	  }
 	  throw new SyntaxError("Unexpected token " + nextToken.type + ", expected " + type, nextToken);
 	}
+	
+	
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
