@@ -1,11 +1,12 @@
 \section{Scanner}
-The scanner is the first part of the interpreter that analyses the input. The input for the scanner is a raw source code for a program written in \productname{}. The main purpose of the scanner is to validate the lexically correctness of a \productname{} program. The scanner must analyse the input and find tokens existing in \productname{}. If an input is met which can not be recognized as a valid token, the source code is not a valid program in \productname{}. The strings that are converted to tokens are called lexemes. Many lexemes can be converted to the same type of token. Some programs contains many different identifiers, which in \productname{} all will have a token instantiated with the type \textit{IDENTIFIER}. Consider the example of a single line from a chess game written in \productname{}. The raw input is:
+The scanner is the first part of the interpreter that analyses the input. The scanners takes a raw source code for a program written in \productname{} as input. The main purpose of the scanner is to validate the lexically correctness of a \productname{} program. The scanner must analyse the input and find tokens existing in \productname{}. If an input is met which can not be recognized as a valid token, the source code is not a valid program in \productname{}. The strings that are converted to tokens are called lexemes. Many lexemes can be converted to the same type of token. Some programs contains many different identifiers, which in \productname{} all will have a token instantiated with the type \textit{IDENTIFIER}. Consider the example of a single line from a chess game written in \productname{}. The raw input is:
 \begin{lstlisting}
 Black{ Pawn [A7 B7 C7 D7 E7 F7 G7 H7] }
 \end{lstlisting}
-The result of analysing the input can be seen in \tableref{table:lexemestotokens}. Tokens are needed for abstraction. When later on the parser will determine if the code respects the grammar of \productname{}, it is useful to have these abstractions. It makes it possible to describe that a list of \textit{COORD\_LIT}'s can be encapsulated between the characters ``[ ]'' without having to list all possible coordinate literals, which in fact are an infinite set, since the grammar of \productname{} which is described later, allows proceeding in both dimensions after \textit{Z9}, namely \textit{Z10} and \textit{AA9}. However, when converting lexemes to tokens, the value of a coordinate, the name of an identifier, e.g. is still kept since that information will be needed for the subsequent parts of the interpreter.
+The result of analysing the input can be seen in \tableref{table:lexemestotokens}. Tokens are needed for abstraction. When later on the parser will determine if the code respects the grammar of \productname{}, it is useful to have these abstractions. It makes it possible to describe that a list of \textit{COORD\_LIT}'s can be encapsulated between the characters ``[ ]'' without having to list all possible coordinate literals, which in fact are an infinite set, since the grammar of \productname{} which is described later, allows proceeding in both dimensions after \textit{Z9}, namely \textit{Z10} and \textit{AA9}. However, when converting lexemes to tokens, the value of a coordinate, the name of an identifier, e.g. is still kept since that information will be needed later for the subsequent parts of the interpreter.
 
 \begin{figure}
+\centering
 \begin{tabular}{|l|l|}
         \hline
         Lexemes & Tokens             \\ \hline
@@ -28,5 +29,42 @@ The result of analysing the input can be seen in \tableref{table:lexemestotokens
 \capt{Analysing an input stream for lexemes and tokens}\label{table:lexemestotokens}
 \end{figure}
 
-The scanner contains 2 classes, \classref{Scanner} and \classref{Token}. \classref{Token} contains an enum named \classref{Type} that enumerates all the types of tokens in \productname{}. When a lexeme is found in the input stream, the scanner analyses which token type it belongs to. A new token is then instantiated and yielded by the scanner. The constructor for \classref{Token} takes the arguments (\classref{Token.Type}, \textit{line}, \textit{offset}). The \textit{line} and \textit{offset} represent where in the source code the lexeme of any token where found, which can be used to inform a programmer where in his source code an error was found, if any was found.
+A scanner can be hard coded by hand or one can choose to generate one using existing tools, e.g. JLex (for Java). When using tools, you must define tokens to match input on regular expressions but input can also be matched on string equality for instance when describing keywords. If a programming language is complex, writing a scanner by hand can be very time consuming error prone. However, we think the syntax of \productname{} as quite simple and have therefore decided that the time we would spend learning how to use tools like JLex could in the meantime have given us a hand coded scanner instead.
+
+The scanner contains 2 classes, \classref{Scanner} and \classref{Token}. \classref{Token} contains an enum named \classref{Type} that enumerates all the types of tokens in \productname{}. When a lexeme is found in the input stream, the scanner analyses which token type it belongs to. A new token is then instantiated and yielded by the scanner. The constructor for \classref{Token} takes the arguments (\classref{Token.Type}, \textit{line}, \textit{offset}). The \textit{line} and \textit{offset} represent where in the source code the lexeme of any token where found, which can be used to inform a programmer where in his source code an error is located.
  
+When an input is to be analysed, the scanner looks at the first symbol of the input and determines which subfunction to jump to. You can compare it to a deterministic finite automata, which takes a transition based on each symbol of the input. In \lstref{lst:scan}, you can clearly see many functions name \methodref{isSomething()}, which simply returns if the next symbol in the input stream is ``Something''. \methodref{isWhitespace()} returns true if next input is a whitespace, and while the condition is true \methodref{pop()} dequeues the next symbol. Therefore, the while loop with \methodref{isWhitespace()} removes all initial white spaces before a next token is found. After that, if the scanner has reached the end of the input stream, it returns a \tokenref{EOF}. For all \methodref{isSomething()} functions, beside the \methodref{isWhitespace()}, a token will be returned based on some evaluations the subfunction is responsible for. For example, if the first symbol of a lexeme is an upper-case character, the function \methodref{scanUppercase()} is responsible for determining whether the lexeme is an \tokenref{identifier} or a \tokenref{direction}, because they are the only tokens starting with an upper-case character. Two variables, \typeref{int} \varref{offset} and \typeref{int} \varref{line} keeps track of where in the input stream the scanner is currently analysing. The function \methodref{pop()} increments \varref{offset} by one. If the next input symbol is a whitespace, it sets \varref{offset} to zero and increments \varref{line} by one. If a input symbol is met which was not expected, error handling is done by throwing an exception. 
+
+\begin{figure}
+\begin{lstlisting}
+public Token scan() throws Exception {
+  while (isWhitespace()) {
+      pop();
+    }
+    if (isEof()) {
+      return new Token(Type.EOF, line, offset);
+    }
+    if (isDigit()) {
+      return scanNumeric();
+    }
+    if (isUppercase()) {
+      return scanUppercase();
+    }
+    if (isOperator()) {
+      return scanOperator();
+    }
+    if (isLowercase()){
+      return scanKeyword();
+    }
+    if (peek() == '"'){
+      return scanString();
+    }
+    if (peek() == '\$'){
+      return scanVar();
+    }
+    throw new Exception("Could not find a valid token starting with char" + peek());
+  }
+}
+\end{lstlisting}
+\capt{The scan() function from the \productname{} scanner.}\label{lst:scan}
+\end{figure}

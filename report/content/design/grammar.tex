@@ -1,61 +1,80 @@
 \section{Grammar}
 
+\subsection{Notational Conventions}
+We use the following notational conventions, to present the
+syntax of our language in this section:
 
-\subsection{Character classes}
+\begin{center}
+\begin{tabular}{r l}
+  $\gopt{pattern}$ & an optional pattern \\
+  $\grep{pattern}$ & zero or more repititions of pattern \\
+  $\ggrp{pattern}$ & a group \\
+  $pattern_1 \gor pattern_2$ & a selection \\
+  $pattern_1 \gex pattern_2$ & matched by $pattern_1$ but not by $pattern_2$\\
+  $pattern_1 \gcat pattern_2$ & concatenation of $pattern_1$ and $pattern_2$ \\
+  $\gter{test}$ & a terminal \\
+  $\gtsq$ & a terminal single quotation mark \\
+  $\gtdq$ & a terminal double quotation mark \\
+  $\gtbs$ & a terminal backslash character \\
+\end{tabular}
+\end{center}
+
+\subsection{Character Classes}
 \begin{ebnf}
-\grule{decimal}{``0'' | ``1'' | \grange | ``9''}
-\grule{lowercase}{``a'' | ``b'' | \grange | ``z''}
-\grule{uppercase}{``A'' | ``B'' | \grange | ``Z''}
-\grule{anycase}{lowercase | uppercase}
+\grule{decimal}{\gter{0} \gor \gter{1} \gor \grange \gor \gter{9}}
+\grule{lowercase}{\gter{a} \gor \gter{b} \gor \grange \gor \gter{z}}
+\grule{uppercase}{\gter{A} \gor \gter{B} \gor \grange \gor \gter{Z}}
+\grule{anycase}{lowercase \gor uppercase}
+\grule{quotebs}{\gtdq \gor \gtbs}
 \grule{unichar}{\gcomment{any unicode character}}
-\grule{strchar}{unichar \gcomment{except for ``\textbackslash\textbackslash'' and ``\textbackslash"''}}
+\grule{strchar}{unichar \gex quotebs}
 \end{ebnf}
-\subsection{Reserved tokens}
+\subsection{Reserved Tokens}
 \begin{ebnf}
 %reserved
-\grule{keyword}{``game'' | ``piece'' | ``this| ``width'' | ``height''}
-\galt{``title'' | ``players'' | ``turnOrder'' | ``board''}
-\galt{``grid'' | ``setup'' | ``wall'' | ``name'' | ``possibleDrops''}
-\galt{``possibleMoves'' | ``winCondition'' | ``tieCondition''}
-\grule{operator}{``and'' | ``or''}
-\grule{pattern\_keyword}{``friend'' | ``foe'' | ``this'' | ``empty''}
-\grule{pattern\_operator}{``*'' | ``?'' | ``+'' | ``!''}
+\grule{keyword}{\gter{game} \gor \gter{piece} \gor \gter{this} \gor \gter{width} \gor \gter{height}}
+\galt{\gter{title} \gor \gter{players} \gor \gter{turnOrder} \gor \gter{board}}
+\galt{\gter{grid} \gor \gter{setup} \gor \gter{wall} \gor \gter{name} \gor \gter{possibleDrops}}
+\galt{\gter{possibleMoves} \gor \gter{winCondition} \gor \gter{tieCondition}}
+\grule{operator}{\gter{and} \gor \gter{or}}
+\grule{pattern\_keyword}{\gter{friend} \gor \gter{foe} \gor \gter{this} \gor \gter{empty}}
+\grule{pattern\_operator}{\gter{*} \gor \gter{?} \gor \gter{+} \gor \gter{!}}
 \end{ebnf}
 \subsection{Literals}
 \begin{ebnf}
 %Literals
-\grule{integer}{deimal \{decimal\}}
-\grule{direction}{``n'' | ``s'' | ``e'' | ``w'' | ``ne'' | ``nw''}
-\galt{``se'' | ``sw''}
-\grule{coordinate}{upperccase \{uppercase\} decimal \{decimal\}}
-\grule{string}{``\textbackslash"'' \{strchar | ``\textbackslash\textbackslash'' unichar\} ``\textbackslash"''}
+\grule{integer}{deimal \gcat \grep{decimal}}
+\grule{direction}{\gter{n} \gor \gter{s} \gor \gter{e} \gor \gter{w} \gor \gter{ne} \gor \gter{nw}}
+\galt{\gter{se} \gor \gter{sw}}
+\grule{coordinate}{upperccase \gcat \grep{uppercase} \gcat decimal \gcat \grep{decimal}}
+\grule{string}{\gtdq \gcat \grep{strchar \gor \gtbs \gcat unichar} \gcat \gtdq}
 \end{ebnf}
 \subsection{Identifiers}
 \begin{ebnf}
 %Identifiers
-\grule{function}{lowercase anycase \{anycase\}}
-\grule{identifier}{uppercase \{anycase\}}
-\grule{variable}{``\$'' anycase \{anycase\}}
+\grule{function}{lowercase \gcat anycase \gcat \grep{anycase}}
+\grule{identifier}{uppercase \gcat \grep{anycase}}
+\grule{variable}{\gter{\$} \gcat anycase \gcat \grep{anycase}}
 \end{ebnf}
-\subsection{Program structure}
+\subsection{Program Structure}
 \begin{ebnf}
 %Program structure
-\grule{program}{\{function\_def\} game\_decl}
-\grule{function\_def}{``define'' function ``$[$'' \{variable\} ``$]$'' expression}
-\grule{game\_decl}{``game'' declaration\_struct}
-\grule{declaration\_struct}{``\{'' declaration \{declaration\} ``\}''}
-\grule{declaration}{\( keyword | identifer \) structure}
-\grule{structure}{declaration\_struct | expression}
+\grule{program}{\grep{function\_def} \gcat game\_decl}
+\grule{function\_def}{\gter{define} \gcat function \gcat \gter{[} \grep{variable} \gcat \gter{]} \gcat expression}
+\grule{game\_decl}{\gter{game} \gcat declaration\_struct}
+\grule{declaration\_struct}{\gter{\{} \gcat declaration \gcat \grep{declaration} \gter{\}}}
+\grule{declaration}{\ggrp{keyword \gor identifier} \gcat structure}
+\grule{structure}{declaration\_struct \gor expression}
 \end{ebnf}
 \subsection{Expressions}
 \begin{ebnf}
 %Expressions
 \grule{expression}{function\_call}
-\galt{element operator expression}
+\galt{element \gcat operator \gcat expression}
 \galt{if\_expr}
 \galt{lambda\_expr}
 \galt{element}
-\grule{element}{``('' expression ``)''}
+\grule{element}{\gter{(} \gcat expression \gcat \gter{)}}
 \galt{variable}
 \galt{list}
 \galt{pattern}
@@ -65,28 +84,28 @@
 \galt{integer}
 \galt{string}
 \galt{identifier}
-\grule{function\_call}{function list}
-\grule{if\_expr}{``if'' expression ``then'' expression ``else'' expression}
-\grule{lambda\_expr}{``\#'' \{variable\} ``=>'' expression}
-\grule{list}{``$[$ \{element\} ``$]$''}
+\grule{function\_call}{function \gcat list}
+\grule{if\_expr}{\gter{if} \gcat expression \gcat \gter{then} \gcat expression \gcat \gter{else} \gcat expression}
+\grule{lambda\_expr}{\gter{\#} \gcat \grep{variable} \gcat \gter{=>} \gcat expression}
+\grule{list}{\gter{[} \gcat \grep{element} \gcat \gter{]}}
 \end{ebnf}
 \subsection{Patterns}
 \begin{ebnf}
 %Patterns
-\grule{pattern}{``/'' pattern\_expr ``/''}
-\grule{pattern\_expr}{pattern\_expr \{pattern\_expr\}}
-\galt{``('' pattern\_expr ``)''}
-\galt{``('' pattern\_expr ``)'' integer}
-\galt{pattern\_expr ``*''}
-\galt{pattern\_expr ``?''}
-\galt{pattern\_expr ``+''}
+\grule{pattern}{\gter{/} \gcat pattern\_expr \gcat \gter{/}}
+\grule{pattern\_expr}{pattern\_expr \gcat \grep{pattern\_expr}}
+\galt{\gter{(} \gcat pattern\_expr \gcat \gter{)}}
+\galt{\gter{(} \gcat pattern\_expr \gcat \gter{)} \gcat integer}
+\galt{pattern\_expr \gcat \gter{*}}
+\galt{pattern\_expr \gcat \gter{?}}
+\galt{pattern\_expr \gcat \gter{+}}
 \galt{pattern\_val}
 \grule{pattern\_val}{direction}
 \galt{pattern\_check}
-\galt{``!'' pattern\_check}
-\grule{patterh\_check}{``friend''}
-\galt{``foe''}
-\galt{``empty''}
-\galt{``this''}
+\galt{\gter{!} \gcat pattern\_check}
+\grule{pattern\_check}{\gter{friend}}
+\galt{\gter{foe}}
+\galt{\gter{empty}}
+\galt{\gter{this}}
 \galt{identifier}
 \end{ebnf}

@@ -17,9 +17,38 @@
 % OTHER
 \usepackage{enumitem} % for [noitemsep] in enumerate/itemize lists
 \graphicspath{ {images/} }
+\usepackage{color}
 \usepackage{multicol}
 \usepackage{hyperref}
 \usepackage{listings}	%for code examples
+ \lstset{ % http://stackoverflow.com/questions/741985/latex-source-code-listing-like-in-professional-books
+%         basicstyle=\footnotesize\ttfamily,% the size of the fonts
+                                % that are used for the code
+        basicstyle=\footnotesize\ttfamily,% the size of the fonts that are used for the code
+         numbers=left,                     % where to put the line-numbers
+         numberstyle=\tiny,                % the size of the fonts that are used for the line-numbers
+         stepnumber=1,                     % line numbering steps
+         numbersep=5pt,                    % how far the line-numbers are from the code
+         tabsize=2,                        % sets default tabsize to 2 spaces
+         breaklines=true,                  % sets automatic line breaking
+         keywordstyle=\color{shkeyword},        % language function text color
+                frame=b,
+ %        keywordstyle=[1]\textbf,    % Stil der Keywords
+ %        keywordstyle=[2]\textbf,    %
+ %        keywordstyle=[3]\textbf,    %
+ %        keywordstyle=[4]\textbf,   \sqrt{\sqrt{}} %
+         stringstyle=\color{shstring}, % string text color
+%         stringstyle=\color{red},
+        commentstyle=\color{shcomment},
+         showspaces=false,           % show spaces adding particular underscores
+         showtabs=false,             % show tabs within strings adding particular underscores   
+         showstringspaces=false,     % underline spaces within strings
+         xleftmargin=17pt,
+         framexleftmargin=17pt,
+         framexrightmargin=5pt,
+         framexbottommargin=4pt,
+         language=Java
+ }
 
 % grammar stuff
 
@@ -51,6 +80,11 @@
 \renewcommand{\labelitemi}{$\bullet$}
 \renewcommand{\labelitemii}{$\circ$}
 \renewcommand{\labelitemiii}{$\cdot$}
+
+%colors
+\definecolor{shcomment}{rgb}{0.12, 0.38, 0.18 }
+\definecolor{shkeyword}{rgb}{0.37, 0.08, 0.25}  % #5F1441
+\definecolor{shstring}{rgb}{0.06, 0.10, 0.98} % #101AF9
 
 % macros
 \input{settings/macros}
