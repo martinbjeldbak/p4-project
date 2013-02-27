@@ -1,10 +1,11 @@
-package ludus;
+package dk.aau.cs.d402f13.scanner;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import ludus.Token.Type;
+import dk.aau.cs.d402f13.scanner.Token.Type;
+
 
 public class Scanner {
   
