@@ -1,4 +1,4 @@
-package ludus;
+package dk.aau.cs.d402f13.scanner;
 
 public class Token {
 	public enum Type {
