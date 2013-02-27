@@ -84,16 +84,19 @@ public class Parser {
 	  }
 	  throw new SyntaxError("Unexpected token " + nextToken.type + ", expected " + type, nextToken);
 	}
-	
+  //done.
 	private AstNode program() throws SyntaxError{
 	  AstNode root = new AstNode(Type.PROGRAM, "");
 	  while(lookAhead(Token.Type.DEFINE)){
 	    root.addChild(functionDef());
 	  }
+	  if(lookAhead(Token.Type.GAME)){
+	    root.addChild(gameDecleration());
+	  }
 	  
 	  return root;
 	}
-	
+  //done.
 	private AstNode functionDef() throws SyntaxError {
 	  AstNode node = new AstNode(Type.FUNC_DEF, "");
     expect(Token.Type.DEFINE);
@@ -107,6 +110,68 @@ public class Parser {
     node.addChild(expression());
     
     return node;
+  }
+	//done.
+	private AstNode gameDecleration() throws SyntaxError {
+    AstNode node = new AstNode(Type.GAME_DECL, "");
+    expect(Token.Type.GAME);
+    if(lookAhead(Token.Type.LBRACE)){
+      node.addChild(declerationStruct());
+    }
+	  
+    return node;
+  }
+  //done.
+  private AstNode declerationStruct() throws SyntaxError {
+    AstNode node = new AstNode(Type.DECL_STRUCT, "");
+    expect(Token.Type.LBRACE);
+    if(lookAheadKeyword() || lookAhead(Token.Type.ID)){
+      node.addChild(decleration());
+    }
+    while(lookAheadKeyword() || lookAhead(Token.Type.ID)){
+      node.addChild(decleration());
+    }
+    expect(Token.Type.RBRACE);
+    
+    return node;
+  }
+  //done.
+  private AstNode decleration() throws SyntaxError {
+    AstNode node = new AstNode(Type.DECL, "");
+    //skal der være mindst én her?
+    while(lookAheadKeyword() || lookAhead(Token.Type.ID)){
+      if(lookAheadKeyword()){
+        node.addChild(new AstNode(Type.KEYWORD, currentToken.value));
+      }
+      else if (lookAhead(Token.Type.ID)){
+        node.addChild(new AstNode(Type.ID, currentToken.value));
+      }
+    }
+    node.addChild(structure());
+    
+    return node;
+  }
+
+  private AstNode structure() throws SyntaxError{
+    AstNode node = new AstNode(Type.STRUCT, "");
+    if(lookAhead(Token.Type.LBRACKET)){
+      node.addChild(declerationStruct());
+    }
+    else if(isExpression()){
+      node.addChild(expression());
+    }
+    
+    return node;
+  }
+  //done.
+  private boolean isExpression(){
+    if(lookAhead(Token.Type.FUNCTION) 
+        || lookAhead(Token.Type.LPAREN) 
+        || lookAhead(Token.Type.IF) 
+        || lookAhead(Token.Type.LAMBDABEGIN)){
+      return true;
+    }
+    else return false;
   }
 
   private AstNode expression() {
@@ -144,7 +209,6 @@ public class Parser {
       }
     }
     */
-
 	}
 
 }
