@@ -1,0 +1,8 @@
+*.aux
+*.log
+*.out
+report/*.pdf
+*.toc
+*.bak
+*.synctex.gz
+docs/gruppekontrakt.pdf
