@@ -1,3 +1,4 @@
+package dk.aau.cs.d402f13.simulator;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
@@ -9,22 +10,6 @@ import javax.swing.border.EmptyBorder;
 public class SimulatorGUI extends JFrame {
 
 	private JPanel contentPane;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					SimulatorGUI frame = new SimulatorGUI();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
