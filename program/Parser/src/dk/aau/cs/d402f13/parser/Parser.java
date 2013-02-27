@@ -1,6 +1,7 @@
 package dk.aau.cs.d402f13.parser;
 import java.util.LinkedList;
 
+import dk.aau.cs.d402f13.parser.AstNode.Type;
 import dk.aau.cs.d402f13.scanner.Token;
 
 
@@ -84,9 +85,36 @@ public class Parser {
 	  throw new SyntaxError("Unexpected token " + nextToken.type + ", expected " + type, nextToken);
 	}
 	
+	private AstNode program() throws SyntaxError{
+	  AstNode root = new AstNode(Type.PROGRAM, "");
+	  while(lookAhead(Token.Type.DEFINE)){
+	    root.addChild(functionDef());
+	  }
+	  
+	  return root;
+	}
 	
-	
-	public static void main(String[] args) {
+	private AstNode functionDef() throws SyntaxError {
+	  AstNode node = new AstNode(Type.FUNC_DEF, "");
+    expect(Token.Type.DEFINE);
+    expect(Token.Type.FUNCTION);
+    node.addChild(new AstNode(Type.FUNCTION, currentToken.value));
+    expect(Token.Type.LBRACKET);
+    while(accept(Token.Type.VAR)){
+      node.addChild(new AstNode(Type.VAR, currentToken.value));
+    }
+    expect(Token.Type.RBRACKET);
+    node.addChild(expression());
+    
+    return node;
+  }
+
+  private AstNode expression() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public static void main(String[] args) {
 		// TODO Auto-generated method stub
 	
 	  /*
