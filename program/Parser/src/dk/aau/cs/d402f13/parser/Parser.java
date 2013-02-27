@@ -1,6 +1,7 @@
 package dk.aau.cs.d402f13.parser;
 import java.util.LinkedList;
-import ludus.Token;
+
+import dk.aau.cs.d402f13.scanner.Token;
 
 
 public class Parser {
@@ -61,11 +62,60 @@ public class Parser {
 			  || lookAhead(Token.Type.VAR)
 			  || lookAhead(Token.Type.LBRACKET)
 			  || lookAhead(Token.Type.PATTERNOP)
-		    || lookAheadKeyword();
+		    || lookAheadKeyword()
+		    || lookAhead(Token.Type.ID);
 	}
+	
+	private boolean accept(Token.Type type){
+	  if(lookAhead(type)){
+	    currentToken = pop();
+	    return true;
+	  }
+	  return false;
+	}
+	
+	private Token expect(Token.Type type) throws SyntaxError {
+	  if(accept(type)){
+	    return currentToken;
+	  }
+	  if(nextToken == null){
+	    throw new SyntaxError("Empty token stream, expected " + type, null);
+	  }
+	  throw new SyntaxError("Unexpected token " + nextToken.type + ", expected " + type, nextToken);
+	}
+	
+	
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+	
+	  /*
+	  try {
+      AstNode ast = p.parse(tokens);
+      ast.print();
+      OutputStreamWriter f = new OutputStreamWriter(
+        new FileOutputStream(new File("ast.dot"), false)
+      );
+      ast.export(f);
+      f.close();
+    }
+    catch (SyntaxError e) {
+      System.out.flush();
+      if (e.getToken() == null) {
+        System.err.println("Syntax error: " + e.getMessage());
+      }
+      else {
+        System.err.println("Syntax error: " + e.getMessage()
+            + " on input line " + e.getToken().line
+            + " offset " + e.getToken().offset + ":");
+        System.err.println(input.split("\n")[e.getToken().line - 1]);
+        for (int i = 1; i < e.getToken().offset; i++) {
+          System.err.print("-");
+        }
+        System.err.println("^");
+      }
+    }
+    */
 
 	}
 
