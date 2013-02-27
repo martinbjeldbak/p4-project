@@ -11,6 +11,7 @@ syntax of our language in this section:
   $\ggrp{pattern}$ & a group \\
   $pattern_1 \gor pattern_2$ & a selection \\
   $pattern_1 \gex pattern_2$ & matched by $pattern_1$ but not by $pattern_2$\\
+  $pattern_1 \: pattern_2$ & concatenation of $pattern_1$ and $pattern_2$ \\
   $\gter{test}$ & a terminal \\
   $\gtsq$ & a terminal single quotation mark \\
   $\gtdq$ & a terminal double quotation mark \\
@@ -51,7 +52,7 @@ syntax of our language in this section:
 \subsection{Identifiers}
 \begin{ebnf}
 %Identifiers
-\grule{function}{lowercase anycase \grep{anycase}}
+\grule{function}{lowercase \; anycase \grep{anycase}}
 \grule{identifier}{uppercase \grep{anycase}}
 \grule{variable}{\gter{\$} anycase \grep{anycase}}
 \end{ebnf}
@@ -69,7 +70,7 @@ syntax of our language in this section:
 \begin{ebnf}
 %Expressions
 \grule{expression}{function\_call}
-\galt{element operator expression}
+\galt{element \; operator \; expression}
 \galt{if\_expr}
 \galt{lambda\_expr}
 \galt{element}
@@ -102,7 +103,7 @@ syntax of our language in this section:
 \grule{pattern\_val}{direction}
 \galt{pattern\_check}
 \galt{\gter{!} pattern\_check}
-\grule{patterh\_check}{\gter{friend}}
+\grule{pattern\_check}{\gter{friend}}
 \galt{\gter{foe}}
 \galt{\gter{empty}}
 \galt{\gter{this}}
