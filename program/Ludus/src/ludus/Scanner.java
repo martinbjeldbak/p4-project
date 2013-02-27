@@ -176,6 +176,12 @@ public class Scanner {
     String value = "";
       while (isOperator()) {
         value += pop();
+        if (value.length() == 2 && value.equals("//")) {
+          while (!isEol()) {
+            pop();
+          }
+          return scan();
+        }
         switch (value) {    //these operators are unambiguous
         case "[":
           return new Token(Type.LBRACKET, line, offset);

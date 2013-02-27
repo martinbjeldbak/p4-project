@@ -1,0 +1,41 @@
+game {
+  title “Kents spil”
+  players [Solo]
+  turnOrder [Solo]
+  board {
+    grid {
+      width 5
+      height 5
+    }
+    setup {
+      Solo{
+        White [A1 A2 A3 B1 B2 B3 C1 C2]
+        Black [C4 C5 D3 D4 D5 E3 E4 E5]
+      }
+      wall [C3 D1 D2 E1 E2 A4 A5 B4 B5]
+    }
+  }
+  piece {
+    name White
+    possibleDrops []
+    possibleMoves (union[
+      (findSquares[/this e empty/])
+      (findSquares[/this n empty/])
+      (findSquares[/this e Black e empty/])
+      (findSquares[/this n Black n empty/])
+    ])
+  }
+  piece {
+    name Black
+    possibleDrops []
+    possibleMoves (union[
+      (findSquares[/this w empty/])
+      (findSquares[/this s empty/])
+      (findSquares[/this w White w empty/])
+      (findSquares[/this s White s empty/])
+    ])
+  }
+  winCondition (
+    andSquares[[A1 A2 A3 B1 B2 B3 C1 C2] ([square] => occupiedBy[square Black])]
+  )
+}
