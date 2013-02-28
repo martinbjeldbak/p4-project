@@ -8,7 +8,6 @@ import dk.aau.cs.d402f13.scanner.Token.Type;
 
 
 public class Scanner {
-  
   public static final String whitespace = " \t\r\n";
   public static final String operators = "!&*+-=>?(){}[]/|";
   public int offset, line;
@@ -92,42 +91,92 @@ public class Scanner {
       return new Token(Type.THEN, line, offset);
     case "else":
       return new Token(Type.ELSE, line, offset);
+    //KEYWORD...?  
+    case "game":
+      return new Token(Type.KEYWORD, "game", line, offset);
+    case "piece":
+      return new Token(Type.KEYWORD, "piece", line, offset);
+    case "this":
+      return new Token(Type.KEYWORD, "this", line, offset);
+    case "width":
+      return new Token(Type.KEYWORD, "width", line, offset);
+    case "height":
+      return new Token(Type.KEYWORD, "height", line, offset);
+    case "title":
+      return new Token(Type.KEYWORD, "title", line, offset);
+    case "players":
+      return new Token(Type.KEYWORD, "players", line, offset);
+    case "turnorder":
+      return new Token(Type.KEYWORD, "turnorder", line, offset);
     case "board":
-      return new Token(Type.BOARD, line, offset);
+      return new Token(Type.KEYWORD, "board", line, offset);
+    case "grid":
+      return new Token(Type.KEYWORD, "grid", line, offset);
+    case "setup":
+      return new Token(Type.KEYWORD, "setup", line, offset);
+    case "wall":
+      return new Token(Type.KEYWORD, "wall", line, offset);
+    case "name":
+      return new Token(Type.KEYWORD, "name", line, offset);
+    case "possible_drops":
+      return new Token(Type.KEYWORD, "possible_drops", line, offset);
+    case "possible_moves":
+      return new Token(Type.KEYWORD, "possible_moves", line, offset);
+    case "win_condition":
+      return new Token(Type.KEYWORD, "win_condition", line, offset);
+    case "tie_condition":
+      return new Token(Type.KEYWORD, "tie_condition", line, offset);
+      
+    /*  
     case "game":
       return new Token(Type.GAME, line, offset);
-    case "grid":
-      return new Token(Type.GRID, line, offset);
+    case "piece":
+      return new Token(Type.PIECE, line, offset);
+    case "this":
+      return new Token(Type.THIS, line, offset);
     case "width":
       return new Token(Type.WIDTH, line, offset);
     case "height":
       return new Token(Type.HEIGHT, line, offset);
-    case "piece":
-      return new Token(Type.PIECE, line, offset);
+    case "title":
+      return new Token(Type.TITLE, line, offset);
     case "players":
       return new Token(Type.PLAYERS, line, offset);
+    case "turnorder":
+      return new Token(Type.TURNORDER, line, offset);
+    case "board":
+      return new Token(Type.BOARD, line, offset);
+    case "grid":
+      return new Token(Type.GRID, line, offset);
+    case "setup":
+      return new Token(Type.SETUP, line, offset);
+    case "wall":
+      return new Token(Type.WALL, line, offset);
+    case "name":
+      return new Token(Type.NAME, line, offset);
     case "possible_drops":
       return new Token(Type.POSSIBLE_DROPS, line, offset);
     case "possible_moves":
       return new Token(Type.POSSIBLE_MOVES, line, offset);
-    case "setup":
-      return new Token(Type.SETUP, line, offset);
-    case "title":
-      return new Token(Type.TITLE, line, offset);
-    case "turnorder":
-      return new Token(Type.TURNORDER, line, offset);
-    case "name":
-      return new Token(Type.NAME, line, offset);
-    case "define":
-      return new Token(Type.DEFINE, line, offset);
-    case "this":
-      return new Token(Type.THIS, line, offset);
+    case "win_condition":
+      return new Token(Type.WIN_CONDITION, line, offset);
+    case "tie_condition":
+      return new Token(Type.TIE_CONDITION, line, offset);  
+     */
+      
+    //Operators?
+    case "and":
+      return new Token(Type.OPERATOR, "and", line, offset);
+    case "or":
+      return new Token(Type.OPERATOR, "or", line, offset);
+    //Pattern keywords
     case "foe":
-      return new Token(Type.FOE, line, offset);
+      return new Token(Type.PATTERN_KEYWORD, "foe", line, offset);
     case "friend":
-      return new Token(Type.FRIEND, line, offset);
+      return new Token(Type.PATTERN_KEYWORD, "friend", line, offset);
     case "empty":
-      return new Token(Type.EMPTY, line, offset);
+      return new Token(Type.PATTERN_KEYWORD, "empty", line, offset);
+    //Direction
     case "ne":
       return new Token(Type.DIR_LIT, "ne", line, offset);
     case "nw":
@@ -136,6 +185,17 @@ public class Scanner {
       return new Token(Type.DIR_LIT, "se", line, offset);
     case "sw":
       return new Token(Type.DIR_LIT, "sw", line, offset);
+    case "n":
+      return new Token(Type.DIR_LIT, "n", line, offset);
+    case "s":
+      return new Token(Type.DIR_LIT, "s", line, offset);
+    case "e":
+      return new Token(Type.DIR_LIT, "e", line, offset);
+    case "w":
+      return new Token(Type.DIR_LIT, "w", line, offset);
+    
+    case "define":
+      return new Token(Type.DEFINE, line, offset);
     }
     return new Token(Type.FUNCTION, value, line, offset);
   }
@@ -199,25 +259,36 @@ public class Scanner {
         case "!":
           return new Token(Type.RPAREN, line, offset);
         case "+":
+          return new Token(Type.PATTERN_OPERATOR, "plus_op", line, offset);
+        case "-":
+          return new Token(Type.PATTERN_OPERATOR, "minus_op", line, offset);
+        case "*":
+          return new Token(Type.PATTERN_OPERATOR, "mult_op", line, offset);
+        case "?":
+          return new Token(Type.PATTERN_OPERATOR, "quest_op", line, offset);
+        /*
+        case "+":
           return new Token(Type.PLUSOP, line, offset);
         case "-":
           return new Token(Type.MINUSOP, line, offset);
-        case "/":
-          return new Token(Type.PATTERNOP, line, offset);
         case "*":
           return new Token(Type.MULTOP, line, offset);
         case "?":
           return new Token(Type.QUESTOP, line, offset);
+        */
+        case "/":
+          return new Token(Type.PATTERNOP, line, offset);
         case "|":
           return new Token(Type.OROP, line, offset);
         case "#":
           return new Token(Type.LAMBDABEGIN, line, offset);
       }
-        switch (value) { //these operators are ambiguous so they are first evaluated when nextChar is not an operator
+        switch (value) { //these operators are ambiguous so they 
+        //are first evaluated when nextChar is not an operator
         case "=>":
           return new Token(Type.LAMBDAOP, line, offset);
-        case "=":
-          return new Token(Type.ASSIGN, line, offset);
+      //  case "=":
+      //    return new Token(Type.ASSIGN, line, offset);
       }
      
       }
