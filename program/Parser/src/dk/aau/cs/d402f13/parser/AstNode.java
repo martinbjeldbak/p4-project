@@ -1,4 +1,6 @@
 package dk.aau.cs.d402f13.parser;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -7,7 +9,7 @@ public class AstNode implements Iterable {
     //Keywords
     GAME, PIECE, THIS,  WIDTH, HEIGHT, TITLE, PLAYERS, TURNORDER, 
     BOARD, GRID, SETUP, WALL, NAME, POSSIBLE_DROPS, POSSIBLE_MOVES, 
-    WIN_CONDITION, TIE_CONDITION, AND, OR, PATTERN_KEYWORD, PATTERN_OPERATOR, 
+    WIN_CONDITION, TIE_CONDITION, OPERATOR, ANDOP, OROP, PATTERN_KEYWORD, PATTERN_OPERATOR, 
     FRIEND, FOE, EMPTY, MULT_OP, QUEST_OP, PLUS_OP, NOT_OP,
     //Literals
     INT_LIT, DIR_LIT, COORD_LIT, STRING_LIT,
@@ -24,7 +26,9 @@ public class AstNode implements Iterable {
   
   public Type type;
   public String value;
-  private ArrayList<AstNode> children;
+  public int line, offset;
+  private ArrayList<AstNode> children = new ArrayList<AstNode>();
+  private static int counter = 0;
   
   public void addChild(AstNode child){
     if(child != null){
@@ -32,16 +36,44 @@ public class AstNode implements Iterable {
     }
   }
   
-  public AstNode(Type type, String value){
+  public AstNode(Type type, String value, int line, int offset){
     this.type = type;
     this.value = value;
+    this.line = line;
+    this.offset = offset;
+  }
+
+  private void exportNode(OutputStreamWriter os) throws IOException {
+    int thisN = counter;
+    os.write("  N" + thisN + " [label=\"" + type + "\\n" + value + "\"]\n");
+    for (AstNode n : children) {
+      counter++;
+      os.write("  N" + thisN + " -> N" + counter + "\n");
+      n.exportNode(os);
+    }
   }
   
-
+  public void export(OutputStreamWriter os) throws IOException {
+    counter = 0;
+    os.write("digraph ast {\n");
+    exportNode(os);
+    os.write("}");
+  }
+    
   @Override
   public Iterator iterator() {
     return children.iterator();
   }
+
+  public void print() {
+    print("");
+  }
   
+  private void print(String prefix){
+    System.out.println(prefix + "- " + type + " (" + value + ") <" + line + ":" + offset + ">");
+    for(AstNode n : children){
+      n.print(prefix + " ");
+    }
+  }
 
 }
