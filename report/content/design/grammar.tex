@@ -1,15 +1,25 @@
 \section{Grammar}
 
 \subsection{Notational Conventions}
-We use the following notational conventions, to present the
-syntax of our language in this section:
+We use a variant of Extended Backus-Naur Form to express the context-free grammar of
+our programming language.
 
+Each production rule assigns an expression of terminals, non-terminals and operations
+to a non-terminal. E.g. in the following example the non-terminal $decimal$ is assigned
+the possible terminals of $\gter{0}$ up to and including $\gter{9}$.
+
+\begin{ebnf}
+\grule{decimal}{\gter{0} \gor \gter{1} \gor \grange \gor \gter{9}}
+\end{ebnf}
+
+The following operations are used throughout this section:
 \begin{center}
 \begin{tabular}{r l}
   $\gopt{pattern}$ & an optional pattern \\
   $\grep{pattern}$ & zero or more repititions of pattern \\
   $\ggrp{pattern}$ & a group \\
   $pattern_1 \gor pattern_2$ & a selection \\
+  $\gter{0} \gor \grange \gor \gter{9}$ & a range of terminals \\
   $pattern_1 \gex pattern_2$ & matched by $pattern_1$ but not by $pattern_2$\\
   $pattern_1 \gcat pattern_2$ & concatenation of $pattern_1$ and $pattern_2$ \\
   $\gter{test}$ & a terminal \\
@@ -18,6 +28,7 @@ syntax of our language in this section:
   $\gtbs$ & a terminal backslash character \\
 \end{tabular}
 \end{center}
+
 
 \subsection{Character Classes}
 \begin{ebnf}
@@ -60,7 +71,7 @@ syntax of our language in this section:
 \begin{ebnf}
 %Program structure
 \grule{program}{\grep{function\_def} \gcat game\_decl}
-\grule{function\_def}{\gter{define} \gcat function \gcat \gter{[} \grep{variable} \gcat \gter{]} \gcat expression}
+\grule{function\_def}{\gter{define} \gcat function \gcat \gter{[} \gcat \grep{variable} \gcat \gter{]} \gcat expression}
 \grule{game\_decl}{\gter{game} \gcat declaration\_struct}
 \grule{declaration\_struct}{\gter{\{} \gcat declaration \gcat \grep{declaration} \gter{\}}}
 \grule{declaration}{\ggrp{keyword \gor identifier} \gcat structure}
@@ -92,20 +103,16 @@ syntax of our language in this section:
 \subsection{Patterns}
 \begin{ebnf}
 %Patterns
-\grule{pattern}{\gter{/} \gcat pattern\_expr \gcat \gter{/}}
-\grule{pattern\_expr}{pattern\_expr \gcat \grep{pattern\_expr}}
-\galt{\gter{(} \gcat pattern\_expr \gcat \gter{)}}
-\galt{\gter{(} \gcat pattern\_expr \gcat \gter{)} \gcat integer}
-\galt{pattern\_expr \gcat \gter{*}}
-\galt{pattern\_expr \gcat \gter{?}}
-\galt{pattern\_expr \gcat \gter{+}}
-\galt{pattern\_val}
-\grule{pattern\_val}{direction}
-\galt{pattern\_check}
-\galt{\gter{!} \gcat pattern\_check}
-\grule{pattern\_check}{\gter{friend}}
-\galt{\gter{foe}}
-\galt{\gter{empty}}
-\galt{\gter{this}}
-\galt{identifier}
+  \grule{pattern}{\gter{/} \gcat pattern\_expr \gcat \grep{pattern\_expr} \gcat \gter{/}}
+  \grule{pattern\_expr}{pattern\_val \gcat \gopt{\gter{*} \gor \gter{?} \gor \gter{+}}}
+  \grule{pattern\_val}{direction}
+  \galt{variable}
+  \galt{pattern\_check}
+  \galt{\gter{!} \gcat pattern\_check}
+  \galt{\gter{(} \gcat pattern\_expr \gcat \gter{)} \gopt{integer}}
+  \grule{pattern\_check}{\gter{friend}}
+  \galt{\gter{foe}}
+  \galt{\gter{empty}}
+  \galt{\gter{this}}
+  \galt{identifier}
 \end{ebnf}
