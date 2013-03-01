@@ -35,7 +35,7 @@ public class Token {
 
 	public String value;
 	public Type type;
-	int line, offset;
+	public int line, offset;
 	public Token(Type type, String value, int line, int offset) {
 		this.type = type;
 		this.value = value;
