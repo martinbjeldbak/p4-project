@@ -12,7 +12,7 @@ public class Token {
 	  ANDOP, OROP,
 	  //Pattern keywords
 	  PATTERN_KEYWORD,
-	  FRIEND, FOE, THIS_PATTERN, EMPTY,
+	  FRIEND, FOE, EMPTY,
 	  //Pattern operators
 	  PATTERN_OPERATOR,
 	  MULTOP, QUESTOP, PLUSOP, MINUSOP, NOTOP,
