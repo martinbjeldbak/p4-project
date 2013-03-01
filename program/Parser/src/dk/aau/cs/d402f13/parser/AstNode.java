@@ -59,8 +59,7 @@ public class AstNode implements Iterable {
     exportNode(os);
     os.write("}");
   }
-    
-  @Override
+  
   public Iterator iterator() {
     return children.iterator();
   }

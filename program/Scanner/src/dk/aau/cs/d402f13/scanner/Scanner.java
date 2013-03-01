@@ -332,7 +332,7 @@ public class Scanner {
   }
   
   public static void main(String[] args) throws Exception {
-    FileInputStream f = new FileInputStream("programExample1.txt");
+  //  FileInputStream f = new FileInputStream("programExample1.txt");
     Scanner s = new Scanner(System.in);
     Token t;
     while ((t = s.scan()).type != Type.EOF) {
