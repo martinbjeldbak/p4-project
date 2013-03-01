@@ -3,6 +3,8 @@ package dk.aau.cs.d402f13.scanner;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 import dk.aau.cs.d402f13.scanner.Token.Type;
 
@@ -13,17 +15,16 @@ public class Scanner {
   public int offset, line;
 
 
-  private InputStream input;
+  private InputStreamReader input;
   private int nextChar = -1;
   
-  public Scanner(InputStream input) {
+  public Scanner(InputStream input) throws UnsupportedEncodingException {
     this.line = 0;  //keeps track of line number and offset so when meeting an error, users can see on which line and offset they messed up
     this.offset = 0;
-    this.input = input;
+    this.input = new InputStreamReader(input, "UTF-8");
     pop();
   }
  
-  
   public char peek() {
     return (char)nextChar;
   }
@@ -93,7 +94,7 @@ public class Scanner {
       return new Token(Type.ELSE, line, offset);
     //KEYWORD...?  
     case "game":
-      return new Token(Type.KEYWORD, "game", line, offset);
+      return new Token(Type.GAME, line, offset);
     case "piece":
       return new Token(Type.KEYWORD, "piece", line, offset);
     case "this":
@@ -266,16 +267,6 @@ public class Scanner {
           return new Token(Type.PATTERN_OPERATOR, "mult_op", line, offset);
         case "?":
           return new Token(Type.PATTERN_OPERATOR, "quest_op", line, offset);
-        /*
-        case "+":
-          return new Token(Type.PLUSOP, line, offset);
-        case "-":
-          return new Token(Type.MINUSOP, line, offset);
-        case "*":
-          return new Token(Type.MULTOP, line, offset);
-        case "?":
-          return new Token(Type.QUESTOP, line, offset);
-        */
         case "/":
           return new Token(Type.PATTERNOP, line, offset);
         case "|":
@@ -283,16 +274,13 @@ public class Scanner {
         case "#":
           return new Token(Type.LAMBDABEGIN, line, offset);
       }
-        switch (value) { //these operators are ambiguous so they 
-        //are first evaluated when nextChar is not an operator
+      switch (value) {
         case "=>":
           return new Token(Type.LAMBDAOP, line, offset);
-      //  case "=":
-      //    return new Token(Type.ASSIGN, line, offset);
       }
      
-      }
-      throw new Exception("Undefined token " + value);
+    }
+    throw new Exception("Undefined token " + value);
  }
   
   public Token scanNumeric() {
@@ -346,8 +334,8 @@ public class Scanner {
   }
   
   public static void main(String[] args) throws Exception {
-    FileInputStream f = new FileInputStream("programExample1.txt");
-    Scanner s = new Scanner(f);
+  //  FileInputStream f = new FileInputStream("programExample1.txt");
+    Scanner s = new Scanner(System.in);
     Token t;
     while ((t = s.scan()).type != Type.EOF) {
       System.out.println("Read token: " + t.type + " (" + t.value + ") on line: " + t.line + ", offset: " + t.offset);

@@ -1,0 +1,111 @@
+define isSecure[$square$derp] ( !checkPieces[([$piece] => isFoe[$piece] and hasMove[$piece $square])] )
+
+define slide[ $pattern ] ( findSquares[/this ($pattern empty)* $pattern !friend/] )
+
+
+game {
+	title "Chess"
+	players [Black White]
+	turnOrder [White Black]
+	board {
+		grid {
+			width 8
+			height 8
+		}
+		setup {
+			Black{
+				Pawn [A7 B7 C7 D7 E7 F7 G7 H7]
+				Rook [A8 H8]
+				Knight [B8 G8]
+				Bishop [C8 F8]
+				Queen [E8]
+				King [D8]
+			}
+			White{
+				Pawn [A2 B2 C2 D2 E2 F2 G2 H2]
+				Rook [A1 H1]
+				Knight [B1 G1]
+				Bishop [C1 F1]
+				Queen [E1]
+				King [D1]
+			}
+		}
+	}
+	
+	piece {
+		name Pawn
+		possibleMoves [
+			if isCurrentPlayer[White] then 	
+				if isFirstMove[this] then	
+					findSquares[/this (n empty)2 /]
+				else 
+					union[
+						(findSquares[/this n empty/])
+						(findSquares[/this (ne|nw) foe/])
+					]
+			else 
+				if isFirstMove[this] then	
+					findSquares[/this (s empty)2 /]
+				else 
+					union[
+						findSquares[/this s empty/]
+						findSquares[/this (se|sw) foe/]
+					]
+		]
+	}
+	piece {
+		name Rook
+		possibleMoves union[
+			(slide[ n ])
+			(slide[ w ])
+			(slide[ s ])
+			(slide[ e ])
+		]
+	}
+	piece {
+		name Knight
+		possibleMoves union[
+			(findSquares[/this n+ne !friend/])
+			(findSquares[/this n+nw !friend/])
+			(findSquares[/this s+se !friend/])
+			(findSquares[/this s+sw !friend/])
+			(findSquares[/this e+ne !friend/])
+			(findSquares[/this e+se !friend/])
+			(findSquares[/this w+nw !friend/])
+			(findSquares[/this w+sw !friend/])
+		]
+	}
+	piece {
+		name Bishop
+		possibleMoves union[
+			(slide[ ne ])
+			(slide[ nw ])
+			(slide[ se ])
+			(slide[ sw ])
+		]
+	}
+	piece {
+		name Queen
+		possibleMoves union[
+			(slide[ ne ])
+			(slide[ nw ])
+			(slide[ se ])
+			(slide[ sw ])
+			(slide[ n ])
+			(slide[ e ])
+			(slide[ s ])
+			(slide[ w ])
+		]
+	}
+	piece {
+		name King
+		possibleMoves union[
+			(findSquares[/this (e|n|s|w) !friend/])
+			(findSquares[/this (ne|nw|se|sw) !friend/])
+		]
+	}
+	winCondition (
+		(findSquares[/King !isSecure/]) // questionable!	
+	)
+}
+
