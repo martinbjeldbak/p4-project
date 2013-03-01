@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 import dk.aau.cs.d402f13.parser.AstNode.Type;
+import dk.aau.cs.d402f13.scanner.Scanner;
 import dk.aau.cs.d402f13.scanner.Token;
 
 
@@ -18,6 +19,24 @@ public class Parser {
 	private LinkedList<Token> tokens;
 	private Token currentToken;
 	private Token nextToken;
+  
+	public AstNode parse(LinkedList<Token> tokens) throws SyntaxError {
+    this.tokens = tokens;
+    currentToken = null;
+    nextToken = tokens.peek();
+    
+    return program();
+  }
+	
+	private AstNode astNode(Type type, String value){
+	  if(currentToken!=null){
+	    return new AstNode(type, value, currentToken.line, currentToken.offset);
+	  }
+	  else if(nextToken!=null){
+	    return new AstNode(type, value, nextToken.line, nextToken.offset);
+	  }
+	  return new AstNode(type, value, 1, 1);
+	}
 	
 	private Token peek(){
 		return nextToken;
@@ -101,7 +120,7 @@ public class Parser {
 	
 	// PROGRAM STRUCTURE
 	private AstNode program() throws SyntaxError{
-	  AstNode root = new AstNode(Type.PROGRAM, "");
+	  AstNode root = astNode(Type.PROGRAM, "");
 	  while(lookAhead(Token.Type.DEFINE)){
 	    root.addChild(functionDefinition());
 	  }
@@ -113,13 +132,13 @@ public class Parser {
 	}
 
 	private AstNode functionDefinition() throws SyntaxError {
-	  AstNode node = new AstNode(Type.FUNC_DEF, "");
+	  AstNode node = astNode(Type.FUNC_DEF, "");
     expect(Token.Type.DEFINE);
     expect(Token.Type.FUNCTION);
-    node.addChild(new AstNode(Type.FUNCTION, currentToken.value));
+    node.addChild(astNode(Type.FUNCTION, currentToken.value));
     expect(Token.Type.LBRACKET);
     while(accept(Token.Type.VAR)){
-      node.addChild(new AstNode(Type.VAR, currentToken.value));
+      node.addChild(astNode(Type.VAR, currentToken.value));
     }
     expect(Token.Type.RBRACKET);
     node.addChild(expression());
@@ -128,17 +147,15 @@ public class Parser {
   }
 	
 	private AstNode gameDecleration() throws SyntaxError {
-    AstNode node = new AstNode(Type.GAME_DECL, "");
+    AstNode node = astNode(Type.GAME_DECL, "");
     expect(Token.Type.GAME);
-    if(lookAhead(Token.Type.LBRACE)){
-      node.addChild(declerationStruct());
-    }
+    node.addChild(declerationStruct());
 	  
     return node;
   }
   
 	private AstNode declerationStruct() throws SyntaxError {
-    AstNode node = new AstNode(Type.DECL_STRUCT, "");
+    AstNode node = astNode(Type.DECL_STRUCT, "");
     expect(Token.Type.LBRACE);
     if(lookAhead(Token.Type.KEYWORD) || lookAhead(Token.Type.ID)){
       node.addChild(decleration());
@@ -152,14 +169,14 @@ public class Parser {
   }
   
   private AstNode decleration() throws SyntaxError {
-    AstNode node = new AstNode(Type.DECL, "");
+    AstNode node = astNode(Type.DECL, "");
     if(lookAhead(Token.Type.KEYWORD)){
       expect(Token.Type.KEYWORD);
-      node.addChild(new AstNode(Type.KEYWORD, currentToken.value));
+      node.addChild(astNode(Type.KEYWORD, currentToken.value));
     }
     else if(lookAhead(Token.Type.ID)){
       expect(Token.Type.ID);
-      node.addChild(new AstNode(Type.ID, currentToken.value)); 
+      node.addChild(astNode(Type.ID, currentToken.value)); 
     }
     node.addChild(structure());
     
@@ -167,7 +184,7 @@ public class Parser {
   }
 
   private AstNode structure() throws SyntaxError{
-    AstNode node = new AstNode(Type.STRUCT, "");
+    AstNode node = astNode(Type.STRUCT, "");
     if(lookAhead(Token.Type.LBRACKET)){
       node.addChild(declerationStruct());
     }
@@ -179,35 +196,18 @@ public class Parser {
 
   //EXPRESSIONS
   private AstNode expression() throws SyntaxError {
-    AstNode node = new AstNode(Type.EXPR, "");
+    AstNode node = astNode(Type.EXPR, "");
     if(lookAhead(Token.Type.FUNCTION)){
       node.addChild(functionCall());
     }
-    /*TRICKY! Der er to muligheder, hvis en expression
-     * starter med non-terminal "element"..
-     * expression -> element operator expression
-     *             | element
-     *             
-     * Løses det korrekt? 
-     */
     else if(lookAheadElement()){
       node.addChild(element());
       if(lookAhead(Token.Type.OPERATOR)){
         expect(Token.Type.OPERATOR);
+        node.addChild(astNode(Type.OPERATOR, currentToken.value));
         node.addChild(expression());
       }
-      /*
-      if(lookAhead(Token.Type.OROP)){
-        expect(Token.Type.OROP);
-        node.addChild(expression());
-      }
-      else if(lookAhead(Token.Type.ANDOP)){
-        expect(Token.Type.ANDOP);
-        node.addChild(expression());
-      }*/
       else return node;
-      //throw new SyntaxError("Unexpected token " + nextToken.type + ", expected an operator.", null);
-
     }
     else if(lookAhead(Token.Type.IF)){
       node.addChild(ifExpression());
@@ -220,7 +220,7 @@ public class Parser {
   }
   
   private AstNode element() throws SyntaxError {
-    AstNode node = new AstNode(Type.ELEM, "");
+    AstNode node = astNode(Type.ELEM, "");
     if(lookAhead(Token.Type.LPAREN)){
       expect(Token.Type.LPAREN);
       node.addChild(expression());
@@ -228,7 +228,7 @@ public class Parser {
     }
     else if(lookAhead(Token.Type.VAR)){
       expect(Token.Type.VAR);
-      node.addChild(new AstNode(Type.VAR, currentToken.value));
+      node.addChild(astNode(Type.VAR, currentToken.value));
     }
     else if(lookAhead(Token.Type.LBRACKET)){
       node.addChild(list());
@@ -238,31 +238,31 @@ public class Parser {
     }
     else if(lookAhead(Token.Type.KEYWORD)){
       expect(Token.Type.KEYWORD);
-      node.addChild(new AstNode(Type.KEYWORD, currentToken.value));
+      node.addChild(astNode(Type.KEYWORD, currentToken.value));
     }
     else if(lookAheadLiteral()){
       expect(Token.Type.INT_LIT);
-      node.addChild(new AstNode(Type.INT_LIT, currentToken.value));
+      node.addChild(astNode(Type.INT_LIT, currentToken.value));
     }
     else if(lookAhead(Token.Type.ID)){
       expect(Token.Type.ID);
-      node.addChild(new AstNode(Type.ID, currentToken.value));
+      node.addChild(astNode(Type.ID, currentToken.value));
     }
     
     return node;
   }  
   
   private AstNode functionCall() throws SyntaxError {
-    AstNode node = new AstNode(Type.FUNC_CALL, "");
+    AstNode node = astNode(Type.FUNC_CALL, "");
     expect(Token.Type.FUNCTION);
-    node.addChild(new AstNode(Type.FUNCTION, currentToken.value));
+    node.addChild(astNode(Type.FUNCTION, currentToken.value));
     node.addChild(list());
     
     return node;
   }
   
   private AstNode ifExpression() throws SyntaxError {
-    AstNode node = new AstNode(Type.IF_EXPR, "");
+    AstNode node = astNode(Type.IF_EXPR, "");
     expect(Token.Type.IF);
     node.addChild(expression());
     expect(Token.Type.THEN);
@@ -274,10 +274,10 @@ public class Parser {
   }
   
   private AstNode lambdaExpression() throws SyntaxError {
-    AstNode node = new AstNode(Type.LAMBDA_EXPR, "");
+    AstNode node = astNode(Type.LAMBDA_EXPR, "");
     expect(Token.Type.LAMBDABEGIN);
     while(lookAhead(Token.Type.VAR)){
-      node.addChild(new AstNode(Type.VAR, currentToken.value));
+      node.addChild(astNode(Type.VAR, currentToken.value));
     }
     expect(Token.Type.LAMBDAOP);
     node.addChild(expression());
@@ -286,7 +286,7 @@ public class Parser {
   }
 
   private AstNode list() throws SyntaxError {
-    AstNode node = new AstNode(Type.LIST, "");
+    AstNode node = astNode(Type.LIST, "");
     expect(Token.Type.LBRACKET);
     while(lookAheadElement()){
       node.addChild(element());
@@ -297,51 +297,80 @@ public class Parser {
   }
   
   private AstNode pattern() throws SyntaxError {
-    AstNode node = new AstNode(Type.PATTERN, "");
+    AstNode node = astNode(Type.PATTERN, "");
     expect(Token.Type.PATTERNOP);
     node.addChild(patternExpression());
+    while(lookAhead(Token.Type.DIR_LIT) 
+        || lookAhead(Token.Type.VAR)
+        || lookAhead(Token.Type.PATTERN_KEYWORD)
+        || lookAhead(Token.Type.ID)
+        || lookAhead(Token.Type.NOTOP)){
+      node.addChild(patternExpression());
+    }
     expect(Token.Type.PATTERNOP);
     
     return node;
   }
 
-  /*
-   * Hvordan implementeres denne pattern??
-   * Det ser ud til, at den kun kalder sig selv..
-   */
   private AstNode patternExpression() throws SyntaxError {
-    AstNode node = new AstNode(Type.PATTERN_EXPR, "");
-    
+    AstNode node = astNode(Type.PATTERN_EXPR, "");
+    node.addChild(patternValue());
+    if(lookAhead(Token.Type.MULTOP)){
+      expect(Token.Type.MULTOP);
+      node.addChild(astNode(Type.MULT_OP, currentToken.value));
+    }
+    else if(lookAhead(Token.Type.QUESTOP)){
+      expect(Token.Type.QUESTOP);
+      node.addChild(astNode(Type.QUEST_OP, currentToken.value));
+    }
+    else if(lookAhead(Token.Type.PLUSOP)){
+      expect(Token.Type.PLUSOP);
+      node.addChild(astNode(Type.PLUS_OP, currentToken.value));
+    }
     
     return node;
   }
   
   private AstNode patternValue() throws SyntaxError {
-    AstNode node = new AstNode(Type.PATTERN_VAL, "");
+    AstNode node = astNode(Type.PATTERN_VAL, "");
     if(lookAhead(Token.Type.DIR_LIT)){
       expect(Token.Type.DIR_LIT);
-      node.addChild(new AstNode(Type.DIR_LIT, currentToken.value));
+      node.addChild(astNode(Type.DIR_LIT, currentToken.value));
     }
-    else if(lookAhead(Token.Type.PATTERN_OPERATOR) || lookAhead(Token.Type.ID)){
+    else if(lookAhead(Token.Type.VAR)){
+      expect(Token.Type.VAR);
+      node.addChild(astNode(Type.VAR, currentToken.value));
+    }
+    else if(lookAhead(Token.Type.PATTERN_KEYWORD) 
+        || lookAhead(Token.Type.ID)){
       node.addChild(patternCheck());
     }
     else if(lookAhead(Token.Type.NOTOP)){
       expect(Token.Type.NOTOP);
       node.addChild(patternCheck());
     }
+    else if(lookAhead(Token.Type.LPAREN)){
+      expect(Token.Type.LPAREN);
+      node.addChild(patternCheck());
+      expect(Token.Type.RPAREN);
+      if(lookAhead(Token.Type.INT_LIT)){
+        expect(Token.Type.INT_LIT);
+        node.addChild(astNode(Type.INT_LIT, currentToken.value));
+      }
+    }
     
     return node;
   }
   
   private AstNode patternCheck() throws SyntaxError {
-    AstNode node = new AstNode(Type.PATTERN_CHECK, "");
+    AstNode node = astNode(Type.PATTERN_CHECK, "");
     if(lookAhead(Token.Type.PATTERN_KEYWORD)){
       expect(Token.Type.PATTERN_KEYWORD);
-      node.addChild(new AstNode(Type.PATTERN_KEYWORD, currentToken.value));
+      node.addChild(astNode(Type.PATTERN_KEYWORD, currentToken.value));
     }
     else if(lookAhead(Token.Type.ID)){
       expect(Token.Type.ID);
-      node.addChild(new AstNode(Type.ID, currentToken.value));
+      node.addChild(astNode(Type.ID, currentToken.value));
     }
     else throw new SyntaxError("Unexpected token " + nextToken.type 
         + ", expected a pattern operator or an identifier.", null);
@@ -349,8 +378,8 @@ public class Parser {
     return node;
   }
 
-  public static void main(String[] args)throws IOException {
-    /*
+  public static void main(String[] args) throws Exception {
+    
     Parser p = new Parser();
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     String line = "";
@@ -399,8 +428,10 @@ public class Parser {
               System.err.println("^");
             }
           }
+      	  default:
+      	    input += line + "\n";
        }
     }
-    */
+    
   }
 }
