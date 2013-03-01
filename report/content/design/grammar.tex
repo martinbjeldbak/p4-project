@@ -60,7 +60,7 @@ syntax of our language in this section:
 \begin{ebnf}
 %Program structure
 \grule{program}{\grep{function\_def} \gcat game\_decl}
-\grule{function\_def}{\gter{define} \gcat function \gcat \gter{[} \grep{variable} \gcat \gter{]} \gcat expression}
+\grule{function\_def}{\gter{define} \gcat function \gcat \gter{[} \gcat \grep{variable} \gcat \gter{]} \gcat expression}
 \grule{game\_decl}{\gter{game} \gcat declaration\_struct}
 \grule{declaration\_struct}{\gter{\{} \gcat declaration \gcat \grep{declaration} \gter{\}}}
 \grule{declaration}{\ggrp{keyword \gor identifier} \gcat structure}
@@ -92,20 +92,16 @@ syntax of our language in this section:
 \subsection{Patterns}
 \begin{ebnf}
 %Patterns
-\grule{pattern}{\gter{/} \gcat pattern\_expr \gcat \gter{/}}
-\grule{pattern\_expr}{pattern\_expr \gcat \grep{pattern\_expr}}
-\galt{\gter{(} \gcat pattern\_expr \gcat \gter{)}}
-\galt{\gter{(} \gcat pattern\_expr \gcat \gter{)} \gcat integer}
-\galt{pattern\_expr \gcat \gter{*}}
-\galt{pattern\_expr \gcat \gter{?}}
-\galt{pattern\_expr \gcat \gter{+}}
-\galt{pattern\_val}
-\grule{pattern\_val}{direction}
-\galt{pattern\_check}
-\galt{\gter{!} \gcat pattern\_check}
-\grule{pattern\_check}{\gter{friend}}
-\galt{\gter{foe}}
-\galt{\gter{empty}}
-\galt{\gter{this}}
-\galt{identifier}
+  \grule{pattern}{\gter{/} \gcat pattern\_expr \gcat \grep{pattern\_expr} \gcat \gter{/}}
+  \grule{pattern\_expr}{pattern\_val \gcat \gopt{\gter{*} \gor \gter{?} \gor \gter{+}}}
+  \grule{pattern\_val}{direction}
+  \galt{variable}
+  \galt{pattern\_check}
+  \galt{\gter{!} \gcat pattern\_check}
+  \galt{\gter{(} \gcat pattern\_expr \gcat \gter{)} \gopt{integer}}
+  \grule{pattern\_check}{\gter{friend}}
+  \galt{\gter{foe}}
+  \galt{\gter{empty}}
+  \galt{\gter{this}}
+  \galt{identifier}
 \end{ebnf}
