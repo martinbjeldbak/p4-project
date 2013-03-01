@@ -10,11 +10,8 @@ public class SyntaxError extends Exception {
     this.token = token;
   }
   
-  public void getToken(){
-    /*
-     * line
-     * offset
-     */
+  public Token getToken(){
+    return token;
   }
   
 }
