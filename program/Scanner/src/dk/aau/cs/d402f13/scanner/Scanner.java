@@ -23,7 +23,6 @@ public class Scanner {
     pop();
   }
  
-  
   public char peek() {
     return (char)nextChar;
   }
@@ -93,7 +92,7 @@ public class Scanner {
       return new Token(Type.ELSE, line, offset);
     //KEYWORD...?  
     case "game":
-      return new Token(Type.KEYWORD, "game", line, offset);
+      return new Token(Type.GAME, line, offset);
     case "piece":
       return new Token(Type.KEYWORD, "piece", line, offset);
     case "this":
@@ -266,16 +265,6 @@ public class Scanner {
           return new Token(Type.PATTERN_OPERATOR, "mult_op", line, offset);
         case "?":
           return new Token(Type.PATTERN_OPERATOR, "quest_op", line, offset);
-        /*
-        case "+":
-          return new Token(Type.PLUSOP, line, offset);
-        case "-":
-          return new Token(Type.MINUSOP, line, offset);
-        case "*":
-          return new Token(Type.MULTOP, line, offset);
-        case "?":
-          return new Token(Type.QUESTOP, line, offset);
-        */
         case "/":
           return new Token(Type.PATTERNOP, line, offset);
         case "|":
@@ -283,16 +272,13 @@ public class Scanner {
         case "#":
           return new Token(Type.LAMBDABEGIN, line, offset);
       }
-        switch (value) { //these operators are ambiguous so they 
-        //are first evaluated when nextChar is not an operator
+      switch (value) {
         case "=>":
           return new Token(Type.LAMBDAOP, line, offset);
-      //  case "=":
-      //    return new Token(Type.ASSIGN, line, offset);
       }
      
-      }
-      throw new Exception("Undefined token " + value);
+    }
+    throw new Exception("Undefined token " + value);
  }
   
   public Token scanNumeric() {
@@ -347,7 +333,7 @@ public class Scanner {
   
   public static void main(String[] args) throws Exception {
     FileInputStream f = new FileInputStream("programExample1.txt");
-    Scanner s = new Scanner(f);
+    Scanner s = new Scanner(System.in);
     Token t;
     while ((t = s.scan()).type != Type.EOF) {
       System.out.println("Read token: " + t.type + " (" + t.value + ") on line: " + t.line + ", offset: " + t.offset);
