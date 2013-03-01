@@ -2,23 +2,35 @@ package dk.aau.cs.d402f13.scanner;
 
 public class Token {
 	public enum Type {
-	  ASSIGN, PLUSOP, MINUSOP, PATTERNOP, MULTOP, LAMBDABEGIN,
-    LAMBDAOP, NOTOP, OROP, ANDOP, QUESTOP, INT_LIT, DIR_LIT,
-  	COORD_LIT, STRING_LIT, ID, FUNCTION, VAR,
-  	  
-  	//brackets
+	  //Keywords
+	  KEYWORD, 
+	  GAME, PIECE, THIS, WIDTH, HEIGHT, TITLE, PLAYERS, TURNORDER,
+	  BOARD, GRID, SETUP, WALL, NAME, POSSIBLE_DROPS, 
+	  POSSIBLE_MOVES, WIN_CONDITION, TIE_CONDITION,
+	  //Operators
+	  OPERATOR,
+	  ANDOP, OROP,
+	  //Pattern keywords
+	  PATTERN_KEYWORD,
+	  FRIEND, FOE, THIS_PATTERN, EMPTY,
+	  //Pattern operators
+	  PATTERN_OPERATOR,
+	  MULTOP, QUESTOP, PLUSOP, MINUSOP, NOTOP,
+	  //Literals
+	  INT_LIT, DIR_LIT, COORD_LIT, STRING_LIT,
+	  //Identifiers
+	  FUNCTION, ID, VAR, 
+	  //Program structure
+	  DEFINE, 
+  	//Brackets
   	LBRACE, RBRACE, LPAREN, RPAREN, LBRACKET, RBRACKET,
-  	
-  	DEFINE, THIS,
-  	
-  	//For patterns
-  	FOE, FRIEND, EMPTY,
-
+  	//if-then-else
   	IF, THEN, ELSE,
-  	  
-  	GAME, TITLE, PLAYERS, TURNORDER, BOARD, GRID, WIDTH,
-  	HEIGHT, SETUP, PIECE, NAME, POSSIBLE_MOVES, 
-  	POSSIBLE_DROPS, WALL, WIN_CONDITION, TIE_CONDITION, EOF
+  	//lambda
+    LAMBDABEGIN, LAMBDAOP,
+    //Pattern begin
+    PATTERNOP, 
+    EOF
 	}		
 
 	public String value;
