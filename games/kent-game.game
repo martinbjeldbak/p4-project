@@ -1,5 +1,5 @@
 game {
-  title “Kents spil”
+  title "Kents spil"
   players [Solo]
   turnOrder [Solo]
   board {
