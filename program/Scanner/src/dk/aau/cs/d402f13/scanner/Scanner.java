@@ -3,6 +3,8 @@ package dk.aau.cs.d402f13.scanner;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 import dk.aau.cs.d402f13.scanner.Token.Type;
 
@@ -13,13 +15,13 @@ public class Scanner {
   public int offset, line;
 
 
-  private InputStream input;
+  private InputStreamReader input;
   private int nextChar = -1;
   
-  public Scanner(InputStream input) {
+  public Scanner(InputStream input) throws UnsupportedEncodingException {
     this.line = 0;  //keeps track of line number and offset so when meeting an error, users can see on which line and offset they messed up
     this.offset = 0;
-    this.input = input;
+    this.input = new InputStreamReader(input, "UTF-8");
     pop();
   }
  
