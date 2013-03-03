@@ -9,6 +9,7 @@ import java.io.UnsupportedEncodingException;
 import dk.aau.cs.d402f13.scanner.Token.Type;
 
 
+@SuppressWarnings("unused")
 public class Scanner {
   public static final String whitespace = " \t\r\n";
   public static final String operators = "!&*+-=>?(){}[]/|";
@@ -19,8 +20,8 @@ public class Scanner {
   private int nextChar = -1;
   
   public Scanner(InputStream input) throws UnsupportedEncodingException {
-    this.line = 0;  //keeps track of line number and offset so when meeting an error, users can see on which line and offset they messed up
-    this.offset = 0;
+    this.line = 1;  //keeps track of line number and offset so when meeting an error, users can see on which line and offset they messed up
+    this.offset = 1;
     this.input = new InputStreamReader(input, "UTF-8");
     pop();
   }
@@ -35,7 +36,7 @@ public class Scanner {
     if (isEol())
     {
      this.line++;
-     this.offset = 0;
+     this.offset = 1;
     }
       
     try {
@@ -92,7 +93,7 @@ public class Scanner {
       return new Token(Type.THEN, line, offset);
     case "else":
       return new Token(Type.ELSE, line, offset);
-    //KEYWORD...?  
+    //KEYWORD  
     case "game":
       return new Token(Type.GAME, line, offset);
     case "piece":
@@ -127,45 +128,7 @@ public class Scanner {
       return new Token(Type.KEYWORD, "win_condition", line, offset);
     case "tie_condition":
       return new Token(Type.KEYWORD, "tie_condition", line, offset);
-      
-    /*  
-    case "game":
-      return new Token(Type.GAME, line, offset);
-    case "piece":
-      return new Token(Type.PIECE, line, offset);
-    case "this":
-      return new Token(Type.THIS, line, offset);
-    case "width":
-      return new Token(Type.WIDTH, line, offset);
-    case "height":
-      return new Token(Type.HEIGHT, line, offset);
-    case "title":
-      return new Token(Type.TITLE, line, offset);
-    case "players":
-      return new Token(Type.PLAYERS, line, offset);
-    case "turnorder":
-      return new Token(Type.TURNORDER, line, offset);
-    case "board":
-      return new Token(Type.BOARD, line, offset);
-    case "grid":
-      return new Token(Type.GRID, line, offset);
-    case "setup":
-      return new Token(Type.SETUP, line, offset);
-    case "wall":
-      return new Token(Type.WALL, line, offset);
-    case "name":
-      return new Token(Type.NAME, line, offset);
-    case "possible_drops":
-      return new Token(Type.POSSIBLE_DROPS, line, offset);
-    case "possible_moves":
-      return new Token(Type.POSSIBLE_MOVES, line, offset);
-    case "win_condition":
-      return new Token(Type.WIN_CONDITION, line, offset);
-    case "tie_condition":
-      return new Token(Type.TIE_CONDITION, line, offset);  
-     */
-      
-    //Operators?
+    //Operators
     case "and":
       return new Token(Type.OPERATOR, "and", line, offset);
     case "or":
