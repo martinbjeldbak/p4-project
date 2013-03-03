@@ -1,5 +1,5 @@
 game {
-  title “Noughts and Crosses”
+  title "Noughts and Crosses"
   players [Noughts Crosses]
   turnOrder [Crosses Noughts]
   board {
@@ -9,7 +9,7 @@ game {
     }
   }
   piece {
-    name “XOPiece”
+    name XOPieces
     possibleDrops (emptySquares[board])
   }
   winCondition (
