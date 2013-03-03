@@ -185,8 +185,7 @@ public class Parser {
         node.addChild(astNode(Type.OPERATOR, currentToken.value));
         node.addChild(expression());
       }
-      else
-        return node;
+      else return node;
     }
     else if (lookAhead(Token.Type.IF)) {
       node.addChild(ifExpression());
