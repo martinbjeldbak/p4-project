@@ -108,8 +108,8 @@ public class Scanner {
       return new Token(Type.KEYWORD, "title", line, offset);
     case "players":
       return new Token(Type.KEYWORD, "players", line, offset);
-    case "turnorder":
-      return new Token(Type.KEYWORD, "turnorder", line, offset);
+    case "turnOrder":
+      return new Token(Type.KEYWORD, "turnOrder", line, offset);
     case "board":
       return new Token(Type.KEYWORD, "board", line, offset);
     case "grid":
@@ -120,14 +120,14 @@ public class Scanner {
       return new Token(Type.KEYWORD, "wall", line, offset);
     case "name":
       return new Token(Type.KEYWORD, "name", line, offset);
-    case "possible_drops":
-      return new Token(Type.KEYWORD, "possible_drops", line, offset);
-    case "possible_moves":
-      return new Token(Type.KEYWORD, "possible_moves", line, offset);
-    case "win_condition":
-      return new Token(Type.KEYWORD, "win_condition", line, offset);
-    case "tie_condition":
-      return new Token(Type.KEYWORD, "tie_condition", line, offset);
+    case "possibleDrops":
+      return new Token(Type.KEYWORD, "possibleDrops", line, offset);
+    case "possibleMoves":
+      return new Token(Type.KEYWORD, "possibleMoves", line, offset);
+    case "winCondition":
+      return new Token(Type.KEYWORD, "winCondition", line, offset);
+    case "tieCondition":
+      return new Token(Type.KEYWORD, "tieCondition", line, offset);
       // Operators
     case "and":
       return new Token(Type.OPERATOR, "and", line, offset);
@@ -212,41 +212,37 @@ public class Scanner {
         return scan();
       }
       switch (value) { // these operators are unambiguous
-      case "[":
-        return new Token(Type.LBRACKET, line, offset);
-      case "]":
-        return new Token(Type.RBRACKET, line, offset);
-      case "{":
-        return new Token(Type.LBRACE, line, offset);
-      case "}":
-        return new Token(Type.RBRACE, line, offset);
-      case "(":
-        return new Token(Type.LPAREN, line, offset);
-      case ")":
-        return new Token(Type.RPAREN, line, offset);
-      case "!":
-        return new Token(Type.NOTOP, line, offset);
-      case "+":
-        return new Token(Type.PATTERN_OPERATOR, "plus_op", line, offset);
-      case "-":
-        return new Token(Type.PATTERN_OPERATOR, "minus_op", line, offset);
-      case "*":
-        return new Token(Type.PATTERN_OPERATOR, "mult_op", line, offset);
-      case "?":
-        return new Token(Type.PATTERN_OPERATOR, "quest_op", line, offset);
-      case "/":
-        return new Token(Type.PATTERNOP, line, offset);
-      case "|":
-        return new Token(Type.OROP, line, offset);
-        //Hvad er det for en OR operator?! Har vi to forskellige OR?
-      case "#":
-        return new Token(Type.LAMBDABEGIN, line, offset);
-      }
-      //Er der nogen grund til at have denne i en switch for sig?
-      //Vi har ingen assign (=) operator.
-      switch (value) {
-      case "=>":
-        return new Token(Type.LAMBDAOP, line, offset);
+        case "[":
+          return new Token(Type.LBRACKET, line, offset);
+        case "]":
+          return new Token(Type.RBRACKET, line, offset);
+        case "{":
+          return new Token(Type.LBRACE, line, offset);
+        case "}":
+          return new Token(Type.RBRACE, line, offset);
+        case "(":
+          return new Token(Type.LPAREN, line, offset);
+        case ")":
+          return new Token(Type.RPAREN, line, offset);
+        case "!":
+          return new Token(Type.NOTOP, line, offset);
+        case "+":
+          return new Token(Type.PATTERN_OPERATOR, "plus_op", line, offset);
+        case "-":
+          return new Token(Type.PATTERN_OPERATOR, "minus_op", line, offset);
+        case "*":
+          return new Token(Type.PATTERN_OPERATOR, "mult_op", line, offset);
+        case "?":
+          return new Token(Type.PATTERN_OPERATOR, "quest_op", line, offset);
+        case "/":
+          return new Token(Type.PATTERNOP, line, offset);
+        case "|":
+          return new Token(Type.OROP, line, offset);
+          //Hvad er det for en OR operator?! Har vi to forskellige OR?
+        case "#":
+          return new Token(Type.LAMBDABEGIN, line, offset);
+        case "=>":
+          return new Token(Type.LAMBDAOP, line, offset);
       }
     }
     throw new Exception("Undefined token " + value);

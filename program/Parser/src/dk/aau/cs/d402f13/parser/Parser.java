@@ -161,7 +161,7 @@ public class Parser {
 
   private AstNode structure() throws SyntaxError {
     AstNode node = astNode(Type.STRUCT, "");
-    if (lookAhead(Token.Type.LBRACKET)) {
+    if (lookAhead(Token.Type.LBRACE)) {
       node.addChild(declerationStruct());
     }
     else if (lookAheadExpression()) {
