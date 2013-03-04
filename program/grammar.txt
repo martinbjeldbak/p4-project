@@ -57,9 +57,10 @@ element			-> “(“ expression “)
 			 | integer
 			 | string
 			 | identifier
+             | function
 function_call		-> function list
 if_expr			-> “if” expression “then” expression “else” expression
-lambda_expr		-> “#” {varlist} “=>” expression
+lambda_expr		-> “#” varlist “=>” expression
 varlist         -> "[" {variable} "]"
 list			-> “[“ {element} “]”
 
