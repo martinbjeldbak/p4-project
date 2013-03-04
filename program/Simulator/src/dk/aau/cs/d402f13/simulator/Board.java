@@ -24,41 +24,9 @@ public class Board extends JPanel {
     
     for(int i = 0; i < height; i++) {
       for(int j = 0; j < width; j++) {
-        field[i][j] = new Field();
-        field[i][j].setBorder(BorderFactory.createEtchedBorder());
-        field[i][j].add(new JLabel(i + "," + j));
-        field[i][j].addMouseListener(new MouseListener() {
-          
-          @Override
-          public void mouseReleased(MouseEvent e) {
-            // TODO Auto-generated method stub
-            
-          }
-          
-          @Override
-          public void mousePressed(MouseEvent e) {
-            // TODO Auto-generated method stub
-            
-          }
-          
-          @Override
-          public void mouseExited(MouseEvent e) {
-            // TODO Auto-generated method stub
-            
-          }
-          
-          @Override
-          public void mouseEntered(MouseEvent e) {
-            // TODO Auto-generated method stub
-            
-          }
-          
-          @Override
-          public void mouseClicked(MouseEvent e) {
-            // TODO Auto-generated method stub
-            
-          }
-        });
+        field[i][j] = new Field(i, j);
+        
+        // Add the field to game board
         this.add(field[i][j]);
       }
     }
