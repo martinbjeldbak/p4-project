@@ -100,18 +100,24 @@ public class Parser {
 
     return root;
   }
-
-  private AstNode functionDefinition() throws SyntaxError {
-    AstNode node = astNode(Type.FUNC_DEF, "");
-    expect(Token.Type.DEFINE);
-    expect(Token.Type.FUNCTION);
-    node.addChild(astNode(Type.FUNCTION, currentToken.value));
+  
+  private AstNode varList() throws SyntaxError {
+    AstNode node = astNode(Type.VARLIST, "");
     expect(Token.Type.LBRACKET);
     while (lookAhead(Token.Type.VAR)) {
       expect(Token.Type.VAR);
       node.addChild(astNode(Type.VAR, currentToken.value));
     }
     expect(Token.Type.RBRACKET);
+    return node;
+  }
+
+  private AstNode functionDefinition() throws SyntaxError {
+    AstNode node = astNode(Type.FUNC_DEF, "");
+    expect(Token.Type.DEFINE);
+    expect(Token.Type.FUNCTION);
+    node.addChild(astNode(Type.FUNCTION, currentToken.value));
+    node.addChild(varList());
     node.addChild(expression());
 
     return node;
@@ -270,9 +276,7 @@ public class Parser {
   private AstNode lambdaExpression() throws SyntaxError {
     AstNode node = astNode(Type.LAMBDA_EXPR, "");
     expect(Token.Type.LAMBDABEGIN);
-    while (lookAhead(Token.Type.VAR)) {
-      node.addChild(astNode(Type.VAR, currentToken.value));
-    }
+    node.addChild(varList());
     expect(Token.Type.LAMBDAOP);
     node.addChild(expression());
 
@@ -331,7 +335,7 @@ public class Parser {
       expect(Token.Type.VAR);
       node.addChild(astNode(Type.VAR, currentToken.value));
     }
-    else if (lookAhead(Token.Type.PATTERN_KEYWORD) || lookAhead(Token.Type.ID)) {
+    else if (lookAhead(Token.Type.PATTERN_KEYWORD) || lookAhead(Token.Type.THIS) || lookAhead(Token.Type.ID)) {
       node.addChild(patternCheck());
     }
     else if (lookAhead(Token.Type.NOTOP)) {
@@ -348,7 +352,7 @@ public class Parser {
       }
     }
     else throw new SyntaxError("Unexpected token " + nextToken.type
-          + ", expected a pattern value.", null);
+          + ", expected a pattern value.", nextToken);
 
     return node;
   }
@@ -358,6 +362,10 @@ public class Parser {
     if (lookAhead(Token.Type.PATTERN_KEYWORD)) {
       expect(Token.Type.PATTERN_KEYWORD);
       node.addChild(astNode(Type.PATTERN_KEYWORD, currentToken.value));
+    }
+    else if (lookAhead(Token.Type.THIS)) {
+      expect(Token.Type.THIS);
+      node.addChild(astNode(Type.THIS, currentToken.value));
     }
     else if (lookAhead(Token.Type.ID)) {
       expect(Token.Type.ID);

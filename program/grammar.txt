@@ -34,7 +34,7 @@ variable		-> “$” anycase {anycase}
 Program structure
 
 program			-> {function_def} game_decl
-function_def		-> “define” function “[“ {variable} “]” expression
+function_def		-> “define” function varlist expression
 game_decl		-> “game” declaration_struct
 declaration_struct	-> “{“ declaration {declaration} “}”
 declaration		-> (keyword | identifier) structure
@@ -60,6 +60,7 @@ element			-> “(“ expression “)
 function_call		-> function list
 if_expr			-> “if” expression “then” expression “else” expression
 lambda_expr		-> “#” {varlist} “=>” expression
+varlist         -> "[" {variable} "]"
 list			-> “[“ {element} “]”
 
 Patterns
