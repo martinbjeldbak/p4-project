@@ -18,7 +18,7 @@ game {
       or (notEmpty[(findSquares[/friend nw friend nw friend/])])
       or (notEmpty[(findSquares[/friend ne friend ne friend/])])
   )
-  drawCondition (
+  tieCondition (
     isFull[board]
   )
 }
