@@ -11,7 +11,7 @@ import dk.aau.cs.d402f13.scanner.Token.Type;
 @SuppressWarnings("unused")
 public class Scanner {
   public static final String whitespace = " \t\r\n";
-  public static final String operators = "!&*+-=>?(){}[]/|";
+  public static final String operators = "!&*+-=>?(){}#[]/|";
   public int offset, line;
 
   private InputStreamReader input;
@@ -99,7 +99,7 @@ public class Scanner {
     case "piece":
       return new Token(Type.KEYWORD, "piece", line, offset);
     case "this":
-      return new Token(Type.KEYWORD, "this", line, offset);
+      return new Token(Type.THIS, "this", line, offset);
     case "width":
       return new Token(Type.KEYWORD, "width", line, offset);
     case "height":
@@ -237,7 +237,7 @@ public class Scanner {
         case "/":
           return new Token(Type.PATTERNOP, line, offset);
         case "|":
-          return new Token(Type.OROP, line, offset);
+          return new Token(Type.PATTERN_OPERATOR, "or_op", line, offset);
           //Hvad er det for en OR operator?! Har vi to forskellige OR?
         case "#":
           return new Token(Type.LAMBDABEGIN, line, offset);
