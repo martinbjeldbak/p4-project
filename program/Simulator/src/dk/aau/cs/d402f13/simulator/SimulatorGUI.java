@@ -15,6 +15,8 @@ import javax.swing.JPopupMenu;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+
 import javax.swing.JButton;
 
 import dk.aau.cs.d402f13.simulator.actions.*;
@@ -60,7 +62,9 @@ public class SimulatorGUI extends JFrame {
 		textPane.setText("test");
 		contentPane.add(textPane, BorderLayout.EAST);
 		
-		board.setDimensions(4, 2);
+		board.setDimensions(2, 2);
+
+    board.field[0][0].setPicture("img/chess.svg");
 	}
 
 	private static void addPopup(Component component, final JPopupMenu popup) {
