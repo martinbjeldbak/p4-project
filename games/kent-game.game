@@ -1,5 +1,5 @@
 game {
-  title “Kents spil”
+  title "Kents spil"
   players [Solo]
   turnOrder [Solo]
   board {
@@ -36,6 +36,6 @@ game {
     ])
   }
   winCondition (
-    andSquares[[A1 A2 A3 B1 B2 B3 C1 C2] ([square] => occupiedBy[square Black])]
+    andSquares[[A1 A2 A3 B1 B2 B3 C1 C2] (#[$square] => occupiedBy[$square Black])]
   )
 }

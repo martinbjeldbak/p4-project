@@ -2,6 +2,7 @@ package dk.aau.cs.d402f13.parser;
 
 import dk.aau.cs.d402f13.scanner.Token;
 
+@SuppressWarnings("serial")
 public class SyntaxError extends Exception {
   public Token token;
   
