@@ -94,9 +94,7 @@ public class Parser {
     while (lookAhead(Token.Type.DEFINE)) {
       root.addChild(functionDefinition());
     }
-    if (lookAhead(Token.Type.GAME)) {
-      root.addChild(gameDecleration());
-    }
+    root.addChild(gameDecleration());
 
     return root;
   }
@@ -134,11 +132,7 @@ public class Parser {
   private AstNode declerationStruct() throws SyntaxError {
     AstNode node = astNode(Type.DECL_STRUCT, "");
     expect(Token.Type.LBRACE);
-    if (lookAhead(Token.Type.KEYWORD) || lookAhead(Token.Type.ID)) {
-      node.addChild(decleration());
-    }
-    else throw new SyntaxError("Unexpected token " + nextToken.type
-          + ", expected one or more declerations", null);
+    node.addChild(decleration());
     while (lookAhead(Token.Type.KEYWORD) || lookAhead(Token.Type.ID)) {
       node.addChild(decleration());
     }
