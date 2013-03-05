@@ -13,7 +13,6 @@ the possible terminals of $\gter{0}$ up to and including $\gter{9}$.
 \end{ebnf}
 
 The following operations are used throughout this section:
-
 \begin{center}
 \begin{tabular}{r l}
   $\gopt{pattern}$ & an optional pattern \\
@@ -96,24 +95,25 @@ The following operations are used throughout this section:
 \galt{integer}
 \galt{string}
 \galt{identifier}
+\galt{function}
 \grule{function\_call}{function \gcat list}
 \grule{if\_expr}{\gter{if} \gcat expression \gcat \gter{then} \gcat expression \gcat \gter{else} \gcat expression}
-\grule{lambda\_expr}{\gter{\#} \gcat \grep{variable} \gcat \gter{=>} \gcat expression}
+\grule{lambda\_expr}{\gter{\#} \gcat \gter{[} \gcat \grep{variable} \gcat \gter{]} \gcat \gter{=>} \gcat expression}
 \grule{list}{\gter{[} \gcat \grep{element} \gcat \gter{]}}
 \end{ebnf}
 \subsection{Patterns}
 \begin{ebnf}
 %Patterns
-  \grule{pattern}{\gter{/} \gcat pattern\_expr \gcat \grep{pattern\_expr} \gcat \gter{/}}
-  \grule{pattern\_expr}{pattern\_val \gcat \gopt{\gter{*} \gor \gter{?} \gor \gter{+}}}
-  \grule{pattern\_val}{direction}
-  \galt{variable}
-  \galt{pattern\_check}
-  \galt{\gter{!} \gcat pattern\_check}
-  \galt{\gter{(} \gcat pattern\_expr \gcat \gter{)} \gopt{integer}}
-  \grule{pattern\_check}{\gter{friend}}
-  \galt{\gter{foe}}
-  \galt{\gter{empty}}
-  \galt{\gter{this}}
-  \galt{identifier}
+\grule{pattern}{\gter{/} \gcat pattern\_expr \gcat \grep{pattern\_expr} \gcat \gter{/}}
+\grule{pattern\_expr}{pattern\_val \gcat \gopt{\gter{*} \gor \gter{?} \gor \gter{+}}}
+\grule{pattern\_val}{direction}
+\galt{variable}
+\galt{pattern\_check}
+\galt{\gter{!} \gcat pattern\_check}
+\galt{\gter{(} \gcat pattern\_expr \gcat \gter{)} \gcat \gopt{integer}}
+\grule{pattern\_check}{\gter{friend}}
+\galt{\gter{foe}}
+\galt{\gter{empty}}
+\galt{\gter{this}}
+\galt{identifier}
 \end{ebnf}
