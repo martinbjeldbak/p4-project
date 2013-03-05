@@ -378,7 +378,6 @@ public class Parser {
   }
 
   public static void main(String[] args) throws Exception {
-    Parser p = new Parser();
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     String line = "";
     String input = "";
@@ -400,6 +399,7 @@ public class Parser {
           tokens.add(t);
         }
         System.out.println("Parsing...");
+        Parser p = new Parser();
         try {
           AstNode ast = p.parse(tokens);
           ast.print();
@@ -424,6 +424,8 @@ public class Parser {
             System.err.println("^");
           }
         }
+        input = "";
+        break;
       default:
         input += line + "\n";
       }
