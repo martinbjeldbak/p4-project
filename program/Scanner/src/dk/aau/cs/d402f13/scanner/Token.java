@@ -15,7 +15,7 @@ public class Token {
 	  FRIEND, FOE, EMPTY,
 	  //Pattern operators
 	  PATTERN_OPERATOR,
-	  MULTOP, QUESTOP, PLUSOP, MINUSOP, NOTOP,
+	  MULTOP, QUESTOP, PLUSOP, NOTOP,
 	  //Literals
 	  INT_LIT, DIR_LIT, COORD_LIT, STRING_LIT,
 	  //Identifiers
