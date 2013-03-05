@@ -4,7 +4,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class AstNode implements Iterable {
+public class AstNode implements Iterable<AstNode> {
   public enum Type{
     //Keywords
     GAME, PIECE, THIS,  WIDTH, HEIGHT, TITLE, PLAYERS, TURNORDER, 
@@ -21,7 +21,9 @@ public class AstNode implements Iterable {
     //Expressions
     EXPR, ELEM, FUNC_CALL, IF_EXPR, LAMBDA_EXPR, LIST, 
     //Patterns
-    PATTERN, PATTERN_EXPR, PATTERN_VAL, PATTERN_CHECK
+    PATTERN, PATTERN_EXPR, PATTERN_VAL, PATTERN_CHECK,
+    // Special
+    VARLIST,
   }
   
   public Type type;
@@ -60,7 +62,7 @@ public class AstNode implements Iterable {
     os.write("}");
   }
   
-  public Iterator iterator() {
+  public Iterator<AstNode> iterator() {
     return children.iterator();
   }
 
