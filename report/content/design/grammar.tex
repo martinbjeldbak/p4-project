@@ -104,16 +104,16 @@ The following operations are used throughout this section:
 \subsection{Patterns}
 \begin{ebnf}
 %Patterns
-  \grule{pattern}{\gter{/} \gcat pattern\_expr \gcat \grep{pattern\_expr} \gcat \gter{/}}
-  \grule{pattern\_expr}{pattern\_val \gcat \gopt{\gter{*} \gor \gter{?} \gor \gter{+}}}
-  \grule{pattern\_val}{direction}
-  \galt{variable}
-  \galt{pattern\_check}
-  \galt{\gter{!} \gcat pattern\_check}
-  \galt{\gter{(} \gcat pattern\_expr \gcat \gter{)} \gcat \gopt{integer}}
-  \grule{pattern\_check}{\gter{friend}}
-  \galt{\gter{foe}}
-  \galt{\gter{empty}}
-  \galt{\gter{this}}
-  \galt{identifier}
+\grule{pattern}{\gter{/} \gcat pattern\_expr \gcat \grep{pattern\_expr} \gcat \gter{/}}
+\grule{pattern\_expr}{pattern\_val \gcat \gopt{\gter{*} \gor \gter{?} \gor \gter{+}}}
+\grule{pattern\_val}{direction}
+\galt{variable}
+\galt{pattern\_check}
+\galt{\gter{!} \gcat pattern\_check}
+\galt{\gter{(} \gcat pattern\_expr \gcat \gter{)} \gcat \gopt{integer}}
+\grule{pattern\_check}{\gter{friend}}
+\galt{\gter{foe}}
+\galt{\gter{empty}}
+\galt{\gter{this}}
+\galt{identifier}
 \end{ebnf}

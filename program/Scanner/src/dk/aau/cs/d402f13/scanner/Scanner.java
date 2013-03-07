@@ -76,14 +76,14 @@ public class Scanner {
     return c >= 'a' && c <= 'z';
   }
 
-  public boolean isAlphacharacter() {
+  public boolean isAnycase() {
     char c = peek();
     return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
   }
 
   public Token scanKeyword() throws Exception {
     String value = "";
-    while (isAlphacharacter()) {
+    while (isAnycase()) {
       value += pop();
     }
     switch (value) {
@@ -161,13 +161,15 @@ public class Scanner {
     case "define":
       return new Token(Type.DEFINE, line, offset);
     }
-    return new Token(Type.FUNCTION, value, line, offset);
+    if (value.length() >= 2) //functions must be: lowercase anycase {anycase}
+      return new Token(Type.FUNCTION, value, line, offset);
+    else throw new Exception("Undefined token " + value);      
   }
 
   public Token scanId() {
     // Like Noughts or Crosses
     String value = "";
-    while (isAlphacharacter()) {
+    while (isAnycase()) {
       value += pop();
     }
     return new Token(Type.ID, value, line, offset);
@@ -176,7 +178,7 @@ public class Scanner {
   public Token scanUppercase() {
     // Can be ID or Coordinate, e.g. Noughts or A3
     String value = "";
-    while (isAlphacharacter()) {
+    while (isAnycase()) {
       value += pop();
     }
     if (isDigit()) // if digit comes after the alphacharacters, it must be a
@@ -191,14 +193,17 @@ public class Scanner {
 
   }
 
-  public Token scanVar() {
+  public Token scanVar() throws Exception {
     // called when token starts with $
     String value = "";
     pop(); // remove initial $
-    while (isAlphacharacter()) {
+    while (isAnycase()) {
       value += pop();
     }
-    return new Token(Type.VAR, value, line, offset);
+    if (value.length() > 0)
+      return new Token(Type.VAR, value, line, offset);
+    else
+      throw new Exception("Undefined token " + value);
   }
 
   public Token scanOperator() throws Exception {
@@ -238,7 +243,6 @@ public class Scanner {
           return new Token(Type.PATTERNOP, line, offset);
         case "|":
           return new Token(Type.PATTERN_OPERATOR, "or_op", line, offset);
-          //Hvad er det for en OR operator?! Har vi to forskellige OR?
         case "#":
           return new Token(Type.LAMBDABEGIN, line, offset);
         case "=>":
