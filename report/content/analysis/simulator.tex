@@ -1,31 +1,136 @@
-\section{Simulator}
-Considering the fact that board games consist of physical entities in the real world and rely purely on user-interaction, we find it necessary to analyze how we can emulate this behavior. To do this, we look at what a simulator is and could be, then what we can use it for, and finally \todo{Finish referring to other sub-sections}.
+<<<<<<< HEAD
+\section{Simulator} Considering the fact that board games consist of
+physical entities in the real world and rely purely on user-to-game
+and user-to-user interaction, we find it necessary to analyze how we
+can emulate this behavior in the most ``realistic'' way. To do this,
+we look at what a simulator is and could be, then what we can use it
+for, setting up some features an optimal simulator for our programming
+language would include, ending with a final definition of our simulator.
 
-So what is a simulator and what does it consist of? A simulator can be seen as a front end to an interpreter, or a compiler, which isn't as practical. It is the glue between the user and code execution. A user interacts with the simulator, which in turn interprets the user's input and does something with it, such as updating a graphical user interface or  \todo{finish}
+So what is a simulator and what does it consist of? A simulator can
+be seen as a front end to an interpreter (or a compiler, though not
+as practical). It can be seen as the glue between the user and code
+execution. A user interacts with the simulator, which in turn interprets
+the user's input and does something with it, such as updating a
+graphical user interface or supplying some other kind of feedback.
+Whether the simulator periodically compiles the code, interprets it
+directly, or an entirely third option, can be hard to know. We show an
+example to help shape our definition of a simulator.
 
-We see the need for a simple simulator because board games consist of so much interactivity between the players and the board that we need to mimic it.
+Examples of simulators are seen in various different contexts, such as
+the Ruby\cite{rubyLang} programming language's interactive shell $irb$,
+which is run from the command line and allows programmers to interact,
+experiment, and write code with immediate response, calling Ruby's
+interpreter upon every command entered. The $irb$ keeps track of all
+current code entered, allowing programmers to write an entire program in
+$irb$. Another example could be Adobe\textsuperscript{\textregistered}
+Photoshop\textsuperscript{\textregistered}, which takes as input a
+picture file, provides high level tools for the user to modify the
+picture in many different ways, and then allows saving of the picture
+again to a newly formed file with the edits in place.
 
-Examples of simulators are seen in various different contexts, such as the programming language Ruby's \cite{rubyLang} interactive shell, or $irb$, which is run from the command line and allows programmers to interact, experiment, and write code with immediate response, calling Ruby's interpreter upon every command entered.
+\subsection{Usage} We see the need for a simple simulator because board
+games consist of so much interactivity between the players and the
+board, that we need to mimic it. Nobody wants to sit and play noughts
+and crosses in front of a terminal; that's both awkward and impractical.
+Therefore we see the simulator playing a crucial role as the engine that
+drives the graphics and gameplay of a written game - in part being a
+front end to everything in the interpretation/compilation phases.
 
+A board game designer could program his game in \productname{} and see
+it displayed with the current implementation fully working and playable
+on the screen in a matter of a few clicks after he's written the game,
+of course. Another advantage with having such a simulator is that it can
+be used to prototype games before they physically need to be produced.
+It will allow quickly changing the game rules and board layout, etc.\
+and support experimentation with different setups.
 
-\subsection{Usage}
+Another, more simple version of the simulator directed at the end users
+can be used to merely play the games. All they would have to do is open
+a game file in the simulator or set the simulator as the default program
+for game files written in our language. This is useful for games that
+don't necessarily need a physical version.
 
-%Why should we spend time on a simulator?
+\subsection{Possible features} We decide that creating a set of
+potential features our simulator will also be useful when it comes to
+designing the programming language, as these features can influence
+the syntax and semantics of \productname{}. Described below are some
+descriptions of possible features we deem important for the simulator to
+offer.
 
+\begin{description}
 
-\subsection{Possible features}
-With the above requirements settled and a simulator described, we are now able to see what we can use it for, when it comes to playing games.
+  \item[Interactive design] As a board game designer, it could be
+possible to quickly change pieces around and edit things directly from
+the interface. This could influence the written code and create a new
+game based off of the old one, much like Photoshop mentioned previously.
+An alternative option would be to dynamically reload the inputted file
+if it is changed from an external source, allowing quick feedback if
+you're just editing a few lines in the game's source code.
 
-%Possible features
-%  - If you're prototyping your board game idea, quickly changing pieces around and editing things could be possible from the interface.
-%  - This could then be exported to a new version of the game that can be played ono ther computers
-%  - Automatic AI support
-%  - Multi-player support, either via the same computer or on a network
-%    - This could replace computer players with real players
-%    - Network support, i.e. sending player commands to others,
+  \item[Loading pictures] Pieces and illustrations of various entities
+in the game can be automatically found and determined from their names
+definitions in a \productname{}-file. This lets the designer think about
+writing the game and not how to load specific files from a directory and
+so on, easily influencing cluttered code.
 
-We define a simulator as the front-end to an interpreter that is in direct contact with the users of our programming language. It can support many different features and could allow changes to be made as the user notices something that needs to be changed. The simulator sends commands to the interpreter and responds to the commands returned from it. An example of this could be that the user clicks and drags on a Knight in chess, moving it to another position on the game board. The simulator would send this behavior to the interpreter, which checks it against the game's source code to see if the move itself is legal, and also any side-effects this move could have, such as eliminating an opposing player's piece.
+  \item[AI] As long as the code and game rules are well defined, an
+automatic AI could be implemented as a module in the simulator to
+simulate other players following the exact same set of rules, allowing
+the designer to test his entire game or parts of it without constantly
+needing other people. This could be very interesting, but unfortunately
+is out of the scope of this project.
 
-Considering the fact that most board games are very visual and consist of different kinds of pieces placed at different locations on a board, we conclude that we need a simulator. This simulator needs to be very graphical and consist of all the things a normal board game session would, such as a board, pieces, rules for moving pieces, multiple players, and so on. This is an attempt at making playing a game as authentic as possible.
+  \item[Multi-player] Multi-player support using the same computer
+or over a network. Each real player could take turns sitting at a
+physical computer, replacing non-existent players or computer-controlled
+players. As long as the simulator is implemented optimally, supporting
+multi-player games should be considerably simple, as the simulator
+needs to handle commands from a single player anyway. Scaling this up
+and handling multiple turns from multiple players shouldn't be too much
+of a challenge. A better, yet not always more practical solution is to
+allow players to play against each other across a network. Sending turn
+commands back and forth could be established via a simple protocol.
 
-Another advantage with having such a simulator, is that it can be used to prototype games before they physically need to be produced. It will allow quickly changing the game rules and board layout, etc.\ and support experimentation with these things.
+  \item[Tracking moves] The simulator could offer a simple turn list
+displaying all the previous moves in the board game. Then it'd be
+possible to go back to a specific turn to ``rewind'' the game to a
+previous state. \end{description}
+
+These features could easily influence the syntax of our programming
+language. There could be specific reserved constructs to determine
+how the board and players are defined, making the simulator's job at
+displaying things easier.
+
+\subsection{Definition} We define a simulator as a package consisting
+of the language's interpreter/compiler and a GUI that is in direct
+contact with the users of our programming language. Whether these
+users are designers or players is irrelevant, as different versions of
+the simulator could easily be written. It can support many different
+features and could allow changes to be made as the user notices
+something that needs to be changed. The simulator sends commands to the
+interpreter/compiler and responds to the commands returned from it, such
+as updating a score, changing the position of a piece, or displaying an
+error message upon an attempt at an illegal move.
+
+An example of this could be that the user clicks and drags on a knight
+in an implementation of chess, moving it to another position on the game
+board. The simulator would send this behavior to the interpreter or
+compiler, which checks it against the game's source code to see if the
+move itself is legal, and also any side-effects this move could have,
+such as eliminating an opposing player's piece.
+
+We see spending time on writing a simulator useful because it links
+all the different stages together and will act as the final product
+package containing all the other parts of the project. That said, it'd
+be ideal to separate the interpreter/compiler and simulator, allowing
+greater modularity if the interpreter/compiler is to be used in another
+implementation of a simulator or something entirely different.
+
+Considering the fact that most board games are very visual and consist
+of different kinds of pieces placed at different locations on a board,
+we conclude that we need a simulator. This simulator needs to be
+graphical and support all the things a normal board game session would,
+such as a board, pieces, rules for moving pieces, multiple players, and
+so on. It would also help make testing and playing games as authentic as
+possible.
