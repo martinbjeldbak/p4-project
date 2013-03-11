@@ -23,7 +23,7 @@ public class AstNode implements Iterable<AstNode> {
     //Patterns
     PATTERN, PATTERN_EXPR, PATTERN_VAL, PATTERN_CHECK,
     // Special
-    VARLIST,
+    VARLIST, NOT_OPERATOR,
   }
   
   public Type type;
