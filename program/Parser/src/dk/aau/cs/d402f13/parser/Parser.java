@@ -66,26 +66,36 @@ public class Parser {
   }
 
   private boolean lookAheadLiteral() {
-    return lookAhead(Token.Type.INT_LIT) || lookAhead(Token.Type.DIR_LIT)
-        || lookAhead(Token.Type.COORD_LIT) || lookAhead(Token.Type.STRING_LIT);
+    return lookAhead(Token.Type.INT_LIT)
+        || lookAhead(Token.Type.DIR_LIT)
+        || lookAhead(Token.Type.COORD_LIT)
+        || lookAhead(Token.Type.STRING_LIT);
   }
 
   private boolean lookAheadElement() {
-    return lookAheadLiteral() || lookAhead(Token.Type.LPAREN)
-        || lookAhead(Token.Type.VAR) || lookAhead(Token.Type.LBRACKET)
-        || lookAhead(Token.Type.PATTERNOP) || lookAhead(Token.Type.KEYWORD)
+    return lookAheadLiteral()
+        || lookAhead(Token.Type.LPAREN)
+        || lookAhead(Token.Type.VAR)
+        || lookAhead(Token.Type.LBRACKET)
+        || lookAhead(Token.Type.PATTERNOP)
+        || lookAhead(Token.Type.KEYWORD)
         || lookAhead(Token.Type.ID);
   }
 
   private boolean lookAheadExpression() {
-    return lookAhead(Token.Type.FUNCTION) || lookAheadElement()
-        || lookAhead(Token.Type.IF) || lookAhead(Token.Type.LAMBDABEGIN);
+    return lookAhead(Token.Type.FUNCTION)
+        || lookAheadElement()
+        || lookAhead(Token.Type.IF)
+        || lookAhead(Token.Type.LAMBDABEGIN);
   }
   
   private boolean lookAheadPatterValue(){
-    return(lookAhead(Token.Type.DIR_LIT) || lookAhead(Token.Type.VAR)
-    || lookAhead(Token.Type.PATTERN_KEYWORD) || lookAhead(Token.Type.ID)
-    || lookAhead(Token.Type.NOTOP) || lookAhead(Token.Type.LPAREN));
+    return lookAhead(Token.Type.DIR_LIT)
+        || lookAhead(Token.Type.VAR)
+        || lookAhead(Token.Type.PATTERN_KEYWORD)
+        || lookAhead(Token.Type.ID)
+        || lookAhead(Token.Type.NOTOP)
+        || lookAhead(Token.Type.LPAREN);
   }
 
   // PROGRAM STRUCTURE
