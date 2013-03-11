@@ -1,12 +1,7 @@
-define isSecure[$square$derp] ( !checkPieces[([$piece] => isFoe[$piece] and hasMove[$piece $square])] )
+define isSecure[$square$derp] ( not checkPieces[((#[$piece] => isFoe[$piece]) and hasMove[$piece $square])] )
 
 define slide[ $pattern ]
 	( findSquares[ /this ($pattern empty)* $pattern !friend/ ] )
-
-move[ this [ A2 A4 ] ]
-moveAndCapture[ this [A2 A4] ]
-
-multiple[ (move[ this A4 ]) (move[ King [A8] ]) ]
 
 define toActions[ $list ]
 	(forall[ $list 
@@ -51,7 +46,7 @@ game {
 	piece {
 		name Pawn
 		possibleMoves toActions[
-			if isCurrentPlayer[White] then 	
+			(if isCurrentPlayer[White] then 	
 				if isFirstMove[this] then	
 					findSquares[ /this (n empty)2 / ]
 				else 
@@ -64,26 +59,26 @@ game {
 					findSquares[ /this (s empty)2 / ]
 				else 
 					union[
-						findSquares[ /this s empty/ ]
-						findSquares[ /this (se|sw) foe/ ]
+						(findSquares[ /this s empty/ ])
+						(findSquares[ /this (se|sw) foe/ ])
 					]
-		]
+		)]
 	}
 	piece {
 		name Rook
 		possibleMoves toActions[ 
-			union[
+			(union[
 				(slide[ /n/ ])
 				(slide[ /w/ ])
 				(slide[ /s/ ])
 				(slide[ /e/ ])
-			]
+			])
 		]
 	}
 	piece {
 		name Knight
 		possibleMoves toActions[
-			union[
+			(union[
 				(findSquares[ /this n+ne !friend/ ])
 				(findSquares[ /this n+nw !friend/ ])
 				(findSquares[ /this s+se !friend/ ])
@@ -92,24 +87,24 @@ game {
 				(findSquares[ /this e+se !friend/ ])
 				(findSquares[ /this w+nw !friend/ ])
 				(findSquares[ /this w+sw !friend/ ])
-			]
+			])
 		]
 	}
 	piece {
 		name Bishop
 		possibleMoves toActions[
-			union[
+			(union[
 				(slide[ /ne/ ])
 				(slide[ /nw/ ])
 				(slide[ /se/ ])
 				(slide[ /sw/ ])
-			]
+			])
 		]
 	}
 	piece {
 		name Queen
 		possibleMoves toActions[
-			union[
+			(union[
 				(slide[ /ne/ ])
 				(slide[ /nw/ ])
 				(slide[ /se/ ])
@@ -118,20 +113,20 @@ game {
 				(slide[ /e/ ])
 				(slide[ /s/ ])
 				(slide[ /w/ ])
-			]
+			])
 		]
 	}
 	piece {
 		name King
 		possibleMoves toActions[
-			union[
+			(union[
 				(findSquares[/this (e|n|s|w) !friend/])
 				(findSquares[/this (ne|nw|se|sw) !friend/])
-			]
+			])
 		]
 	}
 	winCondition (
-		findSquares[/King !isSecure/] // questionable!	
-	)
+ 		findSquares[/King !isSecure/] // questionable!	
+   )
 }
 
