@@ -12,7 +12,7 @@ On the other hand knowing the specific platform makes it possible to create opti
 
 Instead of compiling to native machine code, it could be compiled to an intermediate format such as Java bytecode which is supported on many platforms.
 While Java bytecode is interpreted and therefore slower, modern interpreters uses sophisticated methods such as Just-In-Time compilation (JIT) which recompiles it into native machine code. 
-This process of course adds an overhead, however the speed differences are not that great anymore. \todo{ find some references and example numbers}
+This process of course adds an overhead, however the speed differences are not that great anymore\cite{java-speed}.
 
 \subsection{Interpretation}
 An interpreter takes the original source code directly to parse and execute it in one step.
@@ -43,22 +43,26 @@ It is possible to achieve this using compilation too.
 The game could be compiled to a plug-in, which the engine loads dynamically.
 
 \subsection{Security}
-Compiling makes it possible to create trojan horses, which are programs that appears to do something for the user, but which executes malicious actions behind the users back. 
-Even if it is not possible to produce malicious code in \productname{}, code could be injected into the resulting executable.
+When compiling to a native instruction set, we have access to every instruction on that platform, also potentially unsafe instructions.
+Even though our language does not include features which makes use of those instructions, it is possible to use code injection on the compiled code to make it execute any code.
+This way you could create a trojan horse, which appears to be a normal game but might do malicious actions in the background.
+For example, it could randomly delete files from the users document folder each time he won.
 
-With interpretation we define ourselves which actions exists and therefore can chose only to include actions which we know are safe. 
-Even if we decide to allow certain questionable actions, since it is not executed directly on the CPU and instead goes through our interpreter, we can provide a sand-boxed environment which restricts the actions to only allow a safe subset. For example, we might provide access to the file system, but only allow file deletion in the games own directory.
-
-fixing security holes with faster updates
-
-interpretor increases codebase
+With interpretation we define ourselves which instructions exists and therefore can chose only to include instructions which we know are safe.
+Even if we decide to allow certain questionable actions, since it is not executed directly on the CPU and instead goes through our interpreter, we can provide a sand-boxed environment which restricts the actions to only allow a safe subset. 
+For example, we might provide access to the file system, but only allow file deletion in the games own directory.
 
 \subsection{Intermediate format}
-possible slight performance improvement
+A middle step between compiling and interpretation is to compile to a intermediate format which is then interpreted. 
+The intermediate language could be more low-level which would make it possible to optimize the code for higher efficiency.
 
-high-level vs low-level
+The intermediate format could be stored as an archive file which contains not only the code, but also sounds, images and other resources required to play the game.
+This would allow for easy distribution of a game in \productname{}.
+The source code would not be available like with a compiled game, however a package format could allow to optionally include the original source if the developer wants to share.
 
-package format, combining sound, images and code (possible also source code when requested)
+Using an intermediate format however means that you need to create a compiler, an interpreter and the intermediate language, which in turn is a significant larger amount of work.
 
 \subsection{Summery}
-
+A compiler can make faster code, however an interpreter allows us to fine-tune security considerations. 
+Separating the game engine and game code gives a significant improvement for both methods.
+Creating an intermediate language can give some advantages over a purely interpreted language, however it also requires more work to develop.
