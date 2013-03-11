@@ -22,11 +22,46 @@ adds the next input symbol into a buffer for consideration. The reduce action re
 of nonterminals and terminals into a nonterminal by reversing a production. These two actions are
 continously called until the input string is reduced to the start symbol. 
 cite{http://stackoverflow.com/questions/5975741/what-is-the-difference-between-ll-and-lr-parsing}.
-An example of a LR(2)-parser and LL(1)-parser in action can be seen in table \ref{table:}.  
+An example of a LR(2)-parser and LL(1)-parser in action can be seen in table \ref{table:LL(1)} and 
+table \ref{table:LR(2)}.  
+
+\begin{center}
+    \begin{tabular}{| l | l | l | l |}                             \hline
+      & Production & Input      & Action                        \\ \hline
+    1 & S          & int + int  & Predict S $\rightarrow$ E     \\ 
+    2 & E          & int + int  & Predict E $\rightarrow$ T + E \\ 
+    3 & T + E      & int + int  & Predict T $\rightarrow$ int   \\
+    4 & int + E    & int + int  & Match int                     \\ 
+    5 & + E        & + int      & Match +                       \\ 
+    6 & E          & int        & Predict E $\rightarrow$ T     \\ 
+    7 & T          & int        & Predict T $\rightarrow$ int   \\
+    8 & int        & int        & Match int                     \\ 
+      &            &            & Accept                        \\ \hline
+    \end{tabular}
+    \label{table:LL(1)}
+\end{center}
+
+\begin{center}
+    \begin{tabular}{| l | l | l | l |}                              \hline
+      & Workspace  & Input      & Action                         \\ \hline
+    1 &            & int + int  & Shift                          \\ 
+    2 & int        & + int      & Reduce T $\rightarrow$ int     \\ 
+    3 & T          & + int      & Shift                          \\
+    4 & T +        & int        & Shift                          \\ 
+    5 & T + int    &            & Reduce T $\rightarrow$ int     \\ 
+    6 & T + T      &            & Reduce E $\rightarrow$ T       \\ 
+    7 & T + E      &            & Reduce E $\rightarrow$ T + E   \\
+    8 & E          &            & Reduce S $\rightarrow$ E       \\ 
+      & S          &            & Accept                         \\ \hline
+    \end{tabular}
+    \label{table:LR(2)}
+\end{center}
 
 Compared to the LR-parser, the LL-parsers are much easier to write by hand and understand. They
 are not as powerfull as the LR-parsers in the sense that they do not accept as many grammars, and
 the LR-parser are generally parsing faster. ****** KILDER og flere sammenligninger følger *******
+
+
 
 
 
