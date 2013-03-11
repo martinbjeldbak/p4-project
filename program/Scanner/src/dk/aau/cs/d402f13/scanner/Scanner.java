@@ -115,17 +115,23 @@ public class Scanner {
     switch (t.value) {
       // Keywords
       case "define":
-        return token(Type.DEFINE);
+        t.type = Type.DEFINE;
+        break;
       case "if":
-        return token(Type.IF);
+        t.type = Type.IF;
+        break;
       case "then":
-        return token(Type.THEN);
+        t.type = Type.THEN;
+        break;
       case "else":
-        return token(Type.ELSE);
+        t.type = Type.ELSE;
+        break;
       case "game":
-        return token(Type.GAME);
+        t.type = Type.GAME;
+        break;
       case "this":
-        return token(Type.THIS);
+        t.type = Type.THIS;
+        break;
       case "width":
       case "height":
       case "title":
@@ -149,7 +155,8 @@ public class Scanner {
         t.type = Token.Type.OPERATOR;
         break;
       case "not":
-        return token(Type.NOT_OPERATOR);
+        t.type = Token.Type.NOT_OPERATOR;
+        break;
       // Pattern keywords
       case "foe":
       case "friend":
@@ -217,17 +224,23 @@ public class Scanner {
     pop();
     switch (c) { // these operators are unambiguous
       case '[':
-        return token(Type.LBRACKET);
+        t.type = Type.LBRACKET;
+        break;
       case ']':
-        return token(Type.RBRACKET);
+        t.type = Type.RBRACKET;
+        break;
       case '{':
-        return token(Type.LBRACE);
+        t.type = Type.LBRACE;
+        break;
       case '}':
-        return token(Type.RBRACE);
+        t.type = Type.RBRACE;
+        break;
       case '(':
-        return token(Type.LPAREN);
+        t.type = Type.LPAREN;
+        break;
       case ')':
-        return token(Type.RPAREN);
+        t.type = Type.RPAREN;
+        break;
       case '!':
       case '+':
       case '-':

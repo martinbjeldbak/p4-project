@@ -387,23 +387,25 @@ public class Parser {
     while (true) {
       line = br.readLine();
       if (line == null) { return; }
+      line = line.replace('\t', ' ');
       switch (line) {
       case ":q":
         System.exit(0);
         break;
       case ":p":
-        ByteArrayInputStream bais = new ByteArrayInputStream(
-            input.getBytes("UTF-8"));
-        Scanner s = new Scanner(bais);
-        LinkedList<Token> tokens = new LinkedList<Token>();
-        Token t;
-        System.out.println("Scanning...");
-        while ((t = s.scan()).type != Token.Type.EOF) {
-          tokens.add(t);
-        }
-        System.out.println("Parsing...");
-        Parser p = new Parser();
         try {
+          ByteArrayInputStream bais = new ByteArrayInputStream(
+            input.getBytes("UTF-8")
+          );
+          Scanner s = new Scanner(bais);
+          LinkedList<Token> tokens = new LinkedList<Token>();
+          Token t;
+          System.out.println("Scanning...");
+          while ((t = s.scan()).type != Token.Type.EOF) {
+            tokens.add(t);
+          }
+          System.out.println("Parsing...");
+          Parser p = new Parser();
           AstNode ast = p.parse(tokens);
           ast.print();
           OutputStreamWriter f = new OutputStreamWriter(new FileOutputStream(
