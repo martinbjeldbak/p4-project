@@ -94,9 +94,7 @@ public class Parser {
     while (lookAhead(Token.Type.DEFINE)) {
       root.addChild(functionDefinition());
     }
-    if (lookAhead(Token.Type.GAME)) {
-      root.addChild(gameDecleration());
-    }
+    root.addChild(gameDecleration());
 
     return root;
   }
@@ -174,7 +172,7 @@ public class Parser {
       node.addChild(expression());
     }
     else throw new SyntaxError("Unexpected token " + nextToken.type
-          + ", expected one or more declerations", null);
+          + ", expected one or more declerations", nextToken);
     return node;
   }
 
@@ -200,7 +198,7 @@ public class Parser {
       node.addChild(lambdaExpression());
     }
     else throw new SyntaxError("Unexpected token " + nextToken.type
-          + ", expected an expression.", null);
+          + ", expected an expression.", nextToken);
 
     return node;
   }
@@ -247,7 +245,7 @@ public class Parser {
       node.addChild(astNode(Type.ID, currentToken.value));
     }
     else throw new SyntaxError("Unexpected token " + nextToken.type
-          + ", expected an element.", null);
+          + ", expected an element.", nextToken);
 
     return node;
   }
