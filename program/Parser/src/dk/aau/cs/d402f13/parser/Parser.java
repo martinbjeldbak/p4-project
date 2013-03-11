@@ -9,7 +9,8 @@ import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 import dk.aau.cs.d402f13.parser.AstNode.Type;
 import dk.aau.cs.d402f13.scanner.Scanner;
-import dk.aau.cs.d402f13.scanner.Token;
+import dk.aau.cs.d402f13.utilities.Token;
+import dk.aau.cs.d402f13.utilities.errors.SyntaxError;
 
 public class Parser {
   private LinkedList<Token> tokens;
@@ -32,15 +33,21 @@ public class Parser {
     return false;
   }
 
+  private SyntaxError unexpectedError(String expected) {
+    if (nextToken == null) {
+      if (currentToken != null) {
+        return new SyntaxError("Unexpected end of file, expected " + expected, currentToken);
+      }
+      return new SyntaxError("Unexpected end of file, expected " + expected, null);
+    }
+    return new SyntaxError("Unexpected token " + nextToken.type + ", expected " + expected, nextToken);
+  }
+  
   private Token expect(Token.Type type) throws SyntaxError {
     if (accept(type)) { 
       return currentToken; 
     }
-    if (nextToken == null) { 
-      throw new SyntaxError("Empty token stream, expected " + type, null); 
-    }
-    throw new SyntaxError("Unexpected token " + nextToken.type + ", expected "
-        + type, nextToken);
+    throw unexpectedError(type.toString());
   }
 
   private AstNode astNode(Type type, String value) {
@@ -79,6 +86,7 @@ public class Parser {
         || lookAhead(Token.Type.LBRACKET)
         || lookAhead(Token.Type.PATTERNOP)
         || lookAhead(Token.Type.KEYWORD)
+        || lookAhead(Token.Type.THIS)
         || lookAhead(Token.Type.ID);
   }
 
@@ -94,7 +102,7 @@ public class Parser {
         || lookAhead(Token.Type.VAR)
         || lookAhead(Token.Type.PATTERN_KEYWORD)
         || lookAhead(Token.Type.ID)
-        || lookAhead(Token.Type.NOTOP)
+        || lookAhead(Token.Type.NOTOP)  
         || lookAhead(Token.Type.LPAREN);
   }
 
@@ -142,11 +150,7 @@ public class Parser {
   private AstNode declerationStruct() throws SyntaxError {
     AstNode node = astNode(Type.DECL_STRUCT, "");
     expect(Token.Type.LBRACE);
-    if (lookAhead(Token.Type.KEYWORD) || lookAhead(Token.Type.ID)) {
-      node.addChild(decleration());
-    }
-    else throw new SyntaxError("Unexpected token " + nextToken.type
-          + ", expected one or more declerations", null);
+    node.addChild(decleration());
     while (lookAhead(Token.Type.KEYWORD) || lookAhead(Token.Type.ID)) {
       node.addChild(decleration());
     }
@@ -157,16 +161,13 @@ public class Parser {
 
   private AstNode decleration() throws SyntaxError {
     AstNode node = astNode(Type.DECL, "");
-    if (lookAhead(Token.Type.KEYWORD)) {
-      expect(Token.Type.KEYWORD);
+    if (accept(Token.Type.KEYWORD)) {
       node.addChild(astNode(Type.KEYWORD, currentToken.value));
     }
-    else if (lookAhead(Token.Type.ID)) {
+    else {
       expect(Token.Type.ID);
       node.addChild(astNode(Type.ID, currentToken.value));
     }
-    else throw new SyntaxError("Unexpected token " + nextToken.type
-          + ", expected a keyword or an identifier.", null);
 
     node.addChild(structure());
 
@@ -178,11 +179,9 @@ public class Parser {
     if (lookAhead(Token.Type.LBRACE)) {
       node.addChild(declerationStruct());
     }
-    else if (lookAheadExpression()) {
+    else {
       node.addChild(expression());
     }
-    else throw new SyntaxError("Unexpected token " + nextToken.type
-          + ", expected one or more declerations", nextToken);
     return node;
   }
 
@@ -192,14 +191,22 @@ public class Parser {
     if (lookAhead(Token.Type.FUNCTION)) {
       node.addChild(functionCall());
     }
+    else if (accept(Token.Type.NOT_OPERATOR)) {
+      AstNode operation = astNode(Type.NOT_OPERATOR, "");
+      operation.addChild(expression());
+      node.addChild(operation);
+    }
     else if (lookAheadElement()) {
-      node.addChild(element());
-      if (lookAhead(Token.Type.OPERATOR)) {
-        expect(Token.Type.OPERATOR);
-        node.addChild(astNode(Type.OPERATOR, currentToken.value));
-        node.addChild(expression());
+      AstNode element = element();
+      if (accept(Token.Type.OPERATOR)) {
+        AstNode operation = astNode(Type.OPERATOR, currentToken.value);
+        operation.addChild(element);
+        operation.addChild(expression());
+        node.addChild(operation);
       }
-      else return node;
+      else {
+        node.addChild(element);
+      }
     }
     else if (lookAhead(Token.Type.IF)) {
       node.addChild(ifExpression());
@@ -207,21 +214,20 @@ public class Parser {
     else if (lookAhead(Token.Type.LAMBDABEGIN)) {
       node.addChild(lambdaExpression());
     }
-    else throw new SyntaxError("Unexpected token " + nextToken.type
-          + ", expected an expression.", nextToken);
+    else {
+      throw unexpectedError("an expression");
+    }
 
     return node;
   }
 
   private AstNode element() throws SyntaxError {
     AstNode node = astNode(Type.ELEM, "");
-    if (lookAhead(Token.Type.LPAREN)) {
-      expect(Token.Type.LPAREN);
+    if (accept(Token.Type.LPAREN)) {
       node.addChild(expression());
       expect(Token.Type.RPAREN);
     }
-    else if (lookAhead(Token.Type.VAR)) {
-      expect(Token.Type.VAR);
+    else if (accept(Token.Type.VAR)) {
       node.addChild(astNode(Type.VAR, currentToken.value));
     }
     else if (lookAhead(Token.Type.LBRACKET)) {
@@ -230,32 +236,30 @@ public class Parser {
     else if (lookAhead(Token.Type.PATTERNOP)) {
       node.addChild(pattern());
     }
-    else if (lookAhead(Token.Type.KEYWORD)) {
-      expect(Token.Type.KEYWORD);
+    else if (accept(Token.Type.KEYWORD)) {
       node.addChild(astNode(Type.KEYWORD, currentToken.value));
     }
-    else if (lookAhead(Token.Type.DIR_LIT)) {
-      expect(Token.Type.DIR_LIT);
+    else if (accept(Token.Type.THIS)) {
+      node.addChild(astNode(Type.KEYWORD, "this"));
+    }
+    else if (accept(Token.Type.DIR_LIT)) {
       node.addChild(astNode(Type.DIR_LIT, currentToken.value));
     }
-    else if (lookAhead(Token.Type.COORD_LIT)) {
-      expect(Token.Type.COORD_LIT);
+    else if (accept(Token.Type.COORD_LIT)) {
       node.addChild(astNode(Type.COORD_LIT, currentToken.value));
     }
-    else if (lookAhead(Token.Type.INT_LIT)) {
-      expect(Token.Type.INT_LIT);
+    else if (accept(Token.Type.INT_LIT)) {
       node.addChild(astNode(Type.INT_LIT, currentToken.value));
     }
-    else if (lookAhead(Token.Type.STRING_LIT)) {
-      expect(Token.Type.STRING_LIT);
+    else if (accept(Token.Type.STRING_LIT)) {
       node.addChild(astNode(Type.STRING_LIT, currentToken.value));
     }
-    else if (lookAhead(Token.Type.ID)) {
-      expect(Token.Type.ID);
+    else if (accept(Token.Type.ID)) {
       node.addChild(astNode(Type.ID, currentToken.value));
     }
-    else throw new SyntaxError("Unexpected token " + nextToken.type
-          + ", expected an element.", nextToken);
+    else {
+      throw unexpectedError("an element");
+    }
 
     return node;
   }
@@ -317,17 +321,8 @@ public class Parser {
   private AstNode patternExpression() throws SyntaxError {
     AstNode node = astNode(Type.PATTERN_EXPR, "");
     node.addChild(patternValue());
-    if (lookAhead(Token.Type.MULTOP)) {
-      expect(Token.Type.MULTOP);
-      node.addChild(astNode(Type.MULT_OP, currentToken.value));
-    }
-    else if (lookAhead(Token.Type.QUESTOP)) {
-      expect(Token.Type.QUESTOP);
-      node.addChild(astNode(Type.QUEST_OP, currentToken.value));
-    }
-    else if (lookAhead(Token.Type.PLUSOP)) {
-      expect(Token.Type.PLUSOP);
-      node.addChild(astNode(Type.PLUS_OP, currentToken.value));
+    if (accept(Token.Type.PATTERN_OPERATOR)) {
+      node.addChild(astNode(Type.PATTERN_OPERATOR, currentToken.value));
     }
 
     return node;
@@ -335,33 +330,32 @@ public class Parser {
 
   private AstNode patternValue() throws SyntaxError {
     AstNode node = astNode(Type.PATTERN_VAL, "");
-    if (lookAhead(Token.Type.DIR_LIT)) {
-      expect(Token.Type.DIR_LIT);
+    if (accept(Token.Type.DIR_LIT)) {
       node.addChild(astNode(Type.DIR_LIT, currentToken.value));
     }
-    else if (lookAhead(Token.Type.VAR)) {
-      expect(Token.Type.VAR);
+    else if (accept(Token.Type.VAR)) {
       node.addChild(astNode(Type.VAR, currentToken.value));
     }
     else if (lookAhead(Token.Type.PATTERN_KEYWORD) || lookAhead(Token.Type.THIS) || lookAhead(Token.Type.ID)) {
       node.addChild(patternCheck());
     }
-    else if (lookAhead(Token.Type.NOTOP)) {
-      expect(Token.Type.NOTOP);
+    else if (accept(Token.Type.NOTOP)) {
       node.addChild(patternCheck());
     }
-    else if (lookAhead(Token.Type.LPAREN)) {
-      expect(Token.Type.LPAREN);
+    else if (accept(Token.Type.LPAREN)) {
       node.addChild(patternExpression());
+      while (!lookAhead(Token.Type.RPAREN)) {
+        node.addChild(patternExpression());
+      }
       expect(Token.Type.RPAREN);
       if (lookAhead(Token.Type.INT_LIT)) {
         expect(Token.Type.INT_LIT);
         node.addChild(astNode(Type.INT_LIT, currentToken.value));
       }
     }
-    else throw new SyntaxError("Unexpected token " + nextToken.type
-          + ", expected a pattern value.", nextToken);
-
+    else {
+      throw unexpectedError("a pattern value");
+    }
     return node;
   }
 
@@ -379,8 +373,9 @@ public class Parser {
       expect(Token.Type.ID);
       node.addChild(astNode(Type.ID, currentToken.value));
     }
-    else throw new SyntaxError("Unexpected token " + nextToken.type
-          + ", expected a pattern operator or an identifier.", null);
+    else {
+      throw unexpectedError("a pattern operator or an identifier");
+    }
 
     return node;
   }
@@ -392,23 +387,25 @@ public class Parser {
     while (true) {
       line = br.readLine();
       if (line == null) { return; }
+      line = line.replace('\t', ' ');
       switch (line) {
       case ":q":
         System.exit(0);
         break;
       case ":p":
-        ByteArrayInputStream bais = new ByteArrayInputStream(
-            input.getBytes("UTF-8"));
-        Scanner s = new Scanner(bais);
-        LinkedList<Token> tokens = new LinkedList<Token>();
-        Token t;
-        System.out.println("Scanning...");
-        while ((t = s.scan()).type != Token.Type.EOF) {
-          tokens.add(t);
-        }
-        System.out.println("Parsing...");
-        Parser p = new Parser();
         try {
+          ByteArrayInputStream bais = new ByteArrayInputStream(
+            input.getBytes("UTF-8")
+          );
+          Scanner s = new Scanner(bais);
+          LinkedList<Token> tokens = new LinkedList<Token>();
+          Token t;
+          System.out.println("Scanning...");
+          while ((t = s.scan()).type != Token.Type.EOF) {
+            tokens.add(t);
+          }
+          System.out.println("Parsing...");
+          Parser p = new Parser();
           AstNode ast = p.parse(tokens);
           ast.print();
           OutputStreamWriter f = new OutputStreamWriter(new FileOutputStream(
@@ -423,13 +420,16 @@ public class Parser {
           }
           else {
             System.err.println("Syntax error: " + e.getMessage()
-                + " on input line " + e.getToken().line + " offset "
-                + e.getToken().offset + ":");
-            System.err.println(input.split("\n")[e.getToken().line - 1]);
-            for (int i = 1; i < e.getToken().offset; i++) {
-              System.err.print("-");
+                + " on input line " + e.getLine() + " column "
+                + e.getColumn() + ":");
+            String[] lines = input.split("\n");
+            if (lines.length >= e.getLine()) {
+              System.err.println(lines[e.getLine() - 1]);
+              for (int i = 1; i < e.getColumn(); i++) {
+                System.err.print("-");
+              }
+              System.err.println("^");
             }
-            System.err.println("^");
           }
         }
         input = "";
