@@ -133,6 +133,8 @@ public class Scanner {
       return new Token(Type.OPERATOR, "and", line, offset);
     case "or":
       return new Token(Type.OPERATOR, "or", line, offset);
+    case "not":
+      return new Token(Type.NOT_OPERATOR, "not", line, offset);
       // Pattern keywords
     case "foe":
       return new Token(Type.PATTERN_KEYWORD, "foe", line, offset);
@@ -207,49 +209,50 @@ public class Scanner {
   }
 
   public Token scanOperator() throws Exception {
-    String value = "";
-    while (isOperator()) {
-      value += pop();
-      if (value.length() == 2 && value.equals("//")) {
-        while (!isEol()) {
-          pop();
+    char c = pop();
+    switch (c) { // these operators are unambiguous
+      case '[':
+        return new Token(Type.LBRACKET, line, offset);
+      case ']':
+        return new Token(Type.RBRACKET, line, offset);
+      case '{':
+        return new Token(Type.LBRACE, line, offset);
+      case '}':
+        return new Token(Type.RBRACE, line, offset);
+      case '(':
+        return new Token(Type.LPAREN, line, offset);
+      case ')':
+        return new Token(Type.RPAREN, line, offset);
+      case '!':
+        return new Token(Type.NOTOP, line, offset);
+      case '+':
+        return new Token(Type.PATTERN_OPERATOR, "plus_op", line, offset);
+      case '-':
+        return new Token(Type.PATTERN_OPERATOR, "minus_op", line, offset);
+      case '*':
+        return new Token(Type.PATTERN_OPERATOR, "mult_op", line, offset);
+      case '?':
+        return new Token(Type.PATTERN_OPERATOR, "quest_op", line, offset);
+      case '/':
+        if (peek() == '/') {
+          while (!isEol()) {
+            pop();
+          }
+          return scan();
         }
-        return scan();
-      }
-      switch (value) { // these operators are unambiguous
-        case "[":
-          return new Token(Type.LBRACKET, line, offset);
-        case "]":
-          return new Token(Type.RBRACKET, line, offset);
-        case "{":
-          return new Token(Type.LBRACE, line, offset);
-        case "}":
-          return new Token(Type.RBRACE, line, offset);
-        case "(":
-          return new Token(Type.LPAREN, line, offset);
-        case ")":
-          return new Token(Type.RPAREN, line, offset);
-        case "!":
-          return new Token(Type.NOTOP, line, offset);
-        case "+":
-          return new Token(Type.PATTERN_OPERATOR, "plus_op", line, offset);
-        case "-":
-          return new Token(Type.PATTERN_OPERATOR, "minus_op", line, offset);
-        case "*":
-          return new Token(Type.PATTERN_OPERATOR, "mult_op", line, offset);
-        case "?":
-          return new Token(Type.PATTERN_OPERATOR, "quest_op", line, offset);
-        case "/":
-          return new Token(Type.PATTERNOP, line, offset);
-        case "|":
-          return new Token(Type.PATTERN_OPERATOR, "or_op", line, offset);
-        case "#":
-          return new Token(Type.LAMBDABEGIN, line, offset);
-        case "=>":
+        return new Token(Type.PATTERNOP, line, offset);
+      case '|':
+        return new Token(Type.PATTERN_OPERATOR, "or_op", line, offset);
+      case '#':
+        return new Token(Type.LAMBDABEGIN, line, offset);
+      case '=':
+        if (peek() == '>') {
+          pop();
           return new Token(Type.LAMBDAOP, line, offset);
-      }
+        }
+      default:
+        throw new Exception("Undefined token " + c);
     }
-    throw new Exception("Undefined token " + value);
   }
 
   public Token scanNumeric() {
