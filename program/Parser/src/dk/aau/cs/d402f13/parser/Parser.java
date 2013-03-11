@@ -9,7 +9,8 @@ import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 import dk.aau.cs.d402f13.parser.AstNode.Type;
 import dk.aau.cs.d402f13.scanner.Scanner;
-import dk.aau.cs.d402f13.scanner.Token;
+import dk.aau.cs.d402f13.utilities.Token;
+import dk.aau.cs.d402f13.utilities.errors.SyntaxError;
 
 public class Parser {
   private LinkedList<Token> tokens;
