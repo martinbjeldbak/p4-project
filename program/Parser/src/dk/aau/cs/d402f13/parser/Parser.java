@@ -66,26 +66,37 @@ public class Parser {
   }
 
   private boolean lookAheadLiteral() {
-    return lookAhead(Token.Type.INT_LIT) || lookAhead(Token.Type.DIR_LIT)
-        || lookAhead(Token.Type.COORD_LIT) || lookAhead(Token.Type.STRING_LIT);
+    return lookAhead(Token.Type.INT_LIT)
+        || lookAhead(Token.Type.DIR_LIT)
+        || lookAhead(Token.Type.COORD_LIT)
+        || lookAhead(Token.Type.STRING_LIT);
   }
 
   private boolean lookAheadElement() {
-    return lookAheadLiteral() || lookAhead(Token.Type.LPAREN)
-        || lookAhead(Token.Type.VAR) || lookAhead(Token.Type.LBRACKET)
-        || lookAhead(Token.Type.PATTERNOP) || lookAhead(Token.Type.KEYWORD)
+    return lookAheadLiteral()
+        || lookAhead(Token.Type.LPAREN)
+        || lookAhead(Token.Type.VAR)
+        || lookAhead(Token.Type.LBRACKET)
+        || lookAhead(Token.Type.PATTERNOP)
+        || lookAhead(Token.Type.KEYWORD)
+        || lookAhead(Token.Type.THIS)
         || lookAhead(Token.Type.ID);
   }
 
   private boolean lookAheadExpression() {
-    return lookAhead(Token.Type.FUNCTION) || lookAheadElement()
-        || lookAhead(Token.Type.IF) || lookAhead(Token.Type.LAMBDABEGIN);
+    return lookAhead(Token.Type.FUNCTION)
+        || lookAheadElement()
+        || lookAhead(Token.Type.IF)
+        || lookAhead(Token.Type.LAMBDABEGIN);
   }
   
   private boolean lookAheadPatterValue(){
-    return(lookAhead(Token.Type.DIR_LIT) || lookAhead(Token.Type.VAR)
-    || lookAhead(Token.Type.PATTERN_KEYWORD) || lookAhead(Token.Type.ID)
-    || lookAhead(Token.Type.NOTOP) || lookAhead(Token.Type.LPAREN));
+    return lookAhead(Token.Type.DIR_LIT)
+        || lookAhead(Token.Type.VAR)
+        || lookAhead(Token.Type.PATTERN_KEYWORD)
+        || lookAhead(Token.Type.ID)
+        || lookAhead(Token.Type.NOTOP)  
+        || lookAhead(Token.Type.LPAREN);
   }
 
   // PROGRAM STRUCTURE
@@ -94,9 +105,7 @@ public class Parser {
     while (lookAhead(Token.Type.DEFINE)) {
       root.addChild(functionDefinition());
     }
-    if (lookAhead(Token.Type.GAME)) {
-      root.addChild(gameDecleration());
-    }
+    root.addChild(gameDecleration());
 
     return root;
   }
@@ -174,7 +183,7 @@ public class Parser {
       node.addChild(expression());
     }
     else throw new SyntaxError("Unexpected token " + nextToken.type
-          + ", expected one or more declerations", null);
+          + ", expected one or more declerations", nextToken);
     return node;
   }
 
@@ -184,14 +193,22 @@ public class Parser {
     if (lookAhead(Token.Type.FUNCTION)) {
       node.addChild(functionCall());
     }
+    else if (accept(Token.Type.NOT_OPERATOR)) {
+      AstNode operation = astNode(Type.NOT_OPERATOR, "");
+      operation.addChild(expression());
+      node.addChild(operation);
+    }
     else if (lookAheadElement()) {
-      node.addChild(element());
-      if (lookAhead(Token.Type.OPERATOR)) {
-        expect(Token.Type.OPERATOR);
-        node.addChild(astNode(Type.OPERATOR, currentToken.value));
-        node.addChild(expression());
+      AstNode element = element();
+      if (accept(Token.Type.OPERATOR)) {
+        AstNode operation = astNode(Type.OPERATOR, currentToken.value);
+        operation.addChild(element);
+        operation.addChild(expression());
+        node.addChild(operation);
       }
-      else return node;
+      else {
+        node.addChild(element);
+      }
     }
     else if (lookAhead(Token.Type.IF)) {
       node.addChild(ifExpression());
@@ -200,20 +217,18 @@ public class Parser {
       node.addChild(lambdaExpression());
     }
     else throw new SyntaxError("Unexpected token " + nextToken.type
-          + ", expected an expression.", null);
+          + ", expected an expression.", nextToken);
 
     return node;
   }
 
   private AstNode element() throws SyntaxError {
     AstNode node = astNode(Type.ELEM, "");
-    if (lookAhead(Token.Type.LPAREN)) {
-      expect(Token.Type.LPAREN);
+    if (accept(Token.Type.LPAREN)) {
       node.addChild(expression());
       expect(Token.Type.RPAREN);
     }
-    else if (lookAhead(Token.Type.VAR)) {
-      expect(Token.Type.VAR);
+    else if (accept(Token.Type.VAR)) {
       node.addChild(astNode(Type.VAR, currentToken.value));
     }
     else if (lookAhead(Token.Type.LBRACKET)) {
@@ -222,32 +237,29 @@ public class Parser {
     else if (lookAhead(Token.Type.PATTERNOP)) {
       node.addChild(pattern());
     }
-    else if (lookAhead(Token.Type.KEYWORD)) {
-      expect(Token.Type.KEYWORD);
+    else if (accept(Token.Type.KEYWORD)) {
       node.addChild(astNode(Type.KEYWORD, currentToken.value));
     }
-    else if (lookAhead(Token.Type.DIR_LIT)) {
-      expect(Token.Type.DIR_LIT);
+    else if (accept(Token.Type.THIS)) {
+      node.addChild(astNode(Type.KEYWORD, "this"));
+    }
+    else if (accept(Token.Type.DIR_LIT)) {
       node.addChild(astNode(Type.DIR_LIT, currentToken.value));
     }
-    else if (lookAhead(Token.Type.COORD_LIT)) {
-      expect(Token.Type.COORD_LIT);
+    else if (accept(Token.Type.COORD_LIT)) {
       node.addChild(astNode(Type.COORD_LIT, currentToken.value));
     }
-    else if (lookAhead(Token.Type.INT_LIT)) {
-      expect(Token.Type.INT_LIT);
+    else if (accept(Token.Type.INT_LIT)) {
       node.addChild(astNode(Type.INT_LIT, currentToken.value));
     }
-    else if (lookAhead(Token.Type.STRING_LIT)) {
-      expect(Token.Type.STRING_LIT);
+    else if (accept(Token.Type.STRING_LIT)) {
       node.addChild(astNode(Type.STRING_LIT, currentToken.value));
     }
-    else if (lookAhead(Token.Type.ID)) {
-      expect(Token.Type.ID);
+    else if (accept(Token.Type.ID)) {
       node.addChild(astNode(Type.ID, currentToken.value));
     }
     else throw new SyntaxError("Unexpected token " + nextToken.type
-          + ", expected an element.", null);
+          + ", expected an element.", nextToken);
 
     return node;
   }
@@ -309,17 +321,8 @@ public class Parser {
   private AstNode patternExpression() throws SyntaxError {
     AstNode node = astNode(Type.PATTERN_EXPR, "");
     node.addChild(patternValue());
-    if (lookAhead(Token.Type.MULTOP)) {
-      expect(Token.Type.MULTOP);
-      node.addChild(astNode(Type.MULT_OP, currentToken.value));
-    }
-    else if (lookAhead(Token.Type.QUESTOP)) {
-      expect(Token.Type.QUESTOP);
-      node.addChild(astNode(Type.QUEST_OP, currentToken.value));
-    }
-    else if (lookAhead(Token.Type.PLUSOP)) {
-      expect(Token.Type.PLUSOP);
-      node.addChild(astNode(Type.PLUS_OP, currentToken.value));
+    if (accept(Token.Type.PATTERN_OPERATOR)) {
+      node.addChild(astNode(Type.PATTERN_OPERATOR, currentToken.value));
     }
 
     return node;
@@ -327,24 +330,23 @@ public class Parser {
 
   private AstNode patternValue() throws SyntaxError {
     AstNode node = astNode(Type.PATTERN_VAL, "");
-    if (lookAhead(Token.Type.DIR_LIT)) {
-      expect(Token.Type.DIR_LIT);
+    if (accept(Token.Type.DIR_LIT)) {
       node.addChild(astNode(Type.DIR_LIT, currentToken.value));
     }
-    else if (lookAhead(Token.Type.VAR)) {
-      expect(Token.Type.VAR);
+    else if (accept(Token.Type.VAR)) {
       node.addChild(astNode(Type.VAR, currentToken.value));
     }
     else if (lookAhead(Token.Type.PATTERN_KEYWORD) || lookAhead(Token.Type.THIS) || lookAhead(Token.Type.ID)) {
       node.addChild(patternCheck());
     }
-    else if (lookAhead(Token.Type.NOTOP)) {
-      expect(Token.Type.NOTOP);
+    else if (accept(Token.Type.NOTOP)) {
       node.addChild(patternCheck());
     }
-    else if (lookAhead(Token.Type.LPAREN)) {
-      expect(Token.Type.LPAREN);
+    else if (accept(Token.Type.LPAREN)) {
       node.addChild(patternExpression());
+      while (!lookAhead(Token.Type.RPAREN)) {
+        node.addChild(patternExpression());
+      }
       expect(Token.Type.RPAREN);
       if (lookAhead(Token.Type.INT_LIT)) {
         expect(Token.Type.INT_LIT);
@@ -372,7 +374,7 @@ public class Parser {
       node.addChild(astNode(Type.ID, currentToken.value));
     }
     else throw new SyntaxError("Unexpected token " + nextToken.type
-          + ", expected a pattern operator or an identifier.", null);
+          + ", expected a pattern operator or an identifier.", nextToken);
 
     return node;
   }

@@ -1,5 +1,50 @@
-\section{Compiler versus interpreter}
+\section{Compiler overview}
 
-Along with the design of the programming language \productname{}, we also want to make it possible for programmers who write games in \productname{} to actually play them afterwards. There are a number of ways we can make that happen. A \productname{}-compiler can be written that makes it possible to compile and play the games afterwards. The compiler approach will result in an executable file that is platform dependant. The platform targeted could also be a virtual machine, e.g. Java Virtual Machine thus a greater platform independence is achieved. Since \productname{} is a programming language optimised for writing board games, some design decisions have already been taken by the developers, which a \productname{}-programmer cannot change. For example, how a move is made physically by drag- and drop with the mouse or by using some keyboard short-cuts, the look of menu items, the sounds when moving a piece and features such as opportunity to undo moves and networked multiplayer games. If we, the developers of \productname{} later on wants to implement networked multiplaying or other features, all games previously written in \productname{} would have to be recompiled using a new compiler to support the added features. Doing so is not always easy since a game developer can have released his games on numerous distribution websites. Some websites may also have further distributed the games to 3rd party websites, which makes updating a game very hard thus releasing a new version of the game may be considered instead. We consider it important that we always can improve games with new and better features without forcing programmers to recompile all their games. 
-An approach that allows us to do so is by using an interpreter instead of a compiler. By interpreting \productname{} source code at runtime or maybe some intermediate language derived there from, games (which is practically source code) can be left unmodified, while a modified interpreter allows new features to be implemented into already released \productname{}-games.
-One disadvantage of using an interpreter is the speed of which code is executed. It definitely decreases. A compiler produces machine code through one or more compilation processes, while the interpreter interprets a language at runtime. For a graphic heavy game like a first person shooter, it could be argued that raising the frame rate was important enough to favour the compiler approach. For a board game and the computations involved, we think the hardware in modern computers today will be sufficient to make it impossible to feel a difference whether we choose to compile or interpret. However, if we were to include some artificial intelligence for playing \productname{}-games, a compiler approach would improve the speed of code execution and thereby the strength of the AI-player. The AI-part can however be separated from the interpreter. When summing up we found the arguments for creating an interpreter to be the most convincing. We therefore choose to develop an interpreter for \productname{}.
+A programming language can be implemented by writing a compiler that translates programs into machine language, which a computer can execute directly \cite[p. 44]{sebesta2013}.
+If the program to be translated is not valid, the compiler should give an error message that best possible helps the programmer identify what error he has made. A good compiler will try to fix the error and continue compilation, so even further errors can be identified, providing the programmer a complete list of errors that can handled all at once instead of one per compilation. Translating one language to another is typically not a simple task, therefore it is often split into different phases, which is shown by \figref{fig:compileroverviewphases} and will be clarified in the following.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{pictures/compileroverview.png}
+\capt{The different phases of a compiler. Based on Sebesta \textit{et al.}\cite{sebesta2013} p. 46, Figure 1.3}\label{fig:compileroverviewphases}
+\end{figure}
+
+\subsection{Lexical analysis}
+
+Patterns of characters from alphabet -> tokens
+
+\subsection{Syntax analysis}
+All languages whether natural or artificial is a set of strings of characters over some alphabet. A language does not contain all possible strings over an alphabet. There are rules for how the strings can look that are in a language. Those rules can be specified formally to describe the syntax of a language\cite[p. 135]{sebesta2013}. A common way to describe a language's syntax is by a formal language-generation mechanism (also called grammars or context free grammars). By describing a grammar that can generate all possible strings in a language, the language has also been formally described. Backus-Naur Form is such a mechanism which in the 1950's became the most widely used method for describing programming language syntax\cite[p. 137]{sebesta2013}.
+
+\begin{ebnf}
+%Expressions
+\grule{program}{\gter{print} expr}
+\grule{expr}{\gter{(} \gcat term \gcat \gter{)} \gcat operator \gcat \gter{(} \gcat term \gcat \gter{)}}
+\grule{operator}{\gter{=}}
+\galt{\gter{>}}
+\galt{\gter{<}}
+\grule{term}{number}
+\galt{expr}
+\grule{number}{\textbf{any number}}
+\end{ebnf}
+
+
+\subsection{Semantic analysis}
+\subsection{Code generation}
+\subsection{Interpretation}
+
+A pure interpretation of a program lies at the opposite end (from compilation) regarding to methods of implementation. With this approach, which can be see, on \figref{fig:compileroverviewinterpretation}, no translation is performed at all. An interpreter is interpreting a program written in the targeted language. It acts like a virtual machine which instructions are statements of high level language. By purely using interpretation, a source code debugger can easily be implemented. Various errors that might occur can once they are detected easily refer to which place in the source code that caused the error. The debugging is eased because the interpreter works like a software implementation of a virtual machine, thus the state of the machine and the value of a specific variable can be outputted at any time when requested. This will of course lead to the disadvantage that an interpreter uses more space than a compiler. Further more, the execution speed of an interpreter is usually 10 to 100 times slower than that of a compiler \cite[p. 48]{sebesta2013}.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{pictures/compileroverviewinterpretation.png}
+\capt{The different phases of an interpreter. Based on Sebesta \textit{et al.}\cite{sebesta2013} p. 48, Figure 1.4}\label{fig:compileroverviewinterpretation}
+\end{figure}
+
+The compiling or interpreting approach can be combined to form a hybrid implementation system. This method is illustrated in \figref{fig:compileroverviewhybrid}, where a program is compiled into an intermediate code which is then interpreted. By using this approach, errors in a program can be detected before interpretation which can save much time for a programmer. A great portability can also be achieved when using hybrid system. The initial implementation of Java was hybrid and allowed Java to be compiled to an intermediate code that could run on any platform which had an implementation of Java Virtual Machine\cite[p. 50]{sebesta2013}. 
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{pictures/compileroverviewhybrid.png}
+\capt{The different phases of a hybrid implementation systems. Based on Sebesta \textit{et al.}\cite{sebesta2013} p. 49, Figure 1.5}\label{fig:compileroverviewhybrid}
+\end{figure}
