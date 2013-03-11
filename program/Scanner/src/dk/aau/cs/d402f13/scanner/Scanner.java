@@ -134,6 +134,7 @@ public class Scanner {
       case "board":
       case "grid":
       case "setup":
+      case "piece":
       case "wall":
       case "name":
       case "possibleDrops":
@@ -153,6 +154,7 @@ public class Scanner {
       case "foe":
       case "friend":
       case "empty":
+      case "any":
         t.type = Token.Type.PATTERN_KEYWORD;
         break;
       // Direction literal
@@ -167,7 +169,9 @@ public class Scanner {
         t.type = Token.Type.DIR_LIT;
         break;
       default:
-        throw new ScannerError("Invalid function or keyword: " + t.value, token(Type.EOF));
+        if (t.value.length() < 2) {
+          throw new ScannerError("Invalid function or keyword: " + t.value, token(Type.EOF));
+        }
     }
     return t;
   }
