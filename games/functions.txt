@@ -1,0 +1,63 @@
+list union[ {list} ]		union[ [3 4] [2 3] ]
+bool notEmpty[ list ]
+bool isFirstMove[ piece|player ]		isFirstMove[ this ]
+
+
+andSquares[[A1 A2 A3 B1 B2 B3 C1 C2] ([$square] => occupiedBy[$square Black])]
+
+
+
+
+
+object
+	$id
+	
+	bool is[ object identifier ]		is[ $piece King ]
+
+	
+consequence
+	
+
+
+action
+	$
+	$consequences - list of consequence
+	
+	{action} move[ piece {coordinate} ]
+	{action} moveAndCapture[ piece {coordinate} ]
+	action multiple[ {action} ] //Ikke helt entydigt...
+
+history
+	$actions - list of action
+
+piece
+	$owner - players
+		
+	bool hasMove[ piece cell ]
+	
+	
+cell
+	$pieces - list of piece
+	
+	{cell} findSquares[ pattern ]		findSquares[ /this (n empty)2 / ]
+	occupiedBy[ cell identifier ]		occupiedBy[ A5 Black ] //This is player, what about piece type?
+	
+	
+board
+	$cells - list of cell
+	
+	{cell} emptySquares[ board ]
+	bool isFull[ board ]
+	
+player
+	
+	
+	bool isCurrentPlayer[ identifier ]		isCurrentPlayer[ Noughts ]
+	
+	
+game
+	$title - string
+	$players - list of players
+	$turnOrder - expression
+	
+	player nextPlayer[ game ]
