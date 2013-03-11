@@ -1,4 +1,4 @@
-package dk.aau.cs.d402f13.scanner;
+package dk.aau.cs.d402f13.utilities;
 
 public class Token {
   public enum Type {
