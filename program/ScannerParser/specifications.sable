@@ -1,0 +1,4 @@
+Package SableCC-ScannerParser;
+
+Helpers
+  decimal = ['0' .. '9'];
