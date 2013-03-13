@@ -11,13 +11,13 @@
   \PYZcb{}
   \PY{k+kr}{piece} \PYZob{}
     \PY{k+kr}{name} \PY{n+no}{XOPieces}
-    \PY{k+kr}{possibleDrops} (\PY{k+kr}{empty}\PY{n+no}{Squares}[\PY{k+kr}{board}])
+    \PY{k+kr}{possibleDrops} (\PY{n+nf}{emptySquares}[\PY{k+kr}{board}])
   \PYZcb{}
   \PY{k+kr}{winCondition} (
     (\PY{n+nf}{notEmpty}[(\PY{n+nf}{findSquares}[/\PY{n+nf}{friend} \PY{n+ni}{n} \PY{n+nf}{friend} \PY{n+ni}{n} \PY{n+nf}{friend}/])])
       \PY{o+ow}{or} (\PY{n+nf}{notEmpty}[(\PY{n+nf}{findSquares}[/\PY{n+nf}{friend} \PY{n+ni}{e} \PY{n+nf}{friend} \PY{n+ni}{e} \PY{n+nf}{friend}/])])
-      \PY{o+ow}{or} (\PY{n+nf}{notEmpty}[(\PY{n+nf}{findSquares}[/\PY{n+nf}{friend} \PY{n+nf}{nw} \PY{n+nf}{friend} \PY{n+nf}{nw} \PY{n+nf}{friend}/])])
-      \PY{o+ow}{or} (\PY{n+nf}{notEmpty}[(\PY{n+nf}{findSquares}[/\PY{n+nf}{friend} \PY{n+nf}{ne} \PY{n+nf}{friend} \PY{n+nf}{ne} \PY{n+nf}{friend}/])])
+      \PY{o+ow}{or} (\PY{n+nf}{notEmpty}[(\PY{n+nf}{findSquares}[/\PY{n+nf}{friend} \PY{n+ni}{nw} \PY{n+nf}{friend} \PY{n+ni}{nw} \PY{n+nf}{friend}/])])
+      \PY{o+ow}{or} (\PY{n+nf}{notEmpty}[(\PY{n+nf}{findSquares}[/\PY{n+nf}{friend} \PY{n+ni}{ne} \PY{n+nf}{friend} \PY{n+ni}{ne} \PY{n+nf}{friend}/])])
   )
   \PY{k+kr}{tieCondition} (
     \PY{n+nf}{isFull}[\PY{k+kr}{board}]
