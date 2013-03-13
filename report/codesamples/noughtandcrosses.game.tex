@@ -1,0 +1,28 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c}{// An implementation of the traditional}
+\PY{c}{// Noughts and Crosses game}
+\PY{k+kr}{game} \PYZob{}
+  \PY{k+kr}{title} \PY{l+s}{\PYZdq{}Noughts and Crosses\PYZdq{}}
+  \PY{k+kr}{players} [\PY{n+no}{Noughts} \PY{n+no}{Crosses}]
+  \PY{k+kr}{turnOrder} [\PY{n+no}{Crosses} \PY{n+no}{Noughts}]
+  \PY{k+kr}{board} \PYZob{}
+    \PY{k+kr}{grid} \PYZob{}
+      \PY{k+kr}{width} \PY{l+m}{3}
+      \PY{k+kr}{height} \PY{l+m}{3}
+    \PYZcb{}
+  \PYZcb{}
+  \PY{k+kr}{piece} \PYZob{}
+    \PY{k+kr}{name} \PY{n+no}{XOPieces}
+    \PY{k+kr}{possibleDrops} (\PY{n+nf}{emptySquares}[\PY{k+kr}{board}])
+  \PYZcb{}
+  \PY{k+kr}{winCondition} (
+    (\PY{n+nf}{notEmpty}[(\PY{n+nf}{findSquares}[/\PY{k+kr}{friend} \PY{n+ni}{n} \PY{k+kr}{friend} \PY{n+ni}{n} \PY{k+kr}{friend}/])])
+      \PY{o+ow}{or} (\PY{n+nf}{notEmpty}[(\PY{n+nf}{findSquares}[/\PY{k+kr}{friend} \PY{n+ni}{e} \PY{k+kr}{friend} \PY{n+ni}{e} \PY{k+kr}{friend}/])])
+      \PY{o+ow}{or} (\PY{n+nf}{notEmpty}[(\PY{n+nf}{findSquares}[/\PY{k+kr}{friend} \PY{n+ni}{nw} \PY{k+kr}{friend} \PY{n+ni}{nw} \PY{k+kr}{friend}/])])
+      \PY{o+ow}{or} (\PY{n+nf}{notEmpty}[(\PY{n+nf}{findSquares}[/\PY{k+kr}{friend} \PY{n+ni}{ne} \PY{k+kr}{friend} \PY{n+ni}{ne} \PY{k+kr}{friend}/])])
+  )
+  \PY{k+kr}{tieCondition} (
+    \PY{n+nf}{isFull}[\PY{k+kr}{board}]
+  )
+\PYZcb{}
+\end{Verbatim}
