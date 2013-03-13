@@ -1,3 +1,5 @@
+// An implementation of the traditional
+// Noughts and Crosses game
 game {
   title "Noughts and Crosses"
   players [Noughts Crosses]
