@@ -1,0 +1,24 @@
+game {
+  title "Noughts and Crosses"
+  players [Noughts Crosses]
+  turnOrder [Crosses Noughts]
+  board {
+    grid {
+      width 3
+      height 3
+    }
+  }
+  piece {
+    name XOPieces
+    possibleDrops (emptySquares[board])
+  }
+  winCondition (
+    (notEmpty[(findSquares[/friend n friend n friend/])])
+      or (notEmpty[(findSquares[/friend e friend e friend/])])
+      or (notEmpty[(findSquares[/friend nw friend nw friend/])])
+      or (notEmpty[(findSquares[/friend ne friend ne friend/])])
+  )
+  tieCondition (
+    isFull[board]
+  )
+}
