@@ -12,36 +12,6 @@ and basic rules of the games and other related information will not
 be included in the analysis, since this has no relevance for gaining
 understanding of how our programming language should be designed.
 
-\begin{center}
-    \begin{tabular}{| l | l | l | l |}                             \hline
-      & Production & Input      & Action                        \\ \hline
-    1 & S          & int + int  & Predict S $\rightarrow$ E     \\ 
-    2 & E          & int + int  & Predict E $\rightarrow$ T + E \\ 
-    3 & T + E      & int + int  & Predict T $\rightarrow$ int   \\
-    4 & int + E    & int + int  & Match int                     \\ 
-    5 & + E        & + int      & Match +                       \\ 
-    6 & E          & int        & Predict E $\rightarrow$ T     \\ 
-    7 & T          & int        & Predict T $\rightarrow$ int   \\
-    8 & int        & int        & Match int                     \\ 
-      &            &            & Accept                        \\ \hline
-    \end{tabular}
-\end{center}
-
-\begin{center}
-    \begin{tabular}{| l | l | l | l |}                              \hline
-      & Workspace  & Input      & Action                         \\ \hline
-    1 &            & int + int  & Shift                          \\ 
-    2 & int        & + int      & Reduce T $\rightarrow$ int     \\ 
-    3 & T          & + int      & Shift                          \\
-    4 & T +        & int        & Shift                          \\ 
-    5 & T + int    &            & Reduce T $\rightarrow$ int     \\ 
-    6 & T + T      &            & Reduce E $\rightarrow$ T       \\ 
-    7 & T + E      &            & Reduce E $\rightarrow$ T + E   \\
-    8 & E          &            & Reduce S $\rightarrow$ E       \\ 
-      & S          &            & Accept                         \\ \hline
-    \end{tabular}
-\end{center}
-
 \input{content/analysis/chesskalahandnaughtscrosses/chess}
 \input{content/analysis/chesskalahandnaughtscrosses/kalah}
 \input{content/analysis/chesskalahandnaughtscrosses/naugthsandcrosses}      
