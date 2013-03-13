@@ -10,6 +10,7 @@ class LudoLexer(RegexLexer):
 
     tokens = {
         'root': [
+            (r'//.*\n', Comment),
             (r'[0-9]+', Number),
             (r'[A-Z]+[0-9]+', Generic.Subheading),
             (r'\b(define|game|piece|this|width|height|title|players|turnOrder|board|grid|setup|wall|name|possibleDrops|possibleMoves|winCondition|tieCondition|if|then|else)\b', Keyword.Reserved),
