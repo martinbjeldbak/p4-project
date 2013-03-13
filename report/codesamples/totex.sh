@@ -2,5 +2,5 @@
 if [ "$#" -lt 1 ]; then
   echo "usage: $0 FILE"
 else
-  pygmentize -f latex -l ludo -o "$1.tex" "$0"
+  pygmentize -f latex -l ludo -o "$1.tex" "$1"
 fi

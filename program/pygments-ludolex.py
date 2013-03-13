@@ -12,7 +12,7 @@ class LudoLexer(RegexLexer):
         'root': [
             (r'[0-9]+', Number),
             (r'[A-Z]+[0-9]+', Generic.Subheading),
-            (r'(game|piece|this|width|height|title|players|turnOrder|board|grid|setup|wall|name|possibleDrops|possibleMoves|winCondition|tieCondition)', Keyword.Reserved),
+            (r'(define|game|piece|this|width|height|title|players|turnOrder|board|grid|setup|wall|name|possibleDrops|possibleMoves|winCondition|tieCondition|if|then|else)', Keyword.Reserved),
             (r'(and|or)', Operator.Word),
             (r'(frind|foe|empty)', Keyword.Reserved),
             (r'"([^"\\]|\\.)*"', String),
