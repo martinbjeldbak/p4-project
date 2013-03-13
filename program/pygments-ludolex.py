@@ -15,7 +15,7 @@ class LudoLexer(RegexLexer):
             (r'[A-Z]+[0-9]+', Generic.Subheading),
             (r'\b(define|game|piece|this|width|height|title|players|turnOrder|board|grid|setup|wall|name|possibleDrops|possibleMoves|winCondition|tieCondition|if|then|else)\b', Keyword.Reserved),
             (r'\b(and|or)\b', Operator.Word),
-            (r'\b(frind|foe|empty)\b', Keyword.Reserved),
+            (r'\b(friend|foe|empty)\b', Keyword.Reserved),
             (r'"([^"\\]|\\.)*"', String),
             (r'\b(n|s|e|w|ne|nw|se|sw)\b', Name.Entity),
             (r'[A-Z][a-zA-Z]*', Name.Constant),
