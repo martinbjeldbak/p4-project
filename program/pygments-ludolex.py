@@ -12,14 +12,14 @@ class LudoLexer(RegexLexer):
         'root': [
             (r'[0-9]+', Number),
             (r'[A-Z]+[0-9]+', Generic.Subheading),
-            (r'(define|game|piece|this|width|height|title|players|turnOrder|board|grid|setup|wall|name|possibleDrops|possibleMoves|winCondition|tieCondition|if|then|else)', Keyword.Reserved),
-            (r'(and|or)', Operator.Word),
-            (r'(frind|foe|empty)', Keyword.Reserved),
+            (r'\b(define|game|piece|this|width|height|title|players|turnOrder|board|grid|setup|wall|name|possibleDrops|possibleMoves|winCondition|tieCondition|if|then|else)\b', Keyword.Reserved),
+            (r'\b(and|or)\b', Operator.Word),
+            (r'\b(frind|foe|empty)\b', Keyword.Reserved),
             (r'"([^"\\]|\\.)*"', String),
+            (r'\b(n|s|e|w|ne|nw|se|sw)\b', Name.Entity),
             (r'[A-Z][a-zA-Z]*', Name.Constant),
             (r'[a-z][a-zA-Z]+', Name.Function),
-            (r'(n|s|e|w|ne|nw|se|sw)', Name.Entity),
-            (r'\$[a-zA-z]+', Name.Variable),
+            (r'\$[a-zA-z]+\b', Name.Variable),
 			(r'.', Text)
         ]
     }
