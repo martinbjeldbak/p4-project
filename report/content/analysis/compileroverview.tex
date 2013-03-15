@@ -32,7 +32,7 @@ The BNF contains a set of terminals and a set of non-terminals. The terminals ar
 
 \begin{ebnf}
 %Expressions
-\grule{program}{\gter{print} expr}
+\grule{program}{\gter{print} \gcat expr}
 \grule{expr}{\gter{(} \gcat term \gcat \gter{)} \gcat operator \gcat \gter{(} \gcat term \gcat \gter{)}}
 \grule{operator}{\gter{=}}
 \galt{\gter{>}}
