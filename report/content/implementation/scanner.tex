@@ -73,7 +73,7 @@ public Token scan() throws Exception {
   if (current() == '"') {
     return scanString();
   }
-  if (current() == '\$') {
+  if (current() == '$') {
     return scanVar();
   }
   throw new ScannerError("Unidentified character: " + current(), token(Type.EOF));
