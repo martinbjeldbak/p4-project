@@ -1,5 +1,3 @@
-define isSecure[$square$derp] ( not checkPieces[((#[$piece] => isFoe[$piece]) and hasMove[$piece $square])] )
-
 define slide[ $pattern ]
 	( findSquares[ /this ($pattern empty)* $pattern !friend/ ] )
 
