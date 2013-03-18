@@ -3,7 +3,7 @@ Along with the design of the programming language \productname{}, we also want t
 There are a number of ways we can make that happen. It can be translated to platform dependant machine instruction using a compiler, or it can be parsed and executed on-the-fly using an interpreter.
 
 \subsection{Compilation}
-With compilation, an executable would be created for a specific platform which contains all the code required to play the game. 
+With compilation, an executable file would be created for a specific platform which contains all the code required to play the game. 
 Since games have common aspects, a game engine containing all the common aspects such as user interface, AI and/or network play would most likely be written. 
 This engine would then be included directly in the executable.
 
@@ -11,7 +11,7 @@ An obvious disadvantage is that the executable is platform dependant and it woul
 On the other hand knowing the specific platform makes it possible to create optimized code which runs faster.
 
 Instead of compiling to native machine code, it could be compiled to an intermediate format such as Java bytecode which is supported on many platforms.
-While Java bytecode is interpreted and therefore slower, modern interpreters uses sophisticated methods such as Just-In-Time compilation (JIT) which recompiles it into native machine code. 
+While Java bytecode is interpreted and therefore slower, modern interpreters uses sophisticated methods such as Just-In-Time compilation (JIT) which at runtime compiles intermediate code into native machine code. 
 This process of course adds an overhead, however the speed differences are not that great anymore\cite{java-speed}.
 
 \subsection{Interpretation}
@@ -22,9 +22,9 @@ Different games written in our language would then use the same copy of the inte
 The execution speed will however suffer and while techniques such as JIT exists to improve this, it is beyond the scope of this project. \todo{can we justify this?}
 
 The execution speed is not critical however. 
-Processors nowadays are fast and executing tasks such as calculating moves would most likely finish so fast that you wouldn't be able to notice the difference between a compiled and a interpreted version.
-One task where speed does become important is artificial intelligence (AI), which would be used to create an virtual opponent controlled by the computer. 
-The virtual opponent becomes smarter the more turns it can look ahead, however the computation complexity is high and a doubling of speed is quite noticeable when the time to make a move is reduced from 2 minutes to one.
+Processors nowadays are fast and executing tasks such as calculating moves would most likely finish so fast that one wouldn't be able to notice the difference between a compiled and a interpreted version.
+One place where speed does become important is in an artificial intelligence (AI), which would be used to create an virtual opponent controlled by the computer. 
+The virtual opponent becomes harder to beat the more turns it can look ahead, however the computational complexity is high and a doubling of speed is quite noticeable when the time to make a move is reduced from 2 minutes to one.
 
 An inherent consequence of interpretation is that the original source code is available for everyone which obtains the game. This can discourage developers which intends to sell their game, as it is easy for everyone obtaining a copy to make derivatives of it. Others will find it as an advantage as they can fix errors, add new gameplay elements or use it as a base for a completely new game.
 
@@ -62,7 +62,7 @@ The source code would not be available like with a compiled game, however a pack
 
 Using an intermediate format however means that you need to create a compiler, an interpreter and the intermediate language, which in turn is a significant larger amount of work.
 
-\subsection{Summery}
+\subsection{Summary}
 A compiler can make faster code, however an interpreter allows us to fine-tune security considerations. 
 Separating the game engine and game code gives a significant improvement for both methods.
 Creating an intermediate language can give some advantages over a purely interpreted language, however it also requires more work to develop.

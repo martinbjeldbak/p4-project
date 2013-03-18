@@ -19,11 +19,22 @@
 
 \newcommand{\todo}[1]{\colorbox{yellow}{\color{red}\textbf{TODO:} \hspace{1ex} #1}}
 
+\newcommand{\codesample}[1]{\input{codesamples/#1}}
+
 \newenvironment{ebnf} {
-  \begin{tabular}{l c l}
+  \begin{center}
+    \begin{tabular}{p{3cm} c p{7cm}}
 }{
   \end{tabular}
+\end{center}
 }
+
+\newcommand{\fig}[3][scale=1.0]{\begin{figure}
+  \center
+  \includegraphics[#1]{pictures/#2}
+  \capt{#3}
+  \label{fig:#2}
+\end{figure}}
 
 \newcommand{\grule}[2]{$#1$ & $\rightarrow$ & $#2$ \\}
 \newcommand{\galt}[1]{& | & $#1$ \\}
