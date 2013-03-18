@@ -3,15 +3,31 @@
 In this section we present our handwritten parser for our programming language. We have written a recursive descent parser, which is within the class of LL(1) parsers. The grammar for our programming language is suiting for this because e.g. is does not have left-recursive productions. 
 
 %structured as the grammar
+The parser was very simple to implement, because it is structured in the same manner as the grammar is structured. For instance if the grammar expresses that the next set of terminals must begin with a left bracket (`[') then the parser will expect the next token to be a \tokenref{LBRACKET} which is the token name for a left bracket. 
+
 %discuss the if expression
+In \lstref{lst:ifexpr} we give an example of how this structure looks like in the parser. The following production rule from our grammar shows what the if expression expects:
+
+\begin{ebnf}
+\grule{if\_expr}{\gter{if} \gcat expression \gcat \gter{then} \gcat expression \gcat \gter{else} \gcat expression}
+\end{ebnf}
+
+The production for if expression says that every expression of this type must start with the combination of the two symbols \gter{i} and \gter{f} that spell the word \gter{if}. When the parser meets this word it knows that it has to parse an if expression and the code this is reflected in \lstref{lst:ifexpr}.
 
 \lstinputlisting[caption="This shows how if expressions are parsed.", label=lst:ifexpr, language=Java]{listings/ifexpr.java}
+
+%astNode()
+%Token
+%node.addChild(expression())
 
 %lookAhead methods - Element
 
 \lstinputlisting[caption="This shows what the lookAhead method expects for an element as input.", label=lst:examplelookahead, language=Java]{listings/method_lookAheadElement.java}
 
+%return boolean
+
 %example of lookAheadElement
 %LL(1)
 
 \lstinputlisting[caption="This shows an example of when the parser uses the lookAhead method.", label=lst:examplelookahead, language=Java]{listings/example_lookAheadElement.java}
+
