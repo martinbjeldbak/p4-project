@@ -1,4 +1,126 @@
-Package SableCC-ScannerParser;
+Package dk.aau.cs.d402f13.ScannerParser;
 
 Helpers
-  decimal = ['0' .. '9'];
+  blank            = (' ' | 13 | 10)+;
+  decimal          = ['0' .. '9'];
+  lowercase        = ['a' .. 'z'];
+  uppercase        = ['A' .. 'Z'];
+  anycase          = lowercase | uppercase;
+  quotebs          = '"' | '\';
+  unichar          = [0 .. 0xffff];
+  strchar          = unichar; // - quotebs
+  keyword          = 'game' | 'piece' | 'this' | 'width' | 'height'
+                   | 'title' | 'players' | 'turnOrder' | 'board'
+                   | 'grid' | 'setup' | 'wall' | 'name' | 'possibleDrops'
+                   | 'possibleMoves' | 'winCondition' | 'tieCondition';
+  operator         = 'and' | 'or' | 'not';
+  pattern_keyword  = 'friend' | 'foe' | 'this' | 'empty';
+  pattern_operator = '*' | '?' | '+' | '!';
+  direction        = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
+  star_qmark_plus  = '*'
+                      | '?'
+                      | '+';
+  
+Tokens
+  blank            = blank;
+  decimal          = decimal;
+  lowercase        = lowercase;
+  uppercase        = uppercase;
+  anycase          = anycase;
+  quotebs          = quotebs;
+  unichar          = unichar;
+  strchar          = strchar;
+  keyword          = keyword;
+  operator         = operator;
+  pattern_keyword  = pattern_keyword;
+  pattern_operator = pattern_operator;
+  direction        = direction;
+  star_qmark_plus  = star_qmark_plus;
+  
+  integer    = decimal+;
+  coordinate = uppercase+ decimal+;
+  string     = '"' (strchar | '\' unichar)* '"';
+
+  /* identifiers */
+  function   = lowercase anycase+;
+  identifier = uppercase anycase*;
+  variable   = '$' anycase+;
+  
+  define     = 'define';
+  game       = 'game';
+  l_bkt      = '[';
+  r_bkt      = ']';
+  l_brc      = '{';
+  r_brc      = '}';
+  l_par      = '(';
+  r_par      = ')';
+  
+  not        = 'not';
+  if         = 'if';
+  then       = 'then';
+  else       = 'else';
+  pound      = '#';
+  l_arrow    = '=>';
+  slash      = '/';
+  star       = '*';
+  q_mark     = '?';
+  plus       = '+';
+  emark      = '!';
+  friend     = 'friend';
+  foe        = 'foe';
+  empty      = 'empty';
+  this       = 'this';
+  
+Ignored Tokens
+  blank;
+  
+Productions
+
+  program            = function_def* game_decl;
+  function_def       = define function l_bkt variable* r_bkt expression;
+  game_decl          = game decl_struct;
+  decl_struct        = l_brc decl+ r_brc;
+  decl               = {keystruc} keyword structure
+                     | {idstruc} identifier structure;
+                     
+  structure          = {declstruc} decl_struct | {expr} expression;
+  
+  /* expressions */
+  expression    = {func} function_call
+                | {elopexpr} element operator expression
+                | {if} if_expr
+                | {lambda} lambda_expr
+                | {el} element
+                | {not} not expression;
+  element       = {lexprr}  l_par expression r_par
+                | {var} variable
+                | {list} list
+                | {pat} pattern
+                | {key} keyword
+                | {dir} direction
+                | {cor} coordinate
+                | {int} integer
+                | {str} string
+                | {id} identifier
+                | {func} function;
+  function_call = function list;
+  if_expr       = if [left]:expression then expression else [right]:expression;
+  lambda_expr   = pound l_bkt variable* r_bkt l_arrow expression;
+  list          = l_bkt element* r_bkt;
+  
+  /* patterns */
+  pattern       = [left]:slash pattern_expr+ [right]:slash;
+  pattern_expr  = {patval} pattern_val
+                | {patvalqmark} pattern_val star_qmark_plus;
+  pattern_val   = {dir} direction
+                | {var} variable
+                | {patcheck} pattern_check
+                | {emarkpatcheck} emark pattern_check
+                | {lpatexprr} l_par pattern_expr+ r_par
+                | {lpatxprrint} l_par pattern_expr+ r_par integer;
+  pattern_check = {friend} friend
+                | {foe} foe
+                | {empty} empty
+                | {this} this
+                | {id} identifier;
+  
