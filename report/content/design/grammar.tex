@@ -82,6 +82,7 @@ The following operations are used throughout this section:
 \begin{ebnf}
 %Expressions
 \grule{expression}{function\_call}
+\galt{assignment}
 \galt{element \gcat operator \gcat expression}
 \galt{if\_expr}
 \galt{lambda\_expr}
@@ -99,6 +100,7 @@ The following operations are used throughout this section:
 \galt{identifier}
 \galt{function}
 \grule{function\_call}{function \gcat list}
+\grule{assignment}{\gter{let} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression} \gcat \gter{in} \gcat expression}
 \grule{if\_expr}{\gter{if} \gcat expression \gcat \gter{then} \gcat expression \gcat \gter{else} \gcat expression}
 \grule{lambda\_expr}{\gter{\#} \gcat \gter{[} \gcat \grep{variable} \gcat \gter{]} \gcat \gter{=>} \gcat expression}
 \grule{list}{\gter{[} \gcat \grep{element} \gcat \gter{]}}
