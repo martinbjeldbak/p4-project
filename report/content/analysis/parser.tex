@@ -1,68 +1,64 @@
-\section{Parser}
-\label{sec:parser}
+\section{Parsers}
+\label{sec:parsers}
 
-A parser is the component or algorithm that controls whether or not the source code of a given application is set up syntactically correct according to the programming language it is written in. This process is called the syntax analysis. In short, the parser takes as input the stream of tokens produced by the scanner, and checks if the given sequence of tokens corresponds to the program language's grammar. If this is the case the sequence is syntactically correct else a syntax error has occurred, which has to be dealt with before the compiler or interpreter can proceed. In this section we are going to make an analysis of some different types of parsers. There exists two main approaches to parsing, namely top-down parsing and bottom-up parsing, which have very different ways of dealing with the parsing process. A variety of parsers derive from each approach. For instance the LL parser, the LR parser and the LALR parser, which we are going to analyse. Further more we are going to look at different methods for making parsers, more specifically we are going to analyse some of the pros and cons against writing the parser by hand versus using parser generator tools to generate it.
+In the following section we are going to compare the LL parsers and the LR parsers, by analyzing the advantages and the disadvantages of each. Further more we are going to look at different methods for making parsers, more specifically we are going to analyse the pros and cons against writing the parser by hand versus using parser generator tools to generate it. A parser is the component or algorithm that controls whether or not the source code of a given application is set up syntactically correct according to the programming language it is written in. This process is called the syntax analysis. In short, the parser takes as input the stream of tokens produced by the scanner, and checks if the given sequence of tokens corresponds to the program language's grammar. If this is the case the sequence is syntactically correct else a syntax error has occurred, which has to be dealt with before the compiler or interpreter can proceed. There exists two main approaches to parsing, which have very different ways of dealing with the parsing process and which we are going to describe briefly, that is top-down parsing and bottom-up parsing. From the top-down parsing approach derives the family of LL(k) parsers (the k defines the number of lookahead tokens), where the LL(1) parser is the more popular and widely used one. From the buttom-up approach derives the family of LR(k) parser, which includes the LALR(1) parser and several others.
 
-\subsection{LL-parsers and LR-parsers}
+\subsection{Top-down parsing and buttom-up parsing}
 
-The LL-parsers is a family of parsers which derives from the top-down parsing approach. In this approach the parsers starts at the start symbol of a grammar and through a series of leftmost derivations tries to match the input string, if possible. On the opposite the LR-parsers starts with the input string and through a series of reductions tries to get back to the start symbol.  
+In the top-down approach the parsers starts at the start symbol of a grammar and through a series of leftmost derivations tries to match the input string, if possible. On the opposite the buttom-up parsers starts with the input string and through a series of reductions tries to get back to the start symbol. In both approaches a parse tree is build. The root of the parse tree contains the start symbol, and the branches the input string. The LL-parsers
+build the parse tree from the root down to the branches as mentioned above - hench the name top-down parsing. While LR-parser builds the parse tree from the branches up to the root - hench buttom-up.
 
-In both approaches a parse tree is build. The root of the parse tree contains the start symbol, and the branches the input string. The LL-parsers
-build the parse tree from the root down to the branches - hench the name top-down parsing. While LR-parser builds the parse tree from the branches up to the root - hench buttom-up. A simple illustration of a parse tree can be seen in figure ref(fig:XXXX). Here the parser gets the input string "int + int". 
-And it's based on the simple context free grammar seen in table ref{table:XXXX).
+\subsection{The parsers in action} 
+The LL-parsers has two actions: predict and match. The predict action is used when the parser is trying to guess the next production to apply in order to get closer to the input string. While the match action eats the next unconsumed input symbol if it corresponds to the leftmost predicted terminal. These two actions are continuosly called until the entire input string has been eaten and thereby has been matched. An example of a LL(1) parser in action can be seen in table \ref{table:LL1}. In the example the parser is based on the simple grammar in table 
 
-The LL-parsers has two actions: predict and match. The predict action is used when the parser 
-is trying to guess the next production to apply in order to get closer to the input string. 
-While the match action eats the next unconsumed input symbol if it corresponds to the leftmost 
-predicted terminal. These two actions are continuosly called until the entire input string has 
-been eaten and thereby has been matched.
+\centering
+\begin{ebnf}
+\grule{S}{E}
+\grule{E}{T + E}
+\galt{T}
+\grule{T}{int}
+\end{ebnf}
 
-The LR-parsers also has two actions: the shift action and the reduce action. The shift action
-adds the next input symbol into a buffer for consideration. The reduce action reduces a collection
-of nonterminals and terminals into a nonterminal by reversing a production. These two actions are
-continously called until the input string is reduced to the start symbol. 
-cite{http://stackoverflow.com/questions/5975741/what-is-the-difference-between-ll-and-lr-parsing}.
-An example of a LR(2)-parser and LL(1)-parser in action can be seen in table \ref{table:LL(1)} and 
-table \ref{table:LR(2)}.  
+The LR-parsers also has two actions: the shift action and the reduce action. The shift action adds the next input symbol of the input string into a buffer for consideration. The reduce action reduces a collection of nonterminals and terminals into a nonterminal by reversing a production. These two actions are
+continously called until the input string is reduced to the start symbol. \cite{LL(1)andLR(2)inaction}. An example of a LR(2)-parser in action is illustrated in table \ref{table:LR2}.
 
-\begin{center}
-    \begin{tabular}{| l | l | l | l |}                             \hline
-      & Production & Input      & Action                        \\ \hline
-    1 & S          & int + int  & Predict S $\rightarrow$ E     \\ 
-    2 & E          & int + int  & Predict E $\rightarrow$ T + E \\ 
-    3 & T + E      & int + int  & Predict T $\rightarrow$ int   \\
-    4 & int + E    & int + int  & Match int                     \\ 
-    5 & + E        & + int      & Match +                       \\ 
-    6 & E          & int        & Predict E $\rightarrow$ T     \\ 
-    7 & T          & int        & Predict T $\rightarrow$ int   \\
-    8 & int        & int        & Match int                     \\ 
-      &            &            & Accept                        \\ \hline
-    \end{tabular}
-    \label{table:LL(1)}
-\end{center}
+\begin{table}
+	\parbox{.45\linewidth}{
+		\centering
+    	\begin{tabular}{| l | l | l | l |}                             \hline
+      	  & Production & Input      & Action                        \\ \hline
+    	1 & S          & int + int  & Predict S $\rightarrow$ E     \\ 
+    	2 & E          & int + int  & Predict E $\rightarrow$ T + E \\ 
+    	3 & T + E      & int + int  & Predict T $\rightarrow$ int   \\
+    	4 & int + E    & int + int  & Match int                     \\ 
+    	5 & + E        & + int      & Match +                       \\ 
+    	6 & E          & int        & Predict E $\rightarrow$ T     \\ 
+    	7 & T          & int        & Predict T $\rightarrow$ int   \\
+    	8 & int        & int        & Match int                     \\ 
+      	  &            &            & Accept                        \\ \hline
+      	\label{table:LL1}
+    	\end{tabular}
+    \caption{A LL(1) parser seen in action parsing the string ``int + int''}
+	}
+	\hfill
+	\parbox{.45\linewidth}{
+		\centering
+    	\begin{tabular}{| l | l | l | l |}                              \hline
+     	  & Workspace  & Input      & Action                         \\ \hline
+    	1 &            & int + int  & Shift                          \\ 
+    	2 & int        & + int      & Reduce T $\rightarrow$ int     \\ 
+    	3 & T          & + int      & Shift                          \\
+    	4 & T +        & int        & Shift                          \\ 
+    	5 & T + int    &            & Reduce T $\rightarrow$ int     \\ 
+   	 	6 & T + T      &            & Reduce E $\rightarrow$ T       \\ 
+   		7 & T + E      &            & Reduce E $\rightarrow$ T + E   \\
+    	8 & E          &            & Reduce S $\rightarrow$ E       \\ 
+      	  & S          &            & Accept                         \\ \hline
+    	\end{tabular}
+    \label{table:LR2}
+    \caption{A LR(2) parser seen in action parsing the string ``int + int''}
+    }
+\end{table}
 
-\begin{center}
-    \begin{tabular}{| l | l | l | l |}                              \hline
-      & Workspace  & Input      & Action                         \\ \hline
-    1 &            & int + int  & Shift                          \\ 
-    2 & int        & + int      & Reduce T $\rightarrow$ int     \\ 
-    3 & T          & + int      & Shift                          \\
-    4 & T +        & int        & Shift                          \\ 
-    5 & T + int    &            & Reduce T $\rightarrow$ int     \\ 
-    6 & T + T      &            & Reduce E $\rightarrow$ T       \\ 
-    7 & T + E      &            & Reduce E $\rightarrow$ T + E   \\
-    8 & E          &            & Reduce S $\rightarrow$ E       \\ 
-      & S          &            & Accept                         \\ \hline
-    \end{tabular}
-    \label{table:LR(2)}
-\end{center}
-
-Compared to the LR-parser, the LL-parsers are much easier to write by hand and understand. They
-are not as powerfull as the LR-parsers in the sense that they do not accept as many grammars, and
-the LR-parser are generally parsing faster. ****** KILDER og flere sammenligninger følger *******
-
-
-
-
-
-   
+\subsection{Comparison of the parsers}
+Compared to the LL-parsers the LR-parsers are more complex and in general harder to write. The result of this however, is the fact that the LR-parsers are more powerful than the LL-parsers, powerful in the sense that they accept a bigger variety of grammars and they parse faster. For instance the LR-parsers can handle grammars with left-recursion, but LL-parsers can't.            
