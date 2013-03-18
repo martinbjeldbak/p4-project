@@ -1,26 +1,26 @@
 \section{Parsers}
 \label{sec:parsers}
 
-In the following section we are going to compare the LL parsers and the LR parsers, by analyzing the advantages and the disadvantages of each. Further more we are going to look at different methods for making parsers, more specifically we are going to analyse the pros and cons against writing the parser by hand versus using parser generator tools to generate it. A parser is the component or algorithm that controls whether or not the source code of a given application is set up syntactically correct according to the programming language it is written in. This process is called the syntax analysis. In short, the parser takes as input the stream of tokens produced by the scanner, and checks if the given sequence of tokens corresponds to the program language's grammar. If this is the case the sequence is syntactically correct else a syntax error has occurred, which has to be dealt with before the compiler or interpreter can proceed. There exists two main approaches to parsing, which have very different ways of dealing with the parsing process and which we are going to describe briefly, that is top-down parsing and bottom-up parsing. From the top-down parsing approach derives the family of LL(k) parsers (the k defines the number of lookahead tokens), where the LL(1) parser is the more popular and widely used one. From the buttom-up approach derives the family of LR(k) parser, which includes the LALR(1) parser and several others.
+In the following section we are going to compare the LL parsers and the LR parsers, by analysing the advantages and the disadvantages of each. Further more we are going to look at different methods for making parsers, more specifically we are going to analyse the pros and cons against writing the parser by hand versus using parser generator tools to generate it. A parser is the component or algorithm that controls whether or not the source code of a given application is set up syntactically correct according to the programming language it is written in. This process is called the syntax analysis. In short, the parser takes as input the stream of tokens produced by the scanner, and checks if the given sequence of tokens corresponds to the program language's grammar. If this is the case the sequence is syntactically correct else a syntax error has occurred, which has to be dealt with before the compiler or interpreter can proceed. There exists two main approaches to parsing, which have very different ways of dealing with the parsing process and which we are going to describe briefly, that is top-down parsing and bottom-up parsing. From the top-down parsing approach derives the family of LL(k) parsers (the k defines the number of lookahead tokens), where the LL(1) parser is the more popular and widely used one. From the bottom-up approach derives the family of LR(k) parser, which includes the LALR(1) parser and several others.
 
-\subsection{Top-down parsing and buttom-up parsing}
+\subsection{Top-down parsing and bottom-up parsing}
 
-In the top-down approach the parsers starts at the start symbol of a grammar and through a series of leftmost derivations tries to match the input string, if possible. On the opposite the buttom-up parsers starts with the input string and through a series of reductions tries to get back to the start symbol. In both approaches a parse tree is build. The root of the parse tree contains the start symbol, and the branches the input string. The LL-parsers
-build the parse tree from the root down to the branches as mentioned above - hench the name top-down parsing. While LR-parser builds the parse tree from the branches up to the root - hench buttom-up.
+In the top-down approach the parsers starts at the start symbol of a grammar and through a series of leftmost derivations tries to match the input string, if possible. On the opposite the bottom-up parsers starts with the input string and through a series of reductions tries to get back to the start symbol. In both approaches a parse tree is build. The root of the parse tree contains the start symbol, and the branches the input string. The LL-parsers
+build the parse tree from the root down to the branches as mentioned above - hence the name top-down parsing. While LR-parser builds the parse tree from the branches up to the root - hence bottom-up.
 
 \subsection{The parsers in action} 
-The LL-parsers has two actions: predict and match. The predict action is used when the parser is trying to guess the next production to apply in order to get closer to the input string. While the match action eats the next unconsumed input symbol if it corresponds to the leftmost predicted terminal. These two actions are continuosly called until the entire input string has been eaten and thereby has been matched. An example of a LL(1) parser in action can be seen in table \ref{table:LL1}. In the example the parser is based on the simple grammar in table 
+The LL-parsers has two actions: predict and match. The predict action is used when the parser is trying to guess the next production to apply in order to get closer to the input string. While the match action eats the next unconsumed input symbol if it corresponds to the leftmost predicted terminal. These two actions are continuously called until the entire input string has been eaten and thereby has been matched. An example of a LL(1) parser in action can be seen in table \ref{table:LL1}. In the example the parser is based on the simple grammar in table 
 
-\centering
+\begin{centering}
 \begin{ebnf}
-\grule{S}{E}
-\grule{E}{T + E}
-\galt{T}
-\grule{T}{int}
+	\grule{S}{E}
+	\grule{E}{T \gcat + \gcat E}
+	\galt{T}
+	\grule{T}{int}
 \end{ebnf}
-
+\end{centering}
 The LR-parsers also has two actions: the shift action and the reduce action. The shift action adds the next input symbol of the input string into a buffer for consideration. The reduce action reduces a collection of nonterminals and terminals into a nonterminal by reversing a production. These two actions are
-continously called until the input string is reduced to the start symbol. \cite{LL(1)andLR(2)inaction}. An example of a LR(2)-parser in action is illustrated in table \ref{table:LR2}.
+continuously called until the input string is reduced to the start symbol. \cite{LL(1)andLR(2)inaction}. An example of a LR(2)-parser in action is illustrated in table \ref{table:LR2}.
 
 \begin{table}
 	\parbox{.45\linewidth}{
@@ -38,7 +38,7 @@ continously called until the input string is reduced to the start symbol. \cite{
       	  &            &            & Accept                        \\ \hline
       	\label{table:LL1}
     	\end{tabular}
-    \caption{A LL(1) parser seen in action parsing the string ``int + int''}
+    \capt{A LL(1) parser seen in action parsing the string ``int + int''}
 	}
 	\hfill
 	\parbox{.45\linewidth}{
