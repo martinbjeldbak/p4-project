@@ -326,7 +326,6 @@ public class Scanner {
     if (current() == '$') {
       return scanVar();
     }
-
     throw new ScannerError("Unidentified character: " + current(), token(Type.EOF));
   }
 
