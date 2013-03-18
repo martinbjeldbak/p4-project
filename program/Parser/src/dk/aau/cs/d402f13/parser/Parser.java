@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Date;
 import java.util.LinkedList;
 import dk.aau.cs.d402f13.parser.AstNode.Type;
 import dk.aau.cs.d402f13.scanner.Scanner;
@@ -397,16 +398,22 @@ public class Parser {
           ByteArrayInputStream bais = new ByteArrayInputStream(
             input.getBytes("UTF-8")
           );
+          System.out.println("Scanning...");
+          Date start = new Date();
           Scanner s = new Scanner(bais);
           LinkedList<Token> tokens = new LinkedList<Token>();
           Token t;
-          System.out.println("Scanning...");
           while ((t = s.scan()).type != Token.Type.EOF) {
             tokens.add(t);
           }
+          long time = new Date().getTime() - start.getTime();
+          System.out.println("Scanning took " + time + " ms");
           System.out.println("Parsing...");
+          start = new Date();
           Parser p = new Parser();
           AstNode ast = p.parse(tokens);
+          time = new Date().getTime() - start.getTime();
+          System.out.println("Parsing took " + time + " ms");
           ast.print();
           OutputStreamWriter f = new OutputStreamWriter(new FileOutputStream(
               new File("ast.dot"), false));
