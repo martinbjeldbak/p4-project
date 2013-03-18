@@ -2,13 +2,9 @@
 A Wikipedia article about programming languages exists which contains a list of 664 different programming language. This tells that constructing a programming language is definitely not a new thing to do. Fortunate enough though, because doing so could at first seem like an overwhelming task, but luckily we can draw knowledge from experienced language designers who have come up with methods which can be used for creating a compiler or interpreter for a programming language. This section describes how it is commonly done and the phases involved, which we use ase a guideline for the construction of \productname{}.
 
 A programming language can be implemented by writing a compiler that translates programs into machine language, which a computer can execute directly \cite[p. 44]{sebesta2013}.
-If the program to be translated is not valid, the compiler should give an error message that best possible helps the programmer identify what error he has made. A good compiler will try to fix the error and continue compilation, so even further errors can be identified, providing the programmer a complete list of errors that can handled all at once instead of one per compilation. Translating one language to another is typically not a simple task, therefore it is often split into different phases, which is shown by \figref{fig:compileroverviewphases} and will be clarified in the following.
+If the program to be translated is not valid, the compiler should give an error message that best possible helps the programmer identify what error he has made. A good compiler will try to fix the error and continue compilation, so even further errors can be identified, providing the programmer a complete list of errors that can handled all at once instead of one per compilation. Translating one language to another is typically not a simple task, therefore it is often split into different phases, which is shown by \figref{fig:compileroverview} and will be clarified in the following.
 
-\begin{figure}
-\centering
-\includegraphics[scale=0.5]{pictures/compileroverview.png}
-\capt{The different phases of a compiler. Based on Sebesta \textit{et al.}\cite{sebesta2013} p. 46, Figure 1.3}\label{fig:compileroverviewphases}
-\end{figure}
+\fig[scale=0.5]{compileroverview}{The different phases of a compiler. Based on Sebesta \textit{et al.}\cite{sebesta2013} p. 46, Figure 1.3}
 
 \subsection{Lexical analysis}
 The lowest level syntactic units of a language is called lexemes. A language's formal description does not often include these. They are instead described by a lexical specification, regular expressions i.e., separated from the syntactic specification\cite[p. 135]{sebesta2013}. Typical lexemes for a programming language includes integer literals, operators and special keywords like \textit{if} and \textit{while}. If both \textit{\$a} and \textit{\$b} are lexemes describing a variable and \textit{102} and \textit{42} are lexemes describing an integer, then \textit{\$a} and \textit{\$b} or \textit{102} and \textit{42} can typically be used interchangeably and still give a meaningful program. Therefore the lexemes are grouped into tokens. The name of a variable or the value of an integer is preserved when tokenising. The tokens are an abstraction that makes it easier to analyse if correct syntax of the language. An example of the grouping of lexemes into tokens can be seen by \tableref{table:lexandtokens}. After the lexical analysis an input stream of characters has been converted to an output stream of tokens.
@@ -54,16 +50,8 @@ Every compiler must focus the translation on the capability of a particular mach
 \subsection{Interpretation}
 A pure interpretation of a program lies at the opposite end (from compilation) regarding to methods of implementation. With this approach, which can be see, on \figref{fig:compileroverviewinterpretation}, no translation is performed at all. An interpreter is interpreting a program written in the targeted language. It acts like a virtual machine which instructions are statements of high level language. By purely using interpretation, a source code debugger can easily be implemented. Various errors that might occur can once they are detected easily refer to which place in the source code that caused the error. The debugging is eased because the interpreter works like a software implementation of a virtual machine, thus the state of the machine and the value of a specific variable can be outputted at any time when requested. This will of course lead to the disadvantage that an interpreter uses more space than a compiler. Further more, the execution speed of an interpreter is usually 10 to 100 times slower than that of a compiler \cite[p. 48]{sebesta2013}.
 
-\begin{figure}
-\centering
-\includegraphics[scale=0.5]{pictures/compileroverviewinterpretation.png}
-\capt{The different phases of an interpreter. Based on Sebesta \textit{et al.}\cite{sebesta2013} p. 48, Figure 1.4}\label{fig:compileroverviewinterpretation}
-\end{figure}
+\fig[scale=0.5]{compileroverviewinterpretation}{The different phases of an interpreter. Based on Sebesta \textit{et al.}\cite{sebesta2013} p. 48, Figure 1.4}
 
 The compiling or interpreting approach can be combined to form a hybrid implementation system. This method is illustrated in \figref{fig:compileroverviewhybrid}, where a program is compiled into an intermediate code which is then interpreted. By using this approach, errors in a program can be detected before interpretation which can save much time for a programmer. A great portability can also be achieved when using hybrid system. The initial implementation of Java was hybrid and allowed Java to be compiled to an intermediate code that could run on any platform which had an implementation of Java Virtual Machine\cite[p. 50]{sebesta2013}. 
 
-\begin{figure}
-\centering
-\includegraphics[scale=0.5]{pictures/compileroverviewhybrid.png}
-\capt{The different phases of a hybrid implementation systems. Based on Sebesta \textit{et al.}\cite{sebesta2013} p. 49, Figure 1.5}\label{fig:compileroverviewhybrid}
-\end{figure}
+\fig[scale=0.5]{compileroverviewhybrid}{The different phases of a hybrid implementation systems. Based on Sebesta \textit{et al.}\cite{sebesta2013} p. 49, Figure 1.5}
