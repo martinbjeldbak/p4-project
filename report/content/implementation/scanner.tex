@@ -10,9 +10,11 @@ A finite automata can be used to recognise tokens specified using regular expres
 Our scanner takes a raw source code for a program written in \productname{} as input. It validates the lexically correctness of a \productname{} program. The scanner tries to find tokens existing in \productname{} from the input. If an input is met which can not be recognized as a valid token, the source code is not a valid program in \productname{}.
 \todo{Error handling?}
  The strings which are converted to tokens are called lexemes. Many lexemes can be converted to the same type of token. Programs will typically contain many different identifiers, which in \productname{} all will have a \tokenref{ID} instantiated. The name of the identifier will then be saved as value belonging the particular token. Consider the example of this single line taken from a chess game written in \productname{}:
+ 
 \begin{lstlisting}
 Black{ Pawn [A7 B7 C7 D7 E7 F7 G7 H7] }
 \end{lstlisting}
+
 The result of analysing the input can be seen in \tableref{table:lexemestotokens}. Tokens are needed for abstraction. When the parser later on will determine if the code respects the grammar of \productname{}, it is useful to have these abstractions. It makes it possible to describe that a list of \tokenref{COORD\_LIT}'s can be encapsulated between the characters ``[ ]'' without having to list all possible coordinate literals, which in fact are an infinite set, since the grammar of \productname{} allows proceeding in both dimensions after \textit{Z9}, namely \textit{Z10} and \textit{AA9}. However, like an identifier, the value of other token types, for instance coordinate literal is still kept since that information will be needed later for the subsequent parts of the interpreter.
 
 \begin{figure}
@@ -49,35 +51,5 @@ For all \methodref{isSomething()} functions, except the \methodref{isWhitespace(
 For example, if the first symbol of a lexeme is an upper-case character, the function \methodref{scanUppercase()} is responsible for determining whether the lexeme is an \tokenref{identifier} or a \tokenref{direction}, because they are the only tokens starting with an upper-case character in \productname{}. Two variables, \typeref{int} \varref{offset} and \typeref{int} \varref{line} keeps track of where in the source file the next input character is taken from. The function \methodref{pop()} will pop the first character from the input stream and assign the value of the new first character to the variable \varref{nextChar}. The \methodref{isSomething()} functions uses that \varref{nextChar} to check what kind of character the next one is.
 The \methodref{pop()} function will additionally increment \varref{offset} by one. If the next input symbol is a whitespace, it assigns zero to  \varref{offset} and increments \varref{line} by one. If an input symbol is met which was not expected, an error is outputted.
  \todo{What to do about errors here?}
-\begin{figure}
-\begin{lstlisting}
-public Token scan() throws Exception {
-  while (isWhitespace()) {
-    pop();
-  }
-  if (isEof()) {
-    return token(Type.EOF);
-  }
-  if (isDigit()) {
-    return scanNumeric();
-  }
-  if (isUppercase()) {
-    return scanUppercase();
-  }
-  if (isOperator()) {
-    return scanOperator();
-  }
-  if (isLowercase()) {
-    return scanKeyword();
-  }
-  if (current() == '"') {
-    return scanString();
-  }
-  if (current() == '$') {
-    return scanVar();
-  }
-  throw new ScannerError("Unidentified character: " + current(), token(Type.EOF));
-}
-\end{lstlisting}
-\capt{The scan() function from the \productname{} scanner.}\label{lst:scan}
-\end{figure}
+ 
+\lstinputlisting[caption="The scan() method from the \productname{} scanner.", label=lst:scan, language=Java]{listings/scan.java}
