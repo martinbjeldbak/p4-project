@@ -28,7 +28,7 @@ A context-free grammar is a collection of substitution rules (or productions) co
 In the following section we give an example of a CFG.
 
 \subsection{Production}
-It is easier to understand what a CFG really is by showing an example. The following is an example of a CFG, which we call \textit{acb}:
+It is easier to understand what a CFG really is by showing an example. The following is an example of a CFG, which we call \textbf{acb}:
 
 \begin{center}
 	\begin{ebnf}
@@ -38,10 +38,10 @@ It is easier to understand what a CFG really is by showing an example. The follo
 	\end{ebnf}
 \end{center}
 
-In the example we have two nonterminals; A and B, and three terminals; a, b, and c. The production for nonterminal A states that A can derive the string ``aAb'' or the string ``B'', and the nonterminal B can derive the string ``c''. When a nonterminal is present in a string they are substituted with their own production. For instance the string \textit{aaacbbb} can be derived from the CFG we called \textit{acb}. It is not really possible to create a lot of different strings with \textit{acb}. It is only possible to create strings with an equal amount of a's and b's with a c in between them.
+In the example we have two nonterminals; A and B, and three terminals; a, b, and c. The production for nonterminal A states that A can derive the string ``aAb'' or the string ``B'', and the nonterminal B can derive the string ``c''. When a nonterminal is present in a string they are substituted with their own production. For instance the string \textit{aaacbbb} can be derived from the CFG we called \textit{acb}. It is not really possible to create a lot of different strings with \textbf{acb}. It is only possible to create strings with an equal amount of a's and b's with a c in between them.
 
 \subsection{Derivation}
-The sequence of substitutions needed to obtain a string from the CFG is called a derivation.\cite[p. 100]{itttoc} A derivation of the above given string \textit{aaacbbb} is:
+The sequence of substitutions needed to obtain a string from the CFG is called a derivation.\cite[p. 100]{itttoc} A derivation of the above given string $aaacbbb$ is:
 
 \[ 
 A \Rightarrow aAb \Rightarrow aaAbb \Rightarrow aaaAbbb \Rightarrow aaaBbbb \Rightarrow aaacbbb 
