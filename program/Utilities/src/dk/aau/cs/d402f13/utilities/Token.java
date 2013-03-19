@@ -30,7 +30,8 @@ public class Token {
     LET, IN, COMMA, 
     // Pattern begin
     PATTERNOP, // '/'
-    PATTERNOR, // | 
+    PATTERN_NOT,
+    PATTERN_OR, // | 
     EOF;
   }
 

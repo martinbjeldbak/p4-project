@@ -251,7 +251,7 @@ public class Scanner {
         t.type = Type.COMMA;
         break;
       case '|':
-        t.type = Type.PATTERNOR;
+        t.type = Type.PATTERN_OR;
         break;
       case '+':
       case '*':
@@ -265,7 +265,7 @@ public class Scanner {
           break;
         }
         else{
-          t.type = Type.PATTERN_OPERATOR; // !
+          t.type = Type.PATTERN_NOT; // !
           break;
         }
           
