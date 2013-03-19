@@ -230,8 +230,9 @@ public class Parser {
     else if (lookAhead(Token.Type.LBRACKET)) {
       node = list();
     }
-    else if (lookAhead(Token.Type.PATTERNOP)) {
+    else if (accept(Token.Type.PATTERNOP)) {
       node = pattern();
+      expect(Token.Type.PATTERNOP);
     }
     else if (accept(Token.Type.KEYWORD)) {
       node = astNode(Type.KEYWORD, currentToken.value);
@@ -324,12 +325,10 @@ public class Parser {
 
   private AstNode pattern() throws SyntaxError {
     AstNode node = astNode(Type.PATTERN, "");
-    expect(Token.Type.PATTERNOP);
     node.addChild(patternExpression());
     while (lookAheadPatterValue()) {
       node.addChild(patternExpression());
     }
-    expect(Token.Type.PATTERNOP);
 
     return node;
   }
@@ -351,28 +350,27 @@ public class Parser {
   }
 
   private AstNode patternValue() throws SyntaxError {
-    AstNode node = astNode(Type.PATTERN_VAL, "");
+    AstNode node;
     if (accept(Token.Type.DIR_LIT)) {
-      node.addChild(astNode(Type.DIR_LIT, currentToken.value));
+      node = astNode(Type.DIR_LIT, currentToken.value);
     }
     else if (accept(Token.Type.VAR)) {
-      node.addChild(astNode(Type.VAR, currentToken.value));
+      node = astNode(Type.VAR, currentToken.value);
     }
     else if (lookAhead(Token.Type.PATTERN_KEYWORD) || lookAhead(Token.Type.THIS) || lookAhead(Token.Type.ID)) {
-      node.addChild(patternCheck());
+      node = patternCheck();
     }
-    else if (accept(Token.Type.NOT_OPERATOR)) {
+    else if (accept(Token.Type.PATTERN_NOT)) {
+      node = astNode(Type.PATTERN_NOT, "");
       node.addChild(patternCheck());
     }
     else if (accept(Token.Type.LPAREN)) {
-      node.addChild(patternExpression());
-      while (!lookAhead(Token.Type.RPAREN)) {
-        node.addChild(patternExpression());
-      }
+      node = pattern();
       expect(Token.Type.RPAREN);
-      if (lookAhead(Token.Type.INT_LIT)) {
-        expect(Token.Type.INT_LIT);
-        node.addChild(astNode(Type.INT_LIT, currentToken.value));
+      if (accept(Token.Type.INT_LIT)) {
+        AstNode mult = astNode(Type.PATTERN_MULTIPLITER, currentToken.value);
+        mult.addChild(node);
+        node = mult;
       }
     }
     else {
@@ -382,23 +380,19 @@ public class Parser {
   }
 
   private AstNode patternCheck() throws SyntaxError {
-    AstNode node = astNode(Type.PATTERN_CHECK, "");
-    if (lookAhead(Token.Type.PATTERN_KEYWORD)) {
-      expect(Token.Type.PATTERN_KEYWORD);
-      node.addChild(astNode(Type.PATTERN_KEYWORD, currentToken.value));
+    AstNode node;
+    if (accept(Token.Type.PATTERN_KEYWORD)) {
+      node = astNode(Type.PATTERN_KEYWORD, currentToken.value);
     }
-    else if (lookAhead(Token.Type.THIS)) {
-      expect(Token.Type.THIS);
-      node.addChild(astNode(Type.THIS, currentToken.value));
+    else if (accept(Token.Type.THIS)) {
+      node = astNode(Type.THIS, currentToken.value);
     }
-    else if (lookAhead(Token.Type.ID)) {
-      expect(Token.Type.ID);
-      node.addChild(astNode(Type.ID, currentToken.value));
+    else if (accept(Token.Type.ID)) {
+      node = astNode(Type.ID, currentToken.value);
     }
     else {
       throw unexpectedError("a pattern operator or an identifier");
     }
-
     return node;
   }
 
