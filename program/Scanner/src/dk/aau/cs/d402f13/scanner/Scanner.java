@@ -229,9 +229,6 @@ public class Scanner {
     t.value += c;
     pop();
     switch (c) {
-      case ',':
-        t.type = Type.COMMA;
-        break;
       case '[':
         t.type = Type.LBRACKET;
         break;
@@ -249,6 +246,12 @@ public class Scanner {
         break;
       case ')':
         t.type = Type.RPAREN;
+        break;
+      case ',':
+        t.type = Type.COMMA;
+        break;
+      case '|':
+        t.type = Type.PATTERNOR;
         break;
       case '+':
       case '*':
