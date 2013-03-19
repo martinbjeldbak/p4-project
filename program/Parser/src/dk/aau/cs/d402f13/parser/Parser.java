@@ -360,8 +360,9 @@ public class Parser {
     else if (lookAhead(Token.Type.PATTERN_KEYWORD) || lookAhead(Token.Type.THIS) || lookAhead(Token.Type.ID)) {
       node = patternCheck();
     }
-    else if (accept(Token.Type.NOT_OPERATOR)) {
-      node = patternCheck();
+    else if (accept(Token.Type.PATTERN_NOT)) {
+      node = astNode(Type.PATTERN_NOT, "");
+      node.addChild(patternCheck());
     }
     else if (accept(Token.Type.LPAREN)) {
       node = pattern();
