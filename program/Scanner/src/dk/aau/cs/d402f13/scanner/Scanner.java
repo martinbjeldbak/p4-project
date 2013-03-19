@@ -256,13 +256,13 @@ public class Scanner {
         break;
       case '!':
         if (current() == '=') {
-          t.value += '"';
+          t.value += '=';
           pop();
-          t.type = Type.NORMAL_OPERATOR; // =>
+          t.type = Type.NORMAL_OPERATOR; // !=
           break;
         }
         else{
-          t.type = Type.PATTERN_OPERATOR;
+          t.type = Type.PATTERN_OPERATOR; // !
           break;
         }
           
