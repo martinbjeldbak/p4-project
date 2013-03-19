@@ -21,7 +21,7 @@ public class AstNode implements Iterable<AstNode> {
     //Expressions
     EXPR, ELEM, FUNC_CALL, ASSIGNMENT, IF_EXPR, LAMBDA_EXPR, LIST, 
     //Patterns
-    PATTERN, PATTERN_EXPR, PATTERN_VAL, PATTERN_CHECK,
+    PATTERN, PATTERN_EXPR, PATTERN_VAL, PATTERN_CHECK, PATTERN_OR, 
     // Special
     VARLIST, NOT_OPERATOR, 
   }
@@ -43,6 +43,10 @@ public class AstNode implements Iterable<AstNode> {
     this.value = value;
     this.line = line;
     this.offset = offset;
+  }
+  
+  public AstNode get(int index) {
+    return children.get(index);
   }
 
   private void exportNode(OutputStreamWriter os) throws IOException {

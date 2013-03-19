@@ -335,13 +335,19 @@ public class Parser {
   }
 
   private AstNode patternExpression() throws SyntaxError {
-    AstNode node = astNode(Type.PATTERN_EXPR, "");
-    node.addChild(patternValue());
-    if (accept(Token.Type.PATTERN_OPERATOR) || accept(Token.Type.SHARED_OPERATOR)) {
-      node.addChild(astNode(Type.PATTERN_OPERATOR, currentToken.value));
+    AstNode subject = patternValue();
+    if (accept(Token.Type.PATTERN_OR)) {
+      AstNode node = astNode(Type.PATTERN_OR, "");
+      node.addChild(subject);
+      node.addChild(patternExpression());
+      return node;
     }
-
-    return node;
+    else if (accept(Token.Type.PATTERN_OPERATOR) || accept(Token.Type.SHARED_OPERATOR)) {
+      AstNode node = astNode(Type.PATTERN_OPERATOR, currentToken.value);
+      node.addChild(subject);
+      return node;
+    }
+    return subject;
   }
 
   private AstNode patternValue() throws SyntaxError {
