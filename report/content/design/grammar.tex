@@ -94,7 +94,7 @@ The following operations are used throughout this section:
 \grule{element}{\gter{(} \gcat expression \gcat \gter{)}}
 \galt{variable}
 \galt{list}
-\galt{pattern}
+\galt{\gter{/} \gcat pattern \gcat \gter{/}}
 \galt{keyword}
 \galt{direction}
 \galt{coordinate}
@@ -111,14 +111,14 @@ The following operations are used throughout this section:
 \subsection{Patterns}
 \begin{ebnf}
 %Patterns
-\grule{pattern}{\gter{/} \gcat pattern\_expr \gcat \grep{pattern\_expr} \gcat \gter{/}}
+\grule{pattern}{pattern\_expr \gcat \grep{pattern\_expr}}
 \grule{pattern\_expr}{pattern\_val \gcat \gopt{\gter{*} \gor \gter{?} \gor \gter{+}}}
 \galt{pattern\_val \gcat \gter{|} \gcat pattern\_expr}
 \grule{pattern\_val}{direction}
 \galt{variable}
 \galt{pattern\_check}
 \galt{\gter{!} \gcat pattern\_check}
-\galt{\gter{(} \gcat pattern\_expr \gcat \grep{pattern\_expr}  \gcat \gter{)} \gcat \gopt{integer}}
+\galt{\gter{(} \gcat pattern \gcat \gter{)} \gcat \gopt{integer}}
 \grule{pattern\_check}{\gter{friend}}
 \galt{\gter{foe}}
 \galt{\gter{empty}}
