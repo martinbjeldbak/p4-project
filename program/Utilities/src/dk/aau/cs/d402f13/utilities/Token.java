@@ -29,7 +29,9 @@ public class Token {
     LAMBDABEGIN, LAMBDAOP,
     LET, IN, COMMA, 
     // Pattern begin
-    PATTERNOP, EOF;
+    PATTERNOP, // '/'
+    PATTERNOR, // | 
+    EOF;
   }
 
   public String value;
