@@ -336,7 +336,7 @@ public class Parser {
 
   private AstNode patternExpression() throws SyntaxError {
     AstNode subject = patternValue();
-    if (accept(Token.Type.PATTERN_OR)) {
+    if (accept(Token.Type.PATTERNOR)) {
       AstNode node = astNode(Type.PATTERN_OR, "");
       node.addChild(subject);
       node.addChild(patternExpression());
