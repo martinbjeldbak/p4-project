@@ -4,7 +4,7 @@ public class Token {
   public enum Type {
     // Keywords
     KEYWORD, GAME, THIS,
-    PATTERN_KEYWORD  // (friend, foe, ...)
+    PATTERN_KEYWORD,  // (friend, foe, ...)
     
     // Operators
     NOT_OPERATOR,
