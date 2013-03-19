@@ -103,7 +103,7 @@ public class Parser {
         || lookAhead(Token.Type.VAR)
         || lookAhead(Token.Type.PATTERN_KEYWORD)
         || lookAhead(Token.Type.ID)
-        || lookAhead(Token.Type.NOT_OPERATOR)  
+        || lookAhead(Token.Type.PATTERN_NOT)  
         || lookAhead(Token.Type.LPAREN);
   }
 
