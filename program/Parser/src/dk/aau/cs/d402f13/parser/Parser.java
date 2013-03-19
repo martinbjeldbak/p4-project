@@ -262,11 +262,15 @@ public class Parser {
   }
 
   private AstNode functionCall() throws SyntaxError {
-    AstNode node = astNode(Type.FUNC_CALL, "");
     expect(Token.Type.FUNCTION);
-    node.addChild(astNode(Type.FUNCTION, currentToken.value));
-    node.addChild(list());
-
+    AstNode node = astNode(Type.FUNC_CALL, currentToken.value);
+    //node.addChild(list());
+    // simplification of tree
+    expect(Token.Type.LBRACKET);
+    while (lookAheadElement()) {
+      node.addChild(element());
+    }
+    expect(Token.Type.RBRACKET);
     return node;
   }
   
