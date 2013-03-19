@@ -21,9 +21,10 @@ public class AstNode implements Iterable<AstNode> {
     //Expressions
     EXPR, ELEM, FUNC_CALL, ASSIGNMENT, IF_EXPR, LAMBDA_EXPR, LIST, 
     //Patterns
-    PATTERN, PATTERN_EXPR, PATTERN_VAL, PATTERN_CHECK, PATTERN_OR, 
+    PATTERN, PATTERN_EXPR, PATTERN_VAL, PATTERN_CHECK, PATTERN_OR, PATTERN_MULTIPLITER,
+    PATTERN_NOT,
     // Special
-    VARLIST, NOT_OPERATOR, 
+    VARLIST, NOT_OPERATOR,  
   }
   
   public Type type;
