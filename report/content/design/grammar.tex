@@ -48,9 +48,11 @@ The following operations are used throughout this section:
 \galt{\gter{title} \gor \gter{players} \gor \gter{turnOrder} \gor \gter{board}}
 \galt{\gter{grid} \gor \gter{setup} \gor \gter{wall} \gor \gter{name} \gor \gter{possibleDrops}}
 \galt{\gter{possibleMoves} \gor \gter{winCondition} \gor \gter{tieCondition}}
-\grule{operator}{\gter{and} \gor \gter{or} \gor \gter{not}}
+\grule{shared\_operator}{\gter{*} \gor \gter{+}}
+\grule{normal\_operator}{\gter{-} \gor \gter{!=} \gor \gter{==} \gor \gter{<=} \gor \gter{>=} \gor \gter{not}}
+\grule{pattern\_operator}{\gter{!} \gor \gter{?} \gor \gter{not}}
+\grule{normal\_not}{\gter{!}}
 \grule{pattern\_keyword}{\gter{friend} \gor \gter{foe} \gor \gter{this} \gor \gter{empty}}
-\grule{pattern\_operator}{\gter{*} \gor \gter{?} \gor \gter{+} \gor \gter{!}}
 \end{ebnf}
 \subsection{Literals}
 \begin{ebnf}
