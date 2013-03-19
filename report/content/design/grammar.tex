@@ -108,6 +108,7 @@ The following operations are used throughout this section:
 %Patterns
 \grule{pattern}{\gter{/} \gcat pattern\_expr \gcat \grep{pattern\_expr} \gcat \gter{/}}
 \grule{pattern\_expr}{pattern\_val \gcat \gopt{\gter{*} \gor \gter{?} \gor \gter{+}}}
+\galt{pattern\_val \gcat \gter{|} \gcat pattern\_expr}
 \grule{pattern\_val}{direction}
 \galt{variable}
 \galt{pattern\_check}
