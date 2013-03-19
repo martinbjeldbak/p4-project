@@ -77,14 +77,14 @@ game {
 		name Knight
 		possibleMoves toActions[
 			(union[
-				(findSquares[ /this n+ne !friend/ ])
-				(findSquares[ /this n+nw !friend/ ])
-				(findSquares[ /this s+se !friend/ ])
-				(findSquares[ /this s+sw !friend/ ])
-				(findSquares[ /this e+ne !friend/ ])
-				(findSquares[ /this e+se !friend/ ])
-				(findSquares[ /this w+nw !friend/ ])
-				(findSquares[ /this w+sw !friend/ ])
+				(findSquares[ /this n ne !friend/ ])
+				(findSquares[ /this n nw !friend/ ])
+				(findSquares[ /this s se !friend/ ])
+				(findSquares[ /this s sw !friend/ ])
+				(findSquares[ /this e ne !friend/ ])
+				(findSquares[ /this e se !friend/ ])
+				(findSquares[ /this w nw !friend/ ])
+				(findSquares[ /this w sw !friend/ ])
 			])
 		]
 	}
