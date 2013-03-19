@@ -1,4 +1,4 @@
-Package ScannerParser;
+Package dk.aau.cs.d402f13.ScannerParser;
 
 Helpers
   blank            = (' ' | 13 | 10)+;
