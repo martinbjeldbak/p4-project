@@ -103,7 +103,7 @@ public class Parser {
         || lookAhead(Token.Type.VAR)
         || lookAhead(Token.Type.PATTERN_KEYWORD)
         || lookAhead(Token.Type.ID)
-        || lookAhead(Token.Type.NOTOP)  
+        || lookAhead(Token.Type.NOT_OPERATOR)  
         || lookAhead(Token.Type.LPAREN);
   }
 
@@ -196,7 +196,7 @@ public class Parser {
     }
     else if (lookAheadElement()) {
       AstNode element = element();
-      if (accept(Token.Type.OPERATOR)) {
+      if (accept(Token.Type.NORMAL_OPERATOR)) {
         AstNode operation = astNode(Type.OPERATOR, currentToken.value);
         operation.addChild(element);
         operation.addChild(expression());
@@ -332,7 +332,7 @@ public class Parser {
     else if (lookAhead(Token.Type.PATTERN_KEYWORD) || lookAhead(Token.Type.THIS) || lookAhead(Token.Type.ID)) {
       node.addChild(patternCheck());
     }
-    else if (accept(Token.Type.NOTOP)) {
+    else if (accept(Token.Type.NOT_OPERATOR)) {
       node.addChild(patternCheck());
     }
     else if (accept(Token.Type.LPAREN)) {
