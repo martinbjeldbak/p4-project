@@ -176,26 +176,23 @@ public class Parser {
   }
 
   private AstNode structure() throws SyntaxError {
-    AstNode node = astNode(Type.STRUCT, "");
     if (lookAhead(Token.Type.LBRACE)) {
-      node.addChild(declerationStruct());
+      return declerationStruct();
     }
     else {
-      node.addChild(expression());
+      return expression();
     }
-    return node;
   }
 
   // EXPRESSIONS
   private AstNode expression() throws SyntaxError {
-    AstNode node = astNode(Type.EXPR, "");
     if (lookAhead(Token.Type.FUNCTION)) {
-      node.addChild(functionCall());
+      return functionCall();
     }
     else if (accept(Token.Type.NOT_OPERATOR)) {
       AstNode operation = astNode(Type.NOT_OPERATOR, "");
       operation.addChild(expression());
-      node.addChild(operation);
+      return operation;
     }
     else if (lookAheadElement()) {
       AstNode element = element();
@@ -203,65 +200,60 @@ public class Parser {
         AstNode operation = astNode(Type.OPERATOR, currentToken.value);
         operation.addChild(element);
         operation.addChild(expression());
-        node.addChild(operation);
+        return operation;
       }
       else {
-        node.addChild(element);
+        return element;
       }
     }
     else if (lookAhead(Token.Type.IF)) {
-      node.addChild(ifExpression());
+      return ifExpression();
     }
     else if (lookAhead(Token.Type.LAMBDABEGIN)) {
-      node.addChild(lambdaExpression());
+      return lambdaExpression();
     }
-    else {
-      throw unexpectedError("an expression");
-    }
-
-    return node;
+    throw unexpectedError("an expression");
   }
 
   private AstNode element() throws SyntaxError {
     AstNode node = astNode(Type.ELEM, "");
     if (accept(Token.Type.LPAREN)) {
-      node.addChild(expression());
+      node = expression();
       expect(Token.Type.RPAREN);
     }
     else if (accept(Token.Type.VAR)) {
-      node.addChild(astNode(Type.VAR, currentToken.value));
+      node = astNode(Type.VAR, currentToken.value);
     }
     else if (lookAhead(Token.Type.LBRACKET)) {
-      node.addChild(list());
+      node = list();
     }
     else if (lookAhead(Token.Type.PATTERNOP)) {
-      node.addChild(pattern());
+      node = pattern();
     }
     else if (accept(Token.Type.KEYWORD)) {
-      node.addChild(astNode(Type.KEYWORD, currentToken.value));
+      node = astNode(Type.KEYWORD, currentToken.value);
     }
     else if (accept(Token.Type.THIS)) {
-      node.addChild(astNode(Type.KEYWORD, "this"));
+      node = astNode(Type.KEYWORD, "this");
     }
     else if (accept(Token.Type.DIR_LIT)) {
-      node.addChild(astNode(Type.DIR_LIT, currentToken.value));
+      node = astNode(Type.DIR_LIT, currentToken.value);
     }
     else if (accept(Token.Type.COORD_LIT)) {
-      node.addChild(astNode(Type.COORD_LIT, currentToken.value));
+      node = astNode(Type.COORD_LIT, currentToken.value);
     }
     else if (accept(Token.Type.INT_LIT)) {
-      node.addChild(astNode(Type.INT_LIT, currentToken.value));
+      node = astNode(Type.INT_LIT, currentToken.value);
     }
     else if (accept(Token.Type.STRING_LIT)) {
-      node.addChild(astNode(Type.STRING_LIT, currentToken.value));
+      node = astNode(Type.STRING_LIT, currentToken.value);
     }
     else if (accept(Token.Type.ID)) {
-      node.addChild(astNode(Type.ID, currentToken.value));
+      node = astNode(Type.ID, currentToken.value);
     }
     else {
       throw unexpectedError("an element");
     }
-
     return node;
   }
 
