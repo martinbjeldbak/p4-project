@@ -10,6 +10,8 @@ public class Token {
     NOT_OPERATOR,
     SHARED_OPERATOR, //those that is used both as normal_operator and pattern_operator
     PATTERN_OPERATOR, NORMAL_OPERATOR,
+    
+    ASSIGN,
 
     // Literals
     INT_LIT, DIR_LIT, COORD_LIT,
