@@ -205,7 +205,7 @@ public class Parser {
     }
     else if (lookAheadElement()) {
       AstNode element = element();
-      if (accept(Token.Type.NORMAL_OPERATOR)) {
+      if (accept(Token.Type.NORMAL_OPERATOR) || accept(Token.Type.SHARED_OPERATOR)) {
         AstNode operation = astNode(Type.OPERATOR, currentToken.value);
         operation.addChild(element);
         operation.addChild(expression());
@@ -279,9 +279,10 @@ public class Parser {
     while (accept(Token.Type.COMMA)) {
       AstNode assignment = astNode(Type.ASSIGNMENT, "");
       expect(Token.Type.VAR);
-      node.addChild(astNode(Type.VAR, currentToken.value));
+      assignment.addChild(astNode(Type.VAR, currentToken.value));
       expect(Token.Type.ASSIGN);
-      node.addChild(expression());
+      assignment.addChild(expression());
+      node.addChild(assignment);
     }
     expect(Token.Type.IN);
     node.addChild(expression());
@@ -336,7 +337,7 @@ public class Parser {
   private AstNode patternExpression() throws SyntaxError {
     AstNode node = astNode(Type.PATTERN_EXPR, "");
     node.addChild(patternValue());
-    if (accept(Token.Type.PATTERN_OPERATOR)) {
+    if (accept(Token.Type.PATTERN_OPERATOR) || accept(Token.Type.SHARED_OPERATOR)) {
       node.addChild(astNode(Type.PATTERN_OPERATOR, currentToken.value));
     }
 
