@@ -27,6 +27,7 @@ public class Token {
     IF, THEN, ELSE,
     // lambda
     LAMBDABEGIN, LAMBDAOP,
+    LET, IN, COMMA, 
     // Pattern begin
     PATTERNOP, EOF;
   }
