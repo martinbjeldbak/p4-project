@@ -407,8 +407,10 @@ public class Parser {
           time = new Date().getTime() - start.getTime();
           System.out.println("Parsing took " + time + " ms");
           ast.print();
-          OutputStreamWriter f = new OutputStreamWriter(new FileOutputStream(
-              new File("ast.dot"), false));
+          OutputStreamWriter f = new OutputStreamWriter(
+              new FileOutputStream(
+              new File("ast.dot"), false)
+          );
           ast.export(f);
           f.close();
         }
