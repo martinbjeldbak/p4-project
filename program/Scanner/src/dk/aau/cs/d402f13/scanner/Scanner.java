@@ -14,7 +14,7 @@ import dk.aau.cs.d402f13.utilities.Token.Type;
 @SuppressWarnings("unused")
 public class Scanner {
   public static final String whitespace = " \t\r\n";
-  public static final String operators = "!&*+-=>?(){}#[]/|,";
+  public static final String operators = "!&*+-=><?(){}#[]/|,";
   
   private int line = 1;
   private int offset = -1;
@@ -255,6 +255,17 @@ public class Scanner {
         t.type = Type.SHARED_OPERATOR; //can be both normal operator and pattern operator
         break;
       case '!':
+        if (current() == '=') {
+          t.value += '"';
+          pop();
+          t.type = Type.NORMAL_OPERATOR; // =>
+          break;
+        }
+        else{
+          t.type = Type.PATTERN_OPERATOR;
+          break;
+        }
+          
       case '?':
         t.type = Type.PATTERN_OPERATOR;
         break;
@@ -268,6 +279,7 @@ public class Scanner {
           break;
         }
         else if (current() == '=') {
+          t.value += '=';
           pop();
           t.type = Type.NORMAL_OPERATOR; // ==
           break;
@@ -278,6 +290,7 @@ public class Scanner {
         }
       case '>':
         if (current() == '=') {  // >=
+          t.value += '=';
           pop();
           t.type = Type.NORMAL_OPERATOR;
           break;
@@ -288,6 +301,7 @@ public class Scanner {
         }
       case '<':
         if (current() == '=') { // <=
+          t.value += '=';
           pop();
           t.type = Type.NORMAL_OPERATOR;
           break;
