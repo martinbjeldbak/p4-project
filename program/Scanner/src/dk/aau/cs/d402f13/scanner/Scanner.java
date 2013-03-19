@@ -14,7 +14,7 @@ import dk.aau.cs.d402f13.utilities.Token.Type;
 @SuppressWarnings("unused")
 public class Scanner {
   public static final String whitespace = " \t\r\n";
-  public static final String operators = "!&*+-=>?(){}#[]/|";
+  public static final String operators = "!&*+-=>?(){}#[]/|,";
   
   private int line = 1;
   private int offset = -1;
@@ -154,6 +154,12 @@ public class Scanner {
       case "or":
         t.type = Token.Type.NORMAL_OPERATOR;
         break;
+      case "let":
+        t.type = Token.Type.LET;
+        break;
+      case "in":
+        t.type = Token.Type.IN;
+        break;
       case "not":
         t.type = Token.Type.NOT_OPERATOR;
         break;
@@ -222,7 +228,10 @@ public class Scanner {
     char c = current();
     t.value += c;
     pop();
-    switch (c) { // these operators are unambiguous
+    switch (c) {
+      case ',':
+        t.type = Type.COMMA;
+        break;
       case '[':
         t.type = Type.LBRACKET;
         break;
