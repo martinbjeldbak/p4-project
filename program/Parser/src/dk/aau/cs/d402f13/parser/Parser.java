@@ -194,6 +194,15 @@ public class Parser {
       operation.addChild(expression());
       return operation;
     }
+    else if (lookAhead(Token.Type.LET)) {
+      return assignment();
+    }
+    else if (lookAhead(Token.Type.IF)) {
+      return ifExpression();
+    }
+    else if (lookAhead(Token.Type.LAMBDABEGIN)) {
+      return lambdaExpression();
+    }
     else if (lookAheadElement()) {
       AstNode element = element();
       if (accept(Token.Type.NORMAL_OPERATOR)) {
@@ -205,12 +214,6 @@ public class Parser {
       else {
         return element;
       }
-    }
-    else if (lookAhead(Token.Type.IF)) {
-      return ifExpression();
-    }
-    else if (lookAhead(Token.Type.LAMBDABEGIN)) {
-      return lambdaExpression();
     }
     throw unexpectedError("an expression");
   }
@@ -263,6 +266,25 @@ public class Parser {
     node.addChild(astNode(Type.FUNCTION, currentToken.value));
     node.addChild(list());
 
+    return node;
+  }
+  
+  private AstNode assignment() throws SyntaxError {
+    AstNode node = astNode(Type.ASSIGNMENT, "");
+    expect(Token.Type.LET);
+    expect(Token.Type.VAR);
+    node.addChild(astNode(Type.VAR, currentToken.value));
+    expect(Token.Type.ASSIGN);
+    node.addChild(expression());
+    while (accept(Token.Type.COMMA)) {
+      AstNode assignment = astNode(Type.ASSIGNMENT, "");
+      expect(Token.Type.VAR);
+      node.addChild(astNode(Type.VAR, currentToken.value));
+      expect(Token.Type.ASSIGN);
+      node.addChild(expression());
+    }
+    expect(Token.Type.IN);
+    node.addChild(expression());
     return node;
   }
 
