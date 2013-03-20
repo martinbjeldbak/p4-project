@@ -30,11 +30,11 @@ SableCC is a bottom-up parser generator that generates LALR(1) parsers. This gen
 
 The following is a list of advantages that LR parsers have:\cite[pp. 193]{sebesta2013} \todo{kontroller sidetal! afsnit 4.5.3}
 
-\begin{itemize}[noitemsep]
+\begin{dlist}
 \item LR parsers can be built for all programming languages
 \item They can detect syntax errors as soon as it is possible in a left-to-right scan
 \item The LR class is a proper superset of the class parsable by LL parsers
-\begin{itemize}[noitemsep]
+\begin{dlist}
 \item Many left-recursive grammars are LR, but none are LL.
 \end{itemize}
 \end{itemize}
@@ -51,14 +51,14 @@ The LL class of grammars cannot contain left-recursion like some LR grammars can
 \label{sec:ana-parsersum}
 By reading the above section about handwritten parser we can conclude the following advantages by handwriting a parser:
 
-\begin{itemize}[noitemsep]
+\begin{dlist}
 \item Gain experience in constructing parsers
 \item Gain a better understanding of how parsers work
 \end{itemize}
 
 We will be gaining a lot of experience by writing a parser by hand and solving the problems that arise along the way. But there are quite a few disadvantages accompanied with handwriting a parser, and they are as follows.
 
-\begin{itemize}[noitemsep]
+\begin{dlist}
 \item Can be error-prone
 \item Can be time-consuming to construct
 \item Time-consuming to maintain
@@ -68,7 +68,7 @@ We will be gaining a lot of experience by writing a parser by hand and solving t
 
 We've summed up the advantages and disadvantages of handwritten parsers. Know we take a short look at the advantages of generated parsers. By reading the above section about the automatically generated parsers we can conclude the following advantages:
 
-\begin{itemize}[noitemsep]
+\begin{dlist}
 \item Efficient
 \item Reliable
 \item Fast
