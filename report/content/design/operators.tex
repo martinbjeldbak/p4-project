@@ -1,26 +1,72 @@
 \section{Operators}
 
-The following boolean operators are made available to the user of \productname:
+\productname{} supports a number of built-in operators. In this section the operators
+of \productname{} are described using the format:
 
+\operator[LeftOperandType]{operator}{RightOperandType}{ReturnType}
 
-\begin{itemize}
-  \item \ig{Boolean \igb{and} Boolean}\\
+The available types are described in \secref{sec:types}.
+Operations that are not described in this section can be considered invalid.
+
+\subsection{Boolean operators}
+
+These operators only accept boolean operands and only return boolean values.
+
+\begin{dlist}
+  \item \operator[Boolean]{and}{Boolean}{Boolean}\\
     Returns true when both operands are true and false otherwise. 
-  \item \ig{Boolean \igb{or} Boolean}\\
+  \item \operator[Boolean]{or}{Boolean}{Boolean}\\
     Returns true when at least one of the operands are true and false otherwise.
-  \item \ig{\igb{not} Boolean} \\
+  \item \operator{not}{Boolean}{Boolean}\\
     Returns true if the single operand is false and false otherwise.
-\end{itemize}
+\end{dlist}
+
+\subsection{Comparison operators}
+
+These operators are used when comparing other values, they will always return
+boolean values.
+
+\begin{dlist}
+  \item \operator[Integer]{<}{Integer}{Boolean}\\
+    Returns true if the left operand is less than the right one.
+  \item \operator[Integer]{>}{Integer}{Boolean}\\
+    Returns true if the left operand is greater than the right one.
+  \item \operator[Integer]{<=}{Integer}{Boolean}\\
+    Returns true if the left operand is less than or equal to the right one.
+  \item \operator[Integer]{>=}{Integer}{Boolean}\\
+    Returns true if the left operand is greater than or equal to the right one.
+  \item \operator[Integer]{==}{Integer}{Boolean}\\
+    \operator[String]{==}{String}{Boolean}\\
+    \operator[Boolean]{==}{Boolean}{Boolean}\\
+    Returns true if the left operand is equal to the right one.
+  \item \operator[Integer]{!=}{Integer}{Boolean}\\
+    \operator[String]{!=}{String}{Boolean}\\
+    \operator[Boolean]{!=}{Boolean}{Boolean}\\
+    Returns true if the left operand is not equal to the right one.
+\end{dlist}
+
+\subsection{Integer operators}
 
 The following operations are possible on integers:
 
-\begin{itemize}
-  \item \ig{Integer \igb{+} Integer} \\
-    Integer addition
-  \item \ig{Integer \igb{-} Integer} \\
-    Integer subtraction
-  \item \ig{Integer \igb{*} Integer} \\
-    Integer multiplication
-  \item \ig{Integer \igb{/} Integer} \\
-    Integer division
-\end{itemize}
+\begin{dlist}
+  \item \operator[Integer]{+}{Integer}{Integer} \\
+    Integer addition.
+  \item \operator[Integer]{-}{Integer}{Integer} \\
+    Integer subtraction.
+  \item \operator[Integer]{*}{Integer}{Integer} \\
+    Integer multiplication.
+  \item \operator[Integer]{/}{Integer}{Integer} \\
+    Integer division.
+\end{dlist}
+
+\subsection{String operators}
+
+It is possible to concatenate strings:
+
+\begin{dlist}
+  \item \operator[String]{+}{String}{String} \\
+    Returns the concatenation of two strings.
+  \item \operator[String]{+}{Integer}{String} \\
+    Returns the concatenation of a string and the string-representation of an integer.
+\end{dlist}
