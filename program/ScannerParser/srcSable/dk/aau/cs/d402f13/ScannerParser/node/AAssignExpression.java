@@ -5,46 +5,46 @@ package dk.aau.cs.d402f13.ScannerParser.node;
 import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 
 @SuppressWarnings("nls")
-public final class AFriendPatternCheck extends PPatternCheck
+public final class AAssignExpression extends PExpression
 {
-    private TFriend _friend_;
+    private PAssignment _assignment_;
 
-    public AFriendPatternCheck()
+    public AAssignExpression()
     {
         // Constructor
     }
 
-    public AFriendPatternCheck(
-        @SuppressWarnings("hiding") TFriend _friend_)
+    public AAssignExpression(
+        @SuppressWarnings("hiding") PAssignment _assignment_)
     {
         // Constructor
-        setFriend(_friend_);
+        setAssignment(_assignment_);
 
     }
 
     @Override
     public Object clone()
     {
-        return new AFriendPatternCheck(
-            cloneNode(this._friend_));
+        return new AAssignExpression(
+            cloneNode(this._assignment_));
     }
 
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseAFriendPatternCheck(this);
+        ((Analysis) sw).caseAAssignExpression(this);
     }
 
-    public TFriend getFriend()
+    public PAssignment getAssignment()
     {
-        return this._friend_;
+        return this._assignment_;
     }
 
-    public void setFriend(TFriend node)
+    public void setAssignment(PAssignment node)
     {
-        if(this._friend_ != null)
+        if(this._assignment_ != null)
         {
-            this._friend_.parent(null);
+            this._assignment_.parent(null);
         }
 
         if(node != null)
@@ -57,23 +57,23 @@ public final class AFriendPatternCheck extends PPatternCheck
             node.parent(this);
         }
 
-        this._friend_ = node;
+        this._assignment_ = node;
     }
 
     @Override
     public String toString()
     {
         return ""
-            + toString(this._friend_);
+            + toString(this._assignment_);
     }
 
     @Override
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._friend_ == child)
+        if(this._assignment_ == child)
         {
-            this._friend_ = null;
+            this._assignment_ = null;
             return;
         }
 
@@ -84,9 +84,9 @@ public final class AFriendPatternCheck extends PPatternCheck
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        if(this._friend_ == oldChild)
+        if(this._assignment_ == oldChild)
         {
-            setFriend((TFriend) newChild);
+            setAssignment((PAssignment) newChild);
             return;
         }
 

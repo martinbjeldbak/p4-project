@@ -5,16 +5,16 @@ package dk.aau.cs.d402f13.ScannerParser.node;
 import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 
 @SuppressWarnings("nls")
-public final class TEmpty extends Token
+public final class TIn extends Token
 {
-    public TEmpty()
+    public TIn()
     {
-        super.setText("empty");
+        super.setText("in");
     }
 
-    public TEmpty(int line, int pos)
+    public TIn(int line, int pos)
     {
-        super.setText("empty");
+        super.setText("in");
         setLine(line);
         setPos(pos);
     }
@@ -22,18 +22,18 @@ public final class TEmpty extends Token
     @Override
     public Object clone()
     {
-      return new TEmpty(getLine(), getPos());
+      return new TIn(getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseTEmpty(this);
+        ((Analysis) sw).caseTIn(this);
     }
 
     @Override
     public void setText(@SuppressWarnings("unused") String text)
     {
-        throw new RuntimeException("Cannot change TEmpty text.");
+        throw new RuntimeException("Cannot change TIn text.");
     }
 }

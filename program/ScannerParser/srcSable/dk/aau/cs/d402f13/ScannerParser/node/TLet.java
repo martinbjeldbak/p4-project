@@ -5,16 +5,16 @@ package dk.aau.cs.d402f13.ScannerParser.node;
 import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 
 @SuppressWarnings("nls")
-public final class TFriend extends Token
+public final class TLet extends Token
 {
-    public TFriend()
+    public TLet()
     {
-        super.setText("friend");
+        super.setText("let");
     }
 
-    public TFriend(int line, int pos)
+    public TLet(int line, int pos)
     {
-        super.setText("friend");
+        super.setText("let");
         setLine(line);
         setPos(pos);
     }
@@ -22,18 +22,18 @@ public final class TFriend extends Token
     @Override
     public Object clone()
     {
-      return new TFriend(getLine(), getPos());
+      return new TLet(getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseTFriend(this);
+        ((Analysis) sw).caseTLet(this);
     }
 
     @Override
     public void setText(@SuppressWarnings("unused") String text)
     {
-        throw new RuntimeException("Cannot change TFriend text.");
+        throw new RuntimeException("Cannot change TLet text.");
     }
 }

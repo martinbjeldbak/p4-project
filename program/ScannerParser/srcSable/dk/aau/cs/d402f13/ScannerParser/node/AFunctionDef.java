@@ -2,6 +2,7 @@
 
 package dk.aau.cs.d402f13.ScannerParser.node;
 
+import java.util.*;
 import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 
 @SuppressWarnings("nls")
@@ -10,7 +11,7 @@ public final class AFunctionDef extends PFunctionDef
     private TDefine _define_;
     private TFunction _function_;
     private TLBkt _lBkt_;
-    private TVariable _variable_;
+    private final LinkedList<TVariable> _variable_ = new LinkedList<TVariable>();
     private TRBkt _rBkt_;
     private PExpression _expression_;
 
@@ -23,7 +24,7 @@ public final class AFunctionDef extends PFunctionDef
         @SuppressWarnings("hiding") TDefine _define_,
         @SuppressWarnings("hiding") TFunction _function_,
         @SuppressWarnings("hiding") TLBkt _lBkt_,
-        @SuppressWarnings("hiding") TVariable _variable_,
+        @SuppressWarnings("hiding") List<?> _variable_,
         @SuppressWarnings("hiding") TRBkt _rBkt_,
         @SuppressWarnings("hiding") PExpression _expression_)
     {
@@ -49,7 +50,7 @@ public final class AFunctionDef extends PFunctionDef
             cloneNode(this._define_),
             cloneNode(this._function_),
             cloneNode(this._lBkt_),
-            cloneNode(this._variable_),
+            cloneList(this._variable_),
             cloneNode(this._rBkt_),
             cloneNode(this._expression_));
     }
@@ -135,29 +136,30 @@ public final class AFunctionDef extends PFunctionDef
         this._lBkt_ = node;
     }
 
-    public TVariable getVariable()
+    public LinkedList<TVariable> getVariable()
     {
         return this._variable_;
     }
 
-    public void setVariable(TVariable node)
+    public void setVariable(List<?> list)
     {
-        if(this._variable_ != null)
+        for(TVariable e : this._variable_)
         {
-            this._variable_.parent(null);
+            e.parent(null);
         }
+        this._variable_.clear();
 
-        if(node != null)
+        for(Object obj_e : list)
         {
-            if(node.parent() != null)
+            TVariable e = (TVariable) obj_e;
+            if(e.parent() != null)
             {
-                node.parent().removeChild(node);
+                e.parent().removeChild(e);
             }
 
-            node.parent(this);
+            e.parent(this);
+            this._variable_.add(e);
         }
-
-        this._variable_ = node;
     }
 
     public TRBkt getRBkt()
@@ -244,9 +246,8 @@ public final class AFunctionDef extends PFunctionDef
             return;
         }
 
-        if(this._variable_ == child)
+        if(this._variable_.remove(child))
         {
-            this._variable_ = null;
             return;
         }
 
@@ -287,10 +288,22 @@ public final class AFunctionDef extends PFunctionDef
             return;
         }
 
-        if(this._variable_ == oldChild)
+        for(ListIterator<TVariable> i = this._variable_.listIterator(); i.hasNext();)
         {
-            setVariable((TVariable) newChild);
-            return;
+            if(i.next() == oldChild)
+            {
+                if(newChild != null)
+                {
+                    i.set((TVariable) newChild);
+                    newChild.parent(this);
+                    oldChild.parent(null);
+                    return;
+                }
+
+                i.remove();
+                oldChild.parent(null);
+                return;
+            }
         }
 
         if(this._rBkt_ == oldChild)
