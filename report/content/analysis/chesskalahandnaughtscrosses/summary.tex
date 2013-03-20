@@ -1,61 +1,24 @@
 \subsection{Summarised interesting game elements}
 \label{subsec:differences}
-<<<<<<< HEAD
+
 From looking at the board games Chess and Kalah, many different game elements have been recognised. For a programming language that allows theses two games to be implemented, all of the game elements must be possible to be designed in the programming language. A summarised list of the game elements has been created. In the list some of the elements from the above analysis have been combined and described by a more general element. Also some elements from the above analysis have been split up and been formulated into more detailed ones and some new elements has been found which has also been added to the list. The resulting list looks as follow:  
 
 \begin{dlist}
-  \item[General game elements]
-  	\begin{dlist}
-  		\item A game has an initial setup.
-  		\item A game can be a tie if the game is in one or more specific states.
-  		\item A player can win if the game is in one or more specific states where winning conditions. 
-  	\end{dlist}
-  \item[The pieces]
-  	\begin{dlist}
-  		\item A piece can be either on the board or off the board (e.g. If a piece has been captured in chess).
-  			\begin{dlist}
-  				\item If a piece is on the board it is positioned on one specific square.
-  				\item A piece off the board may be put back on the board. (This happens in the promotion move in chess).
-  			\end{dlist}
-  		\item A game can contain of one or more types of pieces.
-  		\item A piece can belong to a player.
-  	\end{dlist}
-  \item[The squares]
-  \item[The players]
-  	\begin{dlist}
-  		\item At any given time, just one player has the turn.
-  		\item A player's turn can consist of more than one move.
-  		\item If a piece is owned by a player, only that player can use it's moves.
-  	\end{dlist}
-  \item[The board]
-  	\begin{dlist}
-  		\item A game has a single board.
-  		\item A board contains of squares in a two-dimensional grid.
-  	\end{dlist}
-=======
-From looking at the three board games (Chess, Kalah, and Naughts \& Crosses) many different game elements have been recognised. For a programming language that allows all of the three games to be described, all of the game elements in each of those must be able to be designed in the programming language. Some of the elements are very similar, an may have been described by a more general element. For example, the rook piece and the bishop piece in chess do not have equal moves but their moves have been generalised to just \textit{movement by patterns}. A summarised list of the game elements in the earlier mentioned board games can be seen here:
-\begin{dlist}
-  \item The game has a single board.
-  \item The board contains squares in a two-dimensional grid.
-  \item The game contains one or more types of pieces.
-  \item The game has an initial setup.
-  \item There are no dice.
-  \item There are no cards.
-  \item A piece can be either on the board or off the board. 
-  \begin{dlist}
-  \item If a piece is on the board it is positioned on one specific square.
-  \item A piece that is off the board may be put on the board.
-  \end{dlist}
-  \item A piece belongs to a player.
-  \item A pattern may consider the position of occupied squares, empty squares or other pieces on the board in relation to a specific square or a specific piece on the board.
-  \item A piece has a set of moves which might be an empty set. The possible moves may be based on a pattern.
-  \item A piece may or shall be removed / exchanged based on a pattern.
-  \item At any given time, just one player has the turn.
-  \item If a piece is owned by a player, only that player can use its moves.
-  \item A player's turn can consist of more than one move.
-  \item A player can win if the game is in one or more specific states, which can consider a pattern.
-  \item A game can be a tie if the game is in one or more specific states, which can consider a pattern.
->>>>>>> 4cdebf6508143f767e1fe964ff97560fc63a7405
+  	\item A game has an initial setup.
+  	\item A game can be a tie if the game is in one or more specific states.
+  	\item A player can win if the game is in one or more specific states where winning conditions. 
+  	\item A piece can be either on the board or off the board (e.g. If a piece has been captured in chess).
+  		\begin{dlist}
+  			\item If a piece is on the board it is positioned on one specific square.
+  			\item A piece off the board may be put back on the board. (This happens in the promotion move in chess).
+  		\end{dlist}
+  	\item A game can contain of one or more types of pieces.
+  	\item A piece can belong to a player.
+  	\item At any given time, just one player has the turn.
+  	\item A player's turn can consist of more than one move.
+  	\item If a piece is owned by a player, only that player can use it's moves.
+  	\item A game has a single board.
+  	\item A board contains of squares in a two-dimensional grid.
 \end{dlist}
 
 The above-mentioned list will be used to set up the requirements for the design of our programming language. 
