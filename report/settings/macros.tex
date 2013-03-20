@@ -21,6 +21,22 @@
 
 \newcommand{\codesample}[1]{\input{codesamples/#1}}
 
+%itemize
+\newenvironment{dlist}{
+\begin{itemize}[noitemsep]
+}{
+\end{itemize}
+}
+
+%enumerate
+\newenvironment{nlist}{
+\begin{enumerate}[noitemsep]
+}{
+\end{enumerate}
+}
+
+\newcommand{\operator}[4][]{\texttt{#1 \textbf{\color{nicered}#2} #3 $\rightarrow$ #4}}
+
 \newenvironment{ebnf} {
   \begin{center}
     \begin{tabular}{p{3cm} c p{7cm}}
@@ -52,18 +68,18 @@
 \newcommand{\gcat}{ \: }
 
 % Table
-\newcommand{\tab}[7]{
-\begin{table}[H]
+\newcommand{\tab}[8][\textwidth]{
+\begin{table}[ht]
   \centering
-    \begin{tabularx}{\textwidth}{ r | >{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X } %Errr, doesn't seem to give any errors, but fix it if possible
+    \begin{tabularx}{#1}{ r | >{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X } %Errr, doesn't seem to give any errors, but fix it if possible
   \hline
-  & \multicolumn{#2}{c}{\textbf{#4}} \\
-   \textbf{#5}    & #6 \\ \hline
-	#7
+  & \multicolumn{#3}{c}{\textbf{#5}} \\
+   \textbf{#6}    & #7 \\ \hline
+	#8
 	\hline
     \end{tabularx}
-    \capt{#3}
-    \label{table:#1}
+    \capt{#4}
+    \label{table:#2}
 \end{table}
 }
 

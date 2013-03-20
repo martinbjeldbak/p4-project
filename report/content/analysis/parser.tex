@@ -22,43 +22,71 @@ The LL-parsers has two actions: predict and match. The predict action is used wh
 The LR-parsers also has two actions: the shift action and the reduce action. The shift action adds the next input symbol of the input string into a buffer for consideration. The reduce action reduces a collection of nonterminals and terminals into a nonterminal by reversing a production. These two actions are
 continuously called until the input string is reduced to the start symbol. \cite{LL(1)andLR(2)inaction}. An example of a LR(2)-parser in action is illustrated in table \ref{table:LR2}.
 
-\begin{table}
-	\parbox{.45\linewidth}{
-		\centering
-    	\begin{tabular}{| l | l | l | l |}                             \hline
-      	  & Production & Input      & Action                        \\ \hline
-    	1 & S          & int + int  & Predict S $\rightarrow$ E     \\ 
-    	2 & E          & int + int  & Predict E $\rightarrow$ T + E \\ 
-    	3 & T + E      & int + int  & Predict T $\rightarrow$ int   \\
-    	4 & int + E    & int + int  & Match int                     \\ 
-    	5 & + E        & + int      & Match +                       \\ 
-    	6 & E          & int        & Predict E $\rightarrow$ T     \\ 
-    	7 & T          & int        & Predict T $\rightarrow$ int   \\
-    	8 & int        & int        & Match int                     \\ 
-      	  &            &            & Accept                        \\ \hline
-      	\label{table:LL1}
-    	\end{tabular}
-    \capt{A LL(1) parser seen in action parsing the string ``int + int''}
-	}
-	\hfill
-	\parbox{.45\linewidth}{
-		\centering
-    	\begin{tabular}{| l | l | l | l |}                              \hline
-     	  & Workspace  & Input      & Action                         \\ \hline
-    	1 &            & int + int  & Shift                          \\ 
-    	2 & int        & + int      & Reduce T $\rightarrow$ int     \\ 
-    	3 & T          & + int      & Shift                          \\
-    	4 & T +        & int        & Shift                          \\ 
-    	5 & T + int    &            & Reduce T $\rightarrow$ int     \\ 
-   	 	6 & T + T      &            & Reduce E $\rightarrow$ T       \\ 
-   		7 & T + E      &            & Reduce E $\rightarrow$ T + E   \\
-    	8 & E          &            & Reduce S $\rightarrow$ E       \\ 
-      	  & S          &            & Accept                         \\ \hline
-    	\end{tabular}
-    \label{table:LR2}
-    \caption{A LR(2) parser seen in action parsing the string ``int + int''}
-    }
-\end{table}
+\tab[11cm]{LL1}{3}{A LL(1) parser seen in action parsing the string ``int + int''.}
+	      {The process                                              }
+{Step  	 }{Production & Input       & Action                        }{
+\tabrow{1}{$S$        & $int + int$ & Predict $S \rightarrow E$     }
+\tabrow{2}{$E$	      & $int + int$ & Predict $E \rightarrow T + E$ }
+\tabrow{3}{$T+E$      & $int + int$ & Predict $T \rightarrow int$   }
+\tabrow{4}{$int+E$    & $int + int$ & Match $int$  				    }
+\tabrow{5}{$+E$       & $+ int$ 	& Match $+$					    }
+\tabrow{6}{$E$ 	      & $int$ 		& Predict $E \rightarrow T$     }
+\tabrow{7}{$T$ 	      & $int$ 		& Predict $T \rightarrow int$   }
+\tabrow{8}{$int$      & $int$       & Match $int$   				}
+\tabrow{ }{           &             & Accept						}
+}
+
+\tab[11cm]{LR2}{3}{A LR(2) parser seen in action parsing the string ``int + int''.}
+	      {The process}
+{Step  	 }{Production & Input       & Action                     }{
+\tabrow{1}{           & $int + int$ & Shift   					 }
+\tabrow{2}{$int$      & $+ int$     & Reduce $T \rightarrow int$ }
+\tabrow{3}{$T$        & $+ int$     & Shift     				 }
+\tabrow{4}{$T+$       & $int$ 		& Shift						 }
+\tabrow{5}{$T+int$    & 			& Reduce $T \rightarrow int$ }
+\tabrow{6}{$T+T$ 	  &             & Reduce $E \rightarrow T$   }
+\tabrow{7}{$T+E$ 	  &      		& Reduce $E \rightarrow T+E$ }
+\tabrow{8}{$E$        &             & Reduce $S \rightarrow E$   }
+\tabrow{ }{$S$        &             & Accept					 }
+}
+
+%\begin{table}
+%	\parbox{.45\linewidth}{
+%		\centering
+%    	\begin{tabular}{| l | l | l | l |}                             \hline
+%      	  & Production & Input      & Action                        \\ \hline
+%    	1 & S          & int + int  & Predict S $\rightarrow$ E     \\ 
+%    	2 & E          & int + int  & Predict E $\rightarrow$ T + E \\ 
+%    	3 & T + E      & int + int  & Predict T $\rightarrow$ int   \\
+%    	4 & int + E    & int + int  & Match int                     \\ 
+%    	5 & + E        & + int      & Match +                       \\ 
+%    	6 & E          & int        & Predict E $\rightarrow$ T     \\ 
+%    	7 & T          & int        & Predict T $\rightarrow$ int   \\
+%    	8 & int        & int        & Match int                     \\ 
+%      	  &            &            & Accept                        \\ \hline
+%      	\label{table:LL1}
+%    	\end{tabular}
+%    \capt{A LL(1) parser seen in action parsing the string ``int + int''}
+%	}
+%	\hfill
+%	\parbox{.45\linewidth}{
+%		\centering
+%    	\begin{tabular}{| l | l | l | l |}                              \hline
+%     	  & Workspace  & Input      & Action                         \\ \hline
+%    	1 &            & int + int  & Shift                          \\ 
+%    	2 & int        & + int      & Reduce T $\rightarrow$ int     \\ 
+%    	3 & T          & + int      & Shift                          \\
+%    	4 & T +        & int        & Shift                          \\ 
+%    	5 & T + int    &            & Reduce T $\rightarrow$ int     \\ 
+%   	6 & T + T      &            & Reduce E $\rightarrow$ T       \\ 
+%   	7 & T + E      &            & Reduce E $\rightarrow$ T + E   \\
+%    	8 & E          &            & Reduce S $\rightarrow$ E       \\ 
+%      	  & S          &            & Accept                         \\ \hline
+%    	\end{tabular}
+ %   \label{table:LR2}
+ %   \capt{A LR(2) parser seen in action parsing the string ``int + int''}
+ %   }
+%\end{table}
 
 \subsection{Comparison of the parsers}
 Compared to the LL-parsers the LR-parsers are more complex and in general harder to write. The result of this however, is the fact that the LR-parsers are more powerful than the LL-parsers, powerful in the sense that they accept a bigger variety of grammars and they parse faster. For instance the LR-parsers can handle grammars with left-recursion, but LL-parsers can't.            
