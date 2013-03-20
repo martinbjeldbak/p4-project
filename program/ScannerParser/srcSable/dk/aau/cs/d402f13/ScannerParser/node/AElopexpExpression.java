@@ -5,18 +5,18 @@ package dk.aau.cs.d402f13.ScannerParser.node;
 import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 
 @SuppressWarnings("nls")
-public final class AElopexprExpression extends PExpression
+public final class AElopexpExpression extends PExpression
 {
     private PElement _element_;
     private TOperator _operator_;
     private PExpression _expression_;
 
-    public AElopexprExpression()
+    public AElopexpExpression()
     {
         // Constructor
     }
 
-    public AElopexprExpression(
+    public AElopexpExpression(
         @SuppressWarnings("hiding") PElement _element_,
         @SuppressWarnings("hiding") TOperator _operator_,
         @SuppressWarnings("hiding") PExpression _expression_)
@@ -33,7 +33,7 @@ public final class AElopexprExpression extends PExpression
     @Override
     public Object clone()
     {
-        return new AElopexprExpression(
+        return new AElopexpExpression(
             cloneNode(this._element_),
             cloneNode(this._operator_),
             cloneNode(this._expression_));
@@ -42,7 +42,7 @@ public final class AElopexprExpression extends PExpression
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseAElopexprExpression(this);
+        ((Analysis) sw).caseAElopexpExpression(this);
     }
 
     public PElement getElement()

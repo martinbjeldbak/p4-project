@@ -16,50 +16,24 @@ Our scanner takes a raw source code for a program written in \productname{} as i
 
 The result of analysing the input can be seen in \tableref{table:lexemestotokens}. Tokens are needed for abstraction. When the parser later on will determine if the code respects the grammar of \productname{}, it is useful to have these abstractions. It makes it possible to describe that a list of \tokenref{COORD\_LIT}'s can be encapsulated between the characters ``[ ]'' without having to list all possible coordinate literals, which in fact are an infinite set, since the grammar of \productname{} allows proceeding in both dimensions after \textit{Z9}, namely \textit{Z10} and \textit{AA9}. However, like an identifier, the value of other token types, for instance coordinate literal is still kept since that information will be needed later for the subsequent parts of the interpreter.
 
-\begin{figure}
-	\centering
-		\begin{tabular}{|c|l|}
-        	\hline
-        	\textbf{Lexemes} & \textbf{Tokens} 	\\ 
-        	\hline
-        	Black   & IDENTIFIER (Black) 		\\ 
-        	\{      & LBRACE             		\\ 
-        	Pawn    & IDENTIFIER (Pawn)  		\\ 
-    	    $[$     & LBRACKET           		\\ 
-	        A7      & COORD\_LIT (A7)     		\\ 
-  	    	B7      & COORD\_LIT (B7)     		\\ 
-        	C7      & COORD\_LIT (C7)     		\\ 
-        	D7      & COORD\_LIT (D7)     		\\ 
-        	E7      & COORD\_LIT (E7)     		\\ 
-        	F7      & COORD\_LIT (F7)     		\\ 
-        	G7      & COORD\_LIT (G7)     		\\ 
-        	H7      & COORD\_LIT (H7)     		\\ 
-        	$]$     & RBRACKET           		\\ 
-        	\}      & RBRACE            		\\ 
-        	\hline
-		\end{tabular}
-	\capt{Analysing an input stream for lexemes and tokens.}
-	\label{table:lexemestotokens}
-\end{figure}
-
-%\tab{lexemestotokens}{1}{Analysing an input stream for lexemes and tokens.}
-%                 {Tokens}
-%       {Lexemes	}{						}{
-%\tabrow{Black 	}{ IDENTIFIER (Black)	}
-%\tabrow{\{    	}{ LBRACE 				}
-%\tabrow{Pawn  	}{ IDENTIFIER (Pawn)	}
-%\tabrow{[    	}{ LBRACKET				}
-%\tabrow{A7    	}{ COORD\_LIT(A7)		}
-%\tabrow{B7    	}{ COORD\_LIT(B7)		}
-%\tabrow{C7    	}{ COORD\_LIT(C7)		}
-%\tabrow{D7    	}{ COORD\_LIT(D7)		}
-%\tabrow{E7    	}{ COORD\_LIT(E7)		}
-%\tabrow{F7    	}{ COORD\_LIT(F7)		}
-%\tabrow{G7    	}{ COORD\_LIT(G7)		}
-%\tabrow{H7    	}{ COORD\_LIT(H7)		}
-%\tabrow{]		}{ RBRACKET 			}
-%\tabrow{\}    	}{ RBRACE				}
-%}
+\tab[8cm]{lexemestotokens}{1}{Analysing an input stream for lexemes and tokens.}
+                 {Tokens}
+       {Lexemes	}{						}{
+\tabrow{Black 	}{ IDENTIFIER (Black)	}
+\tabrow{\{    	}{ LBRACE 				}
+\tabrow{Pawn  	}{ IDENTIFIER (Pawn)	}
+\tabrow{$[$    	}{ LBRACKET				}
+\tabrow{A7    	}{ COORD\_LIT(A7)		}
+\tabrow{B7    	}{ COORD\_LIT(B7)		}
+\tabrow{C7    	}{ COORD\_LIT(C7)		}
+\tabrow{D7    	}{ COORD\_LIT(D7)		}
+\tabrow{E7    	}{ COORD\_LIT(E7)		}
+\tabrow{F7    	}{ COORD\_LIT(F7)		}
+\tabrow{G7    	}{ COORD\_LIT(G7)		}
+\tabrow{H7    	}{ COORD\_LIT(H7)		}
+\tabrow{$]$		}{ RBRACKET 			}
+\tabrow{\}    	}{ RBRACE				}
+}
 
 Our scanner contains 2 classes, \classref{Scanner} and \classref{Token}. \classref{Token} contains an enum named \classref{Type} that enumerates all the types of tokens in \productname{}. When a lexeme is found in the input stream, the scanner analyses which token type it belongs to. A new token is then instantiated and returned by the scanner. The constructor for \classref{Token} takes the arguments (\classref{Token.Type}, \textit{line}, \textit{offset}). The \textit{line} and \textit{offset} represent where in the source code the lexeme of any token where found. This is essential if an error is found, since we can then inform a programmer where in his source code he should look for the error.
  

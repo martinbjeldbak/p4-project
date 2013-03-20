@@ -1,14 +1,16 @@
 Package dk.aau.cs.d402f13.ScannerParser;
 
 Helpers
-  blank            = (' ' | 13 | 10)+;
+  tab              = 9;
+  cr               = 13;
+  lf               = 10;
   decimal          = ['0' .. '9'];
   lowercase        = ['a' .. 'z'];
   uppercase        = ['A' .. 'Z'];
-  anycase          = lowercase | uppercase;
-  quotebs          = '"' | '\';
   unichar          = [0 .. 0xffff];
-  strchar          = unichar; // - quotebs
+  quote            = '"';
+  backslash        = '\';
+  strchar          = [unichar - [quote + backslash]];
   keyword          = 'game' | 'piece' | 'this' | 'width' | 'height'
                    | 'title' | 'players' | 'turnOrder' | 'board'
                    | 'grid' | 'setup' | 'wall' | 'name' | 'possibleDrops'
@@ -18,16 +20,15 @@ Helpers
   pattern_operator = '*' | '?' | '+' | '!';
   direction        = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
   star_qmark_plus  = '*'
-                      | '?'
-                      | '+';
-  
+                   | '?'
+                   | '+';
+ 
 Tokens
-  blank            = blank;
+  eol              = cr | lf | cr lf;
+  blank            = ' ' | tab;
   decimal          = decimal;
   lowercase        = lowercase;
   uppercase        = uppercase;
-  anycase          = anycase;
-  quotebs          = quotebs;
   unichar          = unichar;
   strchar          = strchar;
   keyword          = keyword;
@@ -36,16 +37,6 @@ Tokens
   pattern_operator = pattern_operator;
   direction        = direction;
   star_qmark_plus  = star_qmark_plus;
-  
-  integer    = decimal+;
-  coordinate = uppercase+ decimal+;
-  string     = '"' (strchar | '\' unichar)* '"';
-
-  /* identifiers */
-  function   = lowercase anycase+;
-  identifier = uppercase anycase*;
-  variable   = '$' anycase+;
-  
   define     = 'define';
   game       = 'game';
   l_bkt      = '[';
@@ -60,7 +51,7 @@ Tokens
   then       = 'then';
   else       = 'else';
   pound      = '#';
-  l_arrow    = '=>';
+  arrow      = '=>';
   slash      = '/';
   star       = '*';
   q_mark     = '?';
@@ -71,28 +62,37 @@ Tokens
   empty      = 'empty';
   this       = 'this';
   
+  integer    = decimal+;
+  coordinate = uppercase+ decimal+;
+  string     = '"' (strchar | '\' unichar)* '"';
+
+  /* identifiers */
+  function   = lowercase (lowercase | uppercase)+;
+  identifier = uppercase (lowercase | uppercase)*;
+  variable   = '$' (lowercase | uppercase)+;
+  
 Ignored Tokens
-  blank;
+  blank, eol;
   
 Productions
-
   program            = function_def* game_decl;
-  function_def       = define function l_bkt variable* r_bkt expression;
+  function_def       = define function l_bkt variable r_bkt expression;
   game_decl          = game decl_struct;
   decl_struct        = l_brc decl+ r_brc;
   decl               = {keystruc} keyword structure
                      | {idstruc} identifier structure;
                      
-  structure          = {declstruc} decl_struct | {expr} expression;
+  structure          = {declstruc} decl_struct
+                     | {expr} expression;
   
   /* expressions */
   expression    = {func} function_call
-                | {elopexpr} element operator expression
+                | {elopexp} element operator expression
                 | {if} if_expr
                 | {lambda} lambda_expr
                 | {el} element
                 | {not} not expression;
-  element       = {lexprr}  l_par expression r_par
+  element       = {expr} l_par expression r_par
                 | {var} variable
                 | {list} list
                 | {pat} pattern
@@ -105,7 +105,7 @@ Productions
                 | {func} function;
   function_call = function list;
   if_expr       = if [left]:expression then expression else [right]:expression;
-  lambda_expr   = pound l_bkt variable* r_bkt l_arrow expression;
+  lambda_expr   = pound l_bkt variable* r_bkt arrow expression;
   list          = l_bkt element* r_bkt;
   
   /* patterns */

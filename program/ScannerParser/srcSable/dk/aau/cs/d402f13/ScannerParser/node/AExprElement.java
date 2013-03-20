@@ -5,18 +5,18 @@ package dk.aau.cs.d402f13.ScannerParser.node;
 import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 
 @SuppressWarnings("nls")
-public final class ALexprrElement extends PElement
+public final class AExprElement extends PElement
 {
     private TLPar _lPar_;
     private PExpression _expression_;
     private TRPar _rPar_;
 
-    public ALexprrElement()
+    public AExprElement()
     {
         // Constructor
     }
 
-    public ALexprrElement(
+    public AExprElement(
         @SuppressWarnings("hiding") TLPar _lPar_,
         @SuppressWarnings("hiding") PExpression _expression_,
         @SuppressWarnings("hiding") TRPar _rPar_)
@@ -33,7 +33,7 @@ public final class ALexprrElement extends PElement
     @Override
     public Object clone()
     {
-        return new ALexprrElement(
+        return new AExprElement(
             cloneNode(this._lPar_),
             cloneNode(this._expression_),
             cloneNode(this._rPar_));
@@ -42,7 +42,7 @@ public final class ALexprrElement extends PElement
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseALexprrElement(this);
+        ((Analysis) sw).caseAExprElement(this);
     }
 
     public TLPar getLPar()

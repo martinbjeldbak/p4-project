@@ -5,14 +5,14 @@ package dk.aau.cs.d402f13.ScannerParser.node;
 import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 
 @SuppressWarnings("nls")
-public final class TQuotebs extends Token
+public final class TEol extends Token
 {
-    public TQuotebs(String text)
+    public TEol(String text)
     {
         setText(text);
     }
 
-    public TQuotebs(String text, int line, int pos)
+    public TEol(String text, int line, int pos)
     {
         setText(text);
         setLine(line);
@@ -22,12 +22,12 @@ public final class TQuotebs extends Token
     @Override
     public Object clone()
     {
-      return new TQuotebs(getText(), getLine(), getPos());
+      return new TEol(getText(), getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseTQuotebs(this);
+        ((Analysis) sw).caseTEol(this);
     }
 }

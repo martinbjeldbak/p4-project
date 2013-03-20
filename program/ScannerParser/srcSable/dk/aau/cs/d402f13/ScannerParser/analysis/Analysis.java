@@ -21,12 +21,12 @@ public interface Analysis extends Switch
     void caseADeclstrucStructure(ADeclstrucStructure node);
     void caseAExprStructure(AExprStructure node);
     void caseAFuncExpression(AFuncExpression node);
-    void caseAElopexprExpression(AElopexprExpression node);
+    void caseAElopexpExpression(AElopexpExpression node);
     void caseAIfExpression(AIfExpression node);
     void caseALambdaExpression(ALambdaExpression node);
     void caseAElExpression(AElExpression node);
     void caseANotExpression(ANotExpression node);
-    void caseALexprrElement(ALexprrElement node);
+    void caseAExprElement(AExprElement node);
     void caseAVarElement(AVarElement node);
     void caseAListElement(AListElement node);
     void caseAPatElement(APatElement node);
@@ -56,12 +56,11 @@ public interface Analysis extends Switch
     void caseAThisPatternCheck(AThisPatternCheck node);
     void caseAIdPatternCheck(AIdPatternCheck node);
 
+    void caseTEol(TEol node);
     void caseTBlank(TBlank node);
     void caseTDecimal(TDecimal node);
     void caseTLowercase(TLowercase node);
     void caseTUppercase(TUppercase node);
-    void caseTAnycase(TAnycase node);
-    void caseTQuotebs(TQuotebs node);
     void caseTUnichar(TUnichar node);
     void caseTStrchar(TStrchar node);
     void caseTKeyword(TKeyword node);
@@ -70,12 +69,6 @@ public interface Analysis extends Switch
     void caseTPatternOperator(TPatternOperator node);
     void caseTDirection(TDirection node);
     void caseTStarQmarkPlus(TStarQmarkPlus node);
-    void caseTInteger(TInteger node);
-    void caseTCoordinate(TCoordinate node);
-    void caseTString(TString node);
-    void caseTFunction(TFunction node);
-    void caseTIdentifier(TIdentifier node);
-    void caseTVariable(TVariable node);
     void caseTDefine(TDefine node);
     void caseTGame(TGame node);
     void caseTLBkt(TLBkt node);
@@ -89,7 +82,7 @@ public interface Analysis extends Switch
     void caseTThen(TThen node);
     void caseTElse(TElse node);
     void caseTPound(TPound node);
-    void caseTLArrow(TLArrow node);
+    void caseTArrow(TArrow node);
     void caseTSlash(TSlash node);
     void caseTStar(TStar node);
     void caseTQMark(TQMark node);
@@ -99,6 +92,12 @@ public interface Analysis extends Switch
     void caseTFoe(TFoe node);
     void caseTEmpty(TEmpty node);
     void caseTThis(TThis node);
+    void caseTInteger(TInteger node);
+    void caseTCoordinate(TCoordinate node);
+    void caseTString(TString node);
+    void caseTFunction(TFunction node);
+    void caseTIdentifier(TIdentifier node);
+    void caseTVariable(TVariable node);
     void caseEOF(EOF node);
     void caseInvalidToken(InvalidToken node);
 }
