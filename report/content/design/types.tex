@@ -1,23 +1,50 @@
 \section{Types}
 \label{sec:types}
 
-The language should have support for the following types:
+\productname{} has support for the following types: Integer, String, Direction, Coordinate,
+Function, Pattern, List and Action.
 
-\begin{description}
+There is no $null$-type or $null$-value, since all expressions must have a value. This
+is also evident in the definition of the $if$-expression in \secref{sec:grammar}, in that
+all $if$-expressions must have the $else$-branch.
+
+\subsection{Integer}
+The integer-type in \productname{} represents a 32-bit integer.
+
+An integer-value can be created using an integer-literal, such as \texttt{2155} or \texttt{0}.
+
+\subsection{String}
+The string-type represents a UTF-8 encoded string.
+
+A string-value is created using a string-literal, such as \texttt{"Hello, World"} or \texttt{""}.
+
+\subsection{Direction}
+The direction-type represents a direction on a game board.
+
+\fig{direction_n}{The \texttt{n}-direction.}
+
+\subsection{Coordinate}
+
+\subsection{Function}
+
+\subsection{Pattern}
+
+\subsection{List}
+
+\subsection{Action}
+
+\begin{description}[noitemsep]
 \item[Integer] a 32-bit signed integer.
 \item[String] a UTF-8 encoded string.
 \item[Direction] a directional value.
 \item[Coordinate] a 2-dimensional vector consisting of an $x$-integer value and
 a $y$-integer value, representing a position in a grid.
-\item[Function] a function reference (could be anonoymous, e.g. lambda expression).
+\item[Function] a function reference (could be anonymous, e.g. lambda expression).
 \item[Pattern] a pattern used for matching patterns on the board.
 \item[List] a list of values (can be empty).
 \item[Action]
 \end{description}
 
-There is no $null$-type or $null$-value, since all expressions must have a value. This
-is also evident in the definition of the $if$-expression in \secref{sec:grammar}, in that
-all $if$-expressions must have the $else$-branch.
 
 Dynamic typing.
 
