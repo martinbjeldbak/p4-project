@@ -2,15 +2,14 @@
 
 package dk.aau.cs.d402f13.ScannerParser.node;
 
-import java.util.*;
 import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 
 @SuppressWarnings("nls")
 public final class ALpatexprrPatternVal extends PPatternVal
 {
     private TLPar _lPar_;
-    private final LinkedList<PPatternExpr> _patternExpr_ = new LinkedList<PPatternExpr>();
-    private TRPar _rPar_;
+    private PPattern _pattern_;
+    private TInteger _integer_;
 
     public ALpatexprrPatternVal()
     {
@@ -19,15 +18,15 @@ public final class ALpatexprrPatternVal extends PPatternVal
 
     public ALpatexprrPatternVal(
         @SuppressWarnings("hiding") TLPar _lPar_,
-        @SuppressWarnings("hiding") List<?> _patternExpr_,
-        @SuppressWarnings("hiding") TRPar _rPar_)
+        @SuppressWarnings("hiding") PPattern _pattern_,
+        @SuppressWarnings("hiding") TInteger _integer_)
     {
         // Constructor
         setLPar(_lPar_);
 
-        setPatternExpr(_patternExpr_);
+        setPattern(_pattern_);
 
-        setRPar(_rPar_);
+        setInteger(_integer_);
 
     }
 
@@ -36,8 +35,8 @@ public final class ALpatexprrPatternVal extends PPatternVal
     {
         return new ALpatexprrPatternVal(
             cloneNode(this._lPar_),
-            cloneList(this._patternExpr_),
-            cloneNode(this._rPar_));
+            cloneNode(this._pattern_),
+            cloneNode(this._integer_));
     }
 
     @Override
@@ -71,42 +70,16 @@ public final class ALpatexprrPatternVal extends PPatternVal
         this._lPar_ = node;
     }
 
-    public LinkedList<PPatternExpr> getPatternExpr()
+    public PPattern getPattern()
     {
-        return this._patternExpr_;
+        return this._pattern_;
     }
 
-    public void setPatternExpr(List<?> list)
+    public void setPattern(PPattern node)
     {
-        for(PPatternExpr e : this._patternExpr_)
+        if(this._pattern_ != null)
         {
-            e.parent(null);
-        }
-        this._patternExpr_.clear();
-
-        for(Object obj_e : list)
-        {
-            PPatternExpr e = (PPatternExpr) obj_e;
-            if(e.parent() != null)
-            {
-                e.parent().removeChild(e);
-            }
-
-            e.parent(this);
-            this._patternExpr_.add(e);
-        }
-    }
-
-    public TRPar getRPar()
-    {
-        return this._rPar_;
-    }
-
-    public void setRPar(TRPar node)
-    {
-        if(this._rPar_ != null)
-        {
-            this._rPar_.parent(null);
+            this._pattern_.parent(null);
         }
 
         if(node != null)
@@ -119,7 +92,32 @@ public final class ALpatexprrPatternVal extends PPatternVal
             node.parent(this);
         }
 
-        this._rPar_ = node;
+        this._pattern_ = node;
+    }
+
+    public TInteger getInteger()
+    {
+        return this._integer_;
+    }
+
+    public void setInteger(TInteger node)
+    {
+        if(this._integer_ != null)
+        {
+            this._integer_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
+            {
+                node.parent().removeChild(node);
+            }
+
+            node.parent(this);
+        }
+
+        this._integer_ = node;
     }
 
     @Override
@@ -127,8 +125,8 @@ public final class ALpatexprrPatternVal extends PPatternVal
     {
         return ""
             + toString(this._lPar_)
-            + toString(this._patternExpr_)
-            + toString(this._rPar_);
+            + toString(this._pattern_)
+            + toString(this._integer_);
     }
 
     @Override
@@ -141,14 +139,15 @@ public final class ALpatexprrPatternVal extends PPatternVal
             return;
         }
 
-        if(this._patternExpr_.remove(child))
+        if(this._pattern_ == child)
         {
+            this._pattern_ = null;
             return;
         }
 
-        if(this._rPar_ == child)
+        if(this._integer_ == child)
         {
-            this._rPar_ = null;
+            this._integer_ = null;
             return;
         }
 
@@ -165,27 +164,15 @@ public final class ALpatexprrPatternVal extends PPatternVal
             return;
         }
 
-        for(ListIterator<PPatternExpr> i = this._patternExpr_.listIterator(); i.hasNext();)
+        if(this._pattern_ == oldChild)
         {
-            if(i.next() == oldChild)
-            {
-                if(newChild != null)
-                {
-                    i.set((PPatternExpr) newChild);
-                    newChild.parent(this);
-                    oldChild.parent(null);
-                    return;
-                }
-
-                i.remove();
-                oldChild.parent(null);
-                return;
-            }
+            setPattern((PPattern) newChild);
+            return;
         }
 
-        if(this._rPar_ == oldChild)
+        if(this._integer_ == oldChild)
         {
-            setRPar((TRPar) newChild);
+            setInteger((TInteger) newChild);
             return;
         }
 
