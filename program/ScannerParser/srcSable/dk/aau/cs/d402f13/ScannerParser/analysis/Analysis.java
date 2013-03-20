@@ -56,11 +56,11 @@ public interface Analysis extends Switch
     void caseAThisPatternCheck(AThisPatternCheck node);
     void caseAIdPatternCheck(AIdPatternCheck node);
 
+    void caseTEol(TEol node);
     void caseTBlank(TBlank node);
     void caseTDecimal(TDecimal node);
     void caseTLowercase(TLowercase node);
     void caseTUppercase(TUppercase node);
-    void caseTAnycase(TAnycase node);
     void caseTUnichar(TUnichar node);
     void caseTStrchar(TStrchar node);
     void caseTKeyword(TKeyword node);
@@ -82,7 +82,7 @@ public interface Analysis extends Switch
     void caseTThen(TThen node);
     void caseTElse(TElse node);
     void caseTPound(TPound node);
-    void caseTLArrow(TLArrow node);
+    void caseTArrow(TArrow node);
     void caseTSlash(TSlash node);
     void caseTStar(TStar node);
     void caseTQMark(TQMark node);

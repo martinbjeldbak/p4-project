@@ -7,14 +7,14 @@ import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 @SuppressWarnings("nls")
 public final class TStar extends Token
 {
-    public TStar(String text)
+    public TStar()
     {
-        setText(text);
+        super.setText("*");
     }
 
-    public TStar(String text, int line, int pos)
+    public TStar(int line, int pos)
     {
-        setText(text);
+        super.setText("*");
         setLine(line);
         setPos(pos);
     }
@@ -22,12 +22,18 @@ public final class TStar extends Token
     @Override
     public Object clone()
     {
-      return new TStar(getText(), getLine(), getPos());
+      return new TStar(getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTStar(this);
+    }
+
+    @Override
+    public void setText(@SuppressWarnings("unused") String text)
+    {
+        throw new RuntimeException("Cannot change TStar text.");
     }
 }

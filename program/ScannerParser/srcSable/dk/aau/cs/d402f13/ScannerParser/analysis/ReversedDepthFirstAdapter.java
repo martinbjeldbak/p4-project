@@ -87,13 +87,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getRBkt().apply(this);
         }
+        if(node.getVariable() != null)
         {
-            List<TVariable> copy = new ArrayList<TVariable>(node.getVariable());
-            Collections.reverse(copy);
-            for(TVariable e : copy)
-            {
-                e.apply(this);
-            }
+            node.getVariable().apply(this);
         }
         if(node.getLBkt() != null)
         {
@@ -721,9 +717,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getExpression().apply(this);
         }
-        if(node.getLArrow() != null)
+        if(node.getArrow() != null)
         {
-            node.getLArrow().apply(this);
+            node.getArrow().apply(this);
         }
         if(node.getRBkt() != null)
         {

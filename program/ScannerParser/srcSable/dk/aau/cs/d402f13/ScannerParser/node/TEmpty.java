@@ -7,14 +7,14 @@ import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 @SuppressWarnings("nls")
 public final class TEmpty extends Token
 {
-    public TEmpty(String text)
+    public TEmpty()
     {
-        setText(text);
+        super.setText("empty");
     }
 
-    public TEmpty(String text, int line, int pos)
+    public TEmpty(int line, int pos)
     {
-        setText(text);
+        super.setText("empty");
         setLine(line);
         setPos(pos);
     }
@@ -22,12 +22,18 @@ public final class TEmpty extends Token
     @Override
     public Object clone()
     {
-      return new TEmpty(getText(), getLine(), getPos());
+      return new TEmpty(getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTEmpty(this);
+    }
+
+    @Override
+    public void setText(@SuppressWarnings("unused") String text)
+    {
+        throw new RuntimeException("Cannot change TEmpty text.");
     }
 }

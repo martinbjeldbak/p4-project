@@ -90,12 +90,9 @@ public class DepthFirstAdapter extends AnalysisAdapter
         {
             node.getLBkt().apply(this);
         }
+        if(node.getVariable() != null)
         {
-            List<TVariable> copy = new ArrayList<TVariable>(node.getVariable());
-            for(TVariable e : copy)
-            {
-                e.apply(this);
-            }
+            node.getVariable().apply(this);
         }
         if(node.getRBkt() != null)
         {
@@ -733,9 +730,9 @@ public class DepthFirstAdapter extends AnalysisAdapter
         {
             node.getRBkt().apply(this);
         }
-        if(node.getLArrow() != null)
+        if(node.getArrow() != null)
         {
-            node.getLArrow().apply(this);
+            node.getArrow().apply(this);
         }
         if(node.getExpression() != null)
         {

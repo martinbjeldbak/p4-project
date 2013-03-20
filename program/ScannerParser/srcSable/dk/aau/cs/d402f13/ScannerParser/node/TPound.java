@@ -7,14 +7,14 @@ import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 @SuppressWarnings("nls")
 public final class TPound extends Token
 {
-    public TPound(String text)
+    public TPound()
     {
-        setText(text);
+        super.setText("#");
     }
 
-    public TPound(String text, int line, int pos)
+    public TPound(int line, int pos)
     {
-        setText(text);
+        super.setText("#");
         setLine(line);
         setPos(pos);
     }
@@ -22,12 +22,18 @@ public final class TPound extends Token
     @Override
     public Object clone()
     {
-      return new TPound(getText(), getLine(), getPos());
+      return new TPound(getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTPound(this);
+    }
+
+    @Override
+    public void setText(@SuppressWarnings("unused") String text)
+    {
+        throw new RuntimeException("Cannot change TPound text.");
     }
 }

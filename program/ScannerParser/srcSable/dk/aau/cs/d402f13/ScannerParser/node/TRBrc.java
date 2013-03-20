@@ -7,14 +7,14 @@ import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 @SuppressWarnings("nls")
 public final class TRBrc extends Token
 {
-    public TRBrc(String text)
+    public TRBrc()
     {
-        setText(text);
+        super.setText("}");
     }
 
-    public TRBrc(String text, int line, int pos)
+    public TRBrc(int line, int pos)
     {
-        setText(text);
+        super.setText("}");
         setLine(line);
         setPos(pos);
     }
@@ -22,12 +22,18 @@ public final class TRBrc extends Token
     @Override
     public Object clone()
     {
-      return new TRBrc(getText(), getLine(), getPos());
+      return new TRBrc(getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTRBrc(this);
+    }
+
+    @Override
+    public void setText(@SuppressWarnings("unused") String text)
+    {
+        throw new RuntimeException("Cannot change TRBrc text.");
     }
 }

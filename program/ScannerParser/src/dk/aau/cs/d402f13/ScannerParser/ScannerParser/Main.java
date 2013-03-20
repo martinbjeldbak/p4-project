@@ -5,7 +5,7 @@ import dk.aau.cs.d402f13.ScannerParser.lexer.*;
 import dk.aau.cs.d402f13.ScannerParser.node.*;
 import java.io.*;
 
-public class Compiler {
+public class Main {
 
   public static void main(String[] args) {
     try {
@@ -16,14 +16,12 @@ public class Compiler {
         new Lexer(
         new PushbackReader(
         //new InputStreamReader(System.in), 1024
-        new FileReader("kent-game.game"), 1204
-            
-            )));
+        new FileReader("test.game"), 1024)));
     
       Start tree = p.parse();
       
       //Apply the translation
-      tree.apply( new Translation() );
+      //tree.apply( new Translation() );
     }
     catch(Exception e) {
       System.out.println(e.getMessage());

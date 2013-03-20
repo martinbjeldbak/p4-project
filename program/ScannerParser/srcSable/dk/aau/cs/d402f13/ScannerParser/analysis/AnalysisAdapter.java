@@ -333,6 +333,12 @@ public class AnalysisAdapter implements Analysis
     }
 
     @Override
+    public void caseTEol(TEol node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
     public void caseTBlank(TBlank node)
     {
         defaultCase(node);
@@ -352,12 +358,6 @@ public class AnalysisAdapter implements Analysis
 
     @Override
     public void caseTUppercase(TUppercase node)
-    {
-        defaultCase(node);
-    }
-
-    @Override
-    public void caseTAnycase(TAnycase node)
     {
         defaultCase(node);
     }
@@ -489,7 +489,7 @@ public class AnalysisAdapter implements Analysis
     }
 
     @Override
-    public void caseTLArrow(TLArrow node)
+    public void caseTArrow(TArrow node)
     {
         defaultCase(node);
     }

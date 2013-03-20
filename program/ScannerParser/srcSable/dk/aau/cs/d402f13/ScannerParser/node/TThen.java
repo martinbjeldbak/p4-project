@@ -7,14 +7,14 @@ import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 @SuppressWarnings("nls")
 public final class TThen extends Token
 {
-    public TThen(String text)
+    public TThen()
     {
-        setText(text);
+        super.setText("then");
     }
 
-    public TThen(String text, int line, int pos)
+    public TThen(int line, int pos)
     {
-        setText(text);
+        super.setText("then");
         setLine(line);
         setPos(pos);
     }
@@ -22,12 +22,18 @@ public final class TThen extends Token
     @Override
     public Object clone()
     {
-      return new TThen(getText(), getLine(), getPos());
+      return new TThen(getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTThen(this);
+    }
+
+    @Override
+    public void setText(@SuppressWarnings("unused") String text)
+    {
+        throw new RuntimeException("Cannot change TThen text.");
     }
 }
