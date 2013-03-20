@@ -6,9 +6,10 @@ Helpers
   lowercase        = ['a' .. 'z'];
   uppercase        = ['A' .. 'Z'];
   anycase          = lowercase | uppercase;
-  quotebs          = '"' | '\';
   unichar          = [0 .. 0xffff];
-  strchar          = unichar; // - quotebs
+  quote            = '"';
+  backslash        = '\';
+  strchar          = [unichar - [quote + backslash]];
   keyword          = 'game' | 'piece' | 'this' | 'width' | 'height'
                    | 'title' | 'players' | 'turnOrder' | 'board'
                    | 'grid' | 'setup' | 'wall' | 'name' | 'possibleDrops'
@@ -18,34 +19,9 @@ Helpers
   pattern_operator = '*' | '?' | '+' | '!';
   direction        = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
   star_qmark_plus  = '*'
-                      | '?'
-                      | '+';
-  
-Tokens
-  blank            = blank;
-  decimal          = decimal;
-  lowercase        = lowercase;
-  uppercase        = uppercase;
-  anycase          = anycase;
-  quotebs          = quotebs;
-  unichar          = unichar;
-  strchar          = strchar;
-  keyword          = keyword;
-  operator         = operator;
-  pattern_keyword  = pattern_keyword;
-  pattern_operator = pattern_operator;
-  direction        = direction;
-  star_qmark_plus  = star_qmark_plus;
-  
-  integer    = decimal+;
-  coordinate = uppercase+ decimal+;
-  string     = '"' (strchar | '\' unichar)* '"';
-
-  /* identifiers */
-  function   = lowercase anycase+;
-  identifier = uppercase anycase*;
-  variable   = '$' anycase+;
-  
+                   | '?'
+                   | '+';
+                   
   define     = 'define';
   game       = 'game';
   l_bkt      = '[';
@@ -71,6 +47,56 @@ Tokens
   empty      = 'empty';
   this       = 'this';
   
+Tokens
+  blank            = blank;
+  decimal          = decimal;
+  lowercase        = lowercase;
+  uppercase        = uppercase;
+  anycase          = anycase;
+  unichar          = unichar;
+  strchar          = strchar;
+  keyword          = keyword;
+  operator         = operator;
+  pattern_keyword  = pattern_keyword;
+  pattern_operator = pattern_operator;
+  direction        = direction;
+  star_qmark_plus  = star_qmark_plus;
+  define     = define;
+  game       = game;
+  l_bkt      = l_bkt;
+  r_bkt      = r_bkt;
+  l_brc      = l_brc;
+  r_brc      = r_brc;
+  l_par      = l_par;
+  r_par      = r_par;
+  
+  not        = not;
+  if         = if;
+  then       = then;
+  else       = else;
+  pound      = pound;
+  l_arrow    = l_arrow;
+  slash      = slash;
+  star       = star;
+  q_mark     = q_mark;
+  plus       = plus;
+  emark      = emark;
+  friend     = friend;
+  foe        = foe;
+  empty      = empty;
+  this       = this;
+  
+  integer    = decimal+;
+  coordinate = uppercase+ decimal+;
+  string     = '"' (strchar | '\' unichar)* '"';
+
+  /* identifiers */
+  function   = lowercase anycase+;
+  identifier = uppercase anycase*;
+  variable   = '$' anycase+;
+  
+
+  
 Ignored Tokens
   blank;
   
@@ -87,12 +113,12 @@ Productions
   
   /* expressions */
   expression    = {func} function_call
-                | {elopexpr} element operator expression
+                | {elopexp} element operator expression
                 | {if} if_expr
                 | {lambda} lambda_expr
                 | {el} element
                 | {not} not expression;
-  element       = {lexprr}  l_par expression r_par
+  element       = {expr}  l_par expression r_par
                 | {var} variable
                 | {list} list
                 | {pat} pattern
