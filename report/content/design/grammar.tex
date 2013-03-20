@@ -48,9 +48,12 @@ The following operations are used throughout this section:
 \galt{\gter{title} \gor \gter{players} \gor \gter{turnOrder} \gor \gter{board}}
 \galt{\gter{grid} \gor \gter{setup} \gor \gter{wall} \gor \gter{name} \gor \gter{possibleDrops}}
 \galt{\gter{possibleMoves} \gor \gter{winCondition} \gor \gter{tieCondition}}
-\grule{operator}{\gter{and} \gor \gter{or} \gor \gter{not}}
+\grule{shared\_operator}{\gter{*} \gor \gter{+}}
+\grule{normal\_operator}{\gter{-} \gor \gter{!=} \gor \gter{==} \gor \gter{<=} \gor \gter{>=}}
+\grule{pattern\_operator}{\gter{!} \gor \gter{?}}
+\grule{pattern\_not}{\gter{!}}
+\grule{pattern\_or}{\gter{|}}
 \grule{pattern\_keyword}{\gter{friend} \gor \gter{foe} \gor \gter{this} \gor \gter{empty}}
-\grule{pattern\_operator}{\gter{*} \gor \gter{?} \gor \gter{+} \gor \gter{!}}
 \end{ebnf}
 \subsection{Literals}
 \begin{ebnf}
@@ -83,6 +86,7 @@ The following operations are used throughout this section:
 %Expressions
 \grule{expression}{function\_call}
 \galt{element \gcat operator \gcat expression}
+\galt{assignment}
 \galt{if\_expr}
 \galt{lambda\_expr}
 \galt{element}
@@ -90,7 +94,7 @@ The following operations are used throughout this section:
 \grule{element}{\gter{(} \gcat expression \gcat \gter{)}}
 \galt{variable}
 \galt{list}
-\galt{pattern}
+\galt{\gter{/} \gcat pattern \gcat \gter{/}}
 \galt{keyword}
 \galt{direction}
 \galt{coordinate}
@@ -99,6 +103,7 @@ The following operations are used throughout this section:
 \galt{identifier}
 \galt{function}
 \grule{function\_call}{function \gcat list}
+\grule{assignment}{\gter{let} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression} \gcat \gter{in} \gcat expression}
 \grule{if\_expr}{\gter{if} \gcat expression \gcat \gter{then} \gcat expression \gcat \gter{else} \gcat expression}
 \grule{lambda\_expr}{\gter{\#} \gcat \gter{[} \gcat \grep{variable} \gcat \gter{]} \gcat \gter{=>} \gcat expression}
 \grule{list}{\gter{[} \gcat \grep{element} \gcat \gter{]}}
@@ -106,13 +111,14 @@ The following operations are used throughout this section:
 \subsection{Patterns}
 \begin{ebnf}
 %Patterns
-\grule{pattern}{\gter{/} \gcat pattern\_expr \gcat \grep{pattern\_expr} \gcat \gter{/}}
+\grule{pattern}{pattern\_expr \gcat \grep{pattern\_expr}}
 \grule{pattern\_expr}{pattern\_val \gcat \gopt{\gter{*} \gor \gter{?} \gor \gter{+}}}
+\galt{pattern\_val \gcat \gter{|} \gcat pattern\_expr}
 \grule{pattern\_val}{direction}
 \galt{variable}
 \galt{pattern\_check}
 \galt{\gter{!} \gcat pattern\_check}
-\galt{\gter{(} \gcat pattern\_expr \gcat \grep{pattern\_expr}  \gcat \gter{)} \gcat \gopt{integer}}
+\galt{\gter{(} \gcat pattern \gcat \gter{)} \gcat \gopt{integer}}
 \grule{pattern\_check}{\gter{friend}}
 \galt{\gter{foe}}
 \galt{\gter{empty}}
