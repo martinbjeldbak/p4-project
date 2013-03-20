@@ -1,46 +1,33 @@
 \subsection{Kalah}
 
+Kalah is like chess a turn-based game of two opponent players. The Kalah pieces, called seeds, are very different from the Chess pieces. They do not have specific moves but rather functions, as their name also suggest, as seeds. The board is not like the Chess board either. It consists of 14 squares, sometimes refered to as houses \cite{kalahrules}, with two of the houses separating themselves from the rest by beeing the houses or bases of each of the players. Further more each player has six houses belonging to him/her. See figure \ref{fig:kalah}. Each house (including the players houses) can contain an arbitrary number of pieces/seeds, unlike in chess where the squares can only contain one piece.  
 
-\begin{quote}
-``The object of the game is to capture more seeds than one's opponent.
-At the beginning of the game, three seeds are placed in each house.
-Each player controls the six houses and their seeds on his/her side of the board. His/her score is the number of seeds in the store to his/her right.
-Players take turns sowing their seeds. On a turn, the player removes all seeds from one of the houses under his/her control. Moving counter-clockwise, the player drops one seed in each house in turn, including the player's own store but not his/her opponent's.
-If the last sown seed lands in the player's store, the player gets an additional move. There is no limit on the number of moves a player can make in his/her turn.
-If the last sown seed lands in an empty house owned by the player, and the opposite house contains seeds, both the last seed and the opposite seeds are captured and placed into the player's store.
-When one player no longer has any seeds in any of his/her houses, the game ends. The other player moves all remaining seeds to his/her store, and the player with the most seeds in his/her store wins.
-It is possible for the game to end in a draw, with 18 seeds each.''
-\end{quote} %http://en.wikipedia.org/wiki/Kalah
+cut to the bone Kalah goes as follow: When the game starts each of the 12 houses contains four seeds and the player bases are empty. Now the players shifts in turn to pick up piles of seeds and dealing them out to the 12 houses and his own base. The dealing of seeds works by a player picking up a pile of seeds from one of his six houses, and dropping one seed down in each of the following houses moving counter-clockwise. If, when dealing out seeds, he lands in a house belonging to himself (not including his own base), which is not empty and which is not belonging to the opponent, he can pick up the pile of seeds in the house and start dealing these out. The turn shifts once a player, when dealing out seeds, lands in an empty house or in one of the opponent's houses. For a more detailed description of the rules, we refere to \cite{kalahrules}. The game is over, once one of the players six houses are empty and the winner is who ever has the most seeds in his/her base.
 
-\fig[scale=0.1]{kalah}{The board game Kalah}
+\fig[scale=0.1]{kalah}{The board game Kalah. There are six squares on each side belonging to each player, and there are two square in each end of the board, which represents the bases of the players.}
 
-Interesting game elements in Kalah:
-\begin{itemize}[noitemsep]
-\item Squares can contain an arbitrary number of pieces
-\item Making a move can be considered as simply choosing a square
-\item A turn may contain more than one move
-	\begin{itemize}[noitemsep]
-	\item If the last piece of your move is put on a specific square, you can make another move.
-	\end{itemize}
-\item A square can be related to a player.
-	\begin{itemize}[noitemsep]
-	\item A winner is found based on who has most pieces in a special square.
-	\item On your turn you can only choose a square beloning to you.
-	\end{itemize}
-\item Squares can be related to other squares.
-	\begin{itemize}[noitemsep]
-	\item You place pieces on squares counter-clowise.
-	\item If you place a last piece on an empty square, the nearest square controlled by the opponent is emptied.
-	\end{itemize}
-\item The game ends when some condition is met
-	\begin{itemize}[noitemsep]
-	\item All pieces are on one specific square.
-	\item If you place a last piece on an empty square, the nearest square controlled by the opponent is emptied.
-	\end{itemize}
-\item When the game ends, a winner is found
-	\begin{itemize}[noitemsep]
-	\item The player with most pieces wins
-	\end{itemize}
-\item Only one type of pieces
-\item The number of pieces on a square determines how long a move you can make
-\end{itemize}
+\subsubsection{Special moves}
+Like in Chess there are some special moves in Kalah which doesn't follow the regular pattern of the Kalah game. We are not going to describe them here, but they will be present in the list of interesting game elements and can't be found in a detailed description in \cite{kalahrules}.
+
+Here is a list of some interesting game elements we found in Kalah. For simplicity we are going to refere to houses and bases as squares again and refere to seeds as pieces again:
+
+\begin{dlist}
+	\item Squares can contain an arbitrary number of pieces
+	\item Making a move can be considered as simply choosing a square
+	\item The number of pieces on a square determines how long a move you can make
+	\item A turn may contain more than one move
+		\begin{dlist}
+			\item If the last piece is dropped in a not-empty square, the player can make another move.
+		\end{dlist}
+	\item A square can belong to a player.
+	\item Squares can be related to other squares.
+		\begin{dlist}
+			\item You place pieces on squares counter-clockwise.
+			\item If you place the last piece on an empty square, the square across the board belonging to the opponent is emptied over to your own square.
+		\end{dlist}
+	\item An end game condition - when all of the square belonging to a player are empty
+	\item A winning condition - the player with the most pieces in his/her square when the end game condition has been met
+	\item Only one type of piece
+\end{dlist}
+
+
