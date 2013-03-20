@@ -10,6 +10,8 @@ public class Token {
     NOT_OPERATOR,
     SHARED_OPERATOR, //those that is used both as normal_operator and pattern_operator
     PATTERN_OPERATOR, NORMAL_OPERATOR,
+    
+    ASSIGN,
 
     // Literals
     INT_LIT, DIR_LIT, COORD_LIT,
@@ -25,8 +27,12 @@ public class Token {
     IF, THEN, ELSE,
     // lambda
     LAMBDABEGIN, LAMBDAOP,
+    LET, IN, COMMA, 
     // Pattern begin
-    PATTERNOP, EOF;
+    PATTERNOP, // '/'
+    PATTERN_NOT,
+    PATTERN_OR, // | 
+    EOF;
   }
 
   public String value;
