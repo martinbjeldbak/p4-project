@@ -5,14 +5,14 @@ package dk.aau.cs.d402f13.ScannerParser.node;
 import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 
 @SuppressWarnings("nls")
-public final class TEmpty extends Token
+public final class TPatternNot extends Token
 {
-    public TEmpty(String text)
+    public TPatternNot(String text)
     {
         setText(text);
     }
 
-    public TEmpty(String text, int line, int pos)
+    public TPatternNot(String text, int line, int pos)
     {
         setText(text);
         setLine(line);
@@ -22,12 +22,12 @@ public final class TEmpty extends Token
     @Override
     public Object clone()
     {
-      return new TEmpty(getText(), getLine(), getPos());
+      return new TPatternNot(getText(), getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseTEmpty(this);
+        ((Analysis) sw).caseTPatternNot(this);
     }
 }

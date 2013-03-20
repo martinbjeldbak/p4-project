@@ -5,14 +5,14 @@ package dk.aau.cs.d402f13.ScannerParser.node;
 import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 
 @SuppressWarnings("nls")
-public final class TFoe extends Token
+public final class TEql extends Token
 {
-    public TFoe(String text)
+    public TEql(String text)
     {
         setText(text);
     }
 
-    public TFoe(String text, int line, int pos)
+    public TEql(String text, int line, int pos)
     {
         setText(text);
         setLine(line);
@@ -22,12 +22,12 @@ public final class TFoe extends Token
     @Override
     public Object clone()
     {
-      return new TFoe(getText(), getLine(), getPos());
+      return new TEql(getText(), getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseTFoe(this);
+        ((Analysis) sw).caseTEql(this);
     }
 }

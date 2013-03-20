@@ -310,6 +310,27 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         outAElopexpExpression(node);
     }
 
+    public void inAAssignExpression(AAssignExpression node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAAssignExpression(AAssignExpression node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAAssignExpression(AAssignExpression node)
+    {
+        inAAssignExpression(node);
+        if(node.getAssignment() != null)
+        {
+            node.getAssignment().apply(this);
+        }
+        outAAssignExpression(node);
+    }
+
     public void inAIfExpression(AIfExpression node)
     {
         defaultIn(node);
@@ -483,9 +504,17 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
     public void caseAPatElement(APatElement node)
     {
         inAPatElement(node);
+        if(node.getRight() != null)
+        {
+            node.getRight().apply(this);
+        }
         if(node.getPattern() != null)
         {
             node.getPattern().apply(this);
+        }
+        if(node.getLeft() != null)
+        {
+            node.getLeft().apply(this);
         }
         outAPatElement(node);
     }
@@ -662,6 +691,88 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         outAFunctionCall(node);
     }
 
+    public void inAVarExpr(AVarExpr node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAVarExpr(AVarExpr node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAVarExpr(AVarExpr node)
+    {
+        inAVarExpr(node);
+        if(node.getExpression() != null)
+        {
+            node.getExpression().apply(this);
+        }
+        if(node.getEql() != null)
+        {
+            node.getEql().apply(this);
+        }
+        if(node.getVariable() != null)
+        {
+            node.getVariable().apply(this);
+        }
+        if(node.getComma() != null)
+        {
+            node.getComma().apply(this);
+        }
+        outAVarExpr(node);
+    }
+
+    public void inAAssignment(AAssignment node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAAssignment(AAssignment node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAAssignment(AAssignment node)
+    {
+        inAAssignment(node);
+        if(node.getRight() != null)
+        {
+            node.getRight().apply(this);
+        }
+        if(node.getIn() != null)
+        {
+            node.getIn().apply(this);
+        }
+        {
+            List<PVarExpr> copy = new ArrayList<PVarExpr>(node.getVarExpr());
+            Collections.reverse(copy);
+            for(PVarExpr e : copy)
+            {
+                e.apply(this);
+            }
+        }
+        if(node.getLeft() != null)
+        {
+            node.getLeft().apply(this);
+        }
+        if(node.getEql() != null)
+        {
+            node.getEql().apply(this);
+        }
+        if(node.getVariable() != null)
+        {
+            node.getVariable().apply(this);
+        }
+        if(node.getLet() != null)
+        {
+            node.getLet().apply(this);
+        }
+        outAAssignment(node);
+    }
+
     public void inAIfExpr(AIfExpr node)
     {
         defaultIn(node);
@@ -721,9 +832,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getExpression().apply(this);
         }
-        if(node.getLArrow() != null)
+        if(node.getArrow() != null)
         {
-            node.getLArrow().apply(this);
+            node.getArrow().apply(this);
         }
         if(node.getRBkt() != null)
         {
@@ -795,10 +906,6 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
     public void caseAPattern(APattern node)
     {
         inAPattern(node);
-        if(node.getRight() != null)
-        {
-            node.getRight().apply(this);
-        }
         {
             List<PPatternExpr> copy = new ArrayList<PPatternExpr>(node.getPatternExpr());
             Collections.reverse(copy);
@@ -806,10 +913,6 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
             {
                 e.apply(this);
             }
-        }
-        if(node.getLeft() != null)
-        {
-            node.getLeft().apply(this);
         }
         outAPattern(node);
     }
@@ -828,27 +931,6 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
     public void caseAPatvalPatternExpr(APatvalPatternExpr node)
     {
         inAPatvalPatternExpr(node);
-        if(node.getPatternVal() != null)
-        {
-            node.getPatternVal().apply(this);
-        }
-        outAPatvalPatternExpr(node);
-    }
-
-    public void inAPatvalqmarkPatternExpr(APatvalqmarkPatternExpr node)
-    {
-        defaultIn(node);
-    }
-
-    public void outAPatvalqmarkPatternExpr(APatvalqmarkPatternExpr node)
-    {
-        defaultOut(node);
-    }
-
-    @Override
-    public void caseAPatvalqmarkPatternExpr(APatvalqmarkPatternExpr node)
-    {
-        inAPatvalqmarkPatternExpr(node);
         if(node.getStarQmarkPlus() != null)
         {
             node.getStarQmarkPlus().apply(this);
@@ -857,7 +939,36 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getPatternVal().apply(this);
         }
-        outAPatvalqmarkPatternExpr(node);
+        outAPatvalPatternExpr(node);
+    }
+
+    public void inAPatvalexprPatternExpr(APatvalexprPatternExpr node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAPatvalexprPatternExpr(APatvalexprPatternExpr node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAPatvalexprPatternExpr(APatvalexprPatternExpr node)
+    {
+        inAPatvalexprPatternExpr(node);
+        if(node.getPatternExpr() != null)
+        {
+            node.getPatternExpr().apply(this);
+        }
+        if(node.getPatternOr() != null)
+        {
+            node.getPatternOr().apply(this);
+        }
+        if(node.getPatternVal() != null)
+        {
+            node.getPatternVal().apply(this);
+        }
+        outAPatvalexprPatternExpr(node);
     }
 
     public void inADirPatternVal(ADirPatternVal node)
@@ -962,17 +1073,13 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
     public void caseALpatexprrPatternVal(ALpatexprrPatternVal node)
     {
         inALpatexprrPatternVal(node);
-        if(node.getRPar() != null)
+        if(node.getInteger() != null)
         {
-            node.getRPar().apply(this);
+            node.getInteger().apply(this);
         }
+        if(node.getPattern() != null)
         {
-            List<PPatternExpr> copy = new ArrayList<PPatternExpr>(node.getPatternExpr());
-            Collections.reverse(copy);
-            for(PPatternExpr e : copy)
-            {
-                e.apply(this);
-            }
+            node.getPattern().apply(this);
         }
         if(node.getLPar() != null)
         {
@@ -981,104 +1088,25 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         outALpatexprrPatternVal(node);
     }
 
-    public void inALpatxprrintPatternVal(ALpatxprrintPatternVal node)
+    public void inAPatkeyPatternCheck(APatkeyPatternCheck node)
     {
         defaultIn(node);
     }
 
-    public void outALpatxprrintPatternVal(ALpatxprrintPatternVal node)
+    public void outAPatkeyPatternCheck(APatkeyPatternCheck node)
     {
         defaultOut(node);
     }
 
     @Override
-    public void caseALpatxprrintPatternVal(ALpatxprrintPatternVal node)
+    public void caseAPatkeyPatternCheck(APatkeyPatternCheck node)
     {
-        inALpatxprrintPatternVal(node);
-        if(node.getInteger() != null)
+        inAPatkeyPatternCheck(node);
+        if(node.getPatternKeyword() != null)
         {
-            node.getInteger().apply(this);
+            node.getPatternKeyword().apply(this);
         }
-        if(node.getRPar() != null)
-        {
-            node.getRPar().apply(this);
-        }
-        {
-            List<PPatternExpr> copy = new ArrayList<PPatternExpr>(node.getPatternExpr());
-            Collections.reverse(copy);
-            for(PPatternExpr e : copy)
-            {
-                e.apply(this);
-            }
-        }
-        if(node.getLPar() != null)
-        {
-            node.getLPar().apply(this);
-        }
-        outALpatxprrintPatternVal(node);
-    }
-
-    public void inAFriendPatternCheck(AFriendPatternCheck node)
-    {
-        defaultIn(node);
-    }
-
-    public void outAFriendPatternCheck(AFriendPatternCheck node)
-    {
-        defaultOut(node);
-    }
-
-    @Override
-    public void caseAFriendPatternCheck(AFriendPatternCheck node)
-    {
-        inAFriendPatternCheck(node);
-        if(node.getFriend() != null)
-        {
-            node.getFriend().apply(this);
-        }
-        outAFriendPatternCheck(node);
-    }
-
-    public void inAFoePatternCheck(AFoePatternCheck node)
-    {
-        defaultIn(node);
-    }
-
-    public void outAFoePatternCheck(AFoePatternCheck node)
-    {
-        defaultOut(node);
-    }
-
-    @Override
-    public void caseAFoePatternCheck(AFoePatternCheck node)
-    {
-        inAFoePatternCheck(node);
-        if(node.getFoe() != null)
-        {
-            node.getFoe().apply(this);
-        }
-        outAFoePatternCheck(node);
-    }
-
-    public void inAEmptyPatternCheck(AEmptyPatternCheck node)
-    {
-        defaultIn(node);
-    }
-
-    public void outAEmptyPatternCheck(AEmptyPatternCheck node)
-    {
-        defaultOut(node);
-    }
-
-    @Override
-    public void caseAEmptyPatternCheck(AEmptyPatternCheck node)
-    {
-        inAEmptyPatternCheck(node);
-        if(node.getEmpty() != null)
-        {
-            node.getEmpty().apply(this);
-        }
-        outAEmptyPatternCheck(node);
+        outAPatkeyPatternCheck(node);
     }
 
     public void inAThisPatternCheck(AThisPatternCheck node)

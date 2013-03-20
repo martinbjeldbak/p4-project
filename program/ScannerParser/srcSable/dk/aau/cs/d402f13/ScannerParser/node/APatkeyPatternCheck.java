@@ -5,46 +5,46 @@ package dk.aau.cs.d402f13.ScannerParser.node;
 import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 
 @SuppressWarnings("nls")
-public final class AFoePatternCheck extends PPatternCheck
+public final class APatkeyPatternCheck extends PPatternCheck
 {
-    private TFoe _foe_;
+    private TPatternKeyword _patternKeyword_;
 
-    public AFoePatternCheck()
+    public APatkeyPatternCheck()
     {
         // Constructor
     }
 
-    public AFoePatternCheck(
-        @SuppressWarnings("hiding") TFoe _foe_)
+    public APatkeyPatternCheck(
+        @SuppressWarnings("hiding") TPatternKeyword _patternKeyword_)
     {
         // Constructor
-        setFoe(_foe_);
+        setPatternKeyword(_patternKeyword_);
 
     }
 
     @Override
     public Object clone()
     {
-        return new AFoePatternCheck(
-            cloneNode(this._foe_));
+        return new APatkeyPatternCheck(
+            cloneNode(this._patternKeyword_));
     }
 
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseAFoePatternCheck(this);
+        ((Analysis) sw).caseAPatkeyPatternCheck(this);
     }
 
-    public TFoe getFoe()
+    public TPatternKeyword getPatternKeyword()
     {
-        return this._foe_;
+        return this._patternKeyword_;
     }
 
-    public void setFoe(TFoe node)
+    public void setPatternKeyword(TPatternKeyword node)
     {
-        if(this._foe_ != null)
+        if(this._patternKeyword_ != null)
         {
-            this._foe_.parent(null);
+            this._patternKeyword_.parent(null);
         }
 
         if(node != null)
@@ -57,23 +57,23 @@ public final class AFoePatternCheck extends PPatternCheck
             node.parent(this);
         }
 
-        this._foe_ = node;
+        this._patternKeyword_ = node;
     }
 
     @Override
     public String toString()
     {
         return ""
-            + toString(this._foe_);
+            + toString(this._patternKeyword_);
     }
 
     @Override
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._foe_ == child)
+        if(this._patternKeyword_ == child)
         {
-            this._foe_ = null;
+            this._patternKeyword_ = null;
             return;
         }
 
@@ -84,9 +84,9 @@ public final class AFoePatternCheck extends PPatternCheck
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        if(this._foe_ == oldChild)
+        if(this._patternKeyword_ == oldChild)
         {
-            setFoe((TFoe) newChild);
+            setPatternKeyword((TPatternKeyword) newChild);
             return;
         }
 

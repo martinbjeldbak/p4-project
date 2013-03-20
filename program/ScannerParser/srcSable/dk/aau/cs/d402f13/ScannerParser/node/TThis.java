@@ -7,14 +7,14 @@ import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 @SuppressWarnings("nls")
 public final class TThis extends Token
 {
-    public TThis(String text)
+    public TThis()
     {
-        setText(text);
+        super.setText("this");
     }
 
-    public TThis(String text, int line, int pos)
+    public TThis(int line, int pos)
     {
-        setText(text);
+        super.setText("this");
         setLine(line);
         setPos(pos);
     }
@@ -22,12 +22,18 @@ public final class TThis extends Token
     @Override
     public Object clone()
     {
-      return new TThis(getText(), getLine(), getPos());
+      return new TThis(getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTThis(this);
+    }
+
+    @Override
+    public void setText(@SuppressWarnings("unused") String text)
+    {
+        throw new RuntimeException("Cannot change TThis text.");
     }
 }

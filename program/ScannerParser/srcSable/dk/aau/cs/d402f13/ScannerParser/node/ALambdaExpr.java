@@ -12,7 +12,7 @@ public final class ALambdaExpr extends PLambdaExpr
     private TLBkt _lBkt_;
     private final LinkedList<TVariable> _variable_ = new LinkedList<TVariable>();
     private TRBkt _rBkt_;
-    private TLArrow _lArrow_;
+    private TArrow _arrow_;
     private PExpression _expression_;
 
     public ALambdaExpr()
@@ -25,7 +25,7 @@ public final class ALambdaExpr extends PLambdaExpr
         @SuppressWarnings("hiding") TLBkt _lBkt_,
         @SuppressWarnings("hiding") List<?> _variable_,
         @SuppressWarnings("hiding") TRBkt _rBkt_,
-        @SuppressWarnings("hiding") TLArrow _lArrow_,
+        @SuppressWarnings("hiding") TArrow _arrow_,
         @SuppressWarnings("hiding") PExpression _expression_)
     {
         // Constructor
@@ -37,7 +37,7 @@ public final class ALambdaExpr extends PLambdaExpr
 
         setRBkt(_rBkt_);
 
-        setLArrow(_lArrow_);
+        setArrow(_arrow_);
 
         setExpression(_expression_);
 
@@ -51,7 +51,7 @@ public final class ALambdaExpr extends PLambdaExpr
             cloneNode(this._lBkt_),
             cloneList(this._variable_),
             cloneNode(this._rBkt_),
-            cloneNode(this._lArrow_),
+            cloneNode(this._arrow_),
             cloneNode(this._expression_));
     }
 
@@ -162,16 +162,16 @@ public final class ALambdaExpr extends PLambdaExpr
         this._rBkt_ = node;
     }
 
-    public TLArrow getLArrow()
+    public TArrow getArrow()
     {
-        return this._lArrow_;
+        return this._arrow_;
     }
 
-    public void setLArrow(TLArrow node)
+    public void setArrow(TArrow node)
     {
-        if(this._lArrow_ != null)
+        if(this._arrow_ != null)
         {
-            this._lArrow_.parent(null);
+            this._arrow_.parent(null);
         }
 
         if(node != null)
@@ -184,7 +184,7 @@ public final class ALambdaExpr extends PLambdaExpr
             node.parent(this);
         }
 
-        this._lArrow_ = node;
+        this._arrow_ = node;
     }
 
     public PExpression getExpression()
@@ -220,7 +220,7 @@ public final class ALambdaExpr extends PLambdaExpr
             + toString(this._lBkt_)
             + toString(this._variable_)
             + toString(this._rBkt_)
-            + toString(this._lArrow_)
+            + toString(this._arrow_)
             + toString(this._expression_);
     }
 
@@ -251,9 +251,9 @@ public final class ALambdaExpr extends PLambdaExpr
             return;
         }
 
-        if(this._lArrow_ == child)
+        if(this._arrow_ == child)
         {
-            this._lArrow_ = null;
+            this._arrow_ = null;
             return;
         }
 
@@ -306,9 +306,9 @@ public final class ALambdaExpr extends PLambdaExpr
             return;
         }
 
-        if(this._lArrow_ == oldChild)
+        if(this._arrow_ == oldChild)
         {
-            setLArrow((TLArrow) newChild);
+            setArrow((TArrow) newChild);
             return;
         }
 
