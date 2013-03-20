@@ -7,14 +7,14 @@ import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 @SuppressWarnings("nls")
 public final class TGame extends Token
 {
-    public TGame(String text)
+    public TGame()
     {
-        setText(text);
+        super.setText("game");
     }
 
-    public TGame(String text, int line, int pos)
+    public TGame(int line, int pos)
     {
-        setText(text);
+        super.setText("game");
         setLine(line);
         setPos(pos);
     }
@@ -22,12 +22,18 @@ public final class TGame extends Token
     @Override
     public Object clone()
     {
-      return new TGame(getText(), getLine(), getPos());
+      return new TGame(getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTGame(this);
+    }
+
+    @Override
+    public void setText(@SuppressWarnings("unused") String text)
+    {
+        throw new RuntimeException("Cannot change TGame text.");
     }
 }

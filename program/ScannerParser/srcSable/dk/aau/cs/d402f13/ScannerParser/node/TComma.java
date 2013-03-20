@@ -5,14 +5,14 @@ package dk.aau.cs.d402f13.ScannerParser.node;
 import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 
 @SuppressWarnings("nls")
-public final class TQMark extends Token
+public final class TComma extends Token
 {
-    public TQMark(String text)
+    public TComma(String text)
     {
         setText(text);
     }
 
-    public TQMark(String text, int line, int pos)
+    public TComma(String text, int line, int pos)
     {
         setText(text);
         setLine(line);
@@ -22,12 +22,12 @@ public final class TQMark extends Token
     @Override
     public Object clone()
     {
-      return new TQMark(getText(), getLine(), getPos());
+      return new TComma(getText(), getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseTQMark(this);
+        ((Analysis) sw).caseTComma(this);
     }
 }

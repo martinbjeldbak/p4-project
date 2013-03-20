@@ -7,14 +7,14 @@ import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 @SuppressWarnings("nls")
 public final class TNot extends Token
 {
-    public TNot(String text)
+    public TNot()
     {
-        setText(text);
+        super.setText("not");
     }
 
-    public TNot(String text, int line, int pos)
+    public TNot(int line, int pos)
     {
-        setText(text);
+        super.setText("not");
         setLine(line);
         setPos(pos);
     }
@@ -22,12 +22,18 @@ public final class TNot extends Token
     @Override
     public Object clone()
     {
-      return new TNot(getText(), getLine(), getPos());
+      return new TNot(getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTNot(this);
+    }
+
+    @Override
+    public void setText(@SuppressWarnings("unused") String text)
+    {
+        throw new RuntimeException("Cannot change TNot text.");
     }
 }

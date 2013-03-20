@@ -8,6 +8,7 @@ import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 public final class APatvalPatternExpr extends PPatternExpr
 {
     private PPatternVal _patternVal_;
+    private TStarQmarkPlus _starQmarkPlus_;
 
     public APatvalPatternExpr()
     {
@@ -15,10 +16,13 @@ public final class APatvalPatternExpr extends PPatternExpr
     }
 
     public APatvalPatternExpr(
-        @SuppressWarnings("hiding") PPatternVal _patternVal_)
+        @SuppressWarnings("hiding") PPatternVal _patternVal_,
+        @SuppressWarnings("hiding") TStarQmarkPlus _starQmarkPlus_)
     {
         // Constructor
         setPatternVal(_patternVal_);
+
+        setStarQmarkPlus(_starQmarkPlus_);
 
     }
 
@@ -26,7 +30,8 @@ public final class APatvalPatternExpr extends PPatternExpr
     public Object clone()
     {
         return new APatvalPatternExpr(
-            cloneNode(this._patternVal_));
+            cloneNode(this._patternVal_),
+            cloneNode(this._starQmarkPlus_));
     }
 
     @Override
@@ -60,11 +65,37 @@ public final class APatvalPatternExpr extends PPatternExpr
         this._patternVal_ = node;
     }
 
+    public TStarQmarkPlus getStarQmarkPlus()
+    {
+        return this._starQmarkPlus_;
+    }
+
+    public void setStarQmarkPlus(TStarQmarkPlus node)
+    {
+        if(this._starQmarkPlus_ != null)
+        {
+            this._starQmarkPlus_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
+            {
+                node.parent().removeChild(node);
+            }
+
+            node.parent(this);
+        }
+
+        this._starQmarkPlus_ = node;
+    }
+
     @Override
     public String toString()
     {
         return ""
-            + toString(this._patternVal_);
+            + toString(this._patternVal_)
+            + toString(this._starQmarkPlus_);
     }
 
     @Override
@@ -74,6 +105,12 @@ public final class APatvalPatternExpr extends PPatternExpr
         if(this._patternVal_ == child)
         {
             this._patternVal_ = null;
+            return;
+        }
+
+        if(this._starQmarkPlus_ == child)
+        {
+            this._starQmarkPlus_ = null;
             return;
         }
 
@@ -87,6 +124,12 @@ public final class APatvalPatternExpr extends PPatternExpr
         if(this._patternVal_ == oldChild)
         {
             setPatternVal((PPatternVal) newChild);
+            return;
+        }
+
+        if(this._starQmarkPlus_ == oldChild)
+        {
+            setStarQmarkPlus((TStarQmarkPlus) newChild);
             return;
         }
 

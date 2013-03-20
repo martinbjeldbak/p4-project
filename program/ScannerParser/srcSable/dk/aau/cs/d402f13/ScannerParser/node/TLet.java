@@ -5,16 +5,16 @@ package dk.aau.cs.d402f13.ScannerParser.node;
 import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 
 @SuppressWarnings("nls")
-public final class TRBkt extends Token
+public final class TLet extends Token
 {
-    public TRBkt()
+    public TLet()
     {
-        super.setText("]");
+        super.setText("let");
     }
 
-    public TRBkt(int line, int pos)
+    public TLet(int line, int pos)
     {
-        super.setText("]");
+        super.setText("let");
         setLine(line);
         setPos(pos);
     }
@@ -22,18 +22,18 @@ public final class TRBkt extends Token
     @Override
     public Object clone()
     {
-      return new TRBkt(getLine(), getPos());
+      return new TLet(getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseTRBkt(this);
+        ((Analysis) sw).caseTLet(this);
     }
 
     @Override
     public void setText(@SuppressWarnings("unused") String text)
     {
-        throw new RuntimeException("Cannot change TRBkt text.");
+        throw new RuntimeException("Cannot change TLet text.");
     }
 }

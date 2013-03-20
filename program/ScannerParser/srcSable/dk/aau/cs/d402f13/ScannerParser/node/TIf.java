@@ -7,14 +7,14 @@ import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 @SuppressWarnings("nls")
 public final class TIf extends Token
 {
-    public TIf(String text)
+    public TIf()
     {
-        setText(text);
+        super.setText("if");
     }
 
-    public TIf(String text, int line, int pos)
+    public TIf(int line, int pos)
     {
-        setText(text);
+        super.setText("if");
         setLine(line);
         setPos(pos);
     }
@@ -22,12 +22,18 @@ public final class TIf extends Token
     @Override
     public Object clone()
     {
-      return new TIf(getText(), getLine(), getPos());
+      return new TIf(getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTIf(this);
+    }
+
+    @Override
+    public void setText(@SuppressWarnings("unused") String text)
+    {
+        throw new RuntimeException("Cannot change TIf text.");
     }
 }
