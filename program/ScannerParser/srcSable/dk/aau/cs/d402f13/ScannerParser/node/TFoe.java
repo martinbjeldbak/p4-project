@@ -7,14 +7,14 @@ import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 @SuppressWarnings("nls")
 public final class TFoe extends Token
 {
-    public TFoe(String text)
+    public TFoe()
     {
-        setText(text);
+        super.setText("foe");
     }
 
-    public TFoe(String text, int line, int pos)
+    public TFoe(int line, int pos)
     {
-        setText(text);
+        super.setText("foe");
         setLine(line);
         setPos(pos);
     }
@@ -22,12 +22,18 @@ public final class TFoe extends Token
     @Override
     public Object clone()
     {
-      return new TFoe(getText(), getLine(), getPos());
+      return new TFoe(getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTFoe(this);
+    }
+
+    @Override
+    public void setText(@SuppressWarnings("unused") String text)
+    {
+        throw new RuntimeException("Cannot change TFoe text.");
     }
 }

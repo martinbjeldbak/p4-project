@@ -1,11 +1,12 @@
 Package dk.aau.cs.d402f13.ScannerParser;
 
 Helpers
-  blank            = (' ' | 13 | 10)+;
+  tab              = 9;
+  cr               = 13;
+  lf               = 10;
   decimal          = ['0' .. '9'];
   lowercase        = ['a' .. 'z'];
   uppercase        = ['A' .. 'Z'];
-  anycase          = lowercase | uppercase;
   unichar          = [0 .. 0xffff];
   quote            = '"';
   backslash        = '\';
@@ -21,7 +22,21 @@ Helpers
   star_qmark_plus  = '*'
                    | '?'
                    | '+';
-                   
+ 
+Tokens
+  eol              = cr | lf | cr lf;
+  blank            = ' ' | tab;
+  decimal          = decimal;
+  lowercase        = lowercase;
+  uppercase        = uppercase;
+  unichar          = unichar;
+  strchar          = strchar;
+  keyword          = keyword;
+  operator         = operator;
+  pattern_keyword  = pattern_keyword;
+  pattern_operator = pattern_operator;
+  direction        = direction;
+  star_qmark_plus  = star_qmark_plus;
   define     = 'define';
   game       = 'game';
   l_bkt      = '[';
@@ -36,7 +51,7 @@ Helpers
   then       = 'then';
   else       = 'else';
   pound      = '#';
-  l_arrow    = '=>';
+  arrow      = '=>';
   slash      = '/';
   star       = '*';
   q_mark     = '?';
@@ -47,69 +62,28 @@ Helpers
   empty      = 'empty';
   this       = 'this';
   
-Tokens
-  blank            = blank;
-  decimal          = decimal;
-  lowercase        = lowercase;
-  uppercase        = uppercase;
-  anycase          = anycase;
-  unichar          = unichar;
-  strchar          = strchar;
-  keyword          = keyword;
-  operator         = operator;
-  pattern_keyword  = pattern_keyword;
-  pattern_operator = pattern_operator;
-  direction        = direction;
-  star_qmark_plus  = star_qmark_plus;
-  define     = define;
-  game       = game;
-  l_bkt      = l_bkt;
-  r_bkt      = r_bkt;
-  l_brc      = l_brc;
-  r_brc      = r_brc;
-  l_par      = l_par;
-  r_par      = r_par;
-  
-  not        = not;
-  if         = if;
-  then       = then;
-  else       = else;
-  pound      = pound;
-  l_arrow    = l_arrow;
-  slash      = slash;
-  star       = star;
-  q_mark     = q_mark;
-  plus       = plus;
-  emark      = emark;
-  friend     = friend;
-  foe        = foe;
-  empty      = empty;
-  this       = this;
-  
   integer    = decimal+;
   coordinate = uppercase+ decimal+;
   string     = '"' (strchar | '\' unichar)* '"';
 
   /* identifiers */
-  function   = lowercase anycase+;
-  identifier = uppercase anycase*;
-  variable   = '$' anycase+;
-  
-
+  function   = lowercase (lowercase | uppercase)+;
+  identifier = uppercase (lowercase | uppercase)*;
+  variable   = '$' (lowercase | uppercase)+;
   
 Ignored Tokens
-  blank;
+  blank, eol;
   
 Productions
-
   program            = function_def* game_decl;
-  function_def       = define function l_bkt variable* r_bkt expression;
+  function_def       = define function l_bkt variable r_bkt expression;
   game_decl          = game decl_struct;
   decl_struct        = l_brc decl+ r_brc;
   decl               = {keystruc} keyword structure
                      | {idstruc} identifier structure;
                      
-  structure          = {declstruc} decl_struct | {expr} expression;
+  structure          = {declstruc} decl_struct
+                     | {expr} expression;
   
   /* expressions */
   expression    = {func} function_call
@@ -118,7 +92,7 @@ Productions
                 | {lambda} lambda_expr
                 | {el} element
                 | {not} not expression;
-  element       = {expr}  l_par expression r_par
+  element       = {expr} l_par expression r_par
                 | {var} variable
                 | {list} list
                 | {pat} pattern
@@ -131,7 +105,7 @@ Productions
                 | {func} function;
   function_call = function list;
   if_expr       = if [left]:expression then expression else [right]:expression;
-  lambda_expr   = pound l_bkt variable* r_bkt l_arrow expression;
+  lambda_expr   = pound l_bkt variable* r_bkt arrow expression;
   list          = l_bkt element* r_bkt;
   
   /* patterns */

@@ -7,14 +7,14 @@ import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 @SuppressWarnings("nls")
 public final class TElse extends Token
 {
-    public TElse(String text)
+    public TElse()
     {
-        setText(text);
+        super.setText("else");
     }
 
-    public TElse(String text, int line, int pos)
+    public TElse(int line, int pos)
     {
-        setText(text);
+        super.setText("else");
         setLine(line);
         setPos(pos);
     }
@@ -22,12 +22,18 @@ public final class TElse extends Token
     @Override
     public Object clone()
     {
-      return new TElse(getText(), getLine(), getPos());
+      return new TElse(getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTElse(this);
+    }
+
+    @Override
+    public void setText(@SuppressWarnings("unused") String text)
+    {
+        throw new RuntimeException("Cannot change TElse text.");
     }
 }

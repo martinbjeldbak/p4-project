@@ -7,14 +7,14 @@ import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 @SuppressWarnings("nls")
 public final class TDefine extends Token
 {
-    public TDefine(String text)
+    public TDefine()
     {
-        setText(text);
+        super.setText("define");
     }
 
-    public TDefine(String text, int line, int pos)
+    public TDefine(int line, int pos)
     {
-        setText(text);
+        super.setText("define");
         setLine(line);
         setPos(pos);
     }
@@ -22,12 +22,18 @@ public final class TDefine extends Token
     @Override
     public Object clone()
     {
-      return new TDefine(getText(), getLine(), getPos());
+      return new TDefine(getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTDefine(this);
+    }
+
+    @Override
+    public void setText(@SuppressWarnings("unused") String text)
+    {
+        throw new RuntimeException("Cannot change TDefine text.");
     }
 }

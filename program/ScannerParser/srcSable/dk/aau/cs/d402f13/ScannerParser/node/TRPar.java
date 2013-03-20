@@ -7,14 +7,14 @@ import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 @SuppressWarnings("nls")
 public final class TRPar extends Token
 {
-    public TRPar(String text)
+    public TRPar()
     {
-        setText(text);
+        super.setText(")");
     }
 
-    public TRPar(String text, int line, int pos)
+    public TRPar(int line, int pos)
     {
-        setText(text);
+        super.setText(")");
         setLine(line);
         setPos(pos);
     }
@@ -22,12 +22,18 @@ public final class TRPar extends Token
     @Override
     public Object clone()
     {
-      return new TRPar(getText(), getLine(), getPos());
+      return new TRPar(getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTRPar(this);
+    }
+
+    @Override
+    public void setText(@SuppressWarnings("unused") String text)
+    {
+        throw new RuntimeException("Cannot change TRPar text.");
     }
 }
