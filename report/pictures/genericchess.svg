@@ -14,9 +14,38 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="genericchess.svg">
+   sodipodi:docname="genericchess.svg"
+   inkscape:export-filename="/home/darx/UNI/dat4/report/pictures/direction_n.png"
+   inkscape:export-xdpi="893.02325"
+   inkscape:export-ydpi="893.02325">
   <defs
      id="defs4">
+    <marker
+       inkscape:stockid="DotS"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="DotS"
+       style="overflow:visible">
+      <path
+         id="path4302"
+         d="M -2.5,-1.0 C -2.5,1.7600000 -4.7400000,4.0 -7.5,4.0 C -10.260000,4.0 -12.5,1.7600000 -12.5,-1.0 C -12.5,-3.7600000 -10.260000,-6.0 -7.5,-6.0 C -4.7400000,-6.0 -2.5,-3.7600000 -2.5,-1.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt"
+         transform="scale(0.2) translate(7.4, 1)" />
+    </marker>
+    <marker
+       inkscape:stockid="DiamondSend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="DiamondSend"
+       style="overflow:visible">
+      <path
+         id="path4338"
+         d="M 0,-7.0710768 L -7.0710894,0 L 0,7.0710589 L 7.0710462,0 L 0,-7.0710768 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt"
+         transform="scale(0.2) translate(-6,0)" />
+    </marker>
     <marker
        inkscape:stockid="TriangleOutM"
        orient="auto"
@@ -95,6 +124,34 @@
          style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt"
          transform="scale(0.8) translate(7.4, 1)" />
     </marker>
+    <marker
+       inkscape:stockid="DotM"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="DotM-7"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4299-6"
+         d="m -2.5,-1 c 0,2.76 -2.24,5 -5,5 -2.76,0 -5,-2.24 -5,-5 0,-2.76 2.24,-5 5,-5 2.76,0 5,2.24 5,5 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="matrix(0.4,0,0,0.4,2.96,0.4)" />
+    </marker>
+    <marker
+       inkscape:stockid="TriangleOutM"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="TriangleOutM-9"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4380-5"
+         d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="scale(0.4,0.4)" />
+    </marker>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -103,9 +160,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.959798"
-     inkscape:cx="219.73065"
-     inkscape:cy="579.41559"
+     inkscape:zoom="5.6"
+     inkscape:cx="229.31214"
+     inkscape:cy="574.54296"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -135,6 +192,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -373,10 +431,942 @@
        height="80"
        x="210"
        y="437.36218" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#DotM);marker-mid:none;marker-end:url(#TriangleOutM)"
-       d="m 245,482.36218 0,-10"
-       id="path4229"
-       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="268.10742"
+       y="406.37601"
+       id="text10600"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699799,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602"
+         x="268.10742"
+         y="406.37601"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">A1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="280.76599"
+       y="406.37598"
+       id="text10600-4"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7"
+         x="280.76599"
+         y="406.37598"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">B1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="268.08304"
+       y="398.50601"
+       id="text10600-48"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-78"
+         x="268.08304"
+         y="398.50601"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">A2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="280.74161"
+       y="398.50598"
+       id="text10600-4-9"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-8"
+         x="280.74161"
+         y="398.50598"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">B2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="268.13181"
+       y="390.63608"
+       id="text10600-6"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-4"
+         x="268.13181"
+         y="390.63608"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">A3</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="280.79037"
+       y="390.63605"
+       id="text10600-4-7"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-1"
+         x="280.79037"
+         y="390.63605"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">B3</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="268.10742"
+       y="382.76608"
+       id="text10600-48-3"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-78-5"
+         x="268.10742"
+         y="382.76608"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">A4</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="280.76599"
+       y="382.76605"
+       id="text10600-4-9-2"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-8-0"
+         x="280.76599"
+         y="382.76605"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">B4</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="293.4725"
+       y="406.37601"
+       id="text10600-49"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-3"
+         x="293.4725"
+         y="406.37601"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">C1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="306.13107"
+       y="406.37598"
+       id="text10600-4-4"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-89"
+         x="306.13107"
+         y="406.37598"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">D1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="293.44812"
+       y="398.50601"
+       id="text10600-48-0"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-78-52"
+         x="293.44812"
+         y="398.50601"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">C2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="306.10669"
+       y="398.50598"
+       id="text10600-4-9-4"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-8-2"
+         x="306.10669"
+         y="398.50598"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">D2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="293.49689"
+       y="390.63608"
+       id="text10600-6-4"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-4-6"
+         x="293.49689"
+         y="390.63608"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">C3</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="306.15546"
+       y="390.63605"
+       id="text10600-4-7-4"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-1-7"
+         x="306.15546"
+         y="390.63605"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">D3</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="293.4725"
+       y="382.76608"
+       id="text10600-48-3-2"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-78-5-3"
+         x="293.4725"
+         y="382.76608"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">C4</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="306.13107"
+       y="382.76605"
+       id="text10600-4-9-2-5"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-8-0-2"
+         x="306.13107"
+         y="382.76605"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">D4</tspan></text>
+    <rect
+       style="fill:#a52126;fill-opacity:1;stroke:none"
+       id="rect2985-1-6-4"
+       width="10"
+       height="10"
+       x="259.96225"
+       y="497.36215" />
+    <rect
+       style="fill:#a52126;fill-opacity:1;stroke:none"
+       id="rect2985-7-9-5"
+       width="10"
+       height="10"
+       x="269.96225"
+       y="487.36215" />
+    <rect
+       style="fill:#a52126;fill-opacity:1;stroke:none"
+       id="rect2985-7-5-5-3"
+       width="10"
+       height="10"
+       x="269.96225"
+       y="507.36215" />
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="318.88553"
+       y="406.37601"
+       id="text10600-2"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-74"
+         x="318.88553"
+         y="406.37601"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">E1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="331.5441"
+       y="406.37598"
+       id="text10600-4-6"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-7"
+         x="331.5441"
+         y="406.37598"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">F1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="318.86115"
+       y="398.50601"
+       id="text10600-48-9"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-78-56"
+         x="318.86115"
+         y="398.50601"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">E2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="331.51971"
+       y="398.50598"
+       id="text10600-4-9-46"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-8-5"
+         x="331.51971"
+         y="398.50598"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">F2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="318.90991"
+       y="390.63608"
+       id="text10600-6-2"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-4-3"
+         x="318.90991"
+         y="390.63608"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">E3</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="331.56848"
+       y="390.63605"
+       id="text10600-4-7-3"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-1-6"
+         x="331.56848"
+         y="390.63605"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">F3</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="318.88553"
+       y="382.76608"
+       id="text10600-48-3-6"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-78-5-8"
+         x="318.88553"
+         y="382.76608"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">E4</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="331.5441"
+       y="382.76605"
+       id="text10600-4-9-2-9"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-8-0-4"
+         x="331.5441"
+         y="382.76605"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">F4</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="344.25061"
+       y="406.37601"
+       id="text10600-49-8"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-3-7"
+         x="344.25061"
+         y="406.37601"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">G1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="356.90918"
+       y="406.37598"
+       id="text10600-4-4-3"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-89-8"
+         x="356.90918"
+         y="406.37598"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">H1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="344.22623"
+       y="398.50601"
+       id="text10600-48-0-8"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-78-52-3"
+         x="344.22623"
+         y="398.50601"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">G2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="356.8848"
+       y="398.50598"
+       id="text10600-4-9-4-8"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-8-2-6"
+         x="356.8848"
+         y="398.50598"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">H2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="344.27499"
+       y="390.63608"
+       id="text10600-6-4-9"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-4-6-2"
+         x="344.27499"
+         y="390.63608"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">G3</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="356.93356"
+       y="390.63605"
+       id="text10600-4-7-4-2"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-1-7-4"
+         x="356.93356"
+         y="390.63605"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">H3</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="344.25061"
+       y="382.76608"
+       id="text10600-48-3-2-6"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-78-5-3-1"
+         x="344.25061"
+         y="382.76608"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">G4</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="356.90918"
+       y="382.76605"
+       id="text10600-4-9-2-5-0"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-8-0-2-2"
+         x="356.90918"
+         y="382.76605"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">H4</tspan></text>
+    <rect
+       style="fill:#a52126;fill-opacity:1;stroke:none"
+       id="rect2985-1-6-8"
+       width="10"
+       height="10"
+       x="219.99622"
+       y="457.36221" />
+    <rect
+       style="fill:#a52126;fill-opacity:1;stroke:none"
+       id="rect2985-7-9-9"
+       width="10"
+       height="10"
+       x="229.99622"
+       y="447.36221" />
+    <rect
+       style="fill:#a52126;fill-opacity:1;stroke:none"
+       id="rect2985-1-4-1-9"
+       width="10"
+       height="10"
+       x="239.99622"
+       y="457.36221" />
+    <rect
+       style="fill:#a52126;fill-opacity:1;stroke:none"
+       id="rect2985-7-5-5-7"
+       width="10"
+       height="10"
+       x="229.99622"
+       y="467.36221" />
+    <rect
+       style="fill:#a52126;fill-opacity:1;stroke:none"
+       id="rect2985-16-0-4"
+       width="10"
+       height="10"
+       x="249.99622"
+       y="447.36221" />
+    <rect
+       style="fill:#a52126;fill-opacity:1;stroke:none"
+       id="rect2985-1-5-8-7"
+       width="10"
+       height="10"
+       x="259.99622"
+       y="457.36221" />
+    <rect
+       style="fill:#a52126;fill-opacity:1;stroke:none"
+       id="rect2985-7-52-0-2"
+       width="10"
+       height="10"
+       x="269.99622"
+       y="447.36221" />
+    <rect
+       style="fill:#a52126;fill-opacity:1;stroke:none"
+       id="rect2985-4-4-5-8"
+       width="10"
+       height="10"
+       x="249.99622"
+       y="467.36221" />
+    <rect
+       style="fill:#a52126;fill-opacity:1;stroke:none"
+       id="rect2985-7-5-9-5-2"
+       width="10"
+       height="10"
+       x="269.99622"
+       y="467.36221" />
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="268.10263"
+       y="374.89612"
+       id="text10600-7"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-6"
+         x="268.10263"
+         y="374.89612"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">A5</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="280.7612"
+       y="374.89609"
+       id="text10600-4-1"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-85"
+         x="280.7612"
+         y="374.89609"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">B5</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="268.07825"
+       y="367.02612"
+       id="text10600-48-5"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-78-6"
+         x="268.07825"
+         y="367.02612"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">A6</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="280.73682"
+       y="367.02609"
+       id="text10600-4-9-40"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-8-4"
+         x="280.73682"
+         y="367.02609"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">B6</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="268.12701"
+       y="359.15619"
+       id="text10600-6-23"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-4-4"
+         x="268.12701"
+         y="359.15619"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">A7</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="280.78558"
+       y="359.15616"
+       id="text10600-4-7-9"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-1-4"
+         x="280.78558"
+         y="359.15616"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">B7</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="268.10263"
+       y="351.28619"
+       id="text10600-48-3-8"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-78-5-30"
+         x="268.10263"
+         y="351.28619"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">A8</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="280.7612"
+       y="351.28616"
+       id="text10600-4-9-2-4"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-8-0-41"
+         x="280.7612"
+         y="351.28616"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">B8</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="293.46771"
+       y="374.89612"
+       id="text10600-49-9"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-3-5"
+         x="293.46771"
+         y="374.89612"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">C5</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="306.12628"
+       y="374.89609"
+       id="text10600-4-4-0"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-89-0"
+         x="306.12628"
+         y="374.89609"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">D5</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="293.44333"
+       y="367.02612"
+       id="text10600-48-0-2"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-78-52-6"
+         x="293.44333"
+         y="367.02612"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">C6</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="306.1019"
+       y="367.02609"
+       id="text10600-4-9-4-0"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-8-2-66"
+         x="306.1019"
+         y="367.02609"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">D6</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="293.4921"
+       y="359.15619"
+       id="text10600-6-4-2"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-4-6-5"
+         x="293.4921"
+         y="359.15619"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">C7</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="306.15067"
+       y="359.15616"
+       id="text10600-4-7-4-4"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-1-7-5"
+         x="306.15067"
+         y="359.15616"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">D7</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="293.46771"
+       y="351.28619"
+       id="text10600-48-3-2-3"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-78-5-3-12"
+         x="293.46771"
+         y="351.28619"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">C8</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="306.12628"
+       y="351.28616"
+       id="text10600-4-9-2-5-2"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-8-0-2-5"
+         x="306.12628"
+         y="351.28616"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">D8</tspan></text>
+    <rect
+       style="fill:#a52126;fill-opacity:1;stroke:none"
+       id="rect2985-1-6-4-3"
+       width="10"
+       height="10"
+       x="259.95847"
+       y="457.36218" />
+    <rect
+       style="fill:#a52126;fill-opacity:1;stroke:none"
+       id="rect2985-7-9-5-6"
+       width="10"
+       height="10"
+       x="269.95847"
+       y="447.36218" />
+    <rect
+       style="fill:#a52126;fill-opacity:1;stroke:none"
+       id="rect2985-7-5-5-3-0"
+       width="10"
+       height="10"
+       x="269.95847"
+       y="467.36218" />
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="318.88074"
+       y="374.89612"
+       id="text10600-2-8"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-74-1"
+         x="318.88074"
+         y="374.89612"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">E5</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="331.53931"
+       y="374.89609"
+       id="text10600-4-6-1"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-7-5"
+         x="331.53931"
+         y="374.89609"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">F5</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="318.85635"
+       y="367.02612"
+       id="text10600-48-9-1"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-78-56-4"
+         x="318.85635"
+         y="367.02612"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">E6</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="331.51492"
+       y="367.02609"
+       id="text10600-4-9-46-5"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-8-5-6"
+         x="331.51492"
+         y="367.02609"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">F6</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="318.90512"
+       y="359.15619"
+       id="text10600-6-2-0"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-4-3-6"
+         x="318.90512"
+         y="359.15619"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">E7</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="331.56369"
+       y="359.15616"
+       id="text10600-4-7-3-7"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-1-6-5"
+         x="331.56369"
+         y="359.15616"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">F7</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="318.88074"
+       y="351.28619"
+       id="text10600-48-3-6-9"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-78-5-8-9"
+         x="318.88074"
+         y="351.28619"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">E8</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="331.53931"
+       y="351.28616"
+       id="text10600-4-9-2-9-9"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-8-0-4-7"
+         x="331.53931"
+         y="351.28616"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">F8</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="344.24582"
+       y="374.89612"
+       id="text10600-49-8-9"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-3-7-7"
+         x="344.24582"
+         y="374.89612"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">G5</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="356.90439"
+       y="374.89609"
+       id="text10600-4-4-3-4"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-89-8-4"
+         x="356.90439"
+         y="374.89609"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">H5</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="344.22144"
+       y="367.02612"
+       id="text10600-48-0-8-3"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-78-52-3-8"
+         x="344.22144"
+         y="367.02612"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">G6</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="356.88"
+       y="367.02609"
+       id="text10600-4-9-4-8-1"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-8-2-6-8"
+         x="356.88"
+         y="367.02609"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">H6</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="344.2702"
+       y="359.15619"
+       id="text10600-6-4-9-2"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-4-6-2-4"
+         x="344.2702"
+         y="359.15619"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">G7</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="356.92877"
+       y="359.15616"
+       id="text10600-4-7-4-2-0"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-1-7-4-7"
+         x="356.92877"
+         y="359.15616"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">H7</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="344.24582"
+       y="351.28619"
+       id="text10600-48-3-2-6-7"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-78-5-3-1-9"
+         x="344.24582"
+         y="351.28619"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">G8</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:9.82037544px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans"
+       x="356.90439"
+       y="351.28616"
+       id="text10600-4-9-2-5-0-9"
+       sodipodi:linespacing="125%"
+       transform="scale(0.78699798,1.2706513)"><tspan
+         sodipodi:role="line"
+         id="tspan10602-7-8-0-2-2-7"
+         x="356.90439"
+         y="351.28616"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">H8</tspan></text>
   </g>
 </svg>

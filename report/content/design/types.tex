@@ -32,8 +32,13 @@ the direction shown in \figref{fig:direction_nne}. This direction could also be 
 \fig{direction_nne}{The \texttt{n + n + e}-direction.}
 
 \subsection{Coordinate}
-a 2-dimensional vector consisting of an $x$-integer value and
-a $y$-integer value, representing a position in a grid.
+This type represents a position in a grid, i.e. on the game board. It is created with
+a direction-literal, e.g. \texttt{A1} or \texttt{AH23}. The first part (the alphabetical part)
+represents the column (or x-value), i.e. \texttt{A} means column $1$ and \texttt{AH} means
+column $1 \cdot 26 + 8 = 34$. The second part (the numeric part) represents the row (or y-value).
+
+\fig{coordinates}{All coordinates on a $8 \times 8$ board.}
+
 \subsection{Function}
 a function reference (could be anonymous, e.g. lambda expression).
 \subsection{Pattern}
