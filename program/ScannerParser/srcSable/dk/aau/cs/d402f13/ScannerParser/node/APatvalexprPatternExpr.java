@@ -5,39 +5,44 @@ package dk.aau.cs.d402f13.ScannerParser.node;
 import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 
 @SuppressWarnings("nls")
-public final class APatvalqmarkPatternExpr extends PPatternExpr
+public final class APatvalexprPatternExpr extends PPatternExpr
 {
     private PPatternVal _patternVal_;
-    private TStarQmarkPlus _starQmarkPlus_;
+    private TPatternOr _patternOr_;
+    private PPatternExpr _patternExpr_;
 
-    public APatvalqmarkPatternExpr()
+    public APatvalexprPatternExpr()
     {
         // Constructor
     }
 
-    public APatvalqmarkPatternExpr(
+    public APatvalexprPatternExpr(
         @SuppressWarnings("hiding") PPatternVal _patternVal_,
-        @SuppressWarnings("hiding") TStarQmarkPlus _starQmarkPlus_)
+        @SuppressWarnings("hiding") TPatternOr _patternOr_,
+        @SuppressWarnings("hiding") PPatternExpr _patternExpr_)
     {
         // Constructor
         setPatternVal(_patternVal_);
 
-        setStarQmarkPlus(_starQmarkPlus_);
+        setPatternOr(_patternOr_);
+
+        setPatternExpr(_patternExpr_);
 
     }
 
     @Override
     public Object clone()
     {
-        return new APatvalqmarkPatternExpr(
+        return new APatvalexprPatternExpr(
             cloneNode(this._patternVal_),
-            cloneNode(this._starQmarkPlus_));
+            cloneNode(this._patternOr_),
+            cloneNode(this._patternExpr_));
     }
 
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseAPatvalqmarkPatternExpr(this);
+        ((Analysis) sw).caseAPatvalexprPatternExpr(this);
     }
 
     public PPatternVal getPatternVal()
@@ -65,16 +70,16 @@ public final class APatvalqmarkPatternExpr extends PPatternExpr
         this._patternVal_ = node;
     }
 
-    public TStarQmarkPlus getStarQmarkPlus()
+    public TPatternOr getPatternOr()
     {
-        return this._starQmarkPlus_;
+        return this._patternOr_;
     }
 
-    public void setStarQmarkPlus(TStarQmarkPlus node)
+    public void setPatternOr(TPatternOr node)
     {
-        if(this._starQmarkPlus_ != null)
+        if(this._patternOr_ != null)
         {
-            this._starQmarkPlus_.parent(null);
+            this._patternOr_.parent(null);
         }
 
         if(node != null)
@@ -87,7 +92,32 @@ public final class APatvalqmarkPatternExpr extends PPatternExpr
             node.parent(this);
         }
 
-        this._starQmarkPlus_ = node;
+        this._patternOr_ = node;
+    }
+
+    public PPatternExpr getPatternExpr()
+    {
+        return this._patternExpr_;
+    }
+
+    public void setPatternExpr(PPatternExpr node)
+    {
+        if(this._patternExpr_ != null)
+        {
+            this._patternExpr_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
+            {
+                node.parent().removeChild(node);
+            }
+
+            node.parent(this);
+        }
+
+        this._patternExpr_ = node;
     }
 
     @Override
@@ -95,7 +125,8 @@ public final class APatvalqmarkPatternExpr extends PPatternExpr
     {
         return ""
             + toString(this._patternVal_)
-            + toString(this._starQmarkPlus_);
+            + toString(this._patternOr_)
+            + toString(this._patternExpr_);
     }
 
     @Override
@@ -108,9 +139,15 @@ public final class APatvalqmarkPatternExpr extends PPatternExpr
             return;
         }
 
-        if(this._starQmarkPlus_ == child)
+        if(this._patternOr_ == child)
         {
-            this._starQmarkPlus_ = null;
+            this._patternOr_ = null;
+            return;
+        }
+
+        if(this._patternExpr_ == child)
+        {
+            this._patternExpr_ = null;
             return;
         }
 
@@ -127,9 +164,15 @@ public final class APatvalqmarkPatternExpr extends PPatternExpr
             return;
         }
 
-        if(this._starQmarkPlus_ == oldChild)
+        if(this._patternOr_ == oldChild)
         {
-            setStarQmarkPlus((TStarQmarkPlus) newChild);
+            setPatternOr((TPatternOr) newChild);
+            return;
+        }
+
+        if(this._patternExpr_ == oldChild)
+        {
+            setPatternExpr((PPatternExpr) newChild);
             return;
         }
 
