@@ -5,14 +5,14 @@ package dk.aau.cs.d402f13.ScannerParser.node;
 import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 
 @SuppressWarnings("nls")
-public final class TLArrow extends Token
+public final class TArrow extends Token
 {
-    public TLArrow()
+    public TArrow()
     {
         super.setText("=>");
     }
 
-    public TLArrow(int line, int pos)
+    public TArrow(int line, int pos)
     {
         super.setText("=>");
         setLine(line);
@@ -22,18 +22,18 @@ public final class TLArrow extends Token
     @Override
     public Object clone()
     {
-      return new TLArrow(getLine(), getPos());
+      return new TArrow(getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseTLArrow(this);
+        ((Analysis) sw).caseTArrow(this);
     }
 
     @Override
     public void setText(@SuppressWarnings("unused") String text)
     {
-        throw new RuntimeException("Cannot change TLArrow text.");
+        throw new RuntimeException("Cannot change TArrow text.");
     }
 }

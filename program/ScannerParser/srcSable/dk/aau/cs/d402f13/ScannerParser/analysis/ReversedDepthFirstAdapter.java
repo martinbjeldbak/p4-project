@@ -87,13 +87,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getRBkt().apply(this);
         }
+        if(node.getVariable() != null)
         {
-            List<TVariable> copy = new ArrayList<TVariable>(node.getVariable());
-            Collections.reverse(copy);
-            for(TVariable e : copy)
-            {
-                e.apply(this);
-            }
+            node.getVariable().apply(this);
         }
         if(node.getLBkt() != null)
         {
@@ -281,20 +277,20 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         outAFuncExpression(node);
     }
 
-    public void inAElopexprExpression(AElopexprExpression node)
+    public void inAElopexpExpression(AElopexpExpression node)
     {
         defaultIn(node);
     }
 
-    public void outAElopexprExpression(AElopexprExpression node)
+    public void outAElopexpExpression(AElopexpExpression node)
     {
         defaultOut(node);
     }
 
     @Override
-    public void caseAElopexprExpression(AElopexprExpression node)
+    public void caseAElopexpExpression(AElopexpExpression node)
     {
-        inAElopexprExpression(node);
+        inAElopexpExpression(node);
         if(node.getExpression() != null)
         {
             node.getExpression().apply(this);
@@ -307,7 +303,7 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getElement().apply(this);
         }
-        outAElopexprExpression(node);
+        outAElopexpExpression(node);
     }
 
     public void inAIfExpression(AIfExpression node)
@@ -398,20 +394,20 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         outANotExpression(node);
     }
 
-    public void inALexprrElement(ALexprrElement node)
+    public void inAExprElement(AExprElement node)
     {
         defaultIn(node);
     }
 
-    public void outALexprrElement(ALexprrElement node)
+    public void outAExprElement(AExprElement node)
     {
         defaultOut(node);
     }
 
     @Override
-    public void caseALexprrElement(ALexprrElement node)
+    public void caseAExprElement(AExprElement node)
     {
-        inALexprrElement(node);
+        inAExprElement(node);
         if(node.getRPar() != null)
         {
             node.getRPar().apply(this);
@@ -424,7 +420,7 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getLPar().apply(this);
         }
-        outALexprrElement(node);
+        outAExprElement(node);
     }
 
     public void inAVarElement(AVarElement node)
@@ -721,9 +717,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getExpression().apply(this);
         }
-        if(node.getLArrow() != null)
+        if(node.getArrow() != null)
         {
-            node.getLArrow().apply(this);
+            node.getArrow().apply(this);
         }
         if(node.getRBkt() != null)
         {

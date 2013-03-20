@@ -44,16 +44,16 @@ The following operations are used throughout this section:
 \subsection{Reserved Tokens}
 \begin{ebnf}
 %reserved
-\grule{keyword}{\gter{game} \gor \gter{piece} \gor \gter{this} \gor \gter{width} \gor \gter{height}}
+\grule{keyword}{\gor \gter{piece} \gor \gter{width} \gor \gter{height}}
 \galt{\gter{title} \gor \gter{players} \gor \gter{turnOrder} \gor \gter{board}}
 \galt{\gter{grid} \gor \gter{setup} \gor \gter{wall} \gor \gter{name} \gor \gter{possibleDrops}}
 \galt{\gter{possibleMoves} \gor \gter{winCondition} \gor \gter{tieCondition}}
 \grule{shared\_operator}{\gter{*} \gor \gter{+}}
-\grule{normal\_operator}{\gter{-} \gor \gter{!=} \gor \gter{==} \gor \gter{<=} \gor \gter{>=}}
-\grule{pattern\_operator}{\gter{!} \gor \gter{?}}
+\grule{normal\_operator}{\gter{-} \gor \gter{!=} \gor \gter{==} \gor \gter{<=} \gor \gter{>=} \gor \gter{<} \gor \gter{>}}
+\grule{pattern\_operator}{\gter{?}}
 \grule{pattern\_not}{\gter{!}}
 \grule{pattern\_or}{\gter{|}}
-\grule{pattern\_keyword}{\gter{friend} \gor \gter{foe} \gor \gter{this} \gor \gter{empty}}
+\grule{pattern\_keyword}{\gter{friend} \gor \gter{foe} \gor \gter{empty}}
 \end{ebnf}
 \subsection{Literals}
 \begin{ebnf}
@@ -119,9 +119,7 @@ The following operations are used throughout this section:
 \galt{pattern\_check}
 \galt{\gter{!} \gcat pattern\_check}
 \galt{\gter{(} \gcat pattern \gcat \gter{)} \gcat \gopt{integer}}
-\grule{pattern\_check}{\gter{friend}}
-\galt{\gter{foe}}
-\galt{\gter{empty}}
+\grule{pattern\_check}{pattern\_keyword}
 \galt{\gter{this}}
 \galt{identifier}
 \end{ebnf}
