@@ -3,20 +3,16 @@ package dk.aau.cs.d402f13.utilities;
 public class Token {
   public enum Type {
     // Keywords
-    KEYWORD, GAME, PIECE, THIS,
-    WIDTH, HEIGHT, TITLE, PLAYERS,
-    TURNORDER, BOARD, GRID, SETUP,
-    WALL, NAME, POSSIBLE_DROPS,
-    POSSIBLE_MOVES, WIN_CONDITION,
-    TIE_CONDITION,
+    KEYWORD, GAME, THIS,
+    PATTERN_KEYWORD,  // (friend, foe, ...)
+    
     // Operators
-    OPERATOR, NOT_OPERATOR,
-    // Pattern keywords
-    PATTERN_KEYWORD, FRIEND, FOE,
-    EMPTY,
-    // Pattern operators
-    PATTERN_OPERATOR, MULTOP,
-    QUESTOP, PLUSOP, NOTOP,
+    NOT_OPERATOR,
+    SHARED_OPERATOR, //those that is used both as normal_operator and pattern_operator
+    PATTERN_OPERATOR, NORMAL_OPERATOR,
+    
+    ASSIGN,
+
     // Literals
     INT_LIT, DIR_LIT, COORD_LIT,
     STRING_LIT,
@@ -31,8 +27,12 @@ public class Token {
     IF, THEN, ELSE,
     // lambda
     LAMBDABEGIN, LAMBDAOP,
+    LET, IN, COMMA, 
     // Pattern begin
-    PATTERNOP, EOF,
+    PATTERNOP, // '/'
+    PATTERN_NOT,
+    PATTERN_OR, // | 
+    EOF;
   }
 
   public String value;

@@ -50,3 +50,21 @@
 \newcommand{\gter}[1]{\texttt{"#1"}}
 \newcommand{\gex}{\: - \:}
 \newcommand{\gcat}{ \: }
+
+% Table
+\newcommand{\tab}[7]{
+\begin{table}[H]
+  \centering
+    \begin{tabularx}{\textwidth}{ r | >{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X } %Errr, doesn't seem to give any errors, but fix it if possible
+  \hline
+  & \multicolumn{#2}{c}{\textbf{#4}} \\
+   \textbf{#5}    & #6 \\ \hline
+	#7
+	\hline
+    \end{tabularx}
+    \capt{#3}
+    \label{table:#1}
+\end{table}
+}
+
+\newcommand{\tabrow}[2]{ #1 & #2 \\ }
