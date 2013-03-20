@@ -14,7 +14,7 @@ import dk.aau.cs.d402f13.utilities.Token.Type;
 @SuppressWarnings("unused")
 public class Scanner {
   public static final String whitespace = " \t\r\n";
-  public static final String operators = "!&*+-=>?(){}#[]/|";
+  public static final String operators = "!&*+-=><?(){}#[]/|,";
   
   private int line = 1;
   private int offset = -1;
@@ -152,7 +152,13 @@ public class Scanner {
       // Operators
       case "and":
       case "or":
-        t.type = Token.Type.OPERATOR;
+        t.type = Token.Type.NORMAL_OPERATOR;
+        break;
+      case "let":
+        t.type = Token.Type.LET;
+        break;
+      case "in":
+        t.type = Token.Type.IN;
         break;
       case "not":
         t.type = Token.Type.NOT_OPERATOR;
@@ -218,11 +224,11 @@ public class Scanner {
   }
 
   public Token scanOperator() throws Exception {
-    Token t = token(Type.OPERATOR);
+    Token t = token(Type.NORMAL_OPERATOR);
     char c = current();
     t.value += c;
     pop();
-    switch (c) { // these operators are unambiguous
+    switch (c) {
       case '[':
         t.type = Type.LBRACKET;
         break;
@@ -241,14 +247,72 @@ public class Scanner {
       case ')':
         t.type = Type.RPAREN;
         break;
-      case '!':
-      case '+':
-      case '-':
-      case '*':
-      case '?':
+      case ',':
+        t.type = Type.COMMA;
+        break;
       case '|':
+        t.type = Type.PATTERN_OR;
+        break;
+      case '+':
+      case '*':
+        t.type = Type.SHARED_OPERATOR; //can be both normal operator and pattern operator
+        break;
+      case '!':
+        if (current() == '=') {
+          t.value += '=';
+          pop();
+          t.type = Type.NORMAL_OPERATOR; // !=
+          break;
+        }
+        else{
+          t.type = Type.PATTERN_NOT; // !
+          break;
+        }
+          
+      case '?':
         t.type = Type.PATTERN_OPERATOR;
         break;
+      case '-':
+        t.type = Type.NORMAL_OPERATOR;
+        break;
+      case '=':
+        if (current() == '>') {
+          pop();
+          t.type = Type.LAMBDAOP; // =>
+          break;
+        }
+        else if (current() == '=') {
+          t.value += '=';
+          pop();
+          t.type = Type.NORMAL_OPERATOR; // ==
+          break;
+        }
+        else{
+          t.type = Type.ASSIGN; // =
+          break;
+        }
+      case '>':
+        if (current() == '=') {  // >=
+          t.value += '=';
+          pop();
+          t.type = Type.NORMAL_OPERATOR;
+          break;
+        }
+        else {
+          t.type = Type.NORMAL_OPERATOR; // >
+          break;
+        }
+      case '<':
+        if (current() == '=') { // <=
+          t.value += '=';
+          pop();
+          t.type = Type.NORMAL_OPERATOR;
+          break;
+        }
+        else {
+          t.type = Type.NORMAL_OPERATOR; // <
+          break;
+        }
       case '/':
         if (current() == '/') {
           while (!isEol()) {
@@ -261,12 +325,6 @@ public class Scanner {
       case '#':
         t.type = Type.LAMBDABEGIN;
         break;
-      case '=':
-        if (current() == '>') {
-          pop();
-          t.type = Type.LAMBDAOP;
-          break;
-        }
       default:
         throw new ScannerError("Undefined operator: " + t.value, token(Type.EOF));
     }
