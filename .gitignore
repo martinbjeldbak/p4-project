@@ -7,4 +7,5 @@ report/*.pdf
 *.synctex.gz
 *.bbl
 *.blg
+*.class
 docs/gruppekontrakt.pdf
