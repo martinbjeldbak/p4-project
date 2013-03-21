@@ -86,8 +86,56 @@ Every compiler must focus the translation on the capability of a particular mach
 \subsection{Interpretation}
 A pure interpretation of a program lies at the opposite end (from compilation) regarding to methods of implementation. With this approach, which can be see, on \figref{fig:compileroverviewinterpretation}, no translation is performed at all. An interpreter is interpreting a program written in the targeted language. It acts like a virtual machine which instructions are statements of high level language. By purely using interpretation, a source code debugger can easily be implemented. Various errors that might occur can once they are detected easily refer to which place in the source code that caused the error. The debugging is eased because the interpreter works like a software implementation of a virtual machine, thus the state of the machine and the value of a specific variable can be outputted at any time when requested. This will of course lead to the disadvantage that an interpreter uses more space than a compiler. Further more, the execution speed of an interpreter is usually 10 to 100 times slower than that of a compiler \cite[p. 48]{sebesta2013}.
 
-\fig[scale=0.5]{compileroverviewinterpretation}{The different phases of an interpreter. Based on Sebesta \textit{et al.}\cite{sebesta2013} p. 48, Figure 1.4}
+\begin{figure}
+	\begin{center}
+		\scalebox{0.85}{
+			\begin{tikzpicture}
+  				[node distance=.8cm, start chain=going below,]
+  				\node[punktchain, join,] (sprog) {Source program};
+  				\node[punktchain, join,] (interp) {Interpreter};
+  				\begin{scope}[start branch=venstre, every join/.style={->, thick, shorten <=1pt}, ]
+  					\node[punktchain, on chain=going right, join=by {<-}] (indat) {Input data};
+  				\end{scope}
+  				\node[punktchain, join,] (res) {Result};
+			\end{tikzpicture}}
+		\end{center}
+	\capt{The different phases of an interpreter. Based on Sebesta \textit{et al.}\cite{sebesta2013} p. 48, Figure 1.4}
+	\label{fig:compileroverviewinterpretation}
+\end{figure}
 
 The compiling or interpreting approach can be combined to form a hybrid implementation system. This method is illustrated in \figref{fig:compileroverviewhybrid}, where a program is compiled into an intermediate code which is then interpreted. By using this approach, errors in a program can be detected before interpretation which can save much time for a programmer. A great portability can also be achieved when using hybrid system. The initial implementation of Java was hybrid and allowed Java to be compiled to an intermediate code that could run on any platform which had an implementation of Java Virtual Machine\cite[p. 50]{sebesta2013}. 
 
-\fig[scale=0.5]{compileroverviewhybrid}{The different phases of a hybrid implementation systems. Based on Sebesta \textit{et al.}\cite{sebesta2013} p. 49, Figure 1.5}
+\begin{figure}
+	\begin{center}
+		\scalebox{0.85}{
+			\begin{tikzpicture}
+  				[node distance=.8cm, start chain=going below,]
+  				\node[punktchain, join,] (sprog) {Source program};
+  				
+	     		\node[punktchain, join] (leana) {Lexical analyser};
+    	 		\node[punktchain, join] (syana) {Syntax analyser};
+     			\node[punktchain, join] (seana) {Semantic analyser};
+  				\node[punktchain, join,] (interp) {Interpreter};
+  	
+  				\begin{scope}[start branch=venstre, every join/.style={->, thick, shorten <=1pt}, ]
+        			\node[punktchain, on chain=going left, join=by {<-}] (indat) {Input data};
+      			\end{scope}
+  				
+  				\node[punktchain, join,] (res) {Result};
+  				
+  				\draw[tuborg, decoration={brace}] let 
+  				\p1=(leana.south), \p2=(syana.north) in
+    			($(2, \y1)$) -- ($(2, \y2)$) node[tubnode] {Tokens};
+  
+  				\draw[tuborg, decoration={brace}] let 
+  				\p1=(syana.south), \p2=(seana.north) in
+    			($(2, \y1)$) -- ($(2, \y2)$) node[tubnode] {Parse tree};
+  
+  				\draw[tuborg, decoration={brace}] let 
+  				\p1=(seana.south), \p2=(interp.north) in
+    			($(2, \y1)$) -- ($(2, \y2)$) node[tubnode] {Intermediate code};
+			\end{tikzpicture}}
+		\end{center}
+	\capt{The different phases of a hybrid implementation systems. Based on Sebesta \textit{et al.}\cite{sebesta2013} p. 49, Figure 1.5.}
+	\label{fig:compileroverviewhybrid}
+\end{figure}
