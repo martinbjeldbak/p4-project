@@ -3,7 +3,7 @@ package dk.aau.cs.d402f13.utilities.errors;
 import dk.aau.cs.d402f13.utilities.Token;
 
 @SuppressWarnings("serial")
-public class SyntaxError extends Exception {
+public class SyntaxError extends StandardError {
   public Token token;
   
   public SyntaxError(String msg, Token token){
