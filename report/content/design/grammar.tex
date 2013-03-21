@@ -89,7 +89,7 @@ The following operations are used throughout this section:
 \galt{assignment}
 \galt{if\_expr}
 \galt{lambda\_expr}
-\galt{element}
+\galt{element \gcat \gopt{list}}
 \galt{\gter{not} \gcat expression}
 \grule{element}{\gter{(} \gcat expression \gcat \gter{)}}
 \galt{variable}
@@ -102,7 +102,6 @@ The following operations are used throughout this section:
 \galt{string}
 \galt{identifier}
 \galt{function}
-\grule{function\_call}{function \gcat list}
 \grule{assignment}{\gter{let} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression} \gcat \gter{in} \gcat expression}
 \grule{if\_expr}{\gter{if} \gcat expression \gcat \gter{then} \gcat expression \gcat \gter{else} \gcat expression}
 \grule{lambda\_expr}{\gter{\#} \gcat \gter{[} \gcat \grep{variable} \gcat \gter{]} \gcat \gter{=>} \gcat expression}
