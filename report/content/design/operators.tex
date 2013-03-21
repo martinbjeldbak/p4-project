@@ -78,12 +78,16 @@ It is possible to concatenate strings:
     Returns the concatenation of a string and the string-representation of another type
 \end{dlist}
 
-\subsection{Direction operators}
+\subsection{Direction and coordinate operators}
 
 It is possible to combine directions using the following operator:
 \begin{dlist}
   \item \operator[Direction]{+}{Direction}{Direction} \\
     Combine two directions.
+  \item \operator[Coordinate]{-}{Coordinate}{Direction} \\
+    Returns the distance between two coordinates as a direction.
+  \item \operator[Coordinate]{+}{Direction}{Coordinate} \\
+    Add a direction to a coordinate.
 \end{dlist}
 For instance adding the directions \texttt{n} and \texttt{e} produces a direction
 equivalent with the direction \texttt{ne}. More information about the direction-type
