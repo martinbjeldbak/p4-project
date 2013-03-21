@@ -87,6 +87,7 @@ public class Parser {
         || lookAhead(Token.Type.LBRACKET)
         || lookAhead(Token.Type.PATTERNOP)
         || lookAhead(Token.Type.KEYWORD)
+        || lookAhead(Token.Type.FUNCTION)
         || lookAhead(Token.Type.THIS)
         || lookAhead(Token.Type.ID);
   }
@@ -186,10 +187,7 @@ public class Parser {
 
   // EXPRESSIONS
   private AstNode expression() throws SyntaxError {
-    if (lookAhead(Token.Type.FUNCTION)) {
-      return functionCall();
-    }
-    else if (accept(Token.Type.NOT_OPERATOR)) {
+    if (accept(Token.Type.NOT_OPERATOR)) {
       AstNode operation = astNode(Type.NOT_OPERATOR, "");
       operation.addChild(expression());
       return operation;
@@ -205,7 +203,13 @@ public class Parser {
     }
     else if (lookAheadElement()) {
       AstNode element = element();
-      if (accept(Token.Type.NORMAL_OPERATOR) || accept(Token.Type.SHARED_OPERATOR)) {
+      if (lookAhead(Token.Type.LBRACKET)) {
+        AstNode node = astNode(Type.FUNC_CALL, "");
+        node.addChild(element);
+        node.addChild(list());
+        return node;
+      }
+      else if (accept(Token.Type.NORMAL_OPERATOR) || accept(Token.Type.SHARED_OPERATOR)) {
         AstNode operation = astNode(Type.OPERATOR, currentToken.value);
         operation.addChild(element);
         operation.addChild(expression());
@@ -237,6 +241,9 @@ public class Parser {
     else if (accept(Token.Type.KEYWORD)) {
       node = astNode(Type.KEYWORD, currentToken.value);
     }
+    else if (accept(Token.Type.FUNCTION)) {
+      node = astNode(Type.FUNCTION, currentToken.value);
+    }
     else if (accept(Token.Type.THIS)) {
       node = astNode(Type.KEYWORD, "this");
     }
@@ -258,19 +265,6 @@ public class Parser {
     else {
       throw unexpectedError("an element");
     }
-    return node;
-  }
-
-  private AstNode functionCall() throws SyntaxError {
-    expect(Token.Type.FUNCTION);
-    AstNode node = astNode(Type.FUNC_CALL, currentToken.value);
-    //node.addChild(list());
-    // simplification of tree
-    expect(Token.Type.LBRACKET);
-    while (lookAheadElement()) {
-      node.addChild(element());
-    }
-    expect(Token.Type.RBRACKET);
     return node;
   }
   
