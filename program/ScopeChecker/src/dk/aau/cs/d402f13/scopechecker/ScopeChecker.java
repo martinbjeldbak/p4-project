@@ -13,7 +13,9 @@ import java.util.LinkedList;
 import dk.aau.cs.d402f13.scanner.Scanner;
 import dk.aau.cs.d402f13.utilities.SymbolTable;
 import dk.aau.cs.d402f13.utilities.Token;
+import dk.aau.cs.d402f13.utilities.SymbolTable.SymbolType;
 import dk.aau.cs.d402f13.utilities.errors.ScopeError;
+import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.SyntaxError;
 import dk.aau.cs.d402f13.parser.AstNode;
 import dk.aau.cs.d402f13.parser.Parser;
@@ -23,59 +25,46 @@ public class ScopeChecker {
   static SymbolTable symTable = new SymbolTable();
 
   //Must be called after the AST has been created
- public static void CheckScopes(AstNode root) throws ScopeError{
-   symTable.Empty();
-   InsertDefaultFunctions();
-   Traverse(root);
-   //symTable.CheckErrors(); //will throw a ScannerError exception if errors are found
-   symTable.Print();
+ public static void checkScopes(AstNode root) throws ScopeError{
+   symTable.empty();
+   insertDefaultFunctions();
+   traverse(root);
+   symTable.checkErrors(); //will throw a ScannerError exception if errors are found
+   symTable.print();
  }
  
- static void InsertDefaultFunctions(){ //the functions that exists in our language
-   symTable.FoundDeclaredSymbol(Token.Type.FUNCTION, "andSquares", 1);
-   symTable.FoundDeclaredSymbol(Token.Type.FUNCTION, "findSquares", 1);
-   symTable.FoundDeclaredSymbol(Token.Type.FUNCTION, "toActions", 1);
-   symTable.FoundDeclaredSymbol(Token.Type.FUNCTION, "union", -1);
-   symTable.FoundDeclaredSymbol(Token.Type.FUNCTION, "forall", 2);
-   symTable.FoundDeclaredSymbol(Token.Type.FUNCTION, "isEmpty", 1);
-   symTable.FoundDeclaredSymbol(Token.Type.FUNCTION, "move", 2);
-   symTable.FoundDeclaredSymbol(Token.Type.FUNCTION, "moveAndCapture", 2);
-   symTable.FoundDeclaredSymbol(Token.Type.FUNCTION, "isCurrentPlayer", 1);
-   symTable.FoundDeclaredSymbol(Token.Type.FUNCTION, "isFirstMove", 1);
+ static void insertDefaultFunctions(){ //the functions that exists in our language
+   symTable.foundDeclaredSymbol(SymbolType.FUNCTION, "andSquares", -1, 0);
+   symTable.foundDeclaredSymbol(SymbolType.FUNCTION, "findSquares", -1, 0);
+   symTable.foundDeclaredSymbol(SymbolType.FUNCTION, "union", -1, 0);
+   symTable.foundDeclaredSymbol(SymbolType.FUNCTION, "forall", -1, 0);
+   symTable.foundDeclaredSymbol(SymbolType.FUNCTION, "isEmpty", -1, 0);
+   symTable.foundDeclaredSymbol(SymbolType.FUNCTION, "move", -1, 0);
+   symTable.foundDeclaredSymbol(SymbolType.FUNCTION, "moveAndCapture", -1, 0);
+   symTable.foundDeclaredSymbol(SymbolType.FUNCTION, "isCurrentPlayer", -1, 0);
+   symTable.foundDeclaredSymbol(SymbolType.FUNCTION, "isFirstMove", -1, 0);
  }
 
- static void Traverse(AstNode node){
+ static void traverse(AstNode node){
    switch (node.type){
-     case FUNC_DEF: FuncDef(node); break;
-     case FUNC_CALL: FuncCall(node); break;
+     case FUNC_DEF: funcDef(node); break;
+     case FUNCTION: function(node); break;
    }
    
    //save the iterator, since node.iterator() will return the same iterator even though .next() has been called
    Iterator<AstNode> it = node.iterator(); while (it.hasNext()){
-     Traverse(it.next());
+     traverse(it.next());
    }
  }
  
- static void FuncDef(AstNode node){
+ static void funcDef(AstNode node){
    Iterator<AstNode> it = node.iterator();
    String funcName = it.next().value;
-   Iterator<AstNode> argIt = it.next().iterator();
-   int argNum = 0;
-   while (argIt.hasNext()){
-     argIt.next();
-     argNum++;
-   }
-   symTable.FoundDeclaredSymbol(Token.Type.FUNCTION, funcName, argNum);
+   symTable.foundDeclaredSymbol(SymbolType.FUNCTION, funcName, node.line, node.offset);
    System.out.println("Found decl of func: " + funcName);
  }
- static void FuncCall(AstNode node){
-   Iterator<AstNode> it = node.iterator();
-   int argNum = 0;
-   while (it.hasNext()){
-     it.next();
-     argNum++;
-   }
-   symTable.FoundUsedSymbol(Token.Type.FUNCTION, node.value, argNum);
+ static void function(AstNode node){
+   symTable.foundUsedSymbol(SymbolType.FUNCTION, node.value, node.line, node.offset);
    System.out.println("Found call to func: " + node.value);
  }
  
@@ -128,29 +117,22 @@ public class ScopeChecker {
              ast.export(f);
              f.close();
              if (line.equals(":c")){
-               System.out.println("hej");
-               CheckScopes(ast);
-               
+               checkScopes(ast);       
              }
            }
          }
-         catch (SyntaxError e) {
+         catch (StandardError e) {
            System.out.flush();
-           if (e.getToken() == null) {
-             System.err.println("Syntax error: " + e.getMessage());
-           }
-           else {
-             System.err.println("Syntax error: " + e.getMessage()
-                 + " on input line " + e.getLine() + " column "
-                 + e.getColumn() + ":");
-             String[] lines = input.split("\n");
-             if (lines.length >= e.getLine()) {
-               System.err.println(lines[e.getLine() - 1]);
-               for (int i = 1; i < e.getColumn(); i++) {
-                 System.err.print("-");
-               }
-               System.err.println("^");
+           System.err.println("Error: " + e.getMessage()
+               + " on input line " + e.getLine() + " column "
+               + e.getColumn() + ":");
+           String[] lines = input.split("\n");
+           if (lines.length >= e.getLine()) {
+             System.err.println(lines[e.getLine() - 1]);
+             for (int i = 1; i < e.getColumn(); i++) {
+               System.err.print("-");
              }
+             System.err.println("^");
            }
          }
          input = "";
