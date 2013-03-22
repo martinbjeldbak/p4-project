@@ -18,7 +18,17 @@ When calling the function:
 A new scope will be created and the values $5$ and $23$
 are assigned to \variable{a} and \variable{b}, respectively.
 
+Named functions (such as \function{max}) always exist in the global scope.
+
 \subsection{Lambda expression scope}
+
+When a lambda expression is created, a reference to the scope it was created
+in is saved with it. This is known as a closure, and means that a lambda
+expression may access variables outside of its own scope. The accessible
+variables are the variables that were available at the time of the creation
+of the lambda expression.
+
+Consider the following example:
 
 \subsection{Let-expressions}
 
