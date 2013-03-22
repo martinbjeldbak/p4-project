@@ -1,7 +1,6 @@
 \section{Compiler overview}
 \label{sec:compileroverview}
-A Wikipedia article about programming languages exists which contains a list of 664 different programming language. This tells that constructing a programming language is definitely not a new thing to do. Fortunate enough though, because doing so could at first seem like an overwhelming task, but luckily we can draw knowledge from experienced language designers who have come up with methods which can be used for creating a compiler or interpreter for a programming language. This section describes how it is commonly done and the phases involved, which we use ase a guideline for the construction of \productname{}.
-
+This section describes how it is commonly done and the phases involved, which we use ase a guideline for the construction of \productname{}.
 A programming language can be implemented by writing a compiler that translates programs into machine language, which a computer can execute directly \cite[p. 44]{sebesta2013}.
 If the program to be translated is not valid, the compiler should give an error message that best possible helps the programmer identify what error he has made. A good compiler will try to fix the error and continue compilation, so even further errors can be identified, providing the programmer a complete list of errors that can handled all at once instead of one per compilation. Translating one language to another is typically not a simple task, therefore it is often split into different phases, which is shown by \figref{fig:compileroverview} and will be clarified in the following.
 
