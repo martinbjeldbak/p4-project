@@ -35,11 +35,14 @@
 \end{enumerate}
 }
 
+\newcommand{\variable}[1]{\texttt{\color[rgb]{0.694 0.537 0.384}\$#1}}
+\newcommand{\function}[1]{\texttt{\color[rgb]{0.012 0.408 0.733}#1}}
+
 \newcommand{\operator}[4][]{\texttt{#1 \textbf{\color{nicered}#2} #3 $\rightarrow$ #4}}
 
 \newenvironment{ebnf} {
   \begin{center}
-    \begin{tabular}{p{3cm} c p{7cm}}
+    \begin{tabular}{>{\hfill}p{3cm} c p{7cm}}
 }{
   \end{tabular}
 \end{center}
