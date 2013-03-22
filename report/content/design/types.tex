@@ -38,27 +38,37 @@ the direction shown in \figref{fig:direction_nne}. This direction could also be 
 
 \subsection{Coordinate}
 This type represents a position in a grid, i.e. on the game board. It is created with
-a direction-literal, e.g. \texttt{A1} or \texttt{AH23}. The first part (the alphabetical part)
+a coordinate-literal, e.g. \texttt{A1} or \texttt{AH23}. The first part (the alphabetical part)
 represents the column (or x-value), i.e. \texttt{A} means column $1$ and \texttt{AH} means
 column $1 \cdot 26 + 8 = 34$. The second part (the numeric part) represents the row (or y-value).
 
 \fig{coordinates}{All coordinates on an $8 \times 8$ board.}
 
 \subsection{Function}
-Functions in \productname{} first-class citizens, meaning that they can be used as any
+Functions in \productname{} are first-class citizens, meaning that they can be used as any
 other value. A function name without a list of arguments results in a reference to that
 function. Function references can be passed as arguments to other functions or as a return
 value.
 
 Another way to create function references, is to use anonymous functions in the form
-of lambda expressions. 
+of lambda expressions. A lambda expression is created by combining a list of input-variables
+with an expression, like so:
+
+\codesample{lambdaexpression.garry}
+
+In the example above, a lambda expression is assigned to to \variable{max}-variable, before
+being called as a function in line 2. The \texttt{\#}-symbol is used to mark the beginning
+of a lambda expression. The scope rules of lambda expressions are further described in \secref{sec:scoping}
+while the declaration of named functions is described in \secref{sec:functions}.
+
 \subsection{Pattern}
+A unique feature of \productname{} is patterns.
 a pattern used for matching patterns on the board.
 \subsection{List}
-a list of values (can be empty).
+A list is an ordered collection of values. The same value may occur more than once. 
 
 \subsection{Identifier}
 
 \subsection{Action}
 
-
+Something about monads here...
