@@ -48,6 +48,10 @@ public class PrettyPrinter extends Visitor {
         node.type == Type.ID ||
         node.type == Type.FUNCTION;
   }
+  
+  //////////////////////////////////////
+  //// Visitor implementation below ////
+  //////////////////////////////////////
 
   @Override
   public String visit(AstNode node) throws StandardError {
