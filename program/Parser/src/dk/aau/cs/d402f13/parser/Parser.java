@@ -8,9 +8,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Date;
 import java.util.LinkedList;
-import dk.aau.cs.d402f13.parser.AstNode.Type;
 import dk.aau.cs.d402f13.scanner.Scanner;
 import dk.aau.cs.d402f13.utilities.Token;
+import dk.aau.cs.d402f13.utilities.ast.AstNode;
+import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.errors.SyntaxError;
 
 public class Parser {
@@ -223,7 +224,7 @@ public class Parser {
   }
 
   private AstNode element() throws SyntaxError {
-    AstNode node = astNode(Type.ELEM, "");
+    AstNode node = null;
     if (accept(Token.Type.LPAREN)) {
       node = expression();
       expect(Token.Type.RPAREN);
