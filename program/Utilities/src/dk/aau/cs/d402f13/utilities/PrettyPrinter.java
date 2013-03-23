@@ -160,11 +160,13 @@ public class PrettyPrinter extends Visitor {
         code += "(" + visit(node.get(i)) + ") ";
       }
     }
-    if (isElement(node.get(l))) {
-      code += visit(node.get(l));
-    }
-    else {
-      code += "(" + visit(node.get(l)) + ")";
+    if (l >= 0) {
+      if (isElement(node.get(l))) {
+        code += visit(node.get(l));
+      }
+      else {
+        code += "(" + visit(node.get(l)) + ")";
+      }
     }
     return code + "]";
   }
