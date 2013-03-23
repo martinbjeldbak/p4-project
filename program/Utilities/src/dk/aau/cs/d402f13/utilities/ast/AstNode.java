@@ -43,6 +43,10 @@ public class AstNode implements Iterable<AstNode> {
     this.offset = offset;
   }
   
+  public int size() {
+    return children.size();
+  }
+  
   public AstNode get(int index) {
     return children.get(index);
   }
