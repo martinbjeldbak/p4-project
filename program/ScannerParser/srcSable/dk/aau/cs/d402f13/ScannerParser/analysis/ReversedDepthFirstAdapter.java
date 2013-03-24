@@ -260,27 +260,6 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         outAExprStructure(node);
     }
 
-    public void inAFuncExpression(AFuncExpression node)
-    {
-        defaultIn(node);
-    }
-
-    public void outAFuncExpression(AFuncExpression node)
-    {
-        defaultOut(node);
-    }
-
-    @Override
-    public void caseAFuncExpression(AFuncExpression node)
-    {
-        inAFuncExpression(node);
-        if(node.getFunctionCall() != null)
-        {
-            node.getFunctionCall().apply(this);
-        }
-        outAFuncExpression(node);
-    }
-
     public void inAElopexpExpression(AElopexpExpression node)
     {
         defaultIn(node);
@@ -387,6 +366,10 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
     public void caseAElExpression(AElExpression node)
     {
         inAElExpression(node);
+        if(node.getList() != null)
+        {
+            node.getList().apply(this);
+        }
         if(node.getElement() != null)
         {
             node.getElement().apply(this);
@@ -666,31 +649,6 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         outAFuncElement(node);
     }
 
-    public void inAFunctionCall(AFunctionCall node)
-    {
-        defaultIn(node);
-    }
-
-    public void outAFunctionCall(AFunctionCall node)
-    {
-        defaultOut(node);
-    }
-
-    @Override
-    public void caseAFunctionCall(AFunctionCall node)
-    {
-        inAFunctionCall(node);
-        if(node.getList() != null)
-        {
-            node.getList().apply(this);
-        }
-        if(node.getFunction() != null)
-        {
-            node.getFunction().apply(this);
-        }
-        outAFunctionCall(node);
-    }
-
     public void inAVarExpr(AVarExpr node)
     {
         defaultIn(node);
@@ -795,9 +753,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getElse().apply(this);
         }
-        if(node.getExpression() != null)
+        if(node.getMid() != null)
         {
-            node.getExpression().apply(this);
+            node.getMid().apply(this);
         }
         if(node.getThen() != null)
         {
@@ -1077,6 +1035,10 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getInteger().apply(this);
         }
+        if(node.getRPar() != null)
+        {
+            node.getRPar().apply(this);
+        }
         if(node.getPattern() != null)
         {
             node.getPattern().apply(this);
@@ -1088,25 +1050,67 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         outALpatexprrPatternVal(node);
     }
 
-    public void inAPatkeyPatternCheck(APatkeyPatternCheck node)
+    public void inAFriendPatternCheck(AFriendPatternCheck node)
     {
         defaultIn(node);
     }
 
-    public void outAPatkeyPatternCheck(APatkeyPatternCheck node)
+    public void outAFriendPatternCheck(AFriendPatternCheck node)
     {
         defaultOut(node);
     }
 
     @Override
-    public void caseAPatkeyPatternCheck(APatkeyPatternCheck node)
+    public void caseAFriendPatternCheck(AFriendPatternCheck node)
     {
-        inAPatkeyPatternCheck(node);
-        if(node.getPatternKeyword() != null)
+        inAFriendPatternCheck(node);
+        if(node.getFriend() != null)
         {
-            node.getPatternKeyword().apply(this);
+            node.getFriend().apply(this);
         }
-        outAPatkeyPatternCheck(node);
+        outAFriendPatternCheck(node);
+    }
+
+    public void inAFoePatternCheck(AFoePatternCheck node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAFoePatternCheck(AFoePatternCheck node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAFoePatternCheck(AFoePatternCheck node)
+    {
+        inAFoePatternCheck(node);
+        if(node.getFoe() != null)
+        {
+            node.getFoe().apply(this);
+        }
+        outAFoePatternCheck(node);
+    }
+
+    public void inAEmptyPatternCheck(AEmptyPatternCheck node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAEmptyPatternCheck(AEmptyPatternCheck node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAEmptyPatternCheck(AEmptyPatternCheck node)
+    {
+        inAEmptyPatternCheck(node);
+        if(node.getEmpty() != null)
+        {
+            node.getEmpty().apply(this);
+        }
+        outAEmptyPatternCheck(node);
     }
 
     public void inAThisPatternCheck(AThisPatternCheck node)
