@@ -10,7 +10,7 @@ public final class AIfExpr extends PIfExpr
     private TIf _if_;
     private PExpression _left_;
     private TThen _then_;
-    private PExpression _expression_;
+    private PExpression _mid_;
     private TElse _else_;
     private PExpression _right_;
 
@@ -23,7 +23,7 @@ public final class AIfExpr extends PIfExpr
         @SuppressWarnings("hiding") TIf _if_,
         @SuppressWarnings("hiding") PExpression _left_,
         @SuppressWarnings("hiding") TThen _then_,
-        @SuppressWarnings("hiding") PExpression _expression_,
+        @SuppressWarnings("hiding") PExpression _mid_,
         @SuppressWarnings("hiding") TElse _else_,
         @SuppressWarnings("hiding") PExpression _right_)
     {
@@ -34,7 +34,7 @@ public final class AIfExpr extends PIfExpr
 
         setThen(_then_);
 
-        setExpression(_expression_);
+        setMid(_mid_);
 
         setElse(_else_);
 
@@ -49,7 +49,7 @@ public final class AIfExpr extends PIfExpr
             cloneNode(this._if_),
             cloneNode(this._left_),
             cloneNode(this._then_),
-            cloneNode(this._expression_),
+            cloneNode(this._mid_),
             cloneNode(this._else_),
             cloneNode(this._right_));
     }
@@ -135,16 +135,16 @@ public final class AIfExpr extends PIfExpr
         this._then_ = node;
     }
 
-    public PExpression getExpression()
+    public PExpression getMid()
     {
-        return this._expression_;
+        return this._mid_;
     }
 
-    public void setExpression(PExpression node)
+    public void setMid(PExpression node)
     {
-        if(this._expression_ != null)
+        if(this._mid_ != null)
         {
-            this._expression_.parent(null);
+            this._mid_.parent(null);
         }
 
         if(node != null)
@@ -157,7 +157,7 @@ public final class AIfExpr extends PIfExpr
             node.parent(this);
         }
 
-        this._expression_ = node;
+        this._mid_ = node;
     }
 
     public TElse getElse()
@@ -217,7 +217,7 @@ public final class AIfExpr extends PIfExpr
             + toString(this._if_)
             + toString(this._left_)
             + toString(this._then_)
-            + toString(this._expression_)
+            + toString(this._mid_)
             + toString(this._else_)
             + toString(this._right_);
     }
@@ -244,9 +244,9 @@ public final class AIfExpr extends PIfExpr
             return;
         }
 
-        if(this._expression_ == child)
+        if(this._mid_ == child)
         {
-            this._expression_ = null;
+            this._mid_ = null;
             return;
         }
 
@@ -287,9 +287,9 @@ public final class AIfExpr extends PIfExpr
             return;
         }
 
-        if(this._expression_ == oldChild)
+        if(this._mid_ == oldChild)
         {
-            setExpression((PExpression) newChild);
+            setMid((PExpression) newChild);
             return;
         }
 

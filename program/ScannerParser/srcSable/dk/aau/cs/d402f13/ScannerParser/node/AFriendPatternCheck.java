@@ -5,46 +5,46 @@ package dk.aau.cs.d402f13.ScannerParser.node;
 import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 
 @SuppressWarnings("nls")
-public final class AFuncExpression extends PExpression
+public final class AFriendPatternCheck extends PPatternCheck
 {
-    private PFunctionCall _functionCall_;
+    private TFriend _friend_;
 
-    public AFuncExpression()
+    public AFriendPatternCheck()
     {
         // Constructor
     }
 
-    public AFuncExpression(
-        @SuppressWarnings("hiding") PFunctionCall _functionCall_)
+    public AFriendPatternCheck(
+        @SuppressWarnings("hiding") TFriend _friend_)
     {
         // Constructor
-        setFunctionCall(_functionCall_);
+        setFriend(_friend_);
 
     }
 
     @Override
     public Object clone()
     {
-        return new AFuncExpression(
-            cloneNode(this._functionCall_));
+        return new AFriendPatternCheck(
+            cloneNode(this._friend_));
     }
 
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseAFuncExpression(this);
+        ((Analysis) sw).caseAFriendPatternCheck(this);
     }
 
-    public PFunctionCall getFunctionCall()
+    public TFriend getFriend()
     {
-        return this._functionCall_;
+        return this._friend_;
     }
 
-    public void setFunctionCall(PFunctionCall node)
+    public void setFriend(TFriend node)
     {
-        if(this._functionCall_ != null)
+        if(this._friend_ != null)
         {
-            this._functionCall_.parent(null);
+            this._friend_.parent(null);
         }
 
         if(node != null)
@@ -57,23 +57,23 @@ public final class AFuncExpression extends PExpression
             node.parent(this);
         }
 
-        this._functionCall_ = node;
+        this._friend_ = node;
     }
 
     @Override
     public String toString()
     {
         return ""
-            + toString(this._functionCall_);
+            + toString(this._friend_);
     }
 
     @Override
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._functionCall_ == child)
+        if(this._friend_ == child)
         {
-            this._functionCall_ = null;
+            this._friend_ = null;
             return;
         }
 
@@ -84,9 +84,9 @@ public final class AFuncExpression extends PExpression
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        if(this._functionCall_ == oldChild)
+        if(this._friend_ == oldChild)
         {
-            setFunctionCall((PFunctionCall) newChild);
+            setFriend((TFriend) newChild);
             return;
         }
 
