@@ -13,9 +13,11 @@ import dk.aau.cs.d402f13.scanner.Scanner;
 import dk.aau.cs.d402f13.utilities.PrettyPrinter;
 import dk.aau.cs.d402f13.utilities.Token;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
+import dk.aau.cs.d402f13.utilities.ast.Visitor;
 import dk.aau.cs.d402f13.utilities.errors.Error;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.SyntaxError;
+import dk.aau.cs.d402f13.scopechecker.ScopeChecker;;
 
 
 public class Interactive {
@@ -39,6 +41,7 @@ public class Interactive {
         case ":s":
         case ":p":
         case ":o":
+        case ":k":
           try {
             ByteArrayInputStream bais = new ByteArrayInputStream(
               input.getBytes("UTF-8")
@@ -75,6 +78,7 @@ public class Interactive {
                 f.close();
               }
               else {
+                if (line.equals(":o")) {
                 System.out.println("Pretty printing...");
                 start = new Date();
                 PrettyPrinter pp = new PrettyPrinter();
@@ -82,6 +86,14 @@ public class Interactive {
                 time = new Date().getTime() - start.getTime();
                 System.out.println("Pretty printing took " + time + " ms");
                 System.out.println(code);
+                }
+                else{
+                  System.out.println("Scope checking printing...");
+                  start = new Date();
+                  new ScopeChecker(ast); //constructor invoke the visiting calls
+                  time = new Date().getTime() - start.getTime();
+                  System.out.println("Scope checking took " + time + " ms");
+                }
               }
             }
           }

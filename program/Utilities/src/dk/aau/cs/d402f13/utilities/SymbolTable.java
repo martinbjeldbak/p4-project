@@ -14,20 +14,20 @@ public class SymbolTable {
   }
   public class SymbolInfo{
     SymbolType type;
-    Boolean declared;
+    Boolean declaration;
     String name;
     int line;
     int offset;
     
     SymbolInfo(SymbolType type, Boolean declared, String name, int line, int offset){
       this.type = type;
-      this.declared = declared;
+      this.declaration = declared;
       this.name = name;
       this.line = line;
       this.offset = offset;
     }
     public void print(){
-      String dec = this.declared ? "DECLARED" : "UNDECLARED";
+      String dec = this.declaration ? "DECLARED" : "UNDECLARED";
       System.out.println(this.type + " : " + this.name + "[" + dec + "]");
     }
     public int getLine(){
@@ -65,22 +65,27 @@ public class SymbolTable {
     symbols.clear();
   }
   
+  int getNestLevel(){
+    return this.parent == null ? 0 : this.parent.getNestLevel() + 1; 
+  }
+  
   public void checkErrors() throws ScopeError {
-    for (SymbolInfo s : symbols){   //call this just before closing a scope. throws error if something in scope has not been declared
-      if (!declared(s)){
+    for (SymbolInfo s : symbols){   //this method is called just before exiting a scope
+      if (!s.declaration && !declared(s)){//if symbol is not a declaration and is not declared in visible scopes 
         SymbolInfo closeMatching = findSuggestion(s); //find a name that looks similar and may have been mistyped
         String suggestion = closeMatching != null ? ", did you mean '" + closeMatching.name + "'?" : "";
-        switch (s.type){
-        case FUNCTION: throw new ScopeError("Scope error, could not find declaration of function: '" + s.name + "'" + suggestion, s);
-        }
+        throw new ScopeError("Scope error, could not find declaration of: '" + s.name + "'" + suggestion, s);
       }
     }
   }
   
   Boolean declared(SymbolInfo s){
+    //Checks if a symbol is declared in either local or outer scopes
     for (SymbolInfo si : symbols){
-      if (si.type == s.type && s.name.equals(si.name) && si.declared)
+      if (si.type == s.type && s.name.equals(si.name) && si.declaration){
+        System.out.println(nestPrefix() + s.name + " (" + s.type + ") found declared on line " + s.line + ", offset " + s.offset);
         return true;
+      }
     }
     if (this.parent == null)    //if this symbol table is in outer scope, symbol is not declared
       return false;
@@ -91,8 +96,8 @@ public class SymbolTable {
   public void foundDeclaredSymbol(SymbolType type, String name, int line, int offset) throws ScopeError{
     for (SymbolInfo s : symbols){//if symbol is found but not declared, change it to declared
       if (s.type == type && s.name.equals(name)){ 
-        if (!s.declared){
-          s.declared = true;
+        if (!s.declaration){
+          s.declaration = true;
           s.line = line;
           s.offset = offset;
         }
@@ -102,18 +107,31 @@ public class SymbolTable {
         return;
       }  
     }
+   
+    System.out.println(nestPrefix() + name + " (" + type + ") decl" );
     //if symbol is not found, insert it as declared
     symbols.add(new SymbolInfo(type, true, name, line, offset));
+  }
+  
+  String nestPrefix(){ //used for printing, to show nest level
+    String prefix = "";
+    for (int i = 0; i < getNestLevel(); i++){
+      prefix += " ";
+    }
+    prefix += "#";
+    return prefix;
   }
   
   public void foundUsedSymbol(SymbolType type, String name, int line, int offset){
     for (SymbolInfo s : symbols){//if symbol is already in table, don't insert it
       if (s.type == type && s.name.equals(name)){
+        System.out.println(nestPrefix() + name + " (" + type + ") used on line " + line + ", offset " + offset );
         return;
       }  
     }
     //if symbol is not found, insert it as undeclared
     symbols.add(new SymbolInfo(type, false, name, line, offset));
+    System.out.println(nestPrefix() + name + " (" + type + ") used on line " + line + ", offset " + offset );
   }
   
   public SymbolInfo findSuggestion(SymbolInfo si){ //looks recursively in this scope + enclosing scopes
@@ -121,19 +139,23 @@ public class SymbolTable {
       return findSuggestionThisScope(si);
     else{
       SymbolInfo bestThisScope = findSuggestionThisScope(si);
-      SymbolInfo bestEnclosingScope = this.parent.findSuggestion(si);
-      if (bestThisScope == null) {  //if symboltable does not contain any declarations
-        return null;
-      }
-      //to reach this point, none of bestThisScope and bestEnclosingScope are null
+      SymbolInfo bestParentScope = this.parent.findSuggestion(si);
+      if (bestThisScope == null && bestParentScope == null) 
+        return null;    //if symboltable does not contain any declarations in any scopes
+      else if (bestThisScope == null)
+        return bestParentScope;
+      else if (bestParentScope == null)
+        return bestThisScope;
+      
+      //to reach this point, none of bestThisScope and bestParentScope are null
       int disThisScope = Levenshtein.computeDistance(bestThisScope.name, si.name);
-      int disEnclosingScope = Levenshtein.computeDistance(bestEnclosingScope.name, si.name);
+      int disEnclosingScope = Levenshtein.computeDistance(bestParentScope.name, si.name);
       int maxDis = 2;
       if (disThisScope < disEnclosingScope && disThisScope <= maxDis){
         return bestThisScope;
       }
       else if (disEnclosingScope <= maxDis){
-        return bestEnclosingScope;
+        return bestParentScope;
       }
       else{
         return null;    //if none match enough, no suggestions was found
@@ -146,7 +168,7 @@ public class SymbolTable {
     int best = 100000; //start with high difference so any match will be better than this
     for (SymbolInfo s : symbols){
       int dist =  Levenshtein.computeDistance(si.name, s.name);
-      if (s.declared && si.type == s.type && dist < best){
+      if (s.declaration && si.type == s.type && dist < best){
         bestMatch = s;
         best = dist;
       }
