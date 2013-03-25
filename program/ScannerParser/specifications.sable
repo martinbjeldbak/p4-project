@@ -88,7 +88,7 @@ Helpers
   quote            = '"';
   backslash        = '\';
   direction        = 'n' | 'e' | 's' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
-  
+  this             = 'this';
   keyword          = 'piece' | 'width' | 'height'
                    | 'title' | 'players' | 'turnOrder' | 'board'
                    | 'grid' | 'setup' | 'wall' | 'name' | 'possibleDrops'
@@ -110,15 +110,17 @@ Helpers
 
 Tokens
   comment          = end_of_line_comment;
-  integer          = decimal+;
+  integer          = ['0' .. '9']+;
   eol              = cr | lf | cr lf;
   blank            = ' ' | tab;
   direction        = direction;
   keyword          = keyword;
+  star_qmark_plus  = '*' | '?' | '+';
   shared_operator  = shared_operator;
   normal_operator  = normal_operator;
   pattern_operator = pattern_operator;
   pattern_or       = pattern_or;
+  emark            = emark;
   pattern_not      = pattern_not;
   
   friend           = friend;
@@ -144,18 +146,17 @@ Tokens
   slash      = slash;
   pound      = pound;
   star       = star;
-  emark      = emark;
-  this       = 'this';
+  this       = this;
   qmark      = qmark;
   plus       = plus;
 
-  star_qmark_plus = '*' | '?' | '+';
+  
  
   lowercase        = lowercase;
   uppercase        = uppercase;
   anycase          = anycase;
   unichar          = unichar;
-  coordinate = uppercase+ ['0' .. '9']+;
+  coordinate = uppercase+ decimal+;
   string     = '"' (strchar | '\' input_character)* '"';
 
   /* identifiers */
@@ -188,6 +189,7 @@ Productions
                 | {el} element list?
                 | {not} not expression;
   element       = {expr} l_par expression r_par
+                | {this} this
                 | {var} variable
                 | {list} list
                 | {pat} [left]:slash pattern [right]:slash
