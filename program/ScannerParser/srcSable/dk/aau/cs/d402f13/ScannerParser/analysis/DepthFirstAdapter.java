@@ -428,6 +428,27 @@ public class DepthFirstAdapter extends AnalysisAdapter
         outAExprElement(node);
     }
 
+    public void inAThisElement(AThisElement node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAThisElement(AThisElement node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAThisElement(AThisElement node)
+    {
+        inAThisElement(node);
+        if(node.getThis() != null)
+        {
+            node.getThis().apply(this);
+        }
+        outAThisElement(node);
+    }
+
     public void inAVarElement(AVarElement node)
     {
         defaultIn(node);

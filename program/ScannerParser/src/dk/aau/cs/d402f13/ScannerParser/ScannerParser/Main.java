@@ -16,7 +16,7 @@ public class Main {
         new PrintLexer(
         new PushbackReader(
         //new InputStreamReader(System.in), 1024
-        new FileReader("chess.game"), 1024)));
+        new FileReader("kent-game.game"), 1024)));
     
       Start tree = p.parse();
       
