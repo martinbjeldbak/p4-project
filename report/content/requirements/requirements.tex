@@ -8,40 +8,89 @@ The requirements specification consists of three main points: functional require
 
 \paragraph*{Functional requirements:}
 \begin{dlist}
-  \item The programming language will be used to program board games \textbf{(Must have)}
-  \item The programming language should as a minimum make it possible to implement chess and the special rules of chess \textbf{(Must have)}
-  \item It must be possible to play the created board games in a graphical simulation \textbf{(Must have)}
-  \item The programming language must be designed in such a way that it will be possible to keep track of the move history \textbf{(Must have)}
-  \item It must be possible to play over a network in the simulation \textbf{(Wont have)}
-  \item Players must have the possibility to undo a move in the simulation \textbf{(Could have)}
+  \item The programming language will be used to program board games
+  \begin{dlist}
+    \item As a minimum, it must be possible to implement chess and the special rules of chess
+  \end{dlist}
+  \item It must be possible to define what pieces the game consists of
+  \item It must be possible to define which pieces a specific player is able to move to
+  \item It must be possible to define the possible squares a piece can be moved to
+  \item It must be possible to represent list structures
+  \begin{dlist}
+    \item It must be possible to perform list unions
+    \item It must be possible to perform list intersections
+  \end{dlist}
+  \item It must be possible to use the language’s built-in functions to do the following:
+  \begin{dlist}
+    \item determine if a square is empty
+    \item determine if a square is occupied, and by who
+    \item check a condition for all objects in a collection
+    \item find all squares that match a specific pattern
+    \item combine lists
+    \item perform a lambda expression on each element in a list
+    \item move a piece to a square
+    \item capture the old piece on a specific square while moving a new piece to the same square
+    \item return which players turn it is
+    \item check if the current move about to be made for a piece is the first move made by that piece
+  \end{dlist}
+  \item It must be possible to determine which legal moves a player has
+  \item It must be possible to define winning conditions
+  \item It must be possible to define draw conditions
+  \item It must be possible to perform integer arithmetic
+  \begin{dlist}
+    \item Addition, subtraction, multiplication, and division
+    \item The programming language must have boolean operators
+    \item The programming language must have comparison operators
+  \end{dlist}
+  \item It must be possible to perform string concatenation
+  \item No function nor expression may produce side effects
+  \item There must be an action type that handles game state changes
+  \item It must be possible to create lambda expressions
+  \item It must be possible to declare functions
+  \item It must be possible to reference functions
+  \begin{dlist}
+    \item Functions must be first-class citizens
+    \item It must be possible to call functions
+  \end{dlist}
+  \item It must be possible to non-destructively assign any value to variables
+  \item The created board games must be playable in a graphical simulator
+  \item The simulator must be able to remember move history
+  \begin{dlist}
+    \item It must be possible to undo/redo moves
+    \item It must be possible to save the move history
+    \begin{dlist}
+      \item It must be possible to start a game from a saved move history
+    \end{dlist}
+  \item It must be possible to play over a network
+  \end{dlist}
 \end{dlist}
 
 The list of requirements also have \textbf{non-functional requirements} which is split into two topics - performance limitations and project limitations.
 
 \paragraph*{Performance limitations:}
 \begin{dlist}
-    % How do we follow up on the requirement below?
-  \item The programming language must be easy to learn and use by novice programmers \textbf{(Must have)}
-  \item Programmers must be able to be able to implement board games with relatively few lines of code \textbf{(Must have)}
-  \item The programming language must not be an extension of another programming language \textbf{(Must have)}
-  \item The board games should as a minimum consist of two players \textbf{(Must have)}
-  \item The source code of a single board game must be written in one file \textbf{(Must have)}
-  \item The formal definition of the programming language must be described in Extended Backus-Naur Form (EBNF) \textbf{(Must have)}
-  \item The programming language must either be compiled (by a compiler) or interpreted (by an interpreter) \textbf{(Must have)}
+% How do we follow up on the requirement below?
+  \item It must be easy to learn how to program in the programming language
+  \item The programmer must be able to implement board games with relatively few lines of code
+  \item The programming language must not be an extension of another programming language
+  \item The board games should as a minimum consist of two players
+  \item The source code of a single board game must be written in one file
+  \item The formal definition of the programming language must be described in Extended Backus-Naur Form (EBNF)
+  \item The programming language will be interpreted (not compiled)
 \end{dlist}
 
 \paragraph*{Project limitations:}
 \begin{dlist}
   \item The programming language must be functional and operable no later than 29th of May 2013
-  \item There group has approximately 20 hours per week to work on the project 
-  \item The project is limited by the group members' skills in the design development of programming languages
-  \item The project (and hence programming language) must have a catchy name and logo
+  \item The group has approximately 20 hours per week to work on the project
+  \item The project is limited by the group members' skill in the design and development of programming languages
+  \item The project (and hence the programming language) must have a catchy name and logo
 \end{dlist}
 
 \paragraph*{Solution goals:}
 \begin{dlist}
-  \item The programming language must make it easy and quick for programmers to develop board games which are within the scope of the defined problem statement \textbf{(Must have)}
-  \item The board games must be playable on different operating systems \textbf{(Should have)}
+  \item The programming language must make it easy and quick for programmers to develop board games which are within the scope of the defined problem statement
+  \item The board games must be playable on different operating systems
 \end{dlist}
 
 \todo{Sum up here. What are the most important points?}
