@@ -45,6 +45,35 @@ public class ScopeChecker extends DefaultVisitor {
    }
 
   @Override
+  protected Object visitAssignment(AstNode node) throws StandardError {
+    //VAR EXPR [ASSIGNMENT]+ EXPR       case 1
+    //VAR EXPR                          case 2
+    
+    //if ASSIGNMENT contains two EXPR, open a new scope (case 1)
+    //else, the assignments is just in the same scope (case 2)
+    boolean simpleAssign = node.size() == 2;
+   
+    if (simpleAssign){
+      varDeclaringMode = true;
+      visit(node.iterator().next()); //visit VAR
+      varDeclaringMode = false; //exit varDeclaringMode since Expr may use vars
+      return null;
+    }
+    
+    openScope();
+    
+    Iterator<AstNode> it = node.iterator();
+    varDeclaringMode = true;
+    visit(it.next()); //visit VAR
+    varDeclaringMode = false;
+    while (it.hasNext()){
+      visit(it.next());
+    }
+    closeScope();
+    return null;
+  }
+  
+  @Override
   protected Object visitFunction(AstNode node) throws StandardError {
     currentST.foundUsedSymbol(SymbolType.FUNCTION, node.value, node.line, node.offset);
     System.out.println("Found use of func: " + node.value + " on line: " + node.line + " offset " + node.offset);
@@ -71,7 +100,6 @@ public class ScopeChecker extends DefaultVisitor {
     
     String funcName = it.next().value;
     currentST.foundDeclaredSymbol(SymbolType.FUNCTION, funcName, node.line, node.offset);
-    System.out.println("Found decl of func: " + funcName + " on line: " + node.line + " offset " + node.offset);
     varDeclaringMode = true;
     visit(it.next()); //traverse the VARLIST
     varDeclaringMode = false;
@@ -85,11 +113,9 @@ public class ScopeChecker extends DefaultVisitor {
   protected Object visitVar(AstNode node) throws StandardError {
     if (varDeclaringMode){
       currentST.foundDeclaredSymbol(SymbolType.VARIABLE, node.value, node.line, node.offset);
-      System.out.println("Found decl of var: " + node.value + " on line: " + node.line + " offset " + node.offset);
     }
     else{
       currentST.foundUsedSymbol(SymbolType.VARIABLE, node.value, node.line, node.offset);
-      System.out.println("Found use of var: " + node.value + " on line: " + node.line + " offset " + node.offset);
     }
     return null;
   }
