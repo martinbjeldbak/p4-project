@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -13,6 +14,7 @@ import java.util.LinkedList;
 import dk.aau.cs.d402f13.scanner.Scanner;
 import dk.aau.cs.d402f13.utilities.SymbolTable;
 import dk.aau.cs.d402f13.utilities.Token;
+import dk.aau.cs.d402f13.utilities.SymbolTable.SymbolInfo;
 import dk.aau.cs.d402f13.utilities.SymbolTable.SymbolType;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.errors.ScopeError;
@@ -22,50 +24,87 @@ import dk.aau.cs.d402f13.parser.Parser;
 
 public class ScopeChecker {
   
-  static SymbolTable symTable = new SymbolTable();
-
+  static SymbolTable currentST;
+  static Boolean varDeclaringMode = false; //if true, next VAR seen is a declaration, else a use
+  static void openScope(){
+    currentST = new SymbolTable(currentST);
+  }
+  static void closeScope() throws ScopeError{
+    currentST.checkErrors(); //will throw a ScannerError exception if errors are found
+    currentST = currentST.getParent();
+  }
+  
   //Must be called after the AST has been created
  public static void checkScopes(AstNode root) throws ScopeError{
-   symTable.empty();
-   insertDefaultFunctions();
+   currentST = null;
+   openScope();
+   insertDefaultFunctions(); //findSquares, union, ...
    traverse(root);
-   symTable.checkErrors(); //will throw a ScannerError exception if errors are found
-   symTable.print();
+   closeScope();
  }
  
- static void insertDefaultFunctions(){ //the functions that exists in our language
-   symTable.foundDeclaredSymbol(SymbolType.FUNCTION, "andSquares", -1, 0);
-   symTable.foundDeclaredSymbol(SymbolType.FUNCTION, "findSquares", -1, 0);
-   symTable.foundDeclaredSymbol(SymbolType.FUNCTION, "union", -1, 0);
-   symTable.foundDeclaredSymbol(SymbolType.FUNCTION, "forall", -1, 0);
-   symTable.foundDeclaredSymbol(SymbolType.FUNCTION, "isEmpty", -1, 0);
-   symTable.foundDeclaredSymbol(SymbolType.FUNCTION, "move", -1, 0);
-   symTable.foundDeclaredSymbol(SymbolType.FUNCTION, "moveAndCapture", -1, 0);
-   symTable.foundDeclaredSymbol(SymbolType.FUNCTION, "isCurrentPlayer", -1, 0);
-   symTable.foundDeclaredSymbol(SymbolType.FUNCTION, "isFirstMove", -1, 0);
+ static void insertDefaultFunctions() throws ScopeError{ //the functions that exists in our language
+   currentST.foundDeclaredSymbol(SymbolType.FUNCTION, "andSquares", -1, 0);
+   currentST.foundDeclaredSymbol(SymbolType.FUNCTION, "findSquares", -1, 0);
+   currentST.foundDeclaredSymbol(SymbolType.FUNCTION, "union", -1, 0);
+   currentST.foundDeclaredSymbol(SymbolType.FUNCTION, "forall", -1, 0);
+   currentST.foundDeclaredSymbol(SymbolType.FUNCTION, "isEmpty", -1, 0);
+   currentST.foundDeclaredSymbol(SymbolType.FUNCTION, "move", -1, 0);
+   currentST.foundDeclaredSymbol(SymbolType.FUNCTION, "moveAndCapture", -1, 0);
+   currentST.foundDeclaredSymbol(SymbolType.FUNCTION, "isCurrentPlayer", -1, 0);
+   currentST.foundDeclaredSymbol(SymbolType.FUNCTION, "isFirstMove", -1, 0);
  }
 
- static void traverse(AstNode node){
+ static void traverse(AstNode node) throws ScopeError{
    switch (node.type){
      case FUNC_DEF: funcDef(node); break;
-     case FUNCTION: function(node); break;
+     case FUNCTION: function(node); traverseChildren(node); break;
+     case VAR: var(node); break;
+     default: traverseChildren(node);
    }
-   
-   //save the iterator, since node.iterator() will return the same iterator even though .next() has been called
+ }
+ 
+ static void var(AstNode node) throws ScopeError{
+   if (varDeclaringMode){
+     currentST.foundDeclaredSymbol(SymbolType.VARIABLE, node.value, node.line, node.offset);
+     System.out.println("Found decl of var: " + node.value + " on line: " + node.line + " offset " + node.offset);
+     
+   }
+   else{
+     currentST.foundUsedSymbol(SymbolType.VARIABLE, node.value, node.line, node.offset);
+     System.out.println("Found use of var: " + node.value + " on line: " + node.line + " offset " + node.offset);
+     
+   }
+ }
+ 
+ 
+ 
+ static void traverseChildren(AstNode node) throws ScopeError{
+ //save the iterator, since node.iterator() will return the same iterator even though .next() has been called
    Iterator<AstNode> it = node.iterator(); while (it.hasNext()){
      traverse(it.next());
    }
  }
  
- static void funcDef(AstNode node){
+ static void funcDef (AstNode node) throws ScopeError{
+   //Save the name of the function defined
    Iterator<AstNode> it = node.iterator();
    String funcName = it.next().value;
-   symTable.foundDeclaredSymbol(SymbolType.FUNCTION, funcName, node.line, node.offset);
-   System.out.println("Found decl of func: " + funcName);
+   currentST.foundDeclaredSymbol(SymbolType.FUNCTION, funcName, node.line, node.offset);
+   System.out.println("Found decl of func: " + funcName + " on line: " + node.line + " offset " + node.offset);
+   
+   //FUNC_DEF = FUNC VARLIST EXPRESSION
+   varDeclaringMode = true;
+   traverse(it.next()); //traverse the VARLIST
+   varDeclaringMode = false;
+   openScope(); //open new scope, so function arguments can be hidden
+     traverse(it.next()); //traverse the expression
+   closeScope();
  }
  static void function(AstNode node){
-   symTable.foundUsedSymbol(SymbolType.FUNCTION, node.value, node.line, node.offset);
-   System.out.println("Found call to func: " + node.value);
+   currentST.foundUsedSymbol(SymbolType.FUNCTION, node.value, node.line, node.offset);
+   System.out.println("Found use of func: " + node.value + " on line: " + node.line + " offset " + node.offset);
+   
  }
  
  public static void main(String[] args) throws Exception {
