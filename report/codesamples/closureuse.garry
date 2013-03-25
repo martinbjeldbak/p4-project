@@ -1,0 +1,2 @@
+let $adder = getAdder[25]
+  in $adder[5] // returns 30
