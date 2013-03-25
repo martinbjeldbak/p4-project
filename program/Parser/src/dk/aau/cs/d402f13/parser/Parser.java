@@ -210,7 +210,8 @@ public class Parser {
         node.addChild(list());
         return node;
       }
-      else if (accept(Token.Type.NORMAL_OPERATOR) || accept(Token.Type.SHARED_OPERATOR)) {
+      else if (accept(Token.Type.NORMAL_OPERATOR) || accept(Token.Type.SHARED_OPERATOR)
+          || accept(Token.Type.PATTERNOP)) {
         AstNode operation = astNode(Type.OPERATOR, currentToken.value);
         operation.addChild(element);
         operation.addChild(expression());

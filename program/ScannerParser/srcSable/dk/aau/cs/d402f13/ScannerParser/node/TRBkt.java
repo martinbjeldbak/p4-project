@@ -7,14 +7,14 @@ import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 @SuppressWarnings("nls")
 public final class TRBkt extends Token
 {
-    public TRBkt()
+    public TRBkt(String text)
     {
-        super.setText("]");
+        setText(text);
     }
 
-    public TRBkt(int line, int pos)
+    public TRBkt(String text, int line, int pos)
     {
-        super.setText("]");
+        setText(text);
         setLine(line);
         setPos(pos);
     }
@@ -22,18 +22,12 @@ public final class TRBkt extends Token
     @Override
     public Object clone()
     {
-      return new TRBkt(getLine(), getPos());
+      return new TRBkt(getText(), getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTRBkt(this);
-    }
-
-    @Override
-    public void setText(@SuppressWarnings("unused") String text)
-    {
-        throw new RuntimeException("Cannot change TRBkt text.");
     }
 }

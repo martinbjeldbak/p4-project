@@ -5,14 +5,14 @@ package dk.aau.cs.d402f13.ScannerParser.node;
 import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 
 @SuppressWarnings("nls")
-public final class TArrow extends Token
+public final class TComment extends Token
 {
-    public TArrow(String text)
+    public TComment(String text)
     {
         setText(text);
     }
 
-    public TArrow(String text, int line, int pos)
+    public TComment(String text, int line, int pos)
     {
         setText(text);
         setLine(line);
@@ -22,12 +22,12 @@ public final class TArrow extends Token
     @Override
     public Object clone()
     {
-      return new TArrow(getText(), getLine(), getPos());
+      return new TComment(getText(), getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseTArrow(this);
+        ((Analysis) sw).caseTComment(this);
     }
 }

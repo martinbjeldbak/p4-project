@@ -57,6 +57,13 @@ ends up beinng $30$.
 
 \subsection{Let-expressions}
 
+\productname{} only supports \emph{single assignment}. Single assignment is not assignment
+in the traditional imperative sense, but rather a way of binding a value to a symbol in a
+certain scope. This is done using \emph{let-expressions}. Using a let-expression creates a
+new scope in which the declared variables are accessible. When leaving the scope the
+variables are destroyed.
+
+
 
 Outline:
 

@@ -13,15 +13,15 @@ public class Main {
       
       Parser p =
         new Parser(
-        new Lexer(
+        new PrintLexer(
         new PushbackReader(
         //new InputStreamReader(System.in), 1024
-        new FileReader("test.game"), 1024)));
+        new FileReader("kent-game.game"), 1024)));
     
       Start tree = p.parse();
       
       //Apply the translation
-      //tree.apply( new Translation() );
+      tree.apply( new Translation() );
     }
     catch(Exception e) {
       System.out.println(e.getMessage());
