@@ -5,14 +5,14 @@ package dk.aau.cs.d402f13.ScannerParser.node;
 import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 
 @SuppressWarnings("nls")
-public final class TDecimal extends Token
+public final class TFriend extends Token
 {
-    public TDecimal(String text)
+    public TFriend(String text)
     {
         setText(text);
     }
 
-    public TDecimal(String text, int line, int pos)
+    public TFriend(String text, int line, int pos)
     {
         setText(text);
         setLine(line);
@@ -22,12 +22,12 @@ public final class TDecimal extends Token
     @Override
     public Object clone()
     {
-      return new TDecimal(getText(), getLine(), getPos());
+      return new TFriend(getText(), getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseTDecimal(this);
+        ((Analysis) sw).caseTFriend(this);
     }
 }
