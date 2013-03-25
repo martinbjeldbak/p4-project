@@ -7,14 +7,14 @@ import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 @SuppressWarnings("nls")
 public final class TLPar extends Token
 {
-    public TLPar()
+    public TLPar(String text)
     {
-        super.setText("(");
+        setText(text);
     }
 
-    public TLPar(int line, int pos)
+    public TLPar(String text, int line, int pos)
     {
-        super.setText("(");
+        setText(text);
         setLine(line);
         setPos(pos);
     }
@@ -22,18 +22,12 @@ public final class TLPar extends Token
     @Override
     public Object clone()
     {
-      return new TLPar(getLine(), getPos());
+      return new TLPar(getText(), getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTLPar(this);
-    }
-
-    @Override
-    public void setText(@SuppressWarnings("unused") String text)
-    {
-        throw new RuntimeException("Cannot change TLPar text.");
     }
 }

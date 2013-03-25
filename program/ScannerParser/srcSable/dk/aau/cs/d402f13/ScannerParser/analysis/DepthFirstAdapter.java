@@ -257,27 +257,6 @@ public class DepthFirstAdapter extends AnalysisAdapter
         outAExprStructure(node);
     }
 
-    public void inAFuncExpression(AFuncExpression node)
-    {
-        defaultIn(node);
-    }
-
-    public void outAFuncExpression(AFuncExpression node)
-    {
-        defaultOut(node);
-    }
-
-    @Override
-    public void caseAFuncExpression(AFuncExpression node)
-    {
-        inAFuncExpression(node);
-        if(node.getFunctionCall() != null)
-        {
-            node.getFunctionCall().apply(this);
-        }
-        outAFuncExpression(node);
-    }
-
     public void inAElopexpExpression(AElopexpExpression node)
     {
         defaultIn(node);
@@ -388,6 +367,10 @@ public class DepthFirstAdapter extends AnalysisAdapter
         {
             node.getElement().apply(this);
         }
+        if(node.getList() != null)
+        {
+            node.getList().apply(this);
+        }
         outAElExpression(node);
     }
 
@@ -443,6 +426,27 @@ public class DepthFirstAdapter extends AnalysisAdapter
             node.getRPar().apply(this);
         }
         outAExprElement(node);
+    }
+
+    public void inAThisElement(AThisElement node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAThisElement(AThisElement node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAThisElement(AThisElement node)
+    {
+        inAThisElement(node);
+        if(node.getThis() != null)
+        {
+            node.getThis().apply(this);
+        }
+        outAThisElement(node);
     }
 
     public void inAVarElement(AVarElement node)
@@ -663,31 +667,6 @@ public class DepthFirstAdapter extends AnalysisAdapter
         outAFuncElement(node);
     }
 
-    public void inAFunctionCall(AFunctionCall node)
-    {
-        defaultIn(node);
-    }
-
-    public void outAFunctionCall(AFunctionCall node)
-    {
-        defaultOut(node);
-    }
-
-    @Override
-    public void caseAFunctionCall(AFunctionCall node)
-    {
-        inAFunctionCall(node);
-        if(node.getFunction() != null)
-        {
-            node.getFunction().apply(this);
-        }
-        if(node.getList() != null)
-        {
-            node.getList().apply(this);
-        }
-        outAFunctionCall(node);
-    }
-
     public void inAVarExpr(AVarExpr node)
     {
         defaultIn(node);
@@ -795,9 +774,9 @@ public class DepthFirstAdapter extends AnalysisAdapter
         {
             node.getThen().apply(this);
         }
-        if(node.getExpression() != null)
+        if(node.getMid() != null)
         {
-            node.getExpression().apply(this);
+            node.getMid().apply(this);
         }
         if(node.getElse() != null)
         {
@@ -1074,6 +1053,10 @@ public class DepthFirstAdapter extends AnalysisAdapter
         {
             node.getPattern().apply(this);
         }
+        if(node.getRPar() != null)
+        {
+            node.getRPar().apply(this);
+        }
         if(node.getInteger() != null)
         {
             node.getInteger().apply(this);
@@ -1081,25 +1064,67 @@ public class DepthFirstAdapter extends AnalysisAdapter
         outALpatexprrPatternVal(node);
     }
 
-    public void inAPatkeyPatternCheck(APatkeyPatternCheck node)
+    public void inAFriendPatternCheck(AFriendPatternCheck node)
     {
         defaultIn(node);
     }
 
-    public void outAPatkeyPatternCheck(APatkeyPatternCheck node)
+    public void outAFriendPatternCheck(AFriendPatternCheck node)
     {
         defaultOut(node);
     }
 
     @Override
-    public void caseAPatkeyPatternCheck(APatkeyPatternCheck node)
+    public void caseAFriendPatternCheck(AFriendPatternCheck node)
     {
-        inAPatkeyPatternCheck(node);
-        if(node.getPatternKeyword() != null)
+        inAFriendPatternCheck(node);
+        if(node.getFriend() != null)
         {
-            node.getPatternKeyword().apply(this);
+            node.getFriend().apply(this);
         }
-        outAPatkeyPatternCheck(node);
+        outAFriendPatternCheck(node);
+    }
+
+    public void inAFoePatternCheck(AFoePatternCheck node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAFoePatternCheck(AFoePatternCheck node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAFoePatternCheck(AFoePatternCheck node)
+    {
+        inAFoePatternCheck(node);
+        if(node.getFoe() != null)
+        {
+            node.getFoe().apply(this);
+        }
+        outAFoePatternCheck(node);
+    }
+
+    public void inAEmptyPatternCheck(AEmptyPatternCheck node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAEmptyPatternCheck(AEmptyPatternCheck node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAEmptyPatternCheck(AEmptyPatternCheck node)
+    {
+        inAEmptyPatternCheck(node);
+        if(node.getEmpty() != null)
+        {
+            node.getEmpty().apply(this);
+        }
+        outAEmptyPatternCheck(node);
     }
 
     public void inAThisPatternCheck(AThisPatternCheck node)
