@@ -27,6 +27,7 @@ public interface Analysis extends Switch
     void caseAElExpression(AElExpression node);
     void caseANotExpression(ANotExpression node);
     void caseAExprElement(AExprElement node);
+    void caseAThisElement(AThisElement node);
     void caseAVarElement(AVarElement node);
     void caseAListElement(AListElement node);
     void caseAPatElement(APatElement node);
@@ -62,10 +63,12 @@ public interface Analysis extends Switch
     void caseTBlank(TBlank node);
     void caseTDirection(TDirection node);
     void caseTKeyword(TKeyword node);
+    void caseTStarQmarkPlus(TStarQmarkPlus node);
     void caseTSharedOperator(TSharedOperator node);
     void caseTNormalOperator(TNormalOperator node);
     void caseTPatternOperator(TPatternOperator node);
     void caseTPatternOr(TPatternOr node);
+    void caseTEmark(TEmark node);
     void caseTPatternNot(TPatternNot node);
     void caseTFriend(TFriend node);
     void caseTFoe(TFoe node);
@@ -90,11 +93,9 @@ public interface Analysis extends Switch
     void caseTSlash(TSlash node);
     void caseTPound(TPound node);
     void caseTStar(TStar node);
-    void caseTEmark(TEmark node);
     void caseTThis(TThis node);
     void caseTQmark(TQmark node);
     void caseTPlus(TPlus node);
-    void caseTStarQmarkPlus(TStarQmarkPlus node);
     void caseTLowercase(TLowercase node);
     void caseTUppercase(TUppercase node);
     void caseTAnycase(TAnycase node);

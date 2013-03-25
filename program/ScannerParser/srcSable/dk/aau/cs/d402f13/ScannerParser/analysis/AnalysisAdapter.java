@@ -165,6 +165,12 @@ public class AnalysisAdapter implements Analysis
     }
 
     @Override
+    public void caseAThisElement(AThisElement node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
     public void caseAVarElement(AVarElement node)
     {
         defaultCase(node);
@@ -369,6 +375,12 @@ public class AnalysisAdapter implements Analysis
     }
 
     @Override
+    public void caseTStarQmarkPlus(TStarQmarkPlus node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
     public void caseTSharedOperator(TSharedOperator node)
     {
         defaultCase(node);
@@ -388,6 +400,12 @@ public class AnalysisAdapter implements Analysis
 
     @Override
     public void caseTPatternOr(TPatternOr node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseTEmark(TEmark node)
     {
         defaultCase(node);
     }
@@ -537,12 +555,6 @@ public class AnalysisAdapter implements Analysis
     }
 
     @Override
-    public void caseTEmark(TEmark node)
-    {
-        defaultCase(node);
-    }
-
-    @Override
     public void caseTThis(TThis node)
     {
         defaultCase(node);
@@ -556,12 +568,6 @@ public class AnalysisAdapter implements Analysis
 
     @Override
     public void caseTPlus(TPlus node)
-    {
-        defaultCase(node);
-    }
-
-    @Override
-    public void caseTStarQmarkPlus(TStarQmarkPlus node)
     {
         defaultCase(node);
     }
