@@ -5,14 +5,14 @@ package dk.aau.cs.d402f13.ScannerParser.node;
 import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 
 @SuppressWarnings("nls")
-public final class TStarQmarkPlus extends Token
+public final class TPlus extends Token
 {
-    public TStarQmarkPlus(String text)
+    public TPlus(String text)
     {
         setText(text);
     }
 
-    public TStarQmarkPlus(String text, int line, int pos)
+    public TPlus(String text, int line, int pos)
     {
         setText(text);
         setLine(line);
@@ -22,12 +22,12 @@ public final class TStarQmarkPlus extends Token
     @Override
     public Object clone()
     {
-      return new TStarQmarkPlus(getText(), getLine(), getPos());
+      return new TPlus(getText(), getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseTStarQmarkPlus(this);
+        ((Analysis) sw).caseTPlus(this);
     }
 }

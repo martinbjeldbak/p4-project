@@ -8,7 +8,7 @@ import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 public final class AElopexpExpression extends PExpression
 {
     private PElement _element_;
-    private TOperator _operator_;
+    private POperator _operator_;
     private PExpression _expression_;
 
     public AElopexpExpression()
@@ -18,7 +18,7 @@ public final class AElopexpExpression extends PExpression
 
     public AElopexpExpression(
         @SuppressWarnings("hiding") PElement _element_,
-        @SuppressWarnings("hiding") TOperator _operator_,
+        @SuppressWarnings("hiding") POperator _operator_,
         @SuppressWarnings("hiding") PExpression _expression_)
     {
         // Constructor
@@ -70,12 +70,12 @@ public final class AElopexpExpression extends PExpression
         this._element_ = node;
     }
 
-    public TOperator getOperator()
+    public POperator getOperator()
     {
         return this._operator_;
     }
 
-    public void setOperator(TOperator node)
+    public void setOperator(POperator node)
     {
         if(this._operator_ != null)
         {
@@ -166,7 +166,7 @@ public final class AElopexpExpression extends PExpression
 
         if(this._operator_ == oldChild)
         {
-            setOperator((TOperator) newChild);
+            setOperator((POperator) newChild);
             return;
         }
 

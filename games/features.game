@@ -1,0 +1,19 @@
+define max[$a $b] if $a > $b then $a else $b
+define min[$a $b] if $a < $b then $a else $b
+define add[$a $b] $a + $b
+define comp[$f $g] #[$x] => $f[$g[$x]]
+
+define hello[] "Hello"
+define world[] "World"
+
+game {
+  title (hello[]) + ", " + (world[]) + "!"
+  winCondition
+    let $f = #[$a] => 5 + $a,
+        $g = #[$a] => $a / 3
+      in (comp[$f $g])[9]
+  tieCondition
+    let $x = let $x = 5 in $x + 5
+      in let $x = $x - 5
+        in $x
+}
