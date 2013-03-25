@@ -9,7 +9,7 @@ public class Translation extends DepthFirstAdapter {
     System.out.println(node);
   }
   
-  public void caseTBlank(TBlank node) {
+  public void outTBlank(TBlank node) {
     System.out.println("hej");
   }
 }

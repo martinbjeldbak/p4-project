@@ -8,7 +8,7 @@ import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 public final class APatvalPatternExpr extends PPatternExpr
 {
     private PPatternVal _patternVal_;
-    private TStarQmarkPlus _starQmarkPlus_;
+    private PStarQmarkPlus _starQmarkPlus_;
 
     public APatvalPatternExpr()
     {
@@ -17,7 +17,7 @@ public final class APatvalPatternExpr extends PPatternExpr
 
     public APatvalPatternExpr(
         @SuppressWarnings("hiding") PPatternVal _patternVal_,
-        @SuppressWarnings("hiding") TStarQmarkPlus _starQmarkPlus_)
+        @SuppressWarnings("hiding") PStarQmarkPlus _starQmarkPlus_)
     {
         // Constructor
         setPatternVal(_patternVal_);
@@ -65,12 +65,12 @@ public final class APatvalPatternExpr extends PPatternExpr
         this._patternVal_ = node;
     }
 
-    public TStarQmarkPlus getStarQmarkPlus()
+    public PStarQmarkPlus getStarQmarkPlus()
     {
         return this._starQmarkPlus_;
     }
 
-    public void setStarQmarkPlus(TStarQmarkPlus node)
+    public void setStarQmarkPlus(PStarQmarkPlus node)
     {
         if(this._starQmarkPlus_ != null)
         {
@@ -129,7 +129,7 @@ public final class APatvalPatternExpr extends PPatternExpr
 
         if(this._starQmarkPlus_ == oldChild)
         {
-            setStarQmarkPlus((TStarQmarkPlus) newChild);
+            setStarQmarkPlus((PStarQmarkPlus) newChild);
             return;
         }
 
