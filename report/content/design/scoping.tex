@@ -85,5 +85,12 @@ and \texttt{VARIABLE2} are available in \texttt{EXPRESSION3} and only in \texttt
 
 Destructive assignments are not possible \productname{}, meaning that it isn't possible to 
 reassign a variable. It is however possible to hide a variable.
+Consider the following expression:
+
+\codesample{lethiding.garry}
+
+The value of this expression is $13$. This is because within the \texttt{\variable{x} + 2}-expression
+the \variable{x}-variable evaluates to $6$. But in the outer expression \variable{x} evaluates to
+$5$.
 
 
