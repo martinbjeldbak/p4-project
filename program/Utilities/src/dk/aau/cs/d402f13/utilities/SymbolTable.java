@@ -70,14 +70,13 @@ public class SymbolTable {
       if (!declared(s)){
         SymbolInfo closeMatching = findSuggestion(s); //find a name that looks similar and may have been mistyped
         String suggestion = closeMatching != null ? ", did you mean '" + closeMatching.name + "'?" : "";
-        switch (s.type){
-        case FUNCTION: throw new ScopeError("Scope error, could not find declaration of function: '" + s.name + "'" + suggestion, s);
-        }
+        throw new ScopeError("Scope error, could not find declaration of: '" + s.name + "'" + suggestion, s);
       }
     }
   }
   
   Boolean declared(SymbolInfo s){
+    //Checks if a symbol is declared in either local or outer scopes
     for (SymbolInfo si : symbols){
       if (si.type == s.type && s.name.equals(si.name) && si.declared)
         return true;
@@ -121,19 +120,23 @@ public class SymbolTable {
       return findSuggestionThisScope(si);
     else{
       SymbolInfo bestThisScope = findSuggestionThisScope(si);
-      SymbolInfo bestEnclosingScope = this.parent.findSuggestion(si);
-      if (bestThisScope == null) {  //if symboltable does not contain any declarations
-        return null;
-      }
-      //to reach this point, none of bestThisScope and bestEnclosingScope are null
+      SymbolInfo bestParentScope = this.parent.findSuggestion(si);
+      if (bestThisScope == null && bestParentScope == null) 
+        return null;    //if symboltable does not contain any declarations in any scopes
+      else if (bestThisScope == null)
+        return bestParentScope;
+      else if (bestParentScope == null)
+        return bestThisScope;
+      
+      //to reach this point, none of bestThisScope and bestParentScope are null
       int disThisScope = Levenshtein.computeDistance(bestThisScope.name, si.name);
-      int disEnclosingScope = Levenshtein.computeDistance(bestEnclosingScope.name, si.name);
+      int disEnclosingScope = Levenshtein.computeDistance(bestParentScope.name, si.name);
       int maxDis = 2;
       if (disThisScope < disEnclosingScope && disThisScope <= maxDis){
         return bestThisScope;
       }
       else if (disEnclosingScope <= maxDis){
-        return bestEnclosingScope;
+        return bestParentScope;
       }
       else{
         return null;    //if none match enough, no suggestions was found

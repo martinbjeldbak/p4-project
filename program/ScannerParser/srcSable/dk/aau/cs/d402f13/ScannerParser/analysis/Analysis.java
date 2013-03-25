@@ -20,6 +20,14 @@ public interface Analysis extends Switch
     void caseAIdstrucDecl(AIdstrucDecl node);
     void caseADeclstrucStructure(ADeclstrucStructure node);
     void caseAExprStructure(AExprStructure node);
+    void caseAStarSharedOperator(AStarSharedOperator node);
+    void caseAPlusSharedOperator(APlusSharedOperator node);
+    void caseANormOpOperator(ANormOpOperator node);
+    void caseASharedOpOperator(ASharedOpOperator node);
+    void caseASlashOperator(ASlashOperator node);
+    void caseAStarStarQmarkPlus(AStarStarQmarkPlus node);
+    void caseAQmarkStarQmarkPlus(AQmarkStarQmarkPlus node);
+    void caseAPlusStarQmarkPlus(APlusStarQmarkPlus node);
     void caseAElopexpExpression(AElopexpExpression node);
     void caseAAssignExpression(AAssignExpression node);
     void caseAIfExpression(AIfExpression node);
@@ -63,13 +71,12 @@ public interface Analysis extends Switch
     void caseTBlank(TBlank node);
     void caseTDirection(TDirection node);
     void caseTKeyword(TKeyword node);
-    void caseTStarQmarkPlus(TStarQmarkPlus node);
-    void caseTSharedOperator(TSharedOperator node);
     void caseTNormalOperator(TNormalOperator node);
     void caseTPatternOperator(TPatternOperator node);
     void caseTPatternOr(TPatternOr node);
     void caseTEmark(TEmark node);
     void caseTPatternNot(TPatternNot node);
+    void caseTSlash(TSlash node);
     void caseTFriend(TFriend node);
     void caseTFoe(TFoe node);
     void caseTEmpty(TEmpty node);
@@ -90,7 +97,6 @@ public interface Analysis extends Switch
     void caseTEql(TEql node);
     void caseTComma(TComma node);
     void caseTArrow(TArrow node);
-    void caseTSlash(TSlash node);
     void caseTPound(TPound node);
     void caseTStar(TStar node);
     void caseTThis(TThis node);
@@ -105,7 +111,6 @@ public interface Analysis extends Switch
     void caseTFunction(TFunction node);
     void caseTIdentifier(TIdentifier node);
     void caseTVariable(TVariable node);
-    void caseTOperator(TOperator node);
     void caseEOF(EOF node);
     void caseInvalidToken(InvalidToken node);
 }
