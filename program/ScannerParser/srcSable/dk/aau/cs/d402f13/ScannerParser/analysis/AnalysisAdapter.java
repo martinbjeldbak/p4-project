@@ -123,6 +123,54 @@ public class AnalysisAdapter implements Analysis
     }
 
     @Override
+    public void caseAStarSharedOperator(AStarSharedOperator node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAPlusSharedOperator(APlusSharedOperator node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseANormOpOperator(ANormOpOperator node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseASharedOpOperator(ASharedOpOperator node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseASlashOperator(ASlashOperator node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAStarStarQmarkPlus(AStarStarQmarkPlus node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAQmarkStarQmarkPlus(AQmarkStarQmarkPlus node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseAPlusStarQmarkPlus(APlusStarQmarkPlus node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
     public void caseAElopexpExpression(AElopexpExpression node)
     {
         defaultCase(node);
@@ -375,18 +423,6 @@ public class AnalysisAdapter implements Analysis
     }
 
     @Override
-    public void caseTStarQmarkPlus(TStarQmarkPlus node)
-    {
-        defaultCase(node);
-    }
-
-    @Override
-    public void caseTSharedOperator(TSharedOperator node)
-    {
-        defaultCase(node);
-    }
-
-    @Override
     public void caseTNormalOperator(TNormalOperator node)
     {
         defaultCase(node);
@@ -412,6 +448,12 @@ public class AnalysisAdapter implements Analysis
 
     @Override
     public void caseTPatternNot(TPatternNot node)
+    {
+        defaultCase(node);
+    }
+
+    @Override
+    public void caseTSlash(TSlash node)
     {
         defaultCase(node);
     }
@@ -537,12 +579,6 @@ public class AnalysisAdapter implements Analysis
     }
 
     @Override
-    public void caseTSlash(TSlash node)
-    {
-        defaultCase(node);
-    }
-
-    @Override
     public void caseTPound(TPound node)
     {
         defaultCase(node);
@@ -622,12 +658,6 @@ public class AnalysisAdapter implements Analysis
 
     @Override
     public void caseTVariable(TVariable node)
-    {
-        defaultCase(node);
-    }
-
-    @Override
-    public void caseTOperator(TOperator node)
     {
         defaultCase(node);
     }
