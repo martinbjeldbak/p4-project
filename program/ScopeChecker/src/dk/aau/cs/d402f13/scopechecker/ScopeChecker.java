@@ -16,10 +16,10 @@ import dk.aau.cs.d402f13.utilities.SymbolTable;
 import dk.aau.cs.d402f13.utilities.Token;
 import dk.aau.cs.d402f13.utilities.SymbolTable.SymbolInfo;
 import dk.aau.cs.d402f13.utilities.SymbolTable.SymbolType;
+import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.errors.ScopeError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.SyntaxError;
-import dk.aau.cs.d402f13.parser.AstNode;
 import dk.aau.cs.d402f13.parser.Parser;
 
 public class ScopeChecker {
