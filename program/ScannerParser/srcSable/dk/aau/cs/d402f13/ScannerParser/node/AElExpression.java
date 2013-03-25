@@ -8,6 +8,7 @@ import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 public final class AElExpression extends PExpression
 {
     private PElement _element_;
+    private PList _list_;
 
     public AElExpression()
     {
@@ -15,10 +16,13 @@ public final class AElExpression extends PExpression
     }
 
     public AElExpression(
-        @SuppressWarnings("hiding") PElement _element_)
+        @SuppressWarnings("hiding") PElement _element_,
+        @SuppressWarnings("hiding") PList _list_)
     {
         // Constructor
         setElement(_element_);
+
+        setList(_list_);
 
     }
 
@@ -26,7 +30,8 @@ public final class AElExpression extends PExpression
     public Object clone()
     {
         return new AElExpression(
-            cloneNode(this._element_));
+            cloneNode(this._element_),
+            cloneNode(this._list_));
     }
 
     @Override
@@ -60,11 +65,37 @@ public final class AElExpression extends PExpression
         this._element_ = node;
     }
 
+    public PList getList()
+    {
+        return this._list_;
+    }
+
+    public void setList(PList node)
+    {
+        if(this._list_ != null)
+        {
+            this._list_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
+            {
+                node.parent().removeChild(node);
+            }
+
+            node.parent(this);
+        }
+
+        this._list_ = node;
+    }
+
     @Override
     public String toString()
     {
         return ""
-            + toString(this._element_);
+            + toString(this._element_)
+            + toString(this._list_);
     }
 
     @Override
@@ -74,6 +105,12 @@ public final class AElExpression extends PExpression
         if(this._element_ == child)
         {
             this._element_ = null;
+            return;
+        }
+
+        if(this._list_ == child)
+        {
+            this._list_ = null;
             return;
         }
 
@@ -87,6 +124,12 @@ public final class AElExpression extends PExpression
         if(this._element_ == oldChild)
         {
             setElement((PElement) newChild);
+            return;
+        }
+
+        if(this._list_ == oldChild)
+        {
+            setList((PList) newChild);
             return;
         }
 

@@ -260,25 +260,172 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         outAExprStructure(node);
     }
 
-    public void inAFuncExpression(AFuncExpression node)
+    public void inAStarSharedOperator(AStarSharedOperator node)
     {
         defaultIn(node);
     }
 
-    public void outAFuncExpression(AFuncExpression node)
+    public void outAStarSharedOperator(AStarSharedOperator node)
     {
         defaultOut(node);
     }
 
     @Override
-    public void caseAFuncExpression(AFuncExpression node)
+    public void caseAStarSharedOperator(AStarSharedOperator node)
     {
-        inAFuncExpression(node);
-        if(node.getFunctionCall() != null)
+        inAStarSharedOperator(node);
+        if(node.getStar() != null)
         {
-            node.getFunctionCall().apply(this);
+            node.getStar().apply(this);
         }
-        outAFuncExpression(node);
+        outAStarSharedOperator(node);
+    }
+
+    public void inAPlusSharedOperator(APlusSharedOperator node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAPlusSharedOperator(APlusSharedOperator node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAPlusSharedOperator(APlusSharedOperator node)
+    {
+        inAPlusSharedOperator(node);
+        if(node.getPlus() != null)
+        {
+            node.getPlus().apply(this);
+        }
+        outAPlusSharedOperator(node);
+    }
+
+    public void inANormOpOperator(ANormOpOperator node)
+    {
+        defaultIn(node);
+    }
+
+    public void outANormOpOperator(ANormOpOperator node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseANormOpOperator(ANormOpOperator node)
+    {
+        inANormOpOperator(node);
+        if(node.getNormalOperator() != null)
+        {
+            node.getNormalOperator().apply(this);
+        }
+        outANormOpOperator(node);
+    }
+
+    public void inASharedOpOperator(ASharedOpOperator node)
+    {
+        defaultIn(node);
+    }
+
+    public void outASharedOpOperator(ASharedOpOperator node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseASharedOpOperator(ASharedOpOperator node)
+    {
+        inASharedOpOperator(node);
+        if(node.getSharedOperator() != null)
+        {
+            node.getSharedOperator().apply(this);
+        }
+        outASharedOpOperator(node);
+    }
+
+    public void inASlashOperator(ASlashOperator node)
+    {
+        defaultIn(node);
+    }
+
+    public void outASlashOperator(ASlashOperator node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseASlashOperator(ASlashOperator node)
+    {
+        inASlashOperator(node);
+        if(node.getSlash() != null)
+        {
+            node.getSlash().apply(this);
+        }
+        outASlashOperator(node);
+    }
+
+    public void inAStarStarQmarkPlus(AStarStarQmarkPlus node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAStarStarQmarkPlus(AStarStarQmarkPlus node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAStarStarQmarkPlus(AStarStarQmarkPlus node)
+    {
+        inAStarStarQmarkPlus(node);
+        if(node.getStar() != null)
+        {
+            node.getStar().apply(this);
+        }
+        outAStarStarQmarkPlus(node);
+    }
+
+    public void inAQmarkStarQmarkPlus(AQmarkStarQmarkPlus node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAQmarkStarQmarkPlus(AQmarkStarQmarkPlus node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAQmarkStarQmarkPlus(AQmarkStarQmarkPlus node)
+    {
+        inAQmarkStarQmarkPlus(node);
+        if(node.getQmark() != null)
+        {
+            node.getQmark().apply(this);
+        }
+        outAQmarkStarQmarkPlus(node);
+    }
+
+    public void inAPlusStarQmarkPlus(APlusStarQmarkPlus node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAPlusStarQmarkPlus(APlusStarQmarkPlus node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAPlusStarQmarkPlus(APlusStarQmarkPlus node)
+    {
+        inAPlusStarQmarkPlus(node);
+        if(node.getPlus() != null)
+        {
+            node.getPlus().apply(this);
+        }
+        outAPlusStarQmarkPlus(node);
     }
 
     public void inAElopexpExpression(AElopexpExpression node)
@@ -387,6 +534,10 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
     public void caseAElExpression(AElExpression node)
     {
         inAElExpression(node);
+        if(node.getList() != null)
+        {
+            node.getList().apply(this);
+        }
         if(node.getElement() != null)
         {
             node.getElement().apply(this);
@@ -446,6 +597,27 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
             node.getLPar().apply(this);
         }
         outAExprElement(node);
+    }
+
+    public void inAThisElement(AThisElement node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAThisElement(AThisElement node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAThisElement(AThisElement node)
+    {
+        inAThisElement(node);
+        if(node.getThis() != null)
+        {
+            node.getThis().apply(this);
+        }
+        outAThisElement(node);
     }
 
     public void inAVarElement(AVarElement node)
@@ -666,31 +838,6 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         outAFuncElement(node);
     }
 
-    public void inAFunctionCall(AFunctionCall node)
-    {
-        defaultIn(node);
-    }
-
-    public void outAFunctionCall(AFunctionCall node)
-    {
-        defaultOut(node);
-    }
-
-    @Override
-    public void caseAFunctionCall(AFunctionCall node)
-    {
-        inAFunctionCall(node);
-        if(node.getList() != null)
-        {
-            node.getList().apply(this);
-        }
-        if(node.getFunction() != null)
-        {
-            node.getFunction().apply(this);
-        }
-        outAFunctionCall(node);
-    }
-
     public void inAVarExpr(AVarExpr node)
     {
         defaultIn(node);
@@ -795,9 +942,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getElse().apply(this);
         }
-        if(node.getExpression() != null)
+        if(node.getMid() != null)
         {
-            node.getExpression().apply(this);
+            node.getMid().apply(this);
         }
         if(node.getThen() != null)
         {
@@ -1077,6 +1224,10 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getInteger().apply(this);
         }
+        if(node.getRPar() != null)
+        {
+            node.getRPar().apply(this);
+        }
         if(node.getPattern() != null)
         {
             node.getPattern().apply(this);
@@ -1088,25 +1239,67 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         outALpatexprrPatternVal(node);
     }
 
-    public void inAPatkeyPatternCheck(APatkeyPatternCheck node)
+    public void inAFriendPatternCheck(AFriendPatternCheck node)
     {
         defaultIn(node);
     }
 
-    public void outAPatkeyPatternCheck(APatkeyPatternCheck node)
+    public void outAFriendPatternCheck(AFriendPatternCheck node)
     {
         defaultOut(node);
     }
 
     @Override
-    public void caseAPatkeyPatternCheck(APatkeyPatternCheck node)
+    public void caseAFriendPatternCheck(AFriendPatternCheck node)
     {
-        inAPatkeyPatternCheck(node);
-        if(node.getPatternKeyword() != null)
+        inAFriendPatternCheck(node);
+        if(node.getFriend() != null)
         {
-            node.getPatternKeyword().apply(this);
+            node.getFriend().apply(this);
         }
-        outAPatkeyPatternCheck(node);
+        outAFriendPatternCheck(node);
+    }
+
+    public void inAFoePatternCheck(AFoePatternCheck node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAFoePatternCheck(AFoePatternCheck node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAFoePatternCheck(AFoePatternCheck node)
+    {
+        inAFoePatternCheck(node);
+        if(node.getFoe() != null)
+        {
+            node.getFoe().apply(this);
+        }
+        outAFoePatternCheck(node);
+    }
+
+    public void inAEmptyPatternCheck(AEmptyPatternCheck node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAEmptyPatternCheck(AEmptyPatternCheck node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAEmptyPatternCheck(AEmptyPatternCheck node)
+    {
+        inAEmptyPatternCheck(node);
+        if(node.getEmpty() != null)
+        {
+            node.getEmpty().apply(this);
+        }
+        outAEmptyPatternCheck(node);
     }
 
     public void inAThisPatternCheck(AThisPatternCheck node)

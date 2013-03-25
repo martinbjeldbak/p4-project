@@ -2,7 +2,7 @@
 
 package dk.aau.cs.d402f13.ScannerParser.node;
 
-public abstract class PFunctionCall extends Node
+public abstract class PSharedOperator extends Node
 {
     // Empty body
 }

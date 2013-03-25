@@ -7,14 +7,14 @@ import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 @SuppressWarnings("nls")
 public final class TSlash extends Token
 {
-    public TSlash()
+    public TSlash(String text)
     {
-        super.setText("/");
+        setText(text);
     }
 
-    public TSlash(int line, int pos)
+    public TSlash(String text, int line, int pos)
     {
-        super.setText("/");
+        setText(text);
         setLine(line);
         setPos(pos);
     }
@@ -22,18 +22,12 @@ public final class TSlash extends Token
     @Override
     public Object clone()
     {
-      return new TSlash(getLine(), getPos());
+      return new TSlash(getText(), getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTSlash(this);
-    }
-
-    @Override
-    public void setText(@SuppressWarnings("unused") String text)
-    {
-        throw new RuntimeException("Cannot change TSlash text.");
     }
 }
