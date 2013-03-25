@@ -7,14 +7,14 @@ import dk.aau.cs.d402f13.ScannerParser.analysis.*;
 @SuppressWarnings("nls")
 public final class TEmark extends Token
 {
-    public TEmark()
+    public TEmark(String text)
     {
-        super.setText("!");
+        setText(text);
     }
 
-    public TEmark(int line, int pos)
+    public TEmark(String text, int line, int pos)
     {
-        super.setText("!");
+        setText(text);
         setLine(line);
         setPos(pos);
     }
@@ -22,18 +22,12 @@ public final class TEmark extends Token
     @Override
     public Object clone()
     {
-      return new TEmark(getLine(), getPos());
+      return new TEmark(getText(), getLine(), getPos());
     }
 
     @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTEmark(this);
-    }
-
-    @Override
-    public void setText(@SuppressWarnings("unused") String text)
-    {
-        throw new RuntimeException("Cannot change TEmark text.");
     }
 }

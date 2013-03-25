@@ -9,6 +9,7 @@ public final class ALpatexprrPatternVal extends PPatternVal
 {
     private TLPar _lPar_;
     private PPattern _pattern_;
+    private TRPar _rPar_;
     private TInteger _integer_;
 
     public ALpatexprrPatternVal()
@@ -19,12 +20,15 @@ public final class ALpatexprrPatternVal extends PPatternVal
     public ALpatexprrPatternVal(
         @SuppressWarnings("hiding") TLPar _lPar_,
         @SuppressWarnings("hiding") PPattern _pattern_,
+        @SuppressWarnings("hiding") TRPar _rPar_,
         @SuppressWarnings("hiding") TInteger _integer_)
     {
         // Constructor
         setLPar(_lPar_);
 
         setPattern(_pattern_);
+
+        setRPar(_rPar_);
 
         setInteger(_integer_);
 
@@ -36,6 +40,7 @@ public final class ALpatexprrPatternVal extends PPatternVal
         return new ALpatexprrPatternVal(
             cloneNode(this._lPar_),
             cloneNode(this._pattern_),
+            cloneNode(this._rPar_),
             cloneNode(this._integer_));
     }
 
@@ -95,6 +100,31 @@ public final class ALpatexprrPatternVal extends PPatternVal
         this._pattern_ = node;
     }
 
+    public TRPar getRPar()
+    {
+        return this._rPar_;
+    }
+
+    public void setRPar(TRPar node)
+    {
+        if(this._rPar_ != null)
+        {
+            this._rPar_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
+            {
+                node.parent().removeChild(node);
+            }
+
+            node.parent(this);
+        }
+
+        this._rPar_ = node;
+    }
+
     public TInteger getInteger()
     {
         return this._integer_;
@@ -126,6 +156,7 @@ public final class ALpatexprrPatternVal extends PPatternVal
         return ""
             + toString(this._lPar_)
             + toString(this._pattern_)
+            + toString(this._rPar_)
             + toString(this._integer_);
     }
 
@@ -142,6 +173,12 @@ public final class ALpatexprrPatternVal extends PPatternVal
         if(this._pattern_ == child)
         {
             this._pattern_ = null;
+            return;
+        }
+
+        if(this._rPar_ == child)
+        {
+            this._rPar_ = null;
             return;
         }
 
@@ -167,6 +204,12 @@ public final class ALpatexprrPatternVal extends PPatternVal
         if(this._pattern_ == oldChild)
         {
             setPattern((PPattern) newChild);
+            return;
+        }
+
+        if(this._rPar_ == oldChild)
+        {
+            setRPar((TRPar) newChild);
             return;
         }
 
