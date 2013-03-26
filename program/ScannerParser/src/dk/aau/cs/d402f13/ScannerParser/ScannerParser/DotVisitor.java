@@ -63,7 +63,7 @@ public class DotVisitor extends DepthFirstAdapter {
     out.print(mNodeToNum.get(node));
     out.print(" [ label=\"DeclStruct\" ];");
 
-    defaultOut(node);    
+    defaultOut(node);
   }
   
   public void outADirElement(ADirElement node) {
