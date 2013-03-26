@@ -22,6 +22,15 @@ public class Main {
       
       //Apply the translation
       tree.apply( new Translation() );
+      
+      //AstNodeConverter asts = new AstNodeConverter();
+      //tree.apply(asts);
+      
+      DotVisitor toDot = new DotVisitor(new PrintWriter(new File("test123.dot")));
+      tree.apply(toDot);
+      
+      
+      
     }
     catch(Exception e) {
       System.out.println(e.getMessage());
