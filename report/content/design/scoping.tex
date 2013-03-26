@@ -5,6 +5,13 @@ A scope is the context in which one or more variables exist.
 There are three types of scopes in \productname{}. Function scopes, lambda scopes and
 ``let''-scopes.
 
+\begin{dlist}
+\item What is scoping?
+\item Examples of static/lexical versus dynamic scoping
+\item Why do we want to use dynamic scoping
+\item What does that mean for \productname?
+\end{dlist}
+
 \subsection{Function scope}
 Consider a function definition such as:
 
@@ -63,13 +70,36 @@ certain scope. This is done using \emph{let-expressions}. Using a let-expression
 new scope in which the declared variables are accessible. When leaving the scope the
 variables are destroyed.
 
+The basic format of a let-expression is:
+
+\texttt{let VARIABLE1 = EXPRESSION1 in EXPRESSION2}
+
+In the example, the value of \texttt{EXPRESSION1} is assigned to \texttt{VARIABLE1}, which
+is available in \texttt{EXPRESSION2}. Another example could be:
+
+\texttt{let VARIABLE1 = EXPRESSION1, VARIABLE2 = EXPRESSION2 in EXPRESSION3}
+
+In this example, the value of \texttt{EXPRESSION1} is assigned to \texttt{VARIABLE2}, and
+the value of \texttt{EXPRESSION2} is assigned to \texttt{VARIABLE2}. Both \texttt{VARIABLE1}
+and \texttt{VARIABLE2} are available in \texttt{EXPRESSION3} and only in \texttt{EXPRESSION3}.
+
+Destructive assignments are not possible \productname{}, meaning that it isn't possible to 
+reassign a variable. It is however possible to hide a variable.
+Consider the following expression:
+
+\codesample{lethiding.garry}
+
+The value of this expression is $13$. This is because within the \texttt{\variable{x} + 2}-expression
+the \variable{x}-variable evaluates to $6$. But in the outer expression \variable{x} evaluates to
+$5$.
+
+Nested \emph{let}-scopes are possible. Consider for instance:
+
+\codesample{nestedlet.garry}
+
+In the inner scope, both \variable{x} and \variable{y} are available. This is of course equivalent
+to:
+
+\codesample{nestedlet2.garry}
 
 
-Outline:
-
-\begin{dlist}
-\item What is scoping?
-\item Examples of static/lexical versus dynamic scoping
-\item Why do we want to use dynamic scoping
-\item What does that mean for \productname?
-\end{dlist}

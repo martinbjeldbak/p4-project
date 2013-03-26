@@ -93,8 +93,7 @@ Helpers
                    | 'title' | 'players' | 'turnOrder' | 'board'
                    | 'grid' | 'setup' | 'wall' | 'name' | 'possibleDrops'
                    | 'possibleMoves' | 'winCondition' | 'tieCondition';
-  shared_operator  = star | plus;
-  normal_operator  = '-' | '!=' | '==' | '<=' | '>=';
+  normal_operator  = '-' | '!=' | '==' | '<=' | '>=' | '<' | '>';
   pattern_operator = qmark;
   pattern_not      = emark;
   pattern_or       = '|';
@@ -115,14 +114,13 @@ Tokens
   blank            = ' ' | tab;
   direction        = direction;
   keyword          = keyword;
-  star_qmark_plus  = '*' | '?' | '+';
-  shared_operator  = shared_operator;
+  
   normal_operator  = normal_operator;
   pattern_operator = pattern_operator;
   pattern_or       = pattern_or;
   emark            = emark;
   pattern_not      = pattern_not;
-  
+  slash            = slash;
   friend           = friend;
   foe              = foe;
   empty            = empty;
@@ -143,7 +141,6 @@ Tokens
   eql        = eql;
   comma      = comma;
   arrow      = arrow;
-  slash      = slash;
   pound      = pound;
   star       = star;
   this       = this;
@@ -160,12 +157,9 @@ Tokens
   string     = '"' (strchar | '\' input_character)* '"';
 
   /* identifiers */
-  
   function   = lowercase anycase+;
   identifier = uppercase anycase*;
   variable   = '$' anycase+;
-  
-  operator = normal_operator | shared_operator;
  
 Ignored Tokens
   blank, eol, comment;
@@ -180,6 +174,17 @@ Productions
                      | {idstruc} identifier structure;                  
   structure          = {declstruc} decl_struct
                      | {expr} expression;
+                     
+  shared_operator    = {star} star
+                     | {plus} plus;
+                     
+    operator         = {norm_op} normal_operator
+                     | {shared_op} shared_operator
+                     | {slash} slash;   
+                   
+    star_qmark_plus  = {star} star 
+                     | {qmark} qmark
+                     | {plus} plus;                
   
   /* expressions */
   expression    = {elopexp} element operator expression

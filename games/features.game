@@ -16,4 +16,7 @@ game {
     let $x = let $x = 5 in $x + 5
       in let $x = $x - 5
         in $x
+  tieCondition
+    let $a = #[$a] => #[$b $c] => $b[($c + $a)]
+      in ($a[12])[(#[$b] => $b * 3) 5]
 }
