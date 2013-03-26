@@ -193,7 +193,8 @@ public class Parser {
       operation.addChild(expression());
       return operation;
     }
-    else if (lookAhead(Token.Type.LET)) {
+    else if (lookAhead(Token.Type.LET))
+    {
       return assignment();
     }
     else if (lookAhead(Token.Type.IF)) {
