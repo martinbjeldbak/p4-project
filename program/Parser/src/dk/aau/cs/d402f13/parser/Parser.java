@@ -368,7 +368,7 @@ public class Parser {
       node = pattern();
       expect(Token.Type.RPAREN);
       if (accept(Token.Type.INT_LIT)) {
-        AstNode mult = astNode(Type.PATTERN_MULTIPLITER, currentToken.value);
+        AstNode mult = astNode(Type.PATTERN_MULTIPLIER, currentToken.value);
         mult.addChild(node);
         node = mult;
       }

@@ -103,7 +103,7 @@ public abstract class Visitor {
           return visitPattern(node);
         case PATTERN_KEYWORD:
           return visitPatternKeyword(node);
-        case PATTERN_MULTIPLITER:
+        case PATTERN_MULTIPLIER:
           return visitPatternMultiplier(node);
         case PATTERN_NOT:
           return visitPatternNot(node);
