@@ -1,5 +1,6 @@
-package dk.aau.cs.d402f13.utilities.errors;
-import dk.aau.cs.d402f13.utilities.SymbolTable.SymbolInfo;
+package dk.aau.cs.d402f13.scopechecker.errors;
+import dk.aau.cs.d402f13.scopechecker.utilities.SymbolTable.SymbolInfo;
+import dk.aau.cs.d402f13.utilities.errors.StandardError;
 
 public class ScopeError extends StandardError {
 

@@ -5,3 +5,134 @@ as an abstract syntax tree.
 
 This section should cover all aspects of our abstract syntax tree, and how it differs from the
 parse tree.
+
+\subsection{Program}
+\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=40mm/#1}]
+\node [square] (z){Program}
+  child {node [square] (a) {Function definition} edge from parent[dashed];}
+  child {node [square] (aa) {Function definition} edge from parent[dashed];}
+  child {node [square] (b) {Game decleration}};
+\path (a)--(aa) node [midway] {$\cdots$};
+\end{tikzpicture}\end{center}\end{figure}
+
+\subsection{Variable list}
+\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] (z){Variable list}
+  child {node [square] (a) {Variable} edge from parent[dashed];}
+  child {node [square] (aa) {Variable} edge from parent[dashed];};
+\path (a)--(aa) node [midway] {$\cdots$};
+\end{tikzpicture}\end{center}\end{figure}
+
+\subsection{Function definition}
+\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] (z){Function definition}
+  child {node [square] (a) {Function}}
+  child {node [square] (b) {Variable list}}
+  child {node [ellipse,draw] (c) {\textit{Expression}}};
+\end{tikzpicture}\end{center}\end{figure}
+
+\subsection{Game decleration}
+\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] (z){Game decleration}
+  child {node [square] (a) {Decleration struct}};
+\end{tikzpicture}\end{center}\end{figure}
+
+\subsection{Decleration struct}
+\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] (z) {Decleration struct}
+  child {node [square] (a) {Decleration}}
+  child {node [square] (b) {Decleration} edge from parent[dashed];}
+  child {node [square] (c) {Decleration} edge from parent[dashed];};
+  
+\path (b)--(c) node [midway] {$\cdots$};
+\end{tikzpicture}\end{center}\end{figure}
+
+\subsection{Decleration}
+\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] {Decleration}
+  child {node [ellipse split,draw] {Keyword \nodepart{lower} Identifier}}
+  child {node [ellipse,draw] {\textit{Structure}}};
+\end{tikzpicture}\end{center}\end{figure}
+
+\subsection{Assignment}
+\begin{figure}[H]\begin{center}\begin{tikzpicture}
+[level/.style={sibling distance=40mm},
+level 1/.style={sibling distance = 39mm},
+level 2/.style={sibling distance = 20mm}]
+\pgfdeclareshape{z,a,b,c,x,y,d,o,p,e}
+
+\node [square] (z) {Assignment}
+  child {node [square,left of=b,xshift=-4cm] (a) {Variable}}
+  child {node [ellipse,draw,left of=c,xshift=-4.5cm] (b) {\textit{Expression}}}
+  child {node [square] (c) {Assignment} edge from parent[dashed]
+  	child {node [square,xshift=-1cm] (x) {Variable} edge from parent[solid]}
+  	child {node [ellipse,draw,solid,xshift=-1cm] (y) {\textit{Expression}} edge from parent[solid]}
+  }
+  child {node [square,xshift=-1cm] (d) {Assignment} edge from parent[dashed]
+  	child {node [square,xshift=1cm] (o) {Variable} edge from parent[solid]}
+  	child {node [ellipse,draw,solid,xshift=1cm] (p) {\textit{Expression}} edge from parent[solid]}
+  }
+  child {node [ellipse,draw,right of=d,xshift=1.5cm](e) {\textit{Expression}}};
+
+\path (c)--(d) node [midway] {$\cdots$};
+\end{tikzpicture}\end{center}\end{figure}
+
+\subsection{If expression}
+\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] (z){If expression}
+  child {node [ellipse,draw] (a) {Expression}}
+  child {node [ellipse,draw] (b) {Expression}}
+  child {node [ellipse,draw] (c) {Expression}};
+\end{tikzpicture}\end{center}\end{figure}
+
+\subsection{Lambda expression}
+
+\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] (z){Lambda expression}
+  child {node [square] (a) {Variable list}}
+  child {node [ellipse,draw] (b) {\textit{Expression}}};
+\end{tikzpicture}\end{center}\end{figure}
+
+\subsection{List}
+\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] (z){List}
+  child {node [ellipse,draw] (a) {Element} edge from parent[dashed]}
+  child {node [ellipse,draw] (b) {Element} edge from parent[dashed]};
+
+\path (a)--(b) node [midway] {$\cdots$};
+\end{tikzpicture}\end{center}\end{figure}
+
+\subsection{Pattern}
+\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=40mm/#1}]
+\node [square] (z){Pattern}
+  child {node [square] (a) {Pattern expression}}
+  child {node [square] (b) {Pattern expression} edge from parent[dashed]}
+  child {node [square] (c) {Pattern expression} edge from parent[dashed]};
+
+\path (b)--(c) node [midway] {$\cdots$};
+\end{tikzpicture}\end{center}\end{figure}
+
+\subsection{Pattern or-operator}
+\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=40mm/#1}]
+\node [square] {Pattern, or-operator}
+  child {node [square] {Pattern value}}
+  child {node [square] {Pattern expression}};
+\end{tikzpicture}\end{center}\end{figure}
+
+\subsection{Pattern multiplier-operator}
+\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=40mm/#1}]
+\node [square] {Pattern, multiplier-operator}
+  child {node [square] {Pattern value}};
+\end{tikzpicture}\end{center}\end{figure}
+
+\subsection{Pattern not-operator}
+\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=40mm/#1}]
+\node [square] {Pattern, not-operator}
+  child {node [square] {\textit{Pattern check}}};
+\end{tikzpicture}\end{center}\end{figure}
+
+\subsection{Not-operator}
+\begin{figure}[ht]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=40mm/#1}]
+\node [square] {Not-operator}
+  child {node [ellipse, draw] {\textit{Expression}}};
+\end{tikzpicture}\end{center}\end{figure}

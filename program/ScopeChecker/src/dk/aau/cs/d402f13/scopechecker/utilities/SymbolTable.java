@@ -1,10 +1,11 @@
-package dk.aau.cs.d402f13.utilities;
+package dk.aau.cs.d402f13.scopechecker.utilities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import dk.aau.cs.d402f13.utilities.errors.ScopeError;
+import dk.aau.cs.d402f13.scopechecker.errors.*;
+import dk.aau.cs.d402f13.utilities.Levenshtein;
 
 public class SymbolTable {
   public enum SymbolType {
