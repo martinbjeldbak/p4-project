@@ -2,11 +2,11 @@ package dk.aau.cs.d402f13.scopechecker;
 
 import java.util.Iterator;
 
-import dk.aau.cs.d402f13.utilities.SymbolTable;
-import dk.aau.cs.d402f13.utilities.SymbolTable.SymbolType;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.ast.DefaultVisitor;
-import dk.aau.cs.d402f13.utilities.errors.ScopeError;
+import dk.aau.cs.d402f13.scopechecker.errors.*;
+import dk.aau.cs.d402f13.scopechecker.utilities.SymbolTable;
+import dk.aau.cs.d402f13.scopechecker.utilities.SymbolTable.SymbolType;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 
 
