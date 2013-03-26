@@ -11,7 +11,7 @@ game {
     }
   }
   piece {
-    name XOPieces
+    name XOPiece
     possibleDrops (emptySquares[board])
   }
   winCondition (
