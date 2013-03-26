@@ -272,6 +272,7 @@ public class Scanner {
       case '?':
         t.type = Type.PATTERN_OPERATOR;
         break;
+      case '@':
       case '-':
         t.type = Type.NORMAL_OPERATOR;
         break;
