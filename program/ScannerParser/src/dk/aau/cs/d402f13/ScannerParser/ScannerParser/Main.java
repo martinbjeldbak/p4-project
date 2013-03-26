@@ -26,7 +26,7 @@ public class Main {
       //AstNodeConverter asts = new AstNodeConverter();
       //tree.apply(asts);
       
-      DotVisitor toDot = new DotVisitor(new PrintWriter(new File("test123.dot")));
+      DotVisitor toDot = new DotVisitor(new PrintWriter(new File("ast.dot")));
       tree.apply(toDot);
       
       
