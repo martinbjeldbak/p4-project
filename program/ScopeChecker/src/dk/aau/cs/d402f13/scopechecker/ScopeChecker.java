@@ -16,9 +16,11 @@ public class ScopeChecker extends DefaultVisitor {
    
     public void openScope(){
       currentST = new SymbolTable(currentST); //make new symbolTable point to old symbolTable to preserve scope hierarchy
+      System.out.println(currentST.nestPrefix() + "BEGIN SCOPE");
     }
     
     private void closeScope() throws ScopeError {
+      System.out.println(currentST.nestPrefix() + "END SCOPE");
       currentST.checkErrors(); //will throw a ScannerError exception if errors are found
       currentST = currentST.getParent();
     }
@@ -49,20 +51,22 @@ public class ScopeChecker extends DefaultVisitor {
     //VAR EXPR [ASSIGNMENT]+ EXPR       case 1
     //VAR EXPR                          case 2
     
+    Iterator<AstNode> it = node.iterator();
+    
     //if ASSIGNMENT contains two EXPR, open a new scope (case 1)
     //else, the assignments is just in the same scope (case 2)
     boolean simpleAssign = node.size() == 2;
    
     if (simpleAssign){
       varDeclaringMode = true;
-      visit(node.iterator().next()); //visit VAR
+      visit(it.next()); //visit VAR
       varDeclaringMode = false; //exit varDeclaringMode since Expr may use vars
+      visit(it.next()); //visit EXPR
       return null;
     }
     
     openScope();
     
-    Iterator<AstNode> it = node.iterator();
     varDeclaringMode = true;
     visit(it.next()); //visit VAR
     varDeclaringMode = false;
@@ -76,7 +80,6 @@ public class ScopeChecker extends DefaultVisitor {
   @Override
   protected Object visitFunction(AstNode node) throws StandardError {
     currentST.foundUsedSymbol(SymbolType.FUNCTION, node.value, node.line, node.offset);
-    System.out.println("Found use of func: " + node.value + " on line: " + node.line + " offset " + node.offset);
     return null;
   }
   
@@ -84,10 +87,12 @@ public class ScopeChecker extends DefaultVisitor {
   protected Object visitLambdaExpr(AstNode node) throws StandardError {
     //VARLIST - EXPR
     Iterator<AstNode> it = node.iterator();
+    openScope();
     varDeclaringMode = true;
     visit(it.next()); //visit VARLIST
     varDeclaringMode = false;
     visit(it.next()); //visit EXPR
+    closeScope();
     return null; 
   }
   
@@ -100,10 +105,10 @@ public class ScopeChecker extends DefaultVisitor {
     
     String funcName = it.next().value;
     currentST.foundDeclaredSymbol(SymbolType.FUNCTION, funcName, node.line, node.offset);
-    varDeclaringMode = true;
-    visit(it.next()); //traverse the VARLIST
-    varDeclaringMode = false;
     openScope(); //open new scope, so function arguments can be hidden
+    varDeclaringMode = true;
+    visit(it.next()); //traverse the VARLIST (the arguments)
+    varDeclaringMode = false;
       visit(it.next()); //traverse the expression
     closeScope();
     return null;
