@@ -1,0 +1,4 @@
+piece {
+  name XOPiece
+  possibleDrops emptySquares[board]
+}
