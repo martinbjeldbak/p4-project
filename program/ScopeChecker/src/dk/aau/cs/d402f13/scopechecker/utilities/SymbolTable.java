@@ -1,10 +1,11 @@
-package dk.aau.cs.d402f13.utilities;
+package dk.aau.cs.d402f13.scopechecker.utilities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import dk.aau.cs.d402f13.utilities.errors.ScopeError;
+import dk.aau.cs.d402f13.scopechecker.errors.*;
+import dk.aau.cs.d402f13.utilities.Levenshtein;
 
 public class SymbolTable {
   public enum SymbolType {
@@ -83,7 +84,6 @@ public class SymbolTable {
     //Checks if a symbol is declared in either local or outer scopes
     for (SymbolInfo si : symbols){
       if (si.type == s.type && s.name.equals(si.name) && si.declaration){
-        System.out.println(nestPrefix() + s.name + " (" + s.type + ") found declared on line " + s.line + ", offset " + s.offset);
         return true;
       }
     }
@@ -108,12 +108,12 @@ public class SymbolTable {
       }  
     }
    
-    System.out.println(nestPrefix() + name + " (" + type + ") decl" );
+    System.out.println(nestPrefix() + name + " (" + type + ") decl on line " + line + ", offset " + offset  );
     //if symbol is not found, insert it as declared
     symbols.add(new SymbolInfo(type, true, name, line, offset));
   }
   
-  String nestPrefix(){ //used for printing, to show nest level
+  public String nestPrefix(){ //used for printing, to show nest level
     String prefix = "";
     for (int i = 0; i < getNestLevel(); i++){
       prefix += " ";
