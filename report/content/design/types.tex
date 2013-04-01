@@ -61,13 +61,41 @@ being called as a function in line 2. The \texttt{\#}-symbol is used to mark the
 of a lambda expression. The scope rules of lambda expressions are further described in \secref{sec:scoping}
 while the declaration of named functions is described in \secref{sec:functions}.
 
+\subsection{Boolean}
+Although there are no boolean constants (``true'' and ``false'') in \productname, the type still exists, since
+boolean values can be returned by some expressions. Boolean values are also required in the condition of
+if-expressions.
+
 \subsection{Pattern}
 A unique feature of \productname{} is patterns.
 a pattern used for matching patterns on the board.
+
 \subsection{List}
 A list is an ordered collection of values. The same value may occur more than once. 
+Lists can be used for all sorts of things.
 
 \subsection{Identifier}
+An identifier is a reference to a certain object. It always begins with an uppercase letter.
+Consider for instance the \productname-implementation
+of Noughts and Crosses. The implementation uses three identifiers; \identifier{Noughts},
+\identifier{Crosses}, and \identifier{XOPiece}. An identifier doesn't have to be declared, and no matter
+where it is used, it always refers to the same object. Two differently named identifiers can't refer
+to the same object. Some uses of an identifier may add more identity to the object referred to by that
+identifier. Consider for example the line:
+
+\codesample{nncplayers.garry}
+
+In this line, the objects referred to by \identifier{Noughts} and \identifier{Crosses}, are declared
+to be players. This means that further on, when using \identifier{Noughts} and \identifier{Crosses},
+they can only be used in contexts where a player-object is applicable.
+
+The other identifier, \identifier{XOPiece}, is used as a name for the one type of piece in
+Noughts and Crosses:
+
+\codesample{nncpiece.garry}
+
+This means that further on \identifier{XOPiece} will refer to that type of piece.
+
 
 \subsection{Action}
 

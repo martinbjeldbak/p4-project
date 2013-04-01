@@ -5,11 +5,10 @@ import dk.aau.cs.d402f13.ScannerParser.node.*;
 
 public class Translation extends DepthFirstAdapter {
   
-  public void caseTGame(TGame node) {
-    System.out.println(node);
-  }
   
-  public void outTBlank(TBlank node) {
-    System.out.println("hej");
+  
+  public void visit(Node node) {
+    if (node != null)
+      node.apply(this);
   }
 }
