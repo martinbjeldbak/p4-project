@@ -1,0 +1,40 @@
+\section{Syntactic analysis}
+All languages whether natural or artificial is a set of strings of characters over some alphabet. There are rules for how the strings can look that are in a language and how they can be combined. The lexemes described how the strings can look and now the tokens are useful when analysis how the lexemes can be combined. The rules can be specified formally to describe the syntax of a language\cite[p. 135]{sebesta2013}. A common way to describe a language's syntax is by a formal language-generation mechanism (also called grammars or context free grammars). By describing a grammar that can generate all possible strings in a language, the language has also been formally described. Backus-Naur Form is such a mechanism which in the 1950's became the most widely used method for describing programming language syntax\cite[p. 137]{sebesta2013}.
+
+\subsection{Lexical analysis}
+The lowest level syntactic units of a language is called lexemes. A language's formal description does not often include these. They are instead described by a lexical specification, regular expressions i.e., separated from the syntactic specification\cite[p. 135]{sebesta2013}. Typical lexemes for a programming language includes integer literals, operators and special keywords like \textit{if} and \textit{while}. If both \textit{\$a} and \textit{\$b} are lexemes describing a variable and \textit{102} and \textit{42} are lexemes describing an integer, then \textit{\$a} and \textit{\$b} or \textit{102} and \textit{42} can typically be used interchangeably and still give a meaningful program. Therefore the lexemes are grouped into tokens. The name of a variable or the value of an integer is preserved when tokenising. The tokens are an abstraction that makes it easier to analyse if correct syntax of the language. An example of the grouping of lexemes into tokens can be seen by \tableref{table:lexandtokens}. After the lexical analysis an input stream of characters has been converted to an output stream of tokens.
+
+\tab[4cm]{lexandtokens}{1}{Lexemes and their corresponding token group.}
+		    {               }
+{Lexemes   }{\textbf{Tokens}}{
+\tabrow{\$a}{var(a) 		}
+\tabrow{=  }{assign 		}
+\tabrow{3  }{int(3) 		}
+\tabrow{\$b}{var(b) 		}
+\tabrow{+  }{plus   		}
+\tabrow{4  }{int(4) 		}
+\tabrow{\$a}{var(a) 		}
+}
+
+\subsection{Context-free grammars}
+Grammars are defined using Backus-Naur Form (BNF). \todo{Finish\ldots}
+
+BNF contains a set of terminals and a set of non-terminals. The terminals are the tokens from the lexical analysis. The non-terminals all have a set of productions, from which a mix of terminals and non-terminals can be derived from. A start production specifies a single non-terminal, from where all syntactically valid strings that are in the language can be derived from by using the production rules until only a sequence of terminals (the tokens) are left. The syntax analysis takes a sequence of tokens as input and tries to create a set of derivations from the start symbol that creates the given sequence of tokens. If success, the input has been parsed and the parse tree is kept for later analysis. The parse tree is the information concerning how the start symbol was derived into the sequence of tokens, which yields a tree structure. This tree is called an abstract syntax tree.
+
+\begin{ebnf}
+%Expressions
+\grule{program}{\gter{print} \gcat expr}
+\grule{expr}{\gter{(} \gcat term \gcat \gter{)} \gcat operator \gcat \gter{(} \gcat term \gcat \gter{)}}
+\grule{operator}{\gter{=}}
+\galt{\gter{>}}
+\galt{\gter{<}}
+\grule{term}{number}
+\galt{expr}
+\grule{number}{\textbf{any number}}
+\end{ebnf}
+
+% This subsection is massive and from the previous structure,
+% hence it is inputted
+\input{content/analysis/parser}
+
+\input{content/analysis/compilercompiler}
