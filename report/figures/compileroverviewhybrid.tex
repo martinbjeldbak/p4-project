@@ -1,0 +1,34 @@
+\begin{figure}
+	\begin{center}
+		\scalebox{0.85}{
+			\begin{tikzpicture}
+  				[node distance=.8cm, start chain=going below,]
+  				\node[punktchain, join,] (sprog) {Source program};
+  				
+	     		\node[punktchain, join] (leana) {Lexical analyser};
+    	 		\node[punktchain, join] (syana) {Syntax analyser};
+     			\node[punktchain, join] (seana) {Semantic analyser};
+  				\node[punktchain, join,] (interp) {Interpreter};
+  	
+  				\begin{scope}[start branch=venstre, every join/.style={->, thick, shorten <=1pt}, ]
+        			\node[punktchain, on chain=going left, join=by {<-}] (indat) {Input data};
+      			\end{scope}
+  				
+  				\node[punktchain, join,] (res) {Result};
+  				
+  				\draw[tuborg, decoration={brace}] let 
+  				\p1=(leana.south), \p2=(syana.north) in
+    			($(2, \y1)$) -- ($(2, \y2)$) node[tubnode] {Tokens};
+  
+  				\draw[tuborg, decoration={brace}] let 
+  				\p1=(syana.south), \p2=(seana.north) in
+    			($(2, \y1)$) -- ($(2, \y2)$) node[tubnode] {Parse tree};
+  
+  				\draw[tuborg, decoration={brace}] let 
+  				\p1=(seana.south), \p2=(interp.north) in
+    			($(2, \y1)$) -- ($(2, \y2)$) node[tubnode] {Intermediate code};
+			\end{tikzpicture}}
+		\end{center}
+	\capt{The different phases of a hybrid implementation systems. Based on Sebesta \textit{et al.}\cite{sebesta2013} p. 49, Figure 1.5.}
+	\label{fig:compileroverviewhybrid}
+\end{figure}
