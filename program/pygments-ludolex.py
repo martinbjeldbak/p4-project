@@ -6,7 +6,7 @@ __all__ = ['LudoLexer']
 class LudoLexer(RegexLexer):
     name = 'Ludo'
     aliases = ['ludo']
-    filenames = ['*.ludo']
+    filenames = ['*.junta', '*.game', '*.garry']
 
     tokens = {
         'root': [
