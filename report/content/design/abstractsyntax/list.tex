@@ -1,0 +1,14 @@
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] {List}
+  child {node [ellipse,draw] (a) {Element} edge from parent[dashed]}
+  child {node [ellipse,draw] (b) {Element} edge from parent[dashed]};
+
+\path (a)--(b) node [midway] {$\cdots$};
+\end{tikzpicture}
+\end{center}
+\capt{The abstract syntax for the list node.}
+\label{ast:list}
+\end{figure}

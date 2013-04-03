@@ -1,0 +1,15 @@
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] {Declaration struct}
+  child {node [square]  {Declaration}}
+  child {node [square] (b) {Declaration} edge from parent[dashed];}
+  child {node [square] (c) {Declaration} edge from parent[dashed];};
+  
+\path (b)--(c) node [midway] {$\cdots$};
+\end{tikzpicture}
+\end{center}
+\capt{The abstract syntax for the declaration structure node.}
+\label{ast:declstruct}
+\end{figure}

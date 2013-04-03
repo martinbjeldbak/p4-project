@@ -1,0 +1,11 @@
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[level/.style={sibling distance=40mm/#1}]
+\node [square] {Not-operator}
+  child {node [ellipse, draw] {\textit{Expression}}};
+\end{tikzpicture}
+\end{center}
+\capt{The abstract syntax for the not-operator node.}
+\label{ast:not}
+\end{figure}

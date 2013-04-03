@@ -1,0 +1,12 @@
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] {Lambda expression}
+  child {node [square] {Variable list}}
+  child {node [ellipse,draw] {\textit{Expression}}};
+\end{tikzpicture}
+\end{center}
+\capt{The abstract syntax for the lambda expression node.}
+\label{ast:lambdaexpr}
+\end{figure}

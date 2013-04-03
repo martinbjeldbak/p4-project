@@ -1,0 +1,15 @@
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[level/.style={sibling distance=40mm/#1}]
+\node [square] {Pattern}
+  child {node [square] {Pattern expression}}
+  child {node [square] (b) {Pattern expression} edge from parent[dashed]}
+  child {node [square] (c) {Pattern expression} edge from parent[dashed]};
+
+\path (b)--(c) node [midway] {$\cdots$};
+\end{tikzpicture}
+\end{center}
+\capt{The abstract syntax for the pattern node.}
+\label{ast:pattern}
+\end{figure}

@@ -1,198 +1,74 @@
 \section{Abstract syntax}
 
-The abstract syntax is the interpreter or compiler's internal representation of a program. It is represented
-as an abstract syntax tree.
+The abstract syntax is the interpreter's or compiler's internal representation of a program. It is represented as an abstract syntax tree which is a series of nodes and leaves connected forming a so-called tree.
 
-This section should cover all aspects of our abstract syntax tree, and how it differs from the
-parse tree.
+This section covers all aspects of our abstract syntax tree (AST), \todo{and how it differs from the parse tree(?)}. When a piece of code is parsed by a parser that understands the specific programming language, the output of the parser will be a parse tree which corresponds to the abstract syntax of each program part. Each program part is represented with an abstract syntax tree within its respective subsection within this section.
 
 \subsection{Program}
-\begin{figure}[H]
-\begin{center}
-\begin{tikzpicture}[level/.style={sibling distance=40mm/#1}]
-\node [square] {Program}
-  child {node [square] (a) {Function definition} edge from parent[dashed];}
-  child {node [square] (b) {Function definition} edge from parent[dashed];}
-  child {node [square] {Game declaration}};
-\path (a)--(b) node [midway] {$\cdots$};
-\end{tikzpicture}
-\end{center}
-\capt{The abstract syntax for the program node.}
-\label{ast:program}
-\end{figure}
+Every program written in \productname{} begins with an abstraction which we call ``program'' that consists of either zero or more function definitions followed by a single game decleration. The production for this rule is a follows:
+
+\begin{ebnf}
+\grule{program}{\grep{function\_def} \gcat game\_decl}
+\end{ebnf}
+
+It is from this production each and every program is derived from. The AST for this abstraction is illustrated in \figref{ast:program}.
+
+\input{content/design/abstractsyntax/program}
 
 \subsection{Variable list}
-\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
-\node [square] {Variable list}
-  child {node [square] (a) {Variable} edge from parent[dashed];}
-  child {node [square] (b) {Variable} edge from parent[dashed];};
-\path (a)--(b) node [midway] {$\cdots$};
-\end{tikzpicture}
-\end{center}
-\capt{The abstract syntax for the variable list node.}
-\label{ast:variablelist}
-\end{figure}
+
+\input{content/design/abstractsyntax/variablelist}
 
 \subsection{Function definition}
-\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
-\node [square] {Function definition}
-  child {node [square] {Function}}
-  child {node [square] {Variable list}}
-  child {node [ellipse,draw] {\textit{Expression}}};
-\end{tikzpicture}
-\end{center}
-\capt{The abstract syntax for the function definition node.}
-\label{ast:funcdef}
-\end{figure}
+
+\input{content/design/abstractsyntax/funcdef}
 
 \subsection{Game declaration}
-\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
-\node [square] {Game declaration}
-  child {node [square] {Declaration struct}};
-\end{tikzpicture}
-\end{center}
-\capt{The abstract syntax for the game declaration node.}
-\label{ast:gamedecl}
-\end{figure}
 
-\subsection{declaration struct}
-\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
-\node [square] {Declaration struct}
-  child {node [square]  {Declaration}}
-  child {node [square] (b) {Declaration} edge from parent[dashed];}
-  child {node [square] (c) {Declaration} edge from parent[dashed];};
-  
-\path (b)--(c) node [midway] {$\cdots$};
-\end{tikzpicture}
-\end{center}
-\capt{The abstract syntax for the declaration structure node.}
-\label{ast:declstruct}
-\end{figure}
+\input{content/design/abstractsyntax/gamedecl}
 
-\subsection{declaration}
-\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
-\node [square] {Declaration}
-  child {node [ellipse split,draw] {Keyword \nodepart{lower} Identifier}}
-  child {node [ellipse,draw] {\textit{Structure}}};
-\end{tikzpicture}
-\end{center}
-\capt{The abstract syntax for the declaration node.}
-\label{ast:decl}
-\end{figure}
+\subsection{Declaration struct}
+
+\input{content/design/abstractsyntax/declstruct}
+
+\subsection{Declaration}
+
+\input{content/design/abstractsyntax/decl}
 
 \subsection{Assignment}
-\begin{figure}[H]\begin{center}\begin{tikzpicture}
-[level/.style={sibling distance=40mm},
-level 1/.style={sibling distance = 39mm},
-level 2/.style={sibling distance = 20mm}]
 
-\node [square] (z) {Assignment}
-  child {node [square,left of=b,xshift=-4cm] (a) {Variable}}
-  child {node [ellipse,draw,left of=c,xshift=-4.5cm] (b) {\textit{Expression}}}
-  child {node [square] (c) {Assignment} edge from parent[dashed]
-  	child {node [square,xshift=-1cm] (x) {Variable} edge from parent[solid]}
-  	child {node [ellipse,draw,solid,xshift=-1cm] (y) {\textit{Expression}} edge from parent[solid]}
-  }
-  child {node [square,xshift=-1cm] (d) {Assignment} edge from parent[dashed]
-  	child {node [square,xshift=1cm] (o) {Variable} edge from parent[solid]}
-  	child {node [ellipse,draw,solid,xshift=1cm] (p) {\textit{Expression}} edge from parent[solid]}
-  }
-  child {node [ellipse,draw,right of=d,xshift=1.5cm](e) {\textit{Expression}}};
-
-\path (c)--(d) node [midway] {$\cdots$};
-\end{tikzpicture}
-\end{center}
-\capt{The abstract syntax for the assignment node.}
-\label{ast:assignment}
-\end{figure}
+\input{content/design/abstractsyntax/assign}
 
 \subsection{If expression}
-\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
-\node [square] {If expression}
-  child {node [ellipse,draw] {\textit{Expression}}}
-  child {node [ellipse,draw] {\textit{Expression}}}
-  child {node [ellipse,draw] {\textit{Expression}}};
-\end{tikzpicture}
-\end{center}
-\capt{The abstract syntax for the if expression node.}
-\label{ast:ifexpr}
-\end{figure}
+
+\input{content/design/abstractsyntax/ifexpr}
 
 \subsection{Lambda expression}
-\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
-\node [square] {Lambda expression}
-  child {node [square] {Variable list}}
-  child {node [ellipse,draw] {\textit{Expression}}};
-\end{tikzpicture}
-\end{center}
-\capt{The abstract syntax for the lambda expression node.}
-\label{ast:lambdaexpr}
-\end{figure}
+
+\input{content/design/abstractsyntax/lambda}
 
 \subsection{List}
-\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
-\node [square] {List}
-  child {node [ellipse,draw] (a) {Element} edge from parent[dashed]}
-  child {node [ellipse,draw] (b) {Element} edge from parent[dashed]};
 
-\path (a)--(b) node [midway] {$\cdots$};
-\end{tikzpicture}
-\end{center}
-\capt{The abstract syntax for the list node.}
-\label{ast:list}
-\end{figure}
+\input{content/design/abstractsyntax/list}
 
 \subsection{Pattern}
-\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=40mm/#1}]
-\node [square] {Pattern}
-  child {node [square] {Pattern expression}}
-  child {node [square] (b) {Pattern expression} edge from parent[dashed]}
-  child {node [square] (c) {Pattern expression} edge from parent[dashed]};
 
-\path (b)--(c) node [midway] {$\cdots$};
-\end{tikzpicture}
-\end{center}
-\capt{The abstract syntax for the pattern node.}
-\label{ast:pattern}
-\end{figure}
+\input{content/design/abstractsyntax/pattern}
 
 \subsection{Pattern or-operator}
-\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=40mm/#1}]
-\node [square] {Pattern, or-operator}
-  child {node [square] {Pattern value}}
-  child {node [square] {Pattern expression}};
-\end{tikzpicture}
-\end{center}
-\capt{The abstract syntax for the pattern or-operator node.}
-\label{ast:pattern-or}
-\end{figure}
+
+
+\input{content/design/abstractsyntax/pattern-or}
 
 \subsection{Pattern multiplier-operator}
-\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=40mm/#1}]
-\node [square] {Pattern, multiplier-operator}
-  child {node [square] {Pattern value}};
-\end{tikzpicture}
-\end{center}
-\capt{The abstract syntax for the pattern multiplier-operator node.}
-\label{ast:patter-mult}
-\end{figure}
+
+
+\input{content/design/abstractsyntax/pattern-mult}
 
 \subsection{Pattern not-operator}
-\begin{figure}[H]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=40mm/#1}]
-\node [square] {Pattern, not-operator}
-  child {node [ellipse,draw] {\textit{Pattern check}}};
-\end{tikzpicture}
-\end{center}
-\capt{The abstract syntax for the pattern not-operator node.}
-\label{ast:pattern-not}
-\end{figure}
+
+\input{content/design/abstractsyntax/pattern-not}
 
 \subsection{Not-operator}
-\begin{figure}[ht]\begin{center}\begin{tikzpicture}[level/.style={sibling distance=40mm/#1}]
-\node [square] {Not-operator}
-  child {node [ellipse, draw] {\textit{Expression}}};
-\end{tikzpicture}
-\end{center}
-\capt{The abstract syntax for the not-operator node.}
-\label{ast:not}
-\end{figure}
+
+\input{content/design/abstractsyntax/not}

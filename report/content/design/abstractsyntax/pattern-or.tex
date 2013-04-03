@@ -1,0 +1,12 @@
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[level/.style={sibling distance=40mm/#1}]
+\node [square] {Pattern, or-operator}
+  child {node [square] {Pattern value}}
+  child {node [square] {Pattern expression}};
+\end{tikzpicture}
+\end{center}
+\capt{The abstract syntax for the pattern or-operator node.}
+\label{ast:pattern-or}
+\end{figure}
