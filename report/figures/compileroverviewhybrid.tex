@@ -18,15 +18,15 @@
   				
   				\draw[tuborg, decoration={brace}] let 
   				\p1=(leana.south), \p2=(syana.north) in
-    			($(2, \y1)$) -- ($(2, \y2)$) node[tubnode] {Tokens};
+    			($(2, \y1)$) -- ($(2, \y2)$) node[tubnode] {Token list};
   
   				\draw[tuborg, decoration={brace}] let 
   				\p1=(syana.south), \p2=(seana.north) in
-    			($(2, \y1)$) -- ($(2, \y2)$) node[tubnode] {Parse tree};
+    			($(2, \y1)$) -- ($(2, \y2)$) node[tubnode] {Abstract syntax tree};
   
   				\draw[tuborg, decoration={brace}] let 
   				\p1=(seana.south), \p2=(interp.north) in
-    			($(2, \y1)$) -- ($(2, \y2)$) node[tubnode] {Intermediate code};
+    			($(2, \y1)$) -- ($(2, \y2)$) node[tubnode] {Decorated abstract syntax tree};
 			\end{tikzpicture}}
 		\end{center}
 	\capt{The different phases of a hybrid implementation systems. Based on Sebesta \textit{et al.}\cite{sebesta2013} p. 49, Figure 1.5.}
