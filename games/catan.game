@@ -1,0 +1,63 @@
+// !!! Not valid Junta program !!!
+
+game{
+	piece{
+		name House
+		transitions[ road1, road2, road3 ]
+		
+		Road{
+			//TODO: same as Road>>=House
+		}
+	}
+	
+	piece{
+		name Road
+		transitions[ house1, house2 ]
+		
+		House{
+			//TODO: simply connect to a free spot
+			house1 <
+				if house2 != that or house1 != nil then
+					house1
+				else
+					that
+			house2 <
+				if house1 == that or house2 != nil then
+					house2
+				else
+					that
+		}
+	}
+	
+	cell[ $resource $number ]{
+		name ResourceCell
+	}
+	
+	area{
+		name Edge
+		line [ House, Road, House]
+		
+		Edge{
+			
+		}
+	}
+	
+	area[ $resourceCell ]{
+		name Hex
+		
+		//Cells
+		&type = $resourceCell
+		&edges = [ Edge * 6 ]
+		
+		//Make the outer edge
+		bendRight [ &edges + (&edges @ 1) ]
+		//adding the first element in the list to the array to create a circle
+		
+		//Connect the inner type to the rest
+		connect [ &edges, &type ] //array of cells to cell, connect every in array to cell
+		
+		Hex{
+			
+		}
+	}
+}

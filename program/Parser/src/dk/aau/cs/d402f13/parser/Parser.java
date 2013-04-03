@@ -123,9 +123,12 @@ public class Parser {
   private AstNode varList() throws SyntaxError {
     AstNode node = astNode(Type.VARLIST, "");
     expect(Token.Type.LBRACKET);
-    while (lookAhead(Token.Type.VAR)) {
-      expect(Token.Type.VAR);
+    if (accept(Token.Type.VAR)) {
       node.addChild(astNode(Type.VAR, currentToken.value));
+      while (accept(Token.Type.COMMA)) {
+        expect(Token.Type.VAR);
+        node.addChild(astNode(Type.VAR, currentToken.value));
+      }
     }
     expect(Token.Type.RBRACKET);
     return node;
@@ -316,8 +319,11 @@ public class Parser {
   private AstNode list() throws SyntaxError {
     AstNode node = astNode(Type.LIST, "");
     expect(Token.Type.LBRACKET);
-    while (lookAheadElement()) {
-      node.addChild(element());
+    if (lookAheadExpression()) {
+      node.addChild(expression());
+      while (accept(Token.Type.COMMA)) {
+        node.addChild(expression());
+      }
     }
     expect(Token.Type.RBRACKET);
 

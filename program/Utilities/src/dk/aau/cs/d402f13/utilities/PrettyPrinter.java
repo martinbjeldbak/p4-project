@@ -148,28 +148,28 @@ public class PrettyPrinter extends Visitor {
 
   @Override
   protected String visitLambdaExpr(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
+    String code = "#";
     return null;
   }
 
   @Override
   protected String visitList(AstNode node) throws StandardError {
     String code = "[";
-    int l = node.size() - 1;
-    for (int i = 0; i < l; i++) {
-      if (isElement(node.get(i))) {
-        code += visit(node.get(i)) + " ";
-      }
-      else {
-        code += "(" + visit(node.get(i)) + ") ";
-      }
-    }
-    if (l >= 0) {
+    int l = node.size();
+    if (l > 0) {
       if (isElement(node.get(l))) {
         code += visit(node.get(l));
       }
       else {
         code += "(" + visit(node.get(l)) + ")";
+      }
+      for (int i = 1; i < l; i++) {
+        if (isElement(node.get(i))) {
+          code += ", " + visit(node.get(i));
+        }
+        else {
+          code += ", (" + visit(node.get(i)) + ")";
+        }
       }
     }
     return code + "]";
@@ -256,8 +256,15 @@ public class PrettyPrinter extends Visitor {
 
   @Override
   protected String visitVarlist(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    String code = "[";
+    int l = node.size();
+    if (l > 0) {
+      code += visit(node.get(l));
+      for (int i = 1; i < l; i++) {
+        code += ", " + visit(node.get(i));
+      }
+    }
+    return code + "]";
   }
 
 }
