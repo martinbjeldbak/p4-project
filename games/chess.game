@@ -1,15 +1,14 @@
 define slide[ $pattern ]
-	( findSquares[ /this ($pattern empty)* $pattern !friend/ ] )
+	findSquares[ /this ($pattern empty)* $pattern !friend/ ]
 
 define toActions[ $list ]
-	(forall[ $list 
-		(#[$item] => (
+	forall[ $list, 
+		#[$item] =>
 			if( isEmpty[$item] ) then
 				move[ this, $item ]
 			else
 				moveAndCapture[ this, $item ]
-		))
-	])
+	]
 
 game {
 	title "Chess"
@@ -48,7 +47,7 @@ game {
 					findSquares[ /this (n empty)2 / ]
 				else 
 					union[
-						findSquares[ /this n empty/ ].
+						findSquares[ /this n empty/ ],
 						findSquares[ /this (ne|nw) foe/ ]
 					]
 			else 
