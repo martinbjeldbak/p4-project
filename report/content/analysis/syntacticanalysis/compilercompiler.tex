@@ -1,6 +1,6 @@
 \subsection{Constructing a parser}
 \label{sec:ana-parsers}
-The principle of generating parsers is very systematic and therefore there are different automated tools to generate parsers for a specific grammar that meets some standards. A grammar must for instance not be ambiguous otherwise the tools cannot make a distinct parser for the grammar. A grammar is ambiguous if a string can be generated with more than one parse tree. We start by taking a look at the constructing of a handwritten parser. Then we take a look a two different parser generators that produce different parsers. Finally we sum up the pros and cons of the analysis on handwritten and generated parsers.
+The principle of generating parsers is very systematic and therefore there are different automated tools to generate parsers for a specific grammar that meets some standards. A grammar must for instance not be ambiguous otherwise the tools cannot make a distinct parser for the grammar. A grammar is ambiguous if a string can be generated with more than one parse tree. We start by taking a look at the constructing of a handwritten parser. Then we take a look a two different parser generators that produce different parsers. Finally we sum up the pros and cons of the analysis on handwritten and generated parsers. 
 
 \subsection{Handwritten parsers}
 \label{sec:handparser}
@@ -30,16 +30,8 @@ SableCC is a bottom-up parser generator that generates LALR(1) parsers. This gen
 
 The following is a list of advantages that LR parsers have:\cite[pp. 193]{sebesta2013} \todo{kontroller sidetal! afsnit 4.5.3}
 
-\begin{dlist}
-\item LR parsers can be built for all programming languages
-\item They can detect syntax errors as soon as it is possible in a left-to-right scan
-\item The LR class is a proper superset of the class parsable by LL parsers
-\begin{dlist}
-\item Many left-recursive grammars are LR, but none are LL.
-\end{dlist}
-\end{dlist}
 
-The only disadvantage a LR parser has is that it is verey difficult to produce by hand. We have the automated generators to solve this disadvantage.\cite[pp. 193]{sebesta2013}
+The only disadvantage a LR parser has is that it is verey difficult to produce by hand. We have the automated generators to solve this disadvantage.
 
 \subsubsection{JavaCC, a top-down parser}
 \label{sec:ana-javacc}
