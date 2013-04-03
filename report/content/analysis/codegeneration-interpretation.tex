@@ -1,0 +1,24 @@
+\section{Code generation \& Interpretation}
+\todo{Merge with compilersandinterpreters.tex}
+The following section presents a brief overview of the phases of translators (compilers and interpreters). The typical translator takes as input some given source code written in a language with a high level of abstraction and translates it into a language with lower abstraction e.g. machine code which can be executed directly by a computer \cite[p. 44]{sebesta2013}. Some translators work differently though. They translate the source code into another high-level language or into machine code for virtual machines, which can provide portability. The translation process is typically not a simple task, therefore it is often split into different phases, which is shown in \figref{fig:compileroverview}. The process can be split into more or less phases though, depending on how detailed one wished to describe the process. In this section we describe the following phases: the lexical analysis, the syntax analysis, the semantic analysis, the code generation and the interpretation.
+
+\input{figures/compilerphases}
+
+\subsection{Intermediate language}
+
+\subsection{Security}
+
+\subsection{Just in Time compilation}
+
+\subsection{Interpretation}
+A pure interpretation of a program lies at the opposite end (from compilation) regarding to methods of implementation. With this approach, which can be see, on \figref{fig:compileroverviewinterpretation}, no translation is performed at all. An interpreter is interpreting a program written in the targeted language. It acts like a virtual machine which instructions are statements of high level language. By purely using interpretation, a source code debugger can easily be implemented. Various errors that might occur can once they are detected easily refer to which place in the source code that caused the error. The debugging is eased because the interpreter works like a software implementation of a virtual machine, thus the state of the machine and the value of a specific variable can be outputted at any time when requested. This will of course lead to the disadvantage that an interpreter uses more space than a compiler. Further more, the execution speed of an interpreter is usually 10 to 100 times slower than that of a compiler \cite[p. 48]{sebesta2013}.
+
+\input{figures/compileroerviewinterpretation}
+
+\subsection{Hybrid compilation \& interpretation}
+
+The compiling or interpreting approach can be combined to form a hybrid implementation system. This method is illustrated in \figref{fig:compileroverviewhybrid}, where a program is compiled into an intermediate code which is then interpreted. By using this approach, errors in a program can be detected before interpretation which can save much time for a programmer. A great portability can also be achieved when using hybrid system. The initial implementation of Java was hybrid and allowed Java to be compiled to an intermediate code that could run on any platform which had an implementation of Java Virtual Machine\cite[p. 50]{sebesta2013}. 
+
+\input{figures/compileroverviewhybrid}
+
+\subsection{Summary}
