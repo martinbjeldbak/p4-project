@@ -11,6 +11,10 @@ public class PrettyPrinter extends Visitor {
   private int indentationLevel = 0;
   private String indentation = "";
   
+  private int maxWidth = 50;
+  
+  private boolean inPattern = false;
+  
   public PrettyPrinter(String indentationString) {
     this.indentationString = indentationString;
   }
@@ -60,8 +64,20 @@ public class PrettyPrinter extends Visitor {
 
   @Override
   protected String visitAssignment(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    String code = "let ";
+    code += visit(node.get(0)) + " = ";
+    code += visit(node.get(1));
+    int l = node.size() - 1;
+    incr();
+    for (int i = 2; i < l; i++) {
+      code += ",\n";
+      code += indentation + visit(node.get(i).get(0)) + " = ";
+      code += visit(node.get(i).get(1));
+    }
+    code += "\n";
+    code += indentation + "in " + visit(node.get(l));
+    decr();
+    return code;
   }
 
   @Override
@@ -114,7 +130,11 @@ public class PrettyPrinter extends Visitor {
   @Override
   protected String visitFuncDef(AstNode node) throws StandardError {
     String code = "define ";
-    // TODO Auto-generated method stub
+    code += visit(node.get(0)) + " ";
+    code += visit(node.get(1)) + "\n";
+    incr();
+    code += indentation + visit(node.get(2));
+    decr();
     return code + "\n";
   }
 
@@ -132,8 +152,13 @@ public class PrettyPrinter extends Visitor {
 
   @Override
   protected String visitIfExpr(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    String code = "if ";
+    incr();
+    code += visit(node.get(0)) + "\n" + indentation + "then ";
+    code += visit(node.get(1)) + "\n" + indentation + "else ";
+    code += visit(node.get(2));
+    decr();
+    return code;
   }
 
   @Override
@@ -149,56 +174,87 @@ public class PrettyPrinter extends Visitor {
   @Override
   protected String visitLambdaExpr(AstNode node) throws StandardError {
     String code = "#";
-    return null;
+    code += visit(node.get(0)) + " => ";
+    code += visit(node.get(1));
+    return code;
   }
 
   @Override
   protected String visitList(AstNode node) throws StandardError {
     String code = "[";
+    incr();
     int l = node.size();
     if (l > 0) {
-      if (isElement(node.get(l))) {
-        code += visit(node.get(l));
+      if (l > 1) {
+        code += "\n" + indentation;
       }
-      else {
-        code += "(" + visit(node.get(l)) + ")";
-      }
-      for (int i = 1; i < l; i++) {
-        if (isElement(node.get(i))) {
-          code += ", " + visit(node.get(i));
+      code += visit(node.get(0));
+      if (l > 1) {
+        for (int i = 1; i < l; i++) {
+          code += ",\n" + indentation;
+          code += visit(node.get(i));
         }
-        else {
-          code += ", (" + visit(node.get(i)) + ")";
-        }
+        code += "\n";
       }
+    }
+    decr();
+    if (l > 1) {
+      code += indentation;
     }
     return code + "]";
   }
 
   @Override
   protected String visitNotOperator(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    return "not " + visit(node.get(0));
   }
 
   @Override
   protected String visitOperator(AstNode node) throws StandardError {
-    String code = "";
+    String left = "";
     if (isElement(node.get(0))) {
-      code += visit(node.get(0));
+      left += visit(node.get(0));
     }
     else {
-      code += "(" + visit(node.get(0)) + ")";
+      left += "(" + visit(node.get(0)) + ")";
     }
-    code += " " + node.value + " ";
-    code += visit(node.get(1));
+    incr();
+    String right = visit(node.get(1));
+    String code;
+    if (left.length() + right.length() > maxWidth) {
+      code = left + "\n" + indentation + node.value + " " + right;
+    }
+    else {
+      code = left + " " + node.value + " " + right;
+    }
+    decr();
     return code;
   }
 
   @Override
   protected String visitPattern(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    String code = "";
+    boolean patternStarter = false;
+    if (!inPattern) {
+      code += "/";
+      inPattern = true;
+      patternStarter = true;
+    }
+    else {
+      code += "(";
+    }
+    code += visit(node.get(0));
+    for (int i = 1; i < node.size(); i++) {
+      code += " " + visit(node.get(i));
+    }
+    if (patternStarter) {
+      inPattern = false;
+      code += "/";
+    }
+    else {
+      code += ")";
+    }
+    return code;
   }
 
   @Override
@@ -208,26 +264,22 @@ public class PrettyPrinter extends Visitor {
 
   @Override
   protected String visitPatternMultiplier(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    return "(" + visit(node.get(0)) + ")" + node.value;
   }
 
   @Override
   protected String visitPatternNot(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    return "!" + visit(node.get(0));
   }
 
   @Override
   protected String visitPatternOperator(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    return visit(node.get(0)) + node.value;
   }
 
   @Override
   protected String visitPatternOr(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    return visit(node.get(0)) + "|" + visit(node.get(1));
   }
 
   @Override
@@ -259,7 +311,7 @@ public class PrettyPrinter extends Visitor {
     String code = "[";
     int l = node.size();
     if (l > 0) {
-      code += visit(node.get(l));
+      code += visit(node.get(0));
       for (int i = 1; i < l; i++) {
         code += ", " + visit(node.get(i));
       }
