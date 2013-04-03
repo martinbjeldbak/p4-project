@@ -5,16 +5,16 @@ define toActions[ $list ]
 	(forall[ $list 
 		(#[$item] => (
 			if( isEmpty[$item] ) then
-				move[ this $item ]
+				move[ this, $item ]
 			else
-				moveAndCapture[ this $item ]
+				moveAndCapture[ this, $item ]
 		))
 	])
 
 game {
 	title "Chess"
-	players [Black White]
-	turnOrder [White Black]
+	players [Black, White]
+	turnOrder [White, Black]
 	board {
 		grid {
 			width 8
@@ -22,18 +22,18 @@ game {
 		}
 		setup {
 			Black{
-				Pawn [A7 B7 C7 D7 E7 F7 G7 H7]
-				Rook [A8 H8]
-				Knight [B8 G8]
-				Bishop [C8 F8]
+				Pawn [A7, B7, C7, D7, E7, F7, G7, H7]
+				Rook [A8, H8]
+				Knight [B8, G8]
+				Bishop [C8, F8]
 				Queen [E8]
 				King [D8]
 			}
 			White{
-				Pawn [A2 B2 C2 D2 E2 F2 G2 H2]
-				Rook [A1 H1]
-				Knight [B1 G1]
-				Bishop [C1 F1]
+				Pawn [A2, B2, C2, D2, E2, F2, G2, H2]
+				Rook [A1, H1]
+				Knight [B1, G1]
+				Bishop [C1, F1]
 				Queen [E1]
 				King [D1]
 			}
@@ -43,83 +43,83 @@ game {
 	piece {
 		name Pawn
 		possibleMoves toActions[
-			(if isCurrentPlayer[White] then 	
+			if isCurrentPlayer[White] then 	
 				if isFirstMove[this] then	
 					findSquares[ /this (n empty)2 / ]
 				else 
 					union[
-						(findSquares[ /this n empty/ ])
-						(findSquares[ /this (ne|nw) foe/ ])
+						findSquares[ /this n empty/ ].
+						findSquares[ /this (ne|nw) foe/ ]
 					]
 			else 
 				if isFirstMove[this] then	
 					findSquares[ /this (s empty)2 / ]
 				else 
 					union[
-						(findSquares[ /this s empty/ ])
-						(findSquares[ /this (se|sw) foe/ ])
+						findSquares[ /this s empty/ ],
+						findSquares[ /this (se|sw) foe/ ]
 					]
-		)]
+		]
 	}
 	piece {
 		name Rook
 		possibleMoves toActions[ 
-			(union[
-				(slide[ /n/ ])
-				(slide[ /w/ ])
-				(slide[ /s/ ])
-				(slide[ /e/ ])
-			])
+			union[
+				slide[ /n/ ],
+				slide[ /w/ ],
+				slide[ /s/ ],
+				slide[ /e/ ]
+			]
 		]
 	}
 	piece {
 		name Knight
 		possibleMoves toActions[
-			(union[
-				(findSquares[ /this n ne !friend/ ])
-				(findSquares[ /this n nw !friend/ ])
-				(findSquares[ /this s se !friend/ ])
-				(findSquares[ /this s sw !friend/ ])
-				(findSquares[ /this e ne !friend/ ])
-				(findSquares[ /this e se !friend/ ])
-				(findSquares[ /this w nw !friend/ ])
-				(findSquares[ /this w sw !friend/ ])
-			])
+			union[
+				findSquares[ /this n ne !friend/ ],
+				findSquares[ /this n nw !friend/ ],
+				findSquares[ /this s se !friend/ ],
+				findSquares[ /this s sw !friend/ ],
+				findSquares[ /this e ne !friend/ ],
+				findSquares[ /this e se !friend/ ],
+				findSquares[ /this w nw !friend/ ],
+				findSquares[ /this w sw !friend/ ]
+			]
 		]
 	}
 	piece {
 		name Bishop
 		possibleMoves toActions[
-			(union[
-				(slide[ /ne/ ])
-				(slide[ /nw/ ])
-				(slide[ /se/ ])
-				(slide[ /sw/ ])
-			])
+			union[
+				slide[ /ne/ ],
+				slide[ /nw/ ],
+				slide[ /se/ ],
+				slide[ /sw/ ]
+			]
 		]
 	}
 	piece {
 		name Queen
 		possibleMoves toActions[
-			(union[
-				(slide[ /ne/ ])
-				(slide[ /nw/ ])
-				(slide[ /se/ ])
-				(slide[ /sw/ ])
-				(slide[ /n/ ])
-				(slide[ /e/ ])
-				(slide[ /s/ ])
-				(slide[ /w/ ])
-			])
+			union[
+				slide[ /ne/ ],
+				slide[ /nw/ ],
+				slide[ /se/ ],
+				slide[ /sw/ ],
+				slide[ /n/ ],
+				slide[ /e/ ],
+				slide[ /s/ ],
+				slide[ /w/ ]
+			]
 		]
 	}
 	piece {
 		name King
 		possibleMoves toActions[
-			(union[
-				(findSquares[/this (e|n|s|w) !friend/])
-				(findSquares[/this (ne|nw|se|sw) !friend/])
-			])
+			union[
+				findSquares[/this (e|n|s|w) !friend/],
+				findSquares[/this (ne|nw|se|sw) !friend/]
+			]
 		]
 	}
 //	winCondition (
