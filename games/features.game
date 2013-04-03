@@ -1,22 +1,38 @@
-define max[$a $b] if $a > $b then $a else $b
-define min[$a $b] if $a < $b then $a else $b
-define add[$a $b] $a + $b
-define comp[$f $g] #[$x] => $f[$g[$x]]
+define (Int -> Int -> Int) max[$a, $b] if $a > $b then $a else $b
+define min[$a, $b] if $a < $b then $a else $b
+define add[$a, $b] $a + $b
+define comp[$f, $g] #[$x] => $f[$g[$x]]
 
 define hello[] "Hello"
 define world[] "World"
+
+define testIo[]
+  sequence[
+    writeLine["What is your name?"],
+    bind[
+      readLine[],
+      #[$name] => writeLine["Nice to meet you, " + $name]
+    ]
+  ]
+
+define giveMeAnAction[]
+  sequence[
+    movePiece[A1, A2],
+    movePiece[A2, A3]
+  ]
+                          
 
 game {
   title (hello[]) + ", " + (world[]) + "!"
   winCondition
     let $f = #[$a] => 5 + $a,
         $g = #[$a] => $a / 3
-      in (comp[$f $g])[9]
+      in (comp[$f, $g])[9]
   tieCondition
     let $x = let $x = 5 in $x + 5
       in let $x = $x - 5
         in $x
   tieCondition
-    let $a = #[$a] => #[$b $c] => $b[($c + $a)]
-      in ($a[12])[(#[$b] => $b * 3) 5]
+    let $a = #[$a] => #[$b, $c] => $b[$c + $a]
+      in ($a[12])[#[$b] => $b * 3, 5]
 }
