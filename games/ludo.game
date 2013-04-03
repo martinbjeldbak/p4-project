@@ -1,0 +1,102 @@
+// !!! Not valid Junta program !!!
+
+define 
+
+define toActions[ $list ]
+	(forall[ $list 
+		(#[$item] => (
+			if( type[$item] == Star ) then
+				multiMove[ this $item /$item warp/ ]
+			else if( type[$item] == Home )
+				
+			else
+				move[ this $item ]
+		))
+	])
+
+game{
+	piece{
+		name "Piece"
+		
+		possibleMoves toActions[
+			/this (forward|special) $dice_roll/
+		]
+	}
+	
+	cell{
+		name Common
+		transitions [forward]
+		
+		Common{ forward < that }
+		Star{ forward < that }
+		Globe{ forward < that }
+	}
+	
+	cell{
+		name Home
+		transitions [forward]
+		
+		Home{ forward < that }
+	}
+	
+	cell{
+		name Star
+		transitions [forward warp special]
+		
+		Common{ forward < that }
+		Star{ warp < that }
+		Home{ special < that }
+	}
+	
+	cell{
+		name Globe
+		transitions [forward]
+		
+		Common{ forward < that }
+	}
+	
+	area{
+		name Wing
+		
+		//Positions we need to refference later
+		Begin = Star
+		Middle = Star
+		End = Common
+		Start = Globe
+		Finish = Home
+		
+		//Special connections
+		End < Middle
+		
+		//Straight lines
+		line [
+			Begin
+				[ Common Common Globe Common ] // Middle squares
+			Common
+				[ Middle ]
+			Common
+				[ Start Common * 3 ] // Start Common Common Common
+			End
+		]
+		line [
+			Middle
+				[ Home * 4 ] // [ Home Home Home Home ]
+			Finish
+		]
+		
+		//These are connected, but not joined
+		connect [ Begin Finish End ]
+		
+		//Connecting Wings together
+		Wing{
+			Begin < that.End
+			Middle < that.Begin //Connecting start to next star
+			
+			bendLeft [ Begin that.End ]
+		}
+	}
+	
+	board{
+		setup Wing * 4 //Doesn't connect first Wing to last Wing
+	}
+}
