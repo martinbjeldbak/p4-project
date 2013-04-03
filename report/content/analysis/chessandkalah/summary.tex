@@ -1,0 +1,34 @@
+\subsection{Summary}
+\label{subsec:summery}
+
+We have now analysed the two board games Chess and Kalah and many interesting game elements have been recognised. For a programming language that allows theses two games to be implemented, all of the game elements must be possible to be implemented in the programming language so this needs to be taken into consideration when designing \productname{}. Therefore the two list of interesting game elements in Chess and Kalah will be used to set up requirements for the design of our programming language. The list of requirements can be viewed in \chapref{chap:requirements}.
+
+%A summarised list of the game elements has been created. In the list some of the elements from the above analysis have been combined and described by a more general element. Also some elements from the above analysis have been split up and been formulated into more detailed ones and some new elements has been found which has also been added to the list. The resulting list looks as follow:  
+
+%\begin{dlist}
+%  	\item A game has an initial setup.
+%  	\item A game can be a tie if the game is in one or more specific states.
+%  	\item A player can win if the game is in one or more specific states where the winning conditions are met.
+%  	\item A piece can be either on the board or off the board (e.g. If a piece has been captured in chess).
+%  		\begin{dlist}
+%  			\item If a piece is on the board it is positioned on one specific square.
+%  			\item A piece off the board may be put back on the board. (This happens in the promotion move in chess).
+%  		\end{dlist}
+%  	\item A game can contain of one or more types of pieces.
+%  	\item A piece can belong to a player.
+%  	\item At any given time, just one player has the turn.
+%  	\item A player's turn can consist of more than one move.
+%  	\item If a piece is owned by a player, only that player can use it's moves.
+%  	\item A game has a single board.
+%  	\item A board contains of squares in a two-dimensional grid.
+%\end{dlist}
+ 
+%Herein lie a few design restraints that prevent an implementation of quite a few different kinds of games. 
+%Granted, many games have these things, but we are deciding to ignore these to make our grasp of implementing a programming language more realistic, while still allowing the programmer to implement a large collection of board games.
+
+
+%The list has allowed us to create our own definition of board games that our language design will reflect. Our definition is:
+%\begin{quote}
+%``Board games are games played on a single rectangle-shaped board with any amount of players taking turns in placing or moving either one or multiple %pieces. Pieces have movement patterns to describe the way they behave on the board. There are rules that define the patterns and exchanging of pieces on a %board. Winning or tying is achieved by placing the game in a certain state. Board games do not have dice or cards involved.''
+%\end{quote}
+%This definition attempts to be relatively specific, but still leaves room for interpretation, considering the fact that there are thousands of different %types of board games with many different elements mixed in.
