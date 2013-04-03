@@ -76,11 +76,12 @@ The following operations are used throughout this section:
 \begin{ebnf}
 %Program structure
 \grule{program}{\grep{function\_def} \gcat game\_decl}
-\grule{function\_def}{\gter{define} \gcat function \gcat \gter{[} \gcat \grep{variable} \gcat \gter{]} \gcat expression}
+\grule{function\_def}{\gter{define} \gcat function \gcat varlist \gcat expression}
 \grule{game\_decl}{\gter{game} \gcat declaration\_struct}
 \grule{declaration\_struct}{\gter{\{} \gcat declaration \gcat \grep{declaration} \gter{\}}}
 \grule{declaration}{\ggrp{keyword \gor identifier} \gcat structure}
 \grule{structure}{declaration\_struct \gor expression}
+\grule{varlist}{\gter{[} \gcat \gopt{variable \gcat \grep{\gter{,} \gcat variable}} \gcat \gter{]}}
 \end{ebnf}
 \subsection{Expressions}
 \begin{ebnf}
@@ -105,8 +106,8 @@ The following operations are used throughout this section:
 \galt{function}
 \grule{assignment}{\gter{let} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression} \gcat \gter{in} \gcat expression}
 \grule{if\_expr}{\gter{if} \gcat expression \gcat \gter{then} \gcat expression \gcat \gter{else} \gcat expression}
-\grule{lambda\_expr}{\gter{\#} \gcat \gter{[} \gcat \grep{variable} \gcat \gter{]} \gcat \gter{=>} \gcat expression}
-\grule{list}{\gter{[} \gcat \grep{element} \gcat \gter{]}}
+\grule{lambda\_expr}{\gter{\#} \gcat varlist \gcat \gter{=>} \gcat expression}
+\grule{list}{\gter{[} \gcat \gopt{expression \gcat \grep{\gter{,} \gcat expression}} \gcat \gter{]}}
 \end{ebnf}
 \subsection{Patterns}
 \begin{ebnf}
