@@ -1,0 +1,14 @@
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[level/.style={sibling distance=40mm/#1}]
+\node [square] {Program}
+  child {node [square] (a) {Function definition} edge from parent[dashed];}
+  child {node [square] (b) {Function definition} edge from parent[dashed];}
+  child {node [square] {Game declaration}};
+\path (a)--(b) node [midway] {$\cdots$};
+\end{tikzpicture}
+\end{center}
+\capt{The abstract syntax for the program node.}
+\label{ast:program}
+\end{figure}
