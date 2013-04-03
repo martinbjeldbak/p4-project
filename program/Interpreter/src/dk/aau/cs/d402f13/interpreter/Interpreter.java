@@ -1,6 +1,7 @@
 package dk.aau.cs.d402f13.interpreter;
 
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
+import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.ast.Visitor;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 
@@ -36,8 +37,9 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Object visitDirLit(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    if(node.value != null && node.type == Type.DIR_LIT) {
+      //return
+    }
   }
 
   @Override
@@ -77,9 +79,13 @@ public class Interpreter extends Visitor {
   }
 
   @Override
-  protected Object visitIntLit(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+  protected Integer visitIntLit(AstNode node) throws StandardError {
+    if(node.value != null && node.type == Type.INT_LIT) {
+      return Integer.parseInt(node.value);
+    }
+    else {
+      throw new StandardError("Integer value must not be null and of type int", node);
+    }
   }
 
   @Override
@@ -109,6 +115,10 @@ public class Interpreter extends Visitor {
   @Override
   protected Object visitOperator(AstNode node) throws StandardError {
     // TODO Auto-generated method stub
+    if(node.value != null && node.type == Type.OPERATOR) {
+      
+    }
+    
     return null;
   }
 
@@ -150,14 +160,31 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Object visitProgram(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
+    if(node.value != null && node.type == Type.PROGRAM) {
+      for(AstNode child : node){
+        if(child.type == Type.FUNC_DEF) {
+          visitFuncDef(child);
+        }
+        else if(child.type == Type.GAME_DECL) {
+          visitGameDecl(child);
+          break;
+        }
+        else {
+          throw new StandardError("Node is not of type function def or game decl", node);
+        }
+      }
+    }
     return null;
   }
 
   @Override
-  protected Object visitStringLit(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+  protected String visitStringLit(AstNode node) throws StandardError {
+    if(node.value != null && node.type == Type.STRING_LIT) {
+      return node.value;
+    }
+    else {
+      throw new StandardError("String literals cannot be null and have to be of type string", node);
+    }
   }
 
   @Override
