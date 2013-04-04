@@ -3,9 +3,9 @@
 \begin{center}
 \begin{tikzpicture}[level/.style={sibling distance=40mm/#1}]
 \node [square] {Pattern, multiplier-operator}
-  child {node [square] {Pattern value}};
+  child {node [ellipse,draw] {\textit{Pattern value}}};
 \end{tikzpicture}
 \end{center}
-\capt{The abstract syntax for the pattern multiplier-operator node.}
+\capt{The abstract syntax tree for the pattern multiplier-operator node.}
 \label{ast:patter-mult}
 \end{figure}

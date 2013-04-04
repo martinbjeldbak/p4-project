@@ -7,7 +7,7 @@ level 1/.style={sibling distance = 39mm},
 level 2/.style={sibling distance = 20mm}]
 
 \node [square] (z) {Assignment}
-  child {node [square,left of=b,xshift=-4cm] (a) {Variable}}
+  child {node [square,left of=b,xshift=-5.1cm] (a) {Variable}}
   child {node [ellipse,draw,left of=c,xshift=-4.5cm] (b) {\textit{Expression}}}
   child {node [square] (c) {Assignment} edge from parent[dashed]
   	child {node [square,xshift=-1cm] (x) {Variable} edge from parent[solid]}
@@ -22,6 +22,6 @@ level 2/.style={sibling distance = 20mm}]
 \path (c)--(d) node [midway] {$\cdots$};
 \end{tikzpicture}
 \end{center}
-\capt{The abstract syntax for the assignment node.}
+\capt{The abstract syntax tree for the assignment node.}
 \label{ast:assignment}
 \end{figure}
