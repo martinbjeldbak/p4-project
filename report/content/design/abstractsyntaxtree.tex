@@ -1,0 +1,112 @@
+\section{Abstract syntax tree}
+
+The abstract syntax is the interpreter's or compiler's internal representation of a program. It is represented as an abstract syntax tree which is a series of nodes and leaves connected forming a so-called tree.
+
+This section covers all aspects of our abstract syntax tree (AST), \todo{and how it differs from the parse tree(?)}. When a piece of code is parsed by a parser that understands the specific programming language, the output of the parser will be a parse tree which corresponds to the abstract syntax of each program part. Each program part is represented with an abstract syntax tree within its respective subsection within this section.
+
+\subsection{Program}
+Every program written in \productname{} begins with an abstraction which we call ``program'' that consists of either zero or more function definitions followed by a single game declaration. The production for this rule is a follows:
+
+\begin{ebnf}
+\grule{program}{\grep{function\_def} \gcat game\_decl}
+\end{ebnf}
+
+It is from this production each and every program is derived from. The AST for this abstraction is illustrated in \figref{ast:program}.
+
+\input{content/design/abstractsyntaxtree/program}
+
+Figure \ref{ast:program} consists of one root which is called ``Program'' and this root has three children, two called ``Function definition'' and one called ``Game declaration''. The nodes named ``Function definition'' are optional because the production says that a program can begin with either zero or more of these abstractions. The AST illustrates this by making the connecting lines dashed. Within these two nodes there are three dots ($\cdots$) which illustrate that it is possible to have more of these abstractions following each other.
+
+This means that a program can begin with either a function or a game declaration. The following section will illustrate the abstraction of a function definition which is part of the program abstraction.
+
+\subsection{Function definition}
+
+\begin{ebnf}
+\grule{function\_def}{\gter{define} \gcat function \gcat varlist \gcat expression}
+\end{ebnf}
+
+\input{content/design/abstractsyntaxtree/funcdef}
+
+\subsection{Game declaration}
+
+\begin{ebnf}
+\grule{game\_decl}{\gter{game} \gcat declaration\_struct}
+\end{ebnf}
+
+\input{content/design/abstractsyntaxtree/gamedecl}
+
+\subsection{Declaration struct}
+
+\begin{ebnf}
+\grule{declaration\_struct}{\gter{\{} \gcat declaration \gcat \grep{declaration} \gter{\}}}
+\end{ebnf}
+
+\input{content/design/abstractsyntaxtree/declstruct}
+
+\subsection{Declaration}
+
+\input{content/design/abstractsyntaxtree/decl}
+
+\subsection{Variable list}
+
+\begin{ebnf}
+\grule{varlist}{\gter{[} \gcat \gopt{variable \gcat \grep{\gter{,} \gcat variable}} \gcat \gter{]}}
+\end{ebnf}
+
+\input{content/design/abstractsyntaxtree/variablelist}
+
+\subsection{Assignment}
+
+\begin{ebnf}
+\grule{assignment}{\gter{let} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression} \gcat \gter{in} \gcat expression}
+\end{ebnf}
+
+\input{content/design/abstractsyntaxtree/assign}
+
+\subsection{If expression}
+
+\begin{ebnf}
+\grule{if\_expr}{\gter{if} \gcat expression \gcat \gter{then} \gcat expression \gcat \gter{else} \gcat expression}
+\end{ebnf}
+
+\input{content/design/abstractsyntaxtree/ifexpr}
+
+\subsection{Lambda expression}
+
+\begin{ebnf}
+\grule{lambda\_expr}{\gter{\#} \gcat varlist \gcat \gter{=>} \gcat expression}
+\end{ebnf}
+
+\input{content/design/abstractsyntaxtree/lambda}
+
+\subsection{List}
+
+\begin{ebnf}
+\grule{list}{\gter{[} \gcat \gopt{expression \gcat \grep{\gter{,} \gcat expression}} \gcat \gter{]}}
+\end{ebnf}
+
+\input{content/design/abstractsyntaxtree/list}
+
+\subsection{Pattern}
+
+\begin{ebnf}
+\grule{pattern}{pattern\_expr \gcat \grep{pattern\_expr}}
+\end{ebnf}
+
+\input{content/design/abstractsyntaxtree/pattern}
+
+\subsection{Pattern or-operator}
+
+\input{content/design/abstractsyntaxtree/pattern-or}
+
+\subsection{Pattern multiplier-operator}
+
+\input{content/design/abstractsyntaxtree/pattern-mult}
+
+\subsection{Pattern not-operator}
+
+\input{content/design/abstractsyntaxtree/pattern-not}
+
+\subsection{Not-operator}
+
+\input{content/design/abstractsyntaxtree/not}

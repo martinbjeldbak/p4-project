@@ -3,8 +3,8 @@
 \begin{center}
 \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
 \node [square] {List}
-  child {node [ellipse,draw] (a) {Element} edge from parent[dashed]}
-  child {node [ellipse,draw] (b) {Element} edge from parent[dashed]};
+  child {node [ellipse,draw] (a) {\textit{Element}} edge from parent[dashed]}
+  child {node [ellipse,draw] (b) {\textit{Element}} edge from parent[dashed]};
 
 \path (a)--(b) node [midway] {$\cdots$};
 \end{tikzpicture}
