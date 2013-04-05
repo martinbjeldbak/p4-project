@@ -189,24 +189,39 @@ public class Scanner {
     return t;
   }
 
-  public Token scanUppercase() {
+  public Token scanUppercase() throws ScannerError {
     // Can be ID or Coordinate, e.g. Noughts or A3
-    Token t = token(Type.ID);
+    Boolean canBeID = true;
+	Boolean canBeCoord = true;
+	Boolean seenDigit = false;
+	Token t = token(Type.COORD_LIT);
     while (isAnycase()) {
+      if (isLowercase()){
+        canBeCoord = false; //coordinates can't contain lowercase letters
+      }
       t.value += current();
       pop();
     }
-    // if digit comes after the alphacharacters, it must be a
-    // coordinate, else an identifier
-    if (isDigit()) {
-      t.type = Token.Type.COORD_LIT;
-      while (isDigit()){
-        t.value += current();
-        pop();
-      }
+	while (isDigit()) {
+	  seenDigit = true;
+	  canBeID = false; //identifiers can't contain digits
+      t.value += current();
+      pop();
     }
+	
+	canBeCoord = seenDigit ? canBeCoord : false; //if not containing a digit, it can't be coordinate
+	
+	if (canBeID)
+	{
+	  t.type = Token.Type.ID;
+	  if (canBeCoord)
+	    throw new ScannerError("ambiguity between coordinate or identifier: " + t.value, token(Type.EOF));
+	}
+	else{ //token is predeclared as COORD_LIT
+	  if (!canBeCoord) //token can neither be ID nor COORD_LIT
+	    throw new ScannerError("Invalid coordinate or identifier: " + t.value, token(Type.EOF));
+	}
     return t;
-
   }
 
   public Token scanVar() throws Exception {
@@ -217,8 +232,8 @@ public class Scanner {
       t.value += current();
       pop();
     }
-    if (t.value.length() < 0) {
-      throw new ScannerError("Invalid variable: " + t.value, token(Type.EOF));
+    if (t.value.length() <= 0) {
+      throw new ScannerError("Invalid unnamed variable", token(Type.EOF));
     }
     return t;
   }
