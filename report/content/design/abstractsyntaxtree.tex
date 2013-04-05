@@ -87,7 +87,7 @@ The function definition is constituted of a function followed by a variable list
 A variable list can consist of variables be an empty list containing nothing. This is illustrated in the following grammar:
 
 \begin{ebnf}
-\grule{varlist}{\gter{[} \gcat \gopt{variable \gcat \grep{\gter{,} \gcat variable}} \gcat \gter{]}}
+\grule{varlist}{\gter{[} \gcat \gopt{variable \gcat \grep{\gter{,} \gcat variable} \gcat \gopt{\gter{,} \gcat vars} \gor vars} \gcat \gter{]}}
 \end{ebnf}
 
 The production specifies that a variable list begins with an occurence of a left bracket and ends with an occurence of a right bracket. The brackets in between the outer bracket mean that the variables are optional. This means that a variable list can be empty or it can contain one or more comma-separated variables enclosed in the outer brackets.
@@ -140,19 +140,17 @@ Figure \ref{ast:lambdaexpr} illustrates the AST for this expression. Because a l
 
 \subsection{List}
 
-We also have an abstraction of the list element. Any list can be empty just like a variable list but instead of containing variables a list contains elements. It can consist of either zero, one, or more elements. The specification for the abstraction is specified in the following production:
+We also have an abstraction of the list element. Any list can be empty just like a variable list but instead of containing variables a list contains expressions. It can consist of either zero, one, or more expressions. The specification for the abstraction is specified in the following production:
 
 \begin{ebnf}
 \grule{list}{\gter{[} \gcat \gopt{expression \gcat \grep{\gter{,} \gcat expression}} \gcat \gter{]}}
 \end{ebnf}
 
-\todo{elements or expressions???}
-
 This element begins and ends like a variable list with brackets with optional elements as the elements of the list. The AST for this production is illustrated in \figref{ast:list}.
 
 \input{content/design/abstractsyntaxtree/list}
 
-The AST in \figref{ast:list} lacks the same descpritiveness as the AST for the variable list does because of the optional parameters in the production. The AST illustrates that it is possible to have zero or more elements in the list, but it is in fact not entirely correct. The correct statement is that it is possible to have either none or at least one element in the list.
+The AST in \figref{ast:list} lacks the same descpritiveness as the AST for the variable list does because of the optional parameters in the production. The AST illustrates that it is possible to have zero or more expressions in the list, but it is in fact not entirely correct. The correct statement is that it is possible to have either none or at least one expression in the list.
 
 \subsection{Pattern}
 
