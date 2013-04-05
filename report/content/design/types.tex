@@ -85,6 +85,16 @@ to and including offset 2 (the list $\texttt{["is", "a"]}$):
 
 \codesample{listaccess2.junta}
 
+An offset can be negative, which means that the offset is dependent on
+the size of the list. For example in order to return the last two elements
+of a list one could use the offsets, $-2$ and $-1$:
+
+\codesample{listaccess3.junta}
+
+Some other examples are:
+
+\codesample{listaccess4.junta}
+
 \subsection{Identifier}
 An identifier is a reference to a certain object. It always begins with an uppercase letter.
 Consider for instance the \productname-implementation
