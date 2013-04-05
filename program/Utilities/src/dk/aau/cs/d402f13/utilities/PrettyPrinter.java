@@ -1,5 +1,7 @@
 package dk.aau.cs.d402f13.utilities;
 
+import java.lang.reflect.Array;
+
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.ast.Visitor;
@@ -135,7 +137,7 @@ public class PrettyPrinter extends Visitor {
     incr();
     code += indentation + visit(node.get(2));
     decr();
-    return code + "\n";
+    return code + "\n\n";
   }
 
   @Override
@@ -317,6 +319,11 @@ public class PrettyPrinter extends Visitor {
       }
     }
     return code + "]";
+  }
+
+  @Override
+  protected Object visitVars(AstNode node) throws StandardError {
+    return "... $" + node.value;
   }
 
 }

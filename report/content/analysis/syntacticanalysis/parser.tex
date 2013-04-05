@@ -1,0 +1,48 @@
+\subsection{LL-parsers and LR-parsers}
+
+As mentioned earlier the LL-parsers derives from the top-down parsing approach. This means the LL-parses attempts to parse a string by starting at the start symbol of a grammar and through a series of leftmost derivations matching the input string. On the opposite the LR-parsers derives from the bottom-up parsing approach. Here the LR-parsers attempts to parse by starting with the input string and through a series of reductions tries to get back to the start symbol. The LL-parsers has two actions: predict and match. The predict action is used when the parser is trying to guess the next production to apply in order to get closer to the input string. While the match action eats the next unconsumed input symbol if it corresponds to the leftmost predicted terminal. These two actions are continuously called until the entire input string has been eaten and thereby has been matched. An example of a LL(1) parser in action can be seen in table \ref{table:LL1}. In the example the parser is based on the simple grammar in table 
+
+\begin{centering}
+\begin{ebnf}
+	\grule{S}{E}
+	\grule{E}{T \gcat + \gcat E}
+	\galt{T}
+	\grule{T}{int}
+\end{ebnf}
+\end{centering}
+
+The LR-parsers also has two actions: the shift action and the reduce action. The shift action adds the next input symbol of the input string into a buffer for consideration. The reduce action reduces a collection of nonterminals and terminals into a nonterminal by reversing a production. These two actions are
+continuously called until the input string is reduced to the start symbol. \cite{LL(1)andLR(2)inaction}. An example of a LR(2)-parser in action is illustrated in table \ref{table:LR2}.
+
+\tab[11cm]{LL1}{3}{A LL(1) parser seen in action parsing the string ``int + int''.}
+	      {The process                                              }
+{Step  	 }{Production & Input       & Action                        }{
+\tabrow{1}{$S$        & $int + int$ & Predict $S \rightarrow E$     }
+\tabrow{2}{$E$	      & $int + int$ & Predict $E \rightarrow T + E$ }
+\tabrow{3}{$T+E$      & $int + int$ & Predict $T \rightarrow int$   }
+\tabrow{4}{$int+E$    & $int + int$ & Match $int$  				    }
+\tabrow{5}{$+E$       & $+ int$ 	& Match $+$					    }
+\tabrow{6}{$E$ 	      & $int$ 		& Predict $E \rightarrow T$     }
+\tabrow{7}{$T$ 	      & $int$ 		& Predict $T \rightarrow int$   }
+\tabrow{8}{$int$      & $int$       & Match $int$   				}
+\tabrow{ }{           &             & Accept						}
+}
+
+\tab[11cm]{LR2}{3}{A LR(2) parser seen in action parsing the string ``int + int''.}
+	      {The process}
+{Step  	 }{Production & Input       & Action                     }{
+\tabrow{1}{           & $int + int$ & Shift   					 }
+\tabrow{2}{$int$      & $+ int$     & Reduce $T \rightarrow int$ }
+\tabrow{3}{$T$        & $+ int$     & Shift     				 }
+\tabrow{4}{$T+$       & $int$ 		& Shift						 }
+\tabrow{5}{$T+int$    & 			& Reduce $T \rightarrow int$ }
+\tabrow{6}{$T+T$ 	  &             & Reduce $E \rightarrow T$   }
+\tabrow{7}{$T+E$ 	  &      		& Reduce $E \rightarrow T+E$ }
+\tabrow{8}{$E$        &             & Reduce $S \rightarrow E$   }
+\tabrow{ }{$S$        &             & Accept					 }
+}
+
+\subsubsection{Comparison of the parsers}
+Compared to the LL-parsers the LR-parsers are more complex and generally harder to write \cite[pp. 193]{sebesta2013}. But the LR-parsers are more powerful than the LL-parsers, because they accept a bigger variety of grammars and they parse faster. For instance some LR-parsers can handle grammars with left-recursion, while no LL-parsers can. The LR class is a proper superset of the class parsable by LL parsers, this can be seen in \figref{fig:LL-parserandLR-parser}
+
+\fig[width=0.75\textwidth]{LL-parserandLR-parser}{The set of grammars accepted by different parsers. As illustrated LR(k)-parsers are supersets of LL(k)-parsers for different values of k}         

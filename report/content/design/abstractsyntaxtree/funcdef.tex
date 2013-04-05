@@ -1,0 +1,13 @@
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] {Function definition}
+  child {node [square,xshift=0.9cm] {Function}}
+  child {node [square] {Variable list}}
+  child {node [ellipse,draw,xshift=-0.5cm] {\textit{Expression}}};
+\end{tikzpicture}
+\end{center}
+\capt{The abstract syntax tree for the function definition node.}
+\label{ast:funcdef}
+\end{figure}

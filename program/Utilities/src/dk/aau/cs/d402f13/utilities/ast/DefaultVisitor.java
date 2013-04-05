@@ -180,4 +180,10 @@ public abstract class DefaultVisitor extends Visitor {
     return null;
   }
 
+  @Override
+  protected Object visitVars(AstNode node) throws StandardError {
+    visitChildren(node);
+    return null;
+  }
+
 }
