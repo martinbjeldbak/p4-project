@@ -6,6 +6,16 @@ define comp[$f, $g] #[$x] => $f[$g[$x]]
 define hello[] "Hello"
 define world[] "World"
 
+define factorial[$n]
+  if $n == 0
+    then 1
+    else $n * factorial[$n - 1]
+
+define gcd[$a, $b]
+  if $b == 0
+    then $a
+    else gcd[$b, $a % $b]
+
 define varsTestOne[$a, ... $args] 0
 define varsTestTwo[$a, $b, ... $args] 0
 define do[... $args] 0
