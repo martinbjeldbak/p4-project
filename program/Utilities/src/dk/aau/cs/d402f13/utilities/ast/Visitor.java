@@ -63,6 +63,8 @@ public abstract class Visitor {
   protected abstract Object visitVarlist(AstNode node) throws StandardError;
 //  case VARS:
   protected abstract Object visitVars(AstNode node) throws StandardError;
+//  case NEGATION:
+  protected abstract Object visitNegation(AstNode node) throws StandardError;
   
   
   public Object visit(AstNode node) throws StandardError {
@@ -126,6 +128,8 @@ public abstract class Visitor {
           return visitVarlist(node);
         case VARS:
           return visitVars(node);
+        case NEGATION:
+          return visitNegation(node);
         default:
           throw new StandardError("Unidentified node type: " + node.type);
       }
