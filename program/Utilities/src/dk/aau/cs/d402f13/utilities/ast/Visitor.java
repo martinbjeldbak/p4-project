@@ -1,5 +1,6 @@
 package dk.aau.cs.d402f13.utilities.ast;
 
+import dk.aau.cs.d402f13.utilities.errors.InternalError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 
 public abstract class Visitor {
@@ -134,6 +135,9 @@ public abstract class Visitor {
         e.setNode(node);
       }
       throw e;
+    }
+    catch (Exception e) {
+      throw new InternalError(e, node);
     }
   }
 
