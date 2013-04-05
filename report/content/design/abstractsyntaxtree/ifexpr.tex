@@ -1,0 +1,13 @@
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] {If expression}
+  child {node [ellipse,draw] {\textit{Expression}}}
+  child {node [ellipse,draw] {\textit{Expression}}}
+  child {node [ellipse,draw] {\textit{Expression}}};
+\end{tikzpicture}
+\end{center}
+\capt{The abstract syntax tree for the if expression node.}
+\label{ast:ifexpr}
+\end{figure}
