@@ -3,8 +3,9 @@
 \begin{center}
 \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
 \node [square] {Variable list}
-  child {node [square] (a) {Variable} edge from parent[dashed];}
-  child {node [square] (b) {Variable} edge from parent[dashed];};
+  child {node [square, xshift=0.5cm] (a) {Variable} edge from parent[dashed];}
+  child {node [square] (b) {Variable} edge from parent[dashed];}
+  child {node [square, xshift=-0.5cm] {Variable arguments} edge from parent[dashed];};
 \path (a)--(b) node [midway] {$\cdots$};
 \end{tikzpicture}
 \end{center}
