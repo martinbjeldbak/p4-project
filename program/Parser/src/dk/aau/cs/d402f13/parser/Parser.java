@@ -34,6 +34,14 @@ public class Parser {
     }
     return false;
   }
+  
+  private boolean accept(Token.Type type, String value) {
+    if (lookAhead(type, value)) {
+      currentToken = pop();
+      return true;
+    }
+    return false;
+  }
 
   private SyntaxError unexpectedError(String expected) {
     if (nextToken == null) {
@@ -73,6 +81,10 @@ public class Parser {
   private boolean lookAhead(Token.Type type) {
     return nextToken != null && nextToken.type == type;
   }
+  
+  private boolean lookAhead(Token.Type type, String value) {
+    return lookAhead(type) && nextToken.value.equals(value);
+  }
 
   private boolean lookAheadLiteral() {
     return lookAhead(Token.Type.INT_LIT)
@@ -90,6 +102,7 @@ public class Parser {
         || lookAhead(Token.Type.KEYWORD)
         || lookAhead(Token.Type.FUNCTION)
         || lookAhead(Token.Type.THIS)
+        || lookAhead(Token.Type.NORMAL_OPERATOR, "-")
         || lookAhead(Token.Type.ID);
   }
 
@@ -248,6 +261,10 @@ public class Parser {
     if (accept(Token.Type.LPAREN)) {
       node = expression();
       expect(Token.Type.RPAREN);
+    }
+    else if (accept(Token.Type.NORMAL_OPERATOR, "-")) {
+      node = astNode(Type.NEGATION, "-");
+      node.addChild(element());
     }
     else if (accept(Token.Type.VAR)) {
       node = astNode(Type.VAR, currentToken.value);
