@@ -11,7 +11,7 @@ public class Token {
     SHARED_OPERATOR, //those that is used both as normal_operator and pattern_operator
     PATTERN_OPERATOR, NORMAL_OPERATOR,
     
-    ASSIGN,
+    ASSIGN, TRIPLEDOTS,
 
     // Literals
     INT_LIT, DIR_LIT, COORD_LIT,

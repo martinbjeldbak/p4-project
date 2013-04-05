@@ -326,6 +326,17 @@ public class Scanner {
       case '#':
         t.type = Type.LAMBDABEGIN;
         break;
+      case '.':
+        if (current() == '.') {
+          t.value += '.';
+          pop();
+          if (current() == '.') {
+            t.value += '.';
+            pop();
+            t.type = Type.TRIPLEDOTS;
+            return t;
+          }
+        }
       default:
         throw new ScannerError("Undefined operator: " + t.value, token(Type.EOF));
     }
