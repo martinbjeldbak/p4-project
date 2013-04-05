@@ -1,0 +1,11 @@
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] {Game declaration}
+  child {node [square] {Declaration struct}};
+\end{tikzpicture}
+\end{center}
+\capt{The abstract syntax tree for the game declaration node.}
+\label{ast:gamedecl}
+\end{figure}

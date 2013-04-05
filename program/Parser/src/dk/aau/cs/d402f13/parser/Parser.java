@@ -126,11 +126,26 @@ public class Parser {
     if (accept(Token.Type.VAR)) {
       node.addChild(astNode(Type.VAR, currentToken.value));
       while (accept(Token.Type.COMMA)) {
+        if (lookAhead(Token.Type.TRIPLEDOTS)) {
+          node.addChild(vars());
+          break;
+        }
         expect(Token.Type.VAR);
         node.addChild(astNode(Type.VAR, currentToken.value));
       }
     }
+    else if (lookAhead(Token.Type.TRIPLEDOTS)) {
+      node.addChild(vars());
+    }
     expect(Token.Type.RBRACKET);
+    return node;
+  }
+  
+  private AstNode vars() throws SyntaxError {
+    AstNode node = astNode(Type.VARS, "");
+    expect(Token.Type.TRIPLEDOTS);
+    expect(Token.Type.VAR);
+    node.value = currentToken.value;
     return node;
   }
 

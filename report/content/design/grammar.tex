@@ -81,7 +81,8 @@ The following operations are used throughout this section:
 \grule{declaration\_struct}{\gter{\{} \gcat declaration \gcat \grep{declaration} \gter{\}}}
 \grule{declaration}{\ggrp{keyword \gor identifier} \gcat structure}
 \grule{structure}{declaration\_struct \gor expression}
-\grule{varlist}{\gter{[} \gcat \gopt{variable \gcat \grep{\gter{,} \gcat variable}} \gcat \gter{]}}
+\grule{varlist}{\gter{[} \gcat \gopt{variable \gcat \grep{\gter{,} \gcat variable} \gcat \gopt{\gter{,} \gcat vars} \gor vars} \gcat \gter{]}}
+\grule{vars}{\gter{...} \gcat variable}
 \end{ebnf}
 \subsection{Expressions}
 \begin{ebnf}

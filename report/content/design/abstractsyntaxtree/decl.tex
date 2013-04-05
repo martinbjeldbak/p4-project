@@ -1,0 +1,12 @@
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] {Declaration}
+  child {node [ellipse split,draw, xshift=0.2cm] {Keyword \nodepart{lower} Identifier}}
+  child {node [ellipse,draw,xshift=-0.2cm] {\textit{Structure}}};
+\end{tikzpicture}
+\end{center}
+\capt{The abstract syntax tree for the declaration node.}
+\label{ast:decl}
+\end{figure}
