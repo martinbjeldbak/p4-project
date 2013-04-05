@@ -5,7 +5,7 @@
 \node [square] {Program}
   child {node [square] (a) {Function definition} edge from parent[dashed];}
   child {node [square] (b) {Function definition} edge from parent[dashed];}
-  child {node [square] {Game declaration}};
+  child {node [square, xshift=-0.8cm] {Game declaration}};
 \path (a)--(b) node [midway] {$\cdots$};
 \end{tikzpicture}
 \end{center}

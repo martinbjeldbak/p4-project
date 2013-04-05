@@ -99,7 +99,7 @@ public class Interactive {
           }
           catch (Error e) {
             System.out.flush();
-            System.err.println("Syntax error: " + e.getMessage()
+            System.err.println(e.getClass().getSimpleName() + ": " + e.getMessage()
                 + " on input line " + e.getLine() + " column "
                 + e.getColumn() + ":");
             String[] lines = input.split("\n");

@@ -1,42 +1,19 @@
-package dk.aau.cs.d402f13.scopechecker.utilities;
+package dk.aau.cs.d402f13.utilities.scopechecker;
+import dk.aau.cs.d402f13.utilities.errors.ScopeError;
+import dk.aau.cs.d402f13.utilities.Levenshtein;
+import dk.aau.cs.d402f13.utilities.Tuple;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import dk.aau.cs.d402f13.scopechecker.errors.*;
-import dk.aau.cs.d402f13.utilities.Levenshtein;
+
 
 public class SymbolTable {
   public enum SymbolType {
     FUNCTION,
     VARIABLE,
     IDENTIFIER
-  }
-  public class SymbolInfo{
-    SymbolType type;
-    Boolean declaration;
-    String name;
-    int line;
-    int offset;
-    
-    SymbolInfo(SymbolType type, Boolean declared, String name, int line, int offset){
-      this.type = type;
-      this.declaration = declared;
-      this.name = name;
-      this.line = line;
-      this.offset = offset;
-    }
-    public void print(){
-      String dec = this.declaration ? "DECLARED" : "UNDECLARED";
-      System.out.println(this.type + " : " + this.name + "[" + dec + "]");
-    }
-    public int getLine(){
-      return this.line;
-    }
-    public int getOffset(){
-      return this.offset;
-    }
   }
   
   ArrayList<SymbolInfo> symbols;
@@ -73,9 +50,9 @@ public class SymbolTable {
   public void checkErrors() throws ScopeError {
     for (SymbolInfo s : symbols){   //this method is called just before exiting a scope
       if (!s.declaration && !declared(s)){//if symbol is not a declaration and is not declared in visible scopes 
-        SymbolInfo closeMatching = findSuggestion(s); //find a name that looks similar and may have been mistyped
+        SymbolInfo closeMatching = findSuggestion(s).x; //find a name that looks similar and may have been mistyped
         String suggestion = closeMatching != null ? ", did you mean '" + closeMatching.name + "'?" : "";
-        throw new ScopeError("Scope error, could not find declaration of: '" + s.name + "'" + suggestion, s);
+        throw new ScopeError("Could not find declaration of: '" + s.name + "'" + suggestion, s);
       }
     }
   }
@@ -134,45 +111,36 @@ public class SymbolTable {
     System.out.println(nestPrefix() + name + " (" + type + ") used on line " + line + ", offset " + offset );
   }
   
-  public SymbolInfo findSuggestion(SymbolInfo si){ //looks recursively in this scope + enclosing scopes
-    if (this.parent == null)
-      return findSuggestionThisScope(si);
-    else{
-      SymbolInfo bestThisScope = findSuggestionThisScope(si);
-      SymbolInfo bestParentScope = this.parent.findSuggestion(si);
-      if (bestThisScope == null && bestParentScope == null) 
-        return null;    //if symboltable does not contain any declarations in any scopes
-      else if (bestThisScope == null)
-        return bestParentScope;
-      else if (bestParentScope == null)
-        return bestThisScope;
-      
-      //to reach this point, none of bestThisScope and bestParentScope are null
-      int disThisScope = Levenshtein.computeDistance(bestThisScope.name, si.name);
-      int disEnclosingScope = Levenshtein.computeDistance(bestParentScope.name, si.name);
-      int maxDis = 2;
-      if (disThisScope < disEnclosingScope && disThisScope <= maxDis){
-        return bestThisScope;
+  public Tuple<SymbolInfo, Integer> findSuggestion(SymbolInfo si){ //looks recursively in this scope + enclosing scopes
+    int maxDis = 2; //allows "fial" -> "fail", "fil" -> "fail"
+    //searches current scope for best suggestion
+    SymbolInfo bestMatch = null;
+    int bestDist = 1000; //start with high difference so any match will be better than this
+    for (SymbolInfo s : symbols){
+      if (s.declaration && si.type == s.type){
+        int dist =  Levenshtein.computeDistance(si.name, s.name);
+        if (dist <= maxDis && dist < bestDist){
+          bestMatch = s;
+          bestDist = dist;
+        }
       }
-      else if (disEnclosingScope <= maxDis){
-        return bestParentScope;
+    }
+    Tuple<SymbolInfo, Integer> parentSuggestion = this.parent == null ? null : this.parent.findSuggestion(si);
+    
+    if (parentSuggestion == null){
+      return new Tuple<SymbolInfo, Integer>(bestMatch, bestDist);
+    }
+    else{
+      if (parentSuggestion.y < bestDist){ //if parent's suggestion is better
+       return parentSuggestion; 
       }
       else{
-        return null;    //if none match enough, no suggestions was found
+        return new Tuple<SymbolInfo, Integer>(bestMatch, bestDist);
       }
     }
+    
   }
   
-  SymbolInfo findSuggestionThisScope(SymbolInfo si){
-    SymbolInfo bestMatch = null;
-    int best = 100000; //start with high difference so any match will be better than this
-    for (SymbolInfo s : symbols){
-      int dist =  Levenshtein.computeDistance(si.name, s.name);
-      if (s.declaration && si.type == s.type && dist < best){
-        bestMatch = s;
-        best = dist;
-      }
-    }
-    return bestMatch;
-  } 
 }
+  
+  

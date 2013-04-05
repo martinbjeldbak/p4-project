@@ -5,10 +5,69 @@ define comp[$f, $g] #[$x] => $f[$g[$x]]
 
 define hello[] "Hello"
 define world[] "World"
+define movePiece[$from, $to] 0
+
+define factorial[$n]
+  if $n == 0
+    then 1
+    else $n * factorial[$n - 1]
+
+define gcd[$a, $b]
+  if $b == 0
+    then $a
+    else gcd[$b, $a % $b]
+
+define fpower[$f, $n]
+  if $n == 1
+    then $f
+    else comp[$f, fpower[$f, $n - 1]]
+
+define map[$f, $list]
+  let $l = size[$list]
+    in if $l == 1
+      then [$f[$list[0]]]
+      else [$f[$list[0]]] + map[$f, $list[1, $l - 1]]
+
+define contains[$needle, $haystack]
+  (0 == size[$haystack])
+    and (($needle == $haystack[0])
+      or contains[$needle, $haystack[1, (size[$haystack]) - 1]]
+    )
+
+define find[$needle, $haystack]
+  if 0 == size[$haystack]
+    then 0 - 1
+    else if $needle == $haystack[0]
+      then 0
+      else let $r = find[$needle, $haystack[1, (size[$haystack]) - 1]]
+        in if $r >= 0
+          then $r + 1
+          else $r
+
+define filter[$predicate, $list]
+  if 1 > size[$list]
+    then $list
+    else (if $predicate[$list[0]]
+      then $list[0]
+      else []) + filter[$predicate, $list[1, (size[$list]) - 1]]
+
+
+define qsort[$list]
+  if 1 >= size[$list]
+    then $list
+    else let $p = $list[0],
+             $rest = $list[1, (size[$list]) - 1],
+             $lesser = filter[#[$x] => $x < $p, $rest],
+             $greater = filter[#[$x] => $x >= $p, $rest]
+      in (qsort[$lesser]) + [$p] + (qsort[$greater])
 
 define varsTestOne[$a, ... $args] 0
 define varsTestTwo[$a, $b, ... $args] 0
-define do[... $args] 0
+define do[... $actions] 0
+define sequence[... $actions] 0
+define bind[$result, $action] 0
+define writeLine[$line] 0
+define readLine[] 0
 
 define testIo[]
   sequence[
