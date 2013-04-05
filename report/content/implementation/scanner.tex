@@ -29,7 +29,25 @@ In \lstref{lst:scan}, you can clearly see many functions with the name \methodre
 Beside the \methodref{isWhitespace()} function, all other \methodref{isSomething()} functions, is reponsible for returning a token based on their evaluation of the input stream.
 For example, if the first symbol of a lexeme is an upper-case character, the function \methodref{scanUppercase()} is responsible for determining whether the lexeme is an \tokenref{identifier} or a \tokenref{direction}, because they are the only tokens starting with an upper-case character in \productname{}. This is depicted in In \figref{fig:scanner}. Two variables, \typeref{int} \varref{offset} and \typeref{int} \varref{line} keeps track of where in the source file the next input character is taken from. The function \methodref{pop()} will pop the first character from the input stream and assign the value of the new first character to the variable \varref{nextChar}. The \methodref{isSomething()} functions uses that \varref{nextChar} to check what kind of character the next one is.
 The \methodref{pop()} function will additionally increment \varref{offset} by one. If the next input symbol is a new line character, it assigns zero to  \varref{offset} and increments \varref{line} by one. If an unexpected input symbol is met, a \typeref{SyntaxError}-exception is thrown. An example could be a \$ character follow by a white space. \$ is used as prefix for variables, but expects to be followed by an identifier, e. g. \$\varref{varName}.
-\fig[width=0.5\textwidth]{scanner}{The different groupings of characters, the subfunctions responsible for handling them and the possible returned token types.}
+
+\tab[14cm]{scanner}{2}{The different groupings of characters, the subfunctions responsible for handling them and the possible returned token types.}
+                 		 {Action and output												}
+       {First character	}{Responsible function	& Token type							}{
+\tabrow{White space 	}{						& \textit{ignored}								}
+\tabrow{End of file    	}{						& EOF									}
+\tabrow{Digit		  	}{scanNumeric()			& INT\_LIT								}
+\tabrow{Uppercase    	}{scanUppercase()		& ID, COORD\_LIT						}
+\tabrow{''			   	}{scanString()			& STRING\_LIT							}
+\tabrow{\$    			}{scanVar()				& VAR									}
+\tabrow{Operator    	}{scanOperator()		& LBRACKET, RBRACKET, LBRACE, RBRACE, 
+												  LPAREN, RPAREN, PATTERN\_OR, COMMA, 
+												  SHARED\_OPERATOR, NORMAL\_OPERATOR, 
+												  ASSIGN, PATTERN\_OP, LAMBDABEGIN		}
+\tabrow{Lowercase   	}{scanKeyword()			& NORMAL\_OPERATOR, PATTERN\_KEYWORD,
+												  DIR\_LIT, NOT\_OPERATOR,
+												  KEYWORD, LET, IN, DEFINE, IF, THEN,
+												  ELSE, GAME, THIS, FUNCTION			}
+}
 
  
 \lstinputlisting[caption="The scan() method from the \productname{} scanner.", label=lst:scan, language=Java]{listings/scan.java}
