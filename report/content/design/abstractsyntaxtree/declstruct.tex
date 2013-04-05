@@ -3,7 +3,7 @@
 \begin{center}
 \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
 \node [square] {Declaration struct}
-  child {node [square]  {Declaration}}
+  child {node [square, xshift=0.5cm]  {Declaration}}
   child {node [square] (b) {Declaration} edge from parent[dashed];}
   child {node [square] (c) {Declaration} edge from parent[dashed];};
   
