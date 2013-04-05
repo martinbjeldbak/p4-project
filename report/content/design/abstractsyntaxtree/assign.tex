@@ -1,0 +1,27 @@
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}
+[level/.style={sibling distance=40mm},
+level 1/.style={sibling distance = 39mm},
+level 2/.style={sibling distance = 20mm}]
+
+\node [square] (z) {Assignment}
+  child {node [square,left of=b,xshift=-5.1cm] (a) {Variable}}
+  child {node [ellipse,draw,left of=c,xshift=-4.5cm] (b) {\textit{Expression}}}
+  child {node [square] (c) {Assignment} edge from parent[dashed]
+  	child {node [square,xshift=-1cm] (x) {Variable} edge from parent[solid]}
+  	child {node [ellipse,draw,solid,xshift=-1cm] (y) {\textit{Expression}} edge from parent[solid]}
+  }
+  child {node [square,xshift=-1cm] (d) {Assignment} edge from parent[dashed]
+  	child {node [square,xshift=1cm] (o) {Variable} edge from parent[solid]}
+  	child {node [ellipse,draw,solid,xshift=1cm] (p) {\textit{Expression}} edge from parent[solid]}
+  }
+  child {node [ellipse,draw,right of=d,xshift=1.5cm](e) {\textit{Expression}}};
+
+\path (c)--(d) node [midway] {$\cdots$};
+\end{tikzpicture}
+\end{center}
+\capt{The abstract syntax tree for the assignment node.}
+\label{ast:assignment}
+\end{figure}
