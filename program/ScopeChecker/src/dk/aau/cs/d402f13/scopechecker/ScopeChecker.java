@@ -47,6 +47,7 @@ public class ScopeChecker extends DefaultVisitor {
      functionST.foundDeclaredSymbol(SymbolType.FUNCTION, "moveAndCapture", -1, 0);
      functionST.foundDeclaredSymbol(SymbolType.FUNCTION, "isCurrentPlayer", -1, 0);
      functionST.foundDeclaredSymbol(SymbolType.FUNCTION, "isFirstMove", -1, 0);
+	 functionST.foundDeclaredSymbol(SymbolType.FUNCTION, "size", -1, 0);
    }
 
   @Override
