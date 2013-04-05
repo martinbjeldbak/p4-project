@@ -27,6 +27,22 @@ define map[$f, $list]
       then [$f[$list[0]]]
       else [$f[$list[0]]] + map[$f, $list[1, $l - 1]]
 
+define contains[$needle, $haystack]
+  (0 == size[$haystack])
+    and (($haystack[0] == $needle)
+      or contains[$needle, $haystack[1, size[$haystack] - 1]]
+    )
+
+define find[$needle, $haystack]
+  if 0 == size[$haystack]
+    then -1
+    else if $needle == $haystack[0]
+      then 0
+      else let $r = find[$needle, $haystack[1, size[$haystack] - 1]]
+        in if $r >= 0
+          then $r + 1
+          else $r
+
 define varsTestOne[$a, ... $args] 0
 define varsTestTwo[$a, $b, ... $args] 0
 define do[... $actions] 0
