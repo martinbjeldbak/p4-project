@@ -6,6 +6,8 @@ define comp[$f, $g] #[$x] => $f[$g[$x]]
 define hello[] "Hello"
 define world[] "World"
 
+define do[... $args]
+
 define testIo[]
   sequence[
     writeLine["What is your name?"],

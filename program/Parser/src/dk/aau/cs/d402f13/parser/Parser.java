@@ -133,6 +133,14 @@ public class Parser {
     expect(Token.Type.RBRACKET);
     return node;
   }
+  
+  private AstNode vars() throws SyntaxError {
+    AstNode node = astNode(Type.VARS, "");
+    expect(Token.Type.TRIPLEDOTS);
+    expect(Token.Type.VAR);
+    node.value = currentToken.value;
+    return node;
+  }
 
   private AstNode functionDefinition() throws SyntaxError {
     AstNode node = astNode(Type.FUNC_DEF, "");
