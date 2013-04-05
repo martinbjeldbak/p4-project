@@ -6,7 +6,9 @@ define comp[$f, $g] #[$x] => $f[$g[$x]]
 define hello[] "Hello"
 define world[] "World"
 
-define do[... $args]
+define varsTestOne[$a, ... $args] 0
+define varsTestTwo[$a, $b, ... $args] 0
+define do[... $args] 0
 
 define testIo[]
   sequence[
