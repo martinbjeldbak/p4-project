@@ -45,10 +45,13 @@ column $1 \cdot 26 + 8 = 34$. The second part (the numeric part) represents the 
 \fig{coordinates}{All coordinates on an $8 \times 8$ board.}
 
 \subsection{Function}
+\label{sec:functiontype}
 Functions in \productname{} are first-class citizens, meaning that they can be used as any
 other value. A function name without a list of arguments results in a reference to that
 function. Function references can be passed as arguments to other functions or as a return
 value.
+
+\todo{Maybe a description of what first-class citizins are?}
 
 Another way to create function references, is to use anonymous functions in the form
 of lambda expressions. A lambda expression is created by combining a list of input-variables
