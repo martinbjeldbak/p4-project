@@ -11,43 +11,40 @@ import dk.aau.cs.d402f13.utilities.scopechecker.SymbolTable.SymbolType;
 
 
 public class ScopeChecker extends DefaultVisitor {
-    private SymbolTable currentVarST; //used for VARs - can be nested
-    private SymbolTable functionST; //used for functions - cannot be nested, is global.
+    private SymbolTable currentST; //used for VARs - can be nested
     private boolean varDeclaringMode; //if true, next VAR seen is a declaration, else a use
    
     public void openScope(){
-      currentVarST = new SymbolTable(currentVarST); //make new symbolTable point to old symbolTable to preserve scope hierarchy
-      System.out.println(currentVarST.nestPrefix() + "BEGIN SCOPE");
+      currentST = new SymbolTable(currentST); //make new symbolTable point to old symbolTable to preserve scope hierarchy
+      System.out.println(currentST.nestPrefix() + "BEGIN SCOPE");
     }
     
     private void closeScope() throws ScopeError {
-      System.out.println(currentVarST.nestPrefix() + "END SCOPE");
-      currentVarST.checkErrors(); //will throw a ScannerError exception if errors are found
-      currentVarST = currentVarST.getParent();
+      System.out.println(currentST.nestPrefix() + "END SCOPE");
+      //now check if any identifier is used without declaration, if so, transfer them to the parent symbol table
+      currentST.checkErrors(); //will throw a ScopeError exception if errors are found
+      currentST = currentST.getParent();
     }
     
     public ScopeChecker(AstNode root) throws StandardError, ScopeError{
-      this.currentVarST = new SymbolTable();
-      this.functionST = new SymbolTable();
       varDeclaringMode = false;
       openScope();
       insertDefaultFunctions(); //findSquares, union, ...
       visit(root);
-      functionST.checkErrors(); //check for udeclared used functions
       closeScope();
     }
     
    void insertDefaultFunctions() throws ScopeError{ //the functions that exists in our language
-     functionST.foundDeclaredSymbol(SymbolType.FUNCTION, "andSquares", -1, 0);
-     functionST.foundDeclaredSymbol(SymbolType.FUNCTION, "findSquares", -1, 0);
-     functionST.foundDeclaredSymbol(SymbolType.FUNCTION, "union", -1, 0);
-     functionST.foundDeclaredSymbol(SymbolType.FUNCTION, "forall", -1, 0);
-     functionST.foundDeclaredSymbol(SymbolType.FUNCTION, "isEmpty", -1, 0);
-     functionST.foundDeclaredSymbol(SymbolType.FUNCTION, "move", -1, 0);
-     functionST.foundDeclaredSymbol(SymbolType.FUNCTION, "moveAndCapture", -1, 0);
-     functionST.foundDeclaredSymbol(SymbolType.FUNCTION, "isCurrentPlayer", -1, 0);
-     functionST.foundDeclaredSymbol(SymbolType.FUNCTION, "isFirstMove", -1, 0);
-	 functionST.foundDeclaredSymbol(SymbolType.FUNCTION, "size", -1, 0);
+     currentST.foundDeclaredSymbol(SymbolType.FUNCTION, "andSquares", -1, 0);
+     currentST.foundDeclaredSymbol(SymbolType.FUNCTION, "findSquares", -1, 0);
+     currentST.foundDeclaredSymbol(SymbolType.FUNCTION, "union", -1, 0);
+     currentST.foundDeclaredSymbol(SymbolType.FUNCTION, "forall", -1, 0);
+     currentST.foundDeclaredSymbol(SymbolType.FUNCTION, "isEmpty", -1, 0);
+     currentST.foundDeclaredSymbol(SymbolType.FUNCTION, "move", -1, 0);
+     currentST.foundDeclaredSymbol(SymbolType.FUNCTION, "moveAndCapture", -1, 0);
+     currentST.foundDeclaredSymbol(SymbolType.FUNCTION, "isCurrentPlayer", -1, 0);
+     currentST.foundDeclaredSymbol(SymbolType.FUNCTION, "isFirstMove", -1, 0);
+     currentST.foundDeclaredSymbol(SymbolType.FUNCTION, "size", -1, 0);
    }
 
   @Override
@@ -84,7 +81,7 @@ public class ScopeChecker extends DefaultVisitor {
   @Override
   protected Object visitFunction(AstNode node) throws StandardError {
     //functions can only be declared in global scope, so uses are also put in the global scope
-    functionST.foundUsedSymbol(SymbolType.FUNCTION, node.value, node.line, node.offset);
+    currentST.foundUsedSymbol(SymbolType.FUNCTION, node.value, node.line, node.offset);
     return null;
   }
   
@@ -108,7 +105,7 @@ public class ScopeChecker extends DefaultVisitor {
     Iterator<AstNode> it = node.iterator();
     //FUNC_DEF = FUNC - VARLIST - EXPRESSION
     String funcName = it.next().value;
-    functionST.foundDeclaredSymbol(SymbolType.FUNCTION, funcName, node.line, node.offset);
+    currentST.foundDeclaredSymbol(SymbolType.FUNCTION, funcName, node.line, node.offset);
     openScope(); //open new scope, so function arguments can be hidden
     varDeclaringMode = true;
     visit(it.next()); //traverse the VARLIST (the arguments)
@@ -121,10 +118,10 @@ public class ScopeChecker extends DefaultVisitor {
   @Override
   protected Object visitVar(AstNode node) throws StandardError {
     if (varDeclaringMode){
-      currentVarST.foundDeclaredSymbol(SymbolType.VARIABLE, node.value, node.line, node.offset);
+      currentST.foundDeclaredSymbol(SymbolType.VARIABLE, node.value, node.line, node.offset);
     }
     else{
-      currentVarST.foundUsedSymbol(SymbolType.VARIABLE, node.value, node.line, node.offset);
+      currentST.foundUsedSymbol(SymbolType.VARIABLE, node.value, node.line, node.offset);
     }
     return null;
   }
