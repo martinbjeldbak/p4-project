@@ -9,6 +9,10 @@ public class IntValue extends Value {
       this.value = Integer.parseInt(value);
   }
   
+  public IntValue(int value) {
+    this.value = value;
+  }
+  
   public int getValue() {
     return this.value;
   }
