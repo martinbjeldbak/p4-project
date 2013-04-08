@@ -102,6 +102,7 @@ public class Parser {
         || lookAhead(Token.Type.KEYWORD)
         || lookAhead(Token.Type.FUNCTION)
         || lookAhead(Token.Type.THIS)
+        || lookAhead(Token.Type.NORMAL_OPERATOR, "-")
         || lookAhead(Token.Type.ID);
   }
 
