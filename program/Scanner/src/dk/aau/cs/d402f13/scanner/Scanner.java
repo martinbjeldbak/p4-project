@@ -14,7 +14,7 @@ import dk.aau.cs.d402f13.utilities.Token.Type;
 @SuppressWarnings("unused")
 public class Scanner {
   public static final String whitespace = " \t\r\n";
-  public static final String operators = "!&*+-=><?(){}#[]/|,";
+  public static final String operators = "!&*+-=><?()%{}#[]/|.,";
   
   private int line = 1;
   private int offset = -1;
@@ -272,7 +272,7 @@ public class Scanner {
       case '?':
         t.type = Type.PATTERN_OPERATOR;
         break;
-      case '@':
+      case '%':
       case '-':
         t.type = Type.NORMAL_OPERATOR;
         break;
@@ -326,6 +326,17 @@ public class Scanner {
       case '#':
         t.type = Type.LAMBDABEGIN;
         break;
+      case '.':
+        if (current() == '.') {
+          t.value += '.';
+          pop();
+          if (current() == '.') {
+            t.value += '.';
+            pop();
+            t.type = Type.TRIPLEDOTS;
+            return t;
+          }
+        }
       default:
         throw new ScannerError("Undefined operator: " + t.value, token(Type.EOF));
     }

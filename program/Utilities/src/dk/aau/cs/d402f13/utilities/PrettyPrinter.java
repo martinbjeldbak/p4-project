@@ -321,4 +321,21 @@ public class PrettyPrinter extends Visitor {
     return code + "]";
   }
 
+  @Override
+  protected Object visitVars(AstNode node) throws StandardError {
+    return "... $" + node.value;
+  }
+  
+  @Override
+  protected Object visitNegation(AstNode node) throws StandardError {
+    String code = "-";
+    if (isElement(node.get(0))) {
+      code += visit(node.get(0));
+    }
+    else {
+      code += "(" + visit(node.get(0)) + ")";
+    }
+    return code;
+  }
+
 }

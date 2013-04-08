@@ -1,5 +1,6 @@
 package dk.aau.cs.d402f13.utilities.ast;
 
+import dk.aau.cs.d402f13.utilities.errors.InternalError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 
 public abstract class Visitor {
@@ -60,6 +61,10 @@ public abstract class Visitor {
   protected abstract Object visitVar(AstNode node) throws StandardError;
 //  case VARLIST:
   protected abstract Object visitVarlist(AstNode node) throws StandardError;
+//  case VARS:
+  protected abstract Object visitVars(AstNode node) throws StandardError;
+//  case NEGATION:
+  protected abstract Object visitNegation(AstNode node) throws StandardError;
   
   
   public Object visit(AstNode node) throws StandardError {
@@ -121,6 +126,10 @@ public abstract class Visitor {
           return visitVar(node);
         case VARLIST:
           return visitVarlist(node);
+        case VARS:
+          return visitVars(node);
+        case NEGATION:
+          return visitNegation(node);
         default:
           throw new StandardError("Unidentified node type: " + node.type);
       }
@@ -130,6 +139,9 @@ public abstract class Visitor {
         e.setNode(node);
       }
       throw e;
+    }
+    catch (Exception e) {
+      throw new InternalError(e, node);
     }
   }
 

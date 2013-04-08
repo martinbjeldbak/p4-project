@@ -16,12 +16,12 @@ public class AstNode implements Iterable<AstNode> {
     //Program structure
     PROGRAM, FUNC_DEF, GAME_DECL, DECL_STRUCT, DECL,
     //Expressions
-    FUNC_CALL, ASSIGNMENT, IF_EXPR, LAMBDA_EXPR, LIST, 
+    FUNC_CALL, ASSIGNMENT, IF_EXPR, LAMBDA_EXPR, LIST, NEGATION, 
     //Patterns
     PATTERN, PATTERN_OR, PATTERN_MULTIPLIER,
     PATTERN_NOT,
     // Special
-    VARLIST, NOT_OPERATOR,  
+    VARLIST, NOT_OPERATOR, VARS,  
   }
   
   public Type type;
