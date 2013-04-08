@@ -121,8 +121,22 @@ This means that further on \identifier{XOPiece} will refer to that type of piece
 \subsection{Action}
 
 Actions represent state changes in a board game. A state change could for instance be a the movement
-of a piece on the board. Action-vaues are returned from certain action functions. An example
+of a piece on the board. Action-values are returned from certain built-in action functions. An example
 of such a function could be:
+
+\codesample{actions1.junta}
+
+To someone familiar with imperative programming languages, this might look like a function that
+instantly moves a piece from square $A1$ to square $C3$, but this isn't the case. Instead the
+function returns an action-value that encapsulates the change in state.
+
+Multiple actions can be combined in a sequence such as:
+
+\codesample{actions2.junta}
+
+This returns a new action, that describes a change in state where, first a piece on square $A1$
+is moved to $C3$, then a piece on square $A2$ is moved to $C4$ and last a piece on square $A3$
+is moved to $C5$.
 
 
 
