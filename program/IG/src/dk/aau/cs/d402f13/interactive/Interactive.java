@@ -17,6 +17,7 @@ import dk.aau.cs.d402f13.utilities.Token;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.ast.Visitor;
 import dk.aau.cs.d402f13.utilities.errors.Error;
+import dk.aau.cs.d402f13.utilities.errors.InternalError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.SyntaxError;
 import dk.aau.cs.d402f13.values.Value;
@@ -51,7 +52,8 @@ public class Interactive {
         //new ScopeChecker(ast);
         Interpreter i = new Interpreter();
         Value v = i.visit(ast);
-        System.out.println(" = " + v);
+        if (v != null) 
+          System.out.println(" = " + v + " (" + v.getClass().getSimpleName() + ")");
       }
       catch (Error e) {
         System.out.flush();
@@ -63,6 +65,9 @@ public class Interactive {
           System.err.print("-");
         }
         System.err.println("^");
+        if (e instanceof InternalError) {
+          e.printStackTrace();
+        }
       }
     }
   }
