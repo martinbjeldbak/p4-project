@@ -3,11 +3,13 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Date;
 import java.util.LinkedList;
 
+import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.parser.Parser;
 import dk.aau.cs.d402f13.scanner.Scanner;
 import dk.aau.cs.d402f13.utilities.PrettyPrinter;
@@ -17,6 +19,7 @@ import dk.aau.cs.d402f13.utilities.ast.Visitor;
 import dk.aau.cs.d402f13.utilities.errors.Error;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.SyntaxError;
+import dk.aau.cs.d402f13.values.Value;
 import dk.aau.cs.d402f13.scopechecker.ScopeChecker;;
 
 
@@ -24,6 +27,50 @@ public class Interactive {
 
   private Interactive() {
     // TODO Auto-generated constructor stub
+  }
+  
+  public static void expressionI(BufferedReader reader) throws IOException {
+    while (true) {
+      System.out.print("> ");
+      String line = reader.readLine();
+      if (line.equals("exit")) {
+        System.out.println("Exitting expression interpreter...");
+        return;
+      }
+      try {
+        Scanner s = new Scanner(new ByteArrayInputStream(
+          line.getBytes("UTF-8")
+        ));
+        Token ts;
+        LinkedList<Token> tokens = new LinkedList<Token>();
+        while ((ts = s.scan()).type != Token.Type.EOF) {
+          tokens.add(ts);
+        }
+        Parser p = new Parser();
+        AstNode ast;
+        if (tokens.get(0).type == Token.Type.DEFINE) {
+          ast = p.parseAsDefinition(tokens);
+        }
+        else {
+          ast = p.parseAsExpression(tokens);
+        }
+        //new ScopeChecker(ast);
+        Interpreter i = new Interpreter();
+        Value v = i.visit(ast);
+        System.out.println(" = " + v);
+      }
+      catch (Error e) {
+        System.out.flush();
+        System.err.println(e.getClass().getSimpleName() + ": " + e.getMessage()
+            + " on input line " + e.getLine() + " column "
+            + e.getColumn() + ":");
+        System.err.println(line);
+        for (int i = 1; i < e.getColumn(); i++) {
+          System.err.print("-");
+        }
+        System.err.println("^");
+      }
+    }
   }
 
   public static void main(String[] args) throws Exception {
@@ -38,9 +85,15 @@ public class Interactive {
         case ":q":
           System.exit(0);
           break;
+        case ":e":
+          System.out.println("Entering expression interpreter...");
+          expressionI(br);
+          input = "";
+          continue;
         case ":s":
-        case ":p":
         case ":o":
+        case ":p":
+        case ":i":
         case ":k":
           try {
             ByteArrayInputStream bais = new ByteArrayInputStream(
@@ -79,20 +132,29 @@ public class Interactive {
               }
               else {
                 if (line.equals(":o")) {
-                System.out.println("Pretty printing...");
-                start = new Date();
-                PrettyPrinter pp = new PrettyPrinter();
-                String code = pp.visit(ast);
-                time = new Date().getTime() - start.getTime();
-                System.out.println("Pretty printing took " + time + " ms");
-                System.out.println(code);
+                  System.out.println("Pretty printing...");
+                  start = new Date();
+                  PrettyPrinter pp = new PrettyPrinter();
+                  String code = pp.visit(ast);
+                  time = new Date().getTime() - start.getTime();
+                  System.out.println("Pretty printing took " + time + " ms");
+                  System.out.println(code);
                 }
                 else{
-                  System.out.println("Scope checking printing...");
+                  System.out.println("Scope checking...");
                   start = new Date();
-                  new ScopeChecker(ast); //constructor invoke the visiting calls
+                  ScopeChecker sc = new ScopeChecker(); //constructor invoke the visiting calls
+                  sc.visit(ast);
                   time = new Date().getTime() - start.getTime();
                   System.out.println("Scope checking took " + time + " ms");
+                  if (line.equals(":i")) {
+                    System.out.println("Interpreting...");
+                    start = new Date();
+                    Interpreter i = new Interpreter();
+                    i.visit(ast);
+                    time = new Date().getTime() - start.getTime();
+                    System.out.println("Interpreting took " + time + " ms");
+                  }
                 }
               }
             }

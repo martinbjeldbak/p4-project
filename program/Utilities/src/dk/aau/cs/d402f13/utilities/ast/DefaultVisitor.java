@@ -6,7 +6,7 @@ import dk.aau.cs.d402f13.utilities.errors.StandardError;
 
 public abstract class DefaultVisitor extends Visitor {
 
-  private void visitChildren(AstNode node) throws StandardError{
+  protected void visitChildren(AstNode node) throws StandardError{
     for (AstNode next : node){
       visit(next);
     }
