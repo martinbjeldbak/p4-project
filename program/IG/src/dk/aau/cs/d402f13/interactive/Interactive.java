@@ -137,7 +137,8 @@ public class Interactive {
                 else{
                   System.out.println("Scope checking...");
                   start = new Date();
-                  new ScopeChecker(ast); //constructor invoke the visiting calls
+                  ScopeChecker sc = new ScopeChecker(); //constructor invoke the visiting calls
+                  sc.visit(ast);
                   time = new Date().getTime() - start.getTime();
                   System.out.println("Scope checking took " + time + " ms");
                   if (line.equals(":i")) {
