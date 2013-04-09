@@ -48,7 +48,13 @@ public class Interactive {
           tokens.add(ts);
         }
         Parser p = new Parser();
-        AstNode ast = p.parseAsExpression(tokens);
+        AstNode ast;
+        if (tokens.get(0).type == Token.Type.DEFINE) {
+          ast = p.parseAsDefinition(tokens);
+        }
+        else {
+          ast = p.parseAsExpression(tokens);
+        }
         //new ScopeChecker(ast);
         Interpreter i = new Interpreter();
         Value v = i.visit(ast);
@@ -142,7 +148,8 @@ public class Interactive {
                 else{
                   System.out.println("Scope checking...");
                   start = new Date();
-                  new ScopeChecker(ast); //constructor invoke the visiting calls
+                  ScopeChecker sc = new ScopeChecker(); //constructor invoke the visiting calls
+                  sc.visit(ast);
                   time = new Date().getTime() - start.getTime();
                   System.out.println("Scope checking took " + time + " ms");
                   if (line.equals(":i")) {
