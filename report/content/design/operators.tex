@@ -5,6 +5,9 @@ of \productname{} are described using the format:
 
 \operator[LeftOperandType]{operator}{RightOperandType}{ReturnType}
 
+A star (\opstar) means that a value of any type is applicable as an
+operand.
+
 The available types are described in \secref{sec:types}.
 Operations that are not described in this section can be considered invalid.
 
@@ -33,23 +36,9 @@ boolean values.
     Returns true if the left operand is less than or equal to the right one.
   \item \operator[Integer]{>=}{Integer}{Boolean}\\
     Returns true if the left operand is greater than or equal to the right one.
-  \item \operator[Integer]{==}{Integer}{Boolean}\\
-    \operator[String]{==}{String}{Boolean}\\
-    \operator[Boolean]{==}{Boolean}{Boolean}\\
-    \operator[Coordinate]{==}{Coordinate}{Boolean}\\
-    \operator[Direction]{==}{Direction}{Boolean}\\
-    \operator[List]{==}{List}{Boolean}\\
-    \operator[Action]{==}{Action}{Boolean}\\
-    \operator[Identifier]{==}{Identifier}{Boolean}\\ 
+  \item \operator[\opstar]{==}{\opstar}{Boolean}\\
     Returns true if the left operand is equal to the right one.
-  \item \operator[Integer]{!=}{Integer}{Boolean}\\
-    \operator[String]{!=}{String}{Boolean}\\
-    \operator[Boolean]{!=}{Boolean}{Boolean}\\
-    \operator[Coordinate]{!=}{Coordinate}{Boolean}\\
-    \operator[Direction]{!=}{Direction}{Boolean}\\
-    \operator[List]{!=}{List}{Boolean}\\
-    \operator[Action]{!=}{Action}{Boolean}\\
-    \operator[Identifier]{!=}{Identifier}{Boolean}\\ 
+  \item \operator[\opstar]{!=}{\opstar}{Boolean}\\
     Returns true if the left operand is not equal to the right one.
 \end{dlist}
 
@@ -100,9 +89,9 @@ Some operators are available for list values as well:
 \item \operator[List]{-}{List}{List} \\
   Returns a list containing all the elements from the first list that
   do not exist in the second list.
-\item \operator[List]{+}{*}{List} \\
+\item \operator[List]{+}{\opstar}{List} \\
   Appends any element on to the end of a list, and returns the resulting list.
-\item \operator[*]{+}{List}{List} \\
+\item \operator[\opstar]{+}{List}{List} \\
   Prepends any element on to the start of a list, and returns the resulting list.
 \end{dlist}
 
