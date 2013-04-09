@@ -2,12 +2,9 @@ define slide[ $pattern ]
 	findSquares[ /this ($pattern empty)* $pattern !friend/ ]
 
 define toActions[ $list ]
-	forall[ $list, 
+	map[ $list, 
 		#[$item] =>
-			if( isEmpty[$item] ) then
-				move[ this, $item ]
-			else
-				moveAndCapture[ this, $item ]
+			moveAndCapture[ this, $item ]
 	]
 
 game {
@@ -46,18 +43,12 @@ game {
 				if isFirstMove[this] then	
 					findSquares[ /this (n empty)2 / ]
 				else 
-					union[
-						findSquares[ /this n empty/ ],
-						findSquares[ /this (ne|nw) foe/ ]
-					]
+					findSquares[ /this (n empty) | (ne|nw foe)/ ]
 			else 
 				if isFirstMove[this] then	
 					findSquares[ /this (s empty)2 / ]
 				else 
-					union[
-						findSquares[ /this s empty/ ],
-						findSquares[ /this (se|sw) foe/ ]
-					]
+					findSquares[ /this (s empty) | (se|sw foe)/ ]
 		]
 	}
 	piece {
@@ -74,16 +65,7 @@ game {
 	piece {
 		name Knight
 		possibleMoves toActions[
-			union[
-				findSquares[ /this n ne !friend/ ],
-				findSquares[ /this n nw !friend/ ],
-				findSquares[ /this s se !friend/ ],
-				findSquares[ /this s sw !friend/ ],
-				findSquares[ /this e ne !friend/ ],
-				findSquares[ /this e se !friend/ ],
-				findSquares[ /this w nw !friend/ ],
-				findSquares[ /this w sw !friend/ ]
-			]
+			findSquares[ /this (n ne|nw) | (s se|sw) | (e nw|se) | (w nw|sw) !friend/ ]
 		]
 	}
 	piece {
