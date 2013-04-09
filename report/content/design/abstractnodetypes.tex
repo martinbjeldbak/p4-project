@@ -1,5 +1,7 @@
-\section{Abstract syntax tree}
-\label{sec:ast}
+\section{Abstract node types}
+\label{sec:ant}
+
+\todo{skal måske rykkes ned til implementation?}
 
 Abstractions are the interpreter's or compiler's internal representation of a program. It is represented as an abstract syntax tree which is a series of nodes and leaves connected, forming a so-called tree.%
 
@@ -17,7 +19,7 @@ Every program written in \productname{} begins with an abstract node type which 
 
 It is from this production each and every program is derived from. The AST for this abstract node type is illustrated in \figref{ast:program}.%
 
-\input{content/design/abstractsyntaxtree/program}%
+\input{content/design/abstractnodetypes/program}%
 
 Figure \ref{ast:program} consists of one root which is called ``Program'' and this root has three children, two called ``Function definition'' and one called ``Game declaration''. The nodes named ``Function definition'' are optional because the production says that a program can begin with either zero or more of these abstract node types. The AST illustrates this by making the connecting lines dashed. Within these two nodes there are three dots ($\cdots$) which illustrate that it is possible to have more of these abstract node types following each other.%
 
@@ -30,7 +32,7 @@ Programmars have the opportunity of defining functions in their programs. The pa
 \grule{function\_def}{\gter{define} \gcat function \gcat varlist \gcat expression}%
 \end{ebnf}%
 
-\input{content/design/abstractsyntaxtree/funcdef}%
+\input{content/design/abstractnodetypes/funcdef}%
 
 Figure \ref{ast:funcdef} illustrates the AST for this production. The AST does not show the ``define'' keyword because it is not part of the abstraction. The keyword is there to make sure that the parser knows that the following production is a function definition and nothing else.%
 
@@ -39,6 +41,11 @@ The production defines that after the keyword ``define'' a function, a variable 
 It is clear that \figref{ast:funcdef} has three children from the root and these children are all drawn with solid lines. This means that they are not optional and must occur in that specific order. The \textit{expression} child is different from the others in its form and that it is written with an italic font. This is done to illustrate that an expression can be many different things.%
 
 So, the AST in \figref{ast:funcdef} is different from the AST for the program abstract node type in that is has no optional children. The next section will cover the final part of the program which is the game declaration from which the rest of the program is derived from.%
+
+\subsection{Function call}
+\todo{write description}
+
+\input{content/design/abstractnodetypes/funccall}
 
 \subsection{Game declaration}%
 The game declaration is the final part of the program abstract node type and it is from this abstract node type that the game is actually declared. The production for the game declaration is as follows:%
@@ -49,7 +56,7 @@ The game declaration is the final part of the program abstract node type and it 
 
 A function definition had a ``define'' keyword in front of every function defintion and the game declaration has another keyword - namely the ``game'' keyword. This makes sure that the parser is aware of the fact that the following declaration is the game declaration. The next production must be a declaration\_struct which is described in the next section.%
 
-\input{content/design/abstractsyntaxtree/gamedecl}%
+\input{content/design/abstractnodetypes/gamedecl}%
 
 Figure \ref{ast:gamedecl} illustrates the AST for the game declaration. This is a rather simply AST with just one root and one child. The keyword in front of the declaration is not shown because it is not part of the tree. If anything else than a declaration struct is read by the parser a syntax error will be thrown indicating that the source code is not valid.%
 
@@ -61,7 +68,7 @@ The declaration struct consists of at least one declaration. The parser knows th
 \grule{declaration\_struct}{\gter{\{} \gcat declaration \gcat \grep{declaration} \gter{\}}}%
 \end{ebnf}%
 
-\input{content/design/abstractsyntaxtree/declstruct}%
+\input{content/design/abstractnodetypes/declstruct}%
 
 Figure \ref{ast:declstruct} illustrates this by have one root with three children where the first child is connected with a solid line to the root followed by two similar children but with dashed lines specifying that the first declaration can be followed by zero or more declarations. The braces are not visible in the AST.%
 
@@ -76,7 +83,7 @@ So, the parser reads either a keyword or a identifier and the following must be 
 
 A structure can be many different things and \figref{ast:decl} illustrates this by encapsulating the child with the abstract node type of a structure in an ellipse formed box with italic font. This is similar to the expressions illustrated earlier.%
 
-\input{content/design/abstractsyntaxtree/decl}%
+\input{content/design/abstractnodetypes/decl}%
 
 So, this means that a program written in \productname{} will always have at least one structure because the declaration struct in \figref{ast:declstruct} specifies that at least one occurence of a declaration must be included.%
 
@@ -96,7 +103,7 @@ The production specifies that a variable list begins with an occurence of a left
 
 The last part of the production is a bit hard to read, but it says that if the list begins with one or more variable types then these variables can be followed by a comma and the variable argument which is a list of parameters. If there are no variable types then the last variable argument can be included. So, the production consists of two parts - one part containing two zero, one or more variables followed by an occurence of variable argument or just a single variable argument. This is due to the comma that must follow the last variable before a variable argument.%
 
-\input{content/design/abstractsyntaxtree/variablelist}%
+\input{content/design/abstractnodetypes/variablelist}%
 
 Figure \ref{ast:variablelist} illustrates this by having a root and three children with dashed lines from the root. But this is actually a bit misleading because of the optional parameters in the specification of the production. The production specifies that if the programmer does not want the list to be empty then at least one occurence of a variable must be present or a single variable argument. After the first variable it is possible to have zero or more variables following the first one and another optional variable argument. The easiest way to illustrate this is as it has been done in \figref{ast:variablelist}.%
 
@@ -110,7 +117,7 @@ An assignment is actually one of the many different abstract node types an expre
 
 The production specifies that any assignment must begin with the keyword ``let'' and end with the keyword ``in'' followed by an expression. In between these beginning and ending keywords the production consists of at least one pair of a variable followed by an assignment-operator followed by an expression. The production specifies that it is possible to have zero or more of these variable-expression pairs (comma-separated) following the first pair.%
 
-\input{content/design/abstractsyntaxtree/assign}%
+\input{content/design/abstractnodetypes/assign}%
 
 Figure \ref{ast:assignment} illustrates this with an AST that omits the keywords, commas and the assignment-operators which can make it rather complex to look at. The figure actually states that an assignment consists of variables and expression where an expression can be many different things, including another assignment. So, this means that it is possible to have assignments nested within each other which is also illustrated in \figref{ast:assignment}. These nested assignments are connected to the root with dashed lines which means that they are optional and it is possible to have zero or more of these following each other.%
 
@@ -124,7 +131,7 @@ The if expression is yet another expression as the name indicates. These express
 
 An if expression begins with the keyword ``if'' and ends with the keyword ``else'' followed by an expression. In between the beginning and the end the keyword ``then'' appears as a must in the if expression. It is for instance not possible to omit the ``else'' statement. The AST for this production is illustrated in \figref{ast:ifexpr} and consists of a root with three children which are expressions. The children are connected to the root with solid lines which means they cannot be omitted.%
 
-\input{content/design/abstractsyntaxtree/ifexpr}%
+\input{content/design/abstractnodetypes/ifexpr}%
 
 \subsection{Lambda expression}%
 
@@ -136,7 +143,7 @@ The next expression is a lambda expression and is specified in the following pro
 
 Any lambda expression begins with the \# symbol which makes it clear for the parser that this is a lambda expression. A lambda expression consists of a variable list and an expression seperated by the $=>$ symbol.%
 
-\input{content/design/abstractsyntaxtree/lambda}%
+\input{content/design/abstractnodetypes/lambda}%
 
 Figure \ref{ast:lambdaexpr} illustrates the AST for this expression. Because a lambda expression is an expression it is possible to have lambda expression inside other lambda expressions, so it is possible to nest these expressions.%
 
@@ -150,7 +157,7 @@ We also have an abstract node type of the list element. Any list can be empty ju
 
 This element begins and ends like a variable list with brackets with optional elements as the elements of the list. The AST for this production is illustrated in \figref{ast:list}.%
 
-\input{content/design/abstractsyntaxtree/list}%
+\input{content/design/abstractnodetypes/list}%
 
 The AST in \figref{ast:list} lacks the same descpritiveness as the AST for the variable list does because of the optional parameters in the production. The AST illustrates that it is possible to have zero or more expressions in the list, but it is in fact not entirely correct. The correct statement is that it is possible to have either none or at least one expression in the list.%
 
@@ -164,7 +171,7 @@ The next element is a pattern which consists of a single pattern expression foll
 
 This production is very straightforward, a pattern must contain at least one pattern expression. The AST for this production is illustrated in \figref{ast:pattern}. This AST has one solid line to the first pattern expression followed by two dashed lines to two other pattern expressions illustrating that these can occur zero or more times.%
 
-\input{content/design/abstractsyntaxtree/pattern}%
+\input{content/design/abstractnodetypes/pattern}%
 
 \subsection{Pattern operators}%
 
@@ -172,26 +179,46 @@ This production is very straightforward, a pattern must contain at least one pat
 
 The or-operator derives a pattern value followed by a pattern expression that both can be many different things. This is why they are written in an italic font. This is illustrated in \figref{ast:pattern-or}.%
 
-\input{content/design/abstractsyntaxtree/pattern-or}%
+\input{content/design/abstractnodetypes/pattern-or}%
 
 The multiplier-operator derives a single child namely a pattern value. This is illustrated in \figref{ast:pattern-mult}.%
 
-\input{content/design/abstractsyntaxtree/pattern-mult}%
+\input{content/design/abstractnodetypes/pattern-mult}%
 
 The not-operator also derives a single child namely a pattern check which is also written in an italic font within an ellipse formed box that indicates that it can be many different things. This is illustrated in \figref{ast:pattern-not}.%
 
-\input{content/design/abstractsyntaxtree/pattern-not}%
+\input{content/design/abstractnodetypes/pattern-not}%
 
 \subsection{Not-operator}%
 
 We also have a not-operator that has to do with expressions and not patterns. This operators AST is illustrated in \figref{ast:not} and derives an expression.%
 
-\input{content/design/abstractsyntaxtree/not}%
+\input{content/design/abstractnodetypes/not}%
 
 \subsection{Operator}%
 
 Furthermore \productname{} is able to handle arithmetic operators. The AST for operators is illustrated in \figref{ast:operator} and consists of an element followed by an expression.%
 
-\input{content/design/abstractsyntaxtree/operator}%
+\input{content/design/abstractnodetypes/operator}%
 
-This concludes the section of the abstract syntax trees for \productname{}.%
+
+\subsection{Single node abstractions}
+This subsection presents the node types which do not have any children. These are used throughout the production of source code written in \productname{}.
+
+\todo{write description}
+
+\input{content/design/abstractnodetypes/identifiers}
+%\input{content/design/abstractnodetypes/keywords}
+%\input{content/design/abstractnodetypes/elements}
+%\input{content/design/abstractnodetypes/expressions}
+\input{content/design/abstractnodetypes/literals}
+\input{content/design/abstractnodetypes/patternkeywords}
+\input{content/design/abstractnodetypes/variables}
+
+%literals
+%variables
+%identifiers
+%keywords
+%pattern keywords
+%expressions
+%elements (this is a special keyword)

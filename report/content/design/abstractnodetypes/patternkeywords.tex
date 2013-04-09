@@ -1,0 +1,13 @@
+
+\begin{figure}[ht]
+\begin{center}
+\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] {Pattern keyword}
+	child {node [square, xshift=1.8cm] {friend} edge from parent [dashed];}
+	child {node [square] {foe} edge from parent [dashed];}
+	child {node [square, xshift=-1.8cm] {empty} edge from parent [dashed];};
+\end{tikzpicture}
+\end{center}
+\capt{The abstract syntax tree for the variable list node.}
+\label{ast:patternkeyword}
+\end{figure}
