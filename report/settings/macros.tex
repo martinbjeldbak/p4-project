@@ -75,10 +75,13 @@
 \newcommand{\tab}[8][\textwidth]{
 \begin{table}[ht]
   \centering
+  \rowcolors{3}{white}{lightgray}
     \begin{tabularx}{#1}{ r | >{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X } %Errr, doesn't seem to give any errors, but fix it if possible
+  \hiderowcolors
   \hline
-  & \multicolumn{#3}{c}{\textbf{#5}} \\
+  & \multicolumn{#3}{>{\columncolor[rgb]{1,1,1}}c}{\textbf{#5}} \\
    \textbf{#6}    & #7 \\ \hline
+   \showrowcolors
 	#8
 	\hline
     \end{tabularx}

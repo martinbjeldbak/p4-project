@@ -1,0 +1,5 @@
+sequence[
+  movePiece[A1, C3],
+  movePiece[A2, C4],
+  movePiece[A3, C5]
+]

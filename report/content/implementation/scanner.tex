@@ -4,8 +4,8 @@ Our scanner takes raw source code in the form of a program written in \productna
 The strings which are converted to tokens are called lexemes. Many lexemes can be converted to the same type of token. Programs will typically contain many different identifiers, which in \productname{} will all be treated as an \tokenref{ID}. The name of the identifier will then be saved as a value belonging to the particular token.
 
 \tab[8cm]{lexemestotokens}{1}{Analysing an input stream for lexemes and tokens.}
-                 {Tokens}
-       {Lexemes	}{						}{
+                 {						}
+       {Lexemes	}{\textbf{Tokens}		}{
 \tabrow{Black 	}{ IDENTIFIER (Black)	}
 \tabrow{\{    	}{ LBRACE 				}
 \tabrow{Pawn  	}{ IDENTIFIER (Pawn)	}
@@ -37,7 +37,7 @@ For example, if the first symbol of a lexeme is an upper-case character, the fun
 \tab[14cm]{scanner}{2}{The different groupings of characters, the subfunctions responsible for handling them and the possible returned token types.}
                  		 {Action and output												}
        {First character	}{Responsible function	& Token type							}{
-\tabrow{White space 	}{						& \textit{ignored}								}
+\tabrow{White space 	}{						& \textit{ignored}						}
 \tabrow{End of file    	}{						& EOF									}
 \tabrow{Digit		  	}{scanNumeric()			& INT\_LIT								}
 \tabrow{Uppercase    	}{scanUppercase()		& ID, COORD\_LIT						}

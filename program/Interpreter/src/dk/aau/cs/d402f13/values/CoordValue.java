@@ -2,10 +2,10 @@ package dk.aau.cs.d402f13.values;
 
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 
-public class CooValue extends Value {
+public class CoordValue extends Value {
   private final int x, y;
 
-  public CooValue(String value) {
+  public CoordValue(String value) {
     int xx = 0;
     int yy = 0;
     
