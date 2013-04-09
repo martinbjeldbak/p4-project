@@ -1,13 +1,13 @@
 package dk.aau.cs.d402f13.values;
 
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
-import dk.aau.cs.d402f13.utilities.errors.LegalValueError;
+import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public class DirValue extends Value {
   private final int x;
   private final int y;
 
-  public DirValue(String value) throws LegalValueError {
+  public DirValue(String value) {
     switch(value) {
     case "n":
       this.x = 0;
@@ -42,7 +42,9 @@ public class DirValue extends Value {
       this.y = 1;
       break;
     default:
-      throw new LegalValueError("Direction not of format: n, e, s, w, ne, se, sw, or nw");
+      this.x = 0;
+      this.y = 0;
+      break;
     }
   }
   
@@ -52,6 +54,17 @@ public class DirValue extends Value {
   
   public int getY() {
     return this.y;
+  }
+  
+  @Override
+  public BoolValue equalsOp(Value other) {
+    if(other instanceof DirValue) {
+      DirValue otherDirection = (DirValue)other;
+      
+      if((this.x == otherDirection.getX()) && (this.y == otherDirection.getY()))
+        return BoolValue.trueValue();
+    }
+    return BoolValue.falseValue();
   }
   
   @Override
