@@ -38,12 +38,18 @@ boolean values.
     \operator[Boolean]{==}{Boolean}{Boolean}\\
     \operator[Coordinate]{==}{Coordinate}{Boolean}\\
     \operator[Direction]{==}{Direction}{Boolean}\\
+    \operator[List]{==}{List}{Boolean}\\
+    \operator[Action]{==}{Action}{Boolean}\\
+    \operator[Identifier]{==}{Identifier}{Boolean}\\ 
     Returns true if the left operand is equal to the right one.
   \item \operator[Integer]{!=}{Integer}{Boolean}\\
     \operator[String]{!=}{String}{Boolean}\\
     \operator[Boolean]{!=}{Boolean}{Boolean}\\
     \operator[Coordinate]{!=}{Coordinate}{Boolean}\\
     \operator[Direction]{!=}{Direction}{Boolean}\\
+    \operator[List]{!=}{List}{Boolean}\\
+    \operator[Action]{!=}{Action}{Boolean}\\
+    \operator[Identifier]{!=}{Identifier}{Boolean}\\ 
     Returns true if the left operand is not equal to the right one.
 \end{dlist}
 
@@ -75,15 +81,30 @@ It is possible to concatenate strings:
    \operator[String]{+}{Boolean}{String} \\
    \operator[String]{+}{Coordinate}{String} \\
    \operator[String]{+}{Direction}{String} \\
+   \operator[String]{+}{Identifier}{String} \\
    \operator[Integer]{+}{String}{String} \\
    \operator[Boolean]{+}{String}{String} \\
    \operator[Coordinate]{+}{String}{String} \\
    \operator[Direction]{+}{String}{String} \\
+   \operator[Identifier]{+}{String}{String} \\
     Returns the concatenation of a string and the string-representation of another type
 \end{dlist}
 
 \subsection{List operators}
 
+Some operators are available for list values as well:
+\begin{dlist}
+\item \operator[List]{+}{List}{List} \\
+  Returns a list containing all elements from the first list followed
+  by all elements from the second list.
+\item \operator[List]{-}{List}{List} \\
+  Returns a list containing all the elements from the first list that
+  do not exist in the second list.
+\item \operator[List]{+}{*}{List} \\
+  Appends any element on to the end of a list, and returns the resulting list.
+\item \operator[*]{+}{List}{List} \\
+  Prepends any element on to the start of a list, and returns the resulting list.
+\end{dlist}
 
 
 \subsection{Direction and coordinate operators}
