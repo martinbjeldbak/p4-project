@@ -30,7 +30,8 @@ public class Interactive {
     // TODO Auto-generated constructor stub
   }
   
-  public static void expressionI(BufferedReader reader) throws IOException {
+  public static void expressionI(BufferedReader reader) throws IOException, StandardError {
+    Interpreter interp = new Interpreter();
     while (true) {
       System.out.print("> ");
       String line = reader.readLine();
@@ -56,8 +57,7 @@ public class Interactive {
           ast = p.parseAsExpression(tokens);
         }
         //new ScopeChecker(ast);
-        Interpreter i = new Interpreter();
-        Value v = i.visit(ast);
+        Value v = interp.visit(ast);
         if (v != null) 
           System.out.println(" = " + v + " (" + v.getClass().getSimpleName() + ")");
       }
