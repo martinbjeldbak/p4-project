@@ -76,11 +76,18 @@ public class AstNode implements Iterable<AstNode> {
     print("");
   }
   
+  public AstNode getFirst() {
+    return this.get(0);
+  }
+  
+  public AstNode getLast() {
+    return this.get(this.size() - 1);
+  }
+  
   private void print(String prefix){
     System.out.println(prefix + "- " + type + " (" + value + ") <" + line + ":" + offset + ">");
     for(AstNode n : children){
       n.print(prefix + " ");
     }
   }
-
 }
