@@ -1,6 +1,17 @@
 \section{Grammar}
 \label{sec:grammar}
 
+%should be possible to construct the language by reading this design document..
+%Notational conventions
+%Character classes
+%reserved tokens
+%literals
+%identifiers
+%program structure
+%expressions
+%patterns
+%section of abstract syntax tree will present the different node types
+
 \subsection{Notational Conventions}
 We use a variant of Extended Backus-Naur Form to express the context-free grammar of
 our programming language.
@@ -13,7 +24,8 @@ the possible terminals of $\gter{0}$ up to and including $\gter{9}$.
 \grule{decimal}{\gter{0} \gor \gter{1} \gor \grange \gor \gter{9}}
 \end{ebnf}
 
-The following operations are used throughout this section:
+The following operations are used throughout this section to describe the grammar of the programming language:
+
 \begin{center}
 \begin{tabular}{r l}
   $\gopt{pattern}$ & an optional pattern \\
@@ -30,8 +42,11 @@ The following operations are used throughout this section:
 \end{tabular}
 \end{center}
 
-
 \subsection{Character Classes}
+To be able to describe which characters or symbols a non-terminal can consist of in a concise manner, we need to define some sets of symbols to specific names which we can use in the description of our grammar.
+
+The following classes of characters will be used throughout this section:
+
 \begin{ebnf}
 \grule{decimal}{\gter{0} \gor \gter{1} \gor \grange \gor \gter{9}}
 \grule{lowercase}{\gter{a} \gor \gter{b} \gor \grange \gor \gter{z}}
@@ -41,7 +56,14 @@ The following operations are used throughout this section:
 \grule{unichar}{\gcomment{any unicode character}}
 \grule{strchar}{unichar \gex quotebs}
 \end{ebnf}
+
+\todo{quotebs?}
+
 \subsection{Reserved Tokens}
+Our programming language needs to be able to distinguish between words (a sequence of characters or symbols) that are reserved for the language to function properly and words which a user has constructed to be used as e.g. function names.
+
+The following is a list of reserved words which \productname{} will use to function properly and they will be refered to throughout this section:
+
 \begin{ebnf}
 %reserved
 \grule{keyword}{\gter{piece} \gor \gter{width} \gor \gter{height}}
@@ -56,7 +78,10 @@ The following operations are used throughout this section:
 \grule{pattern\_or}{\gter{|}}
 \grule{pattern\_keyword}{\gter{friend} \gor \gter{foe} \gor \gter{empty}}
 \end{ebnf}
+
 \subsection{Literals}
+\productname{} consists of the following four literals which are used throughout this section:
+
 \begin{ebnf}
 %Literals
 \grule{integer}{decimal \gcat \grep{decimal}}
@@ -65,14 +90,40 @@ The following operations are used throughout this section:
 \grule{coordinate}{upperccase \gcat \grep{uppercase} \gcat decimal \gcat \grep{decimal}}
 \grule{string}{\gtdq \gcat \grep{strchar \gor \gtbs \gcat unichar} \gcat \gtdq}
 \end{ebnf}
+
+Non of the above literals can be empty (by empty we mean assigned to null-like value). The following list briefly describeds the literals in plain English:
+
+\begin{dlist}
+\item The integer literal must consist of at least one decimal
+\item The direction literal can consist of either one of the eight coordinate-like letters 
+\begin{dlist}
+\item By coordinate-like we mean north, south, west, etc. and must not be confused with the coordinate literal
+\end{dlist}
+\item The coordinate literal must consist of at least one uppercase letter followed by at least one decimal value
+\begin{dlist}
+\item Coordinates will be described in greater detail in \secref{sec:coordinatetype}
+\end{dlist}
+\item The string literal can consist of a sequence of strchar's or a blackslash followed by any unicode character.
+\begin{dlist}
+\item A string literal can be empty and just contain nothing between the quotation marks, but this is not the same as been assign a null-like value
+\end{dlist}
+\end{dlist}
+
 \subsection{Identifiers}
+The following three identifiers are used throughout this section:
+
 \begin{ebnf}
 %Identifiers
 \grule{function}{lowercase \gcat anycase \gcat \grep{anycase}}
 \grule{identifier}{uppercase \gcat \grep{anycase}}
 \grule{variable}{\gter{\$} \gcat anycase \gcat \grep{anycase}}
 \end{ebnf}
+
+This description means that every function must start with a lowercase character and not uppercase. If an uppercase character begins a sequence of characters, the parser will interpret this as an identifier which is quite different from a function. Furthermore, all variables begin with a dollar symbol followed by at least one character.
+
 \subsection{Program Structure}
+The following grammar describes the actual construction of any program written in \productname{}:
+
 \begin{ebnf}
 %Program structure
 \grule{program}{\grep{function\_def} \gcat game\_decl}
@@ -84,7 +135,12 @@ The following operations are used throughout this section:
 \grule{varlist}{\gter{[} \gcat \gopt{variable \gcat \grep{\gter{,} \gcat variable} \gcat \gopt{\gter{,} \gcat vars} \gor vars} \gcat \gter{]}}
 \grule{vars}{\gter{...} \gcat variable}
 \end{ebnf}
+
+The grammar describes that any program written in \productname{} can begin by defining user-defined functions (the functions definitions does not have to be there) followed by one game declaration. 
+
 \subsection{Expressions}
+The following grammar describes the expressions of the programming language:
+
 \begin{ebnf}
 %Expressions
 \grule{expression}{element \gcat operator \gcat expression}
@@ -111,7 +167,12 @@ The following operations are used throughout this section:
 \grule{lambda\_expr}{\gter{\#} \gcat varlist \gcat \gter{=>} \gcat expression}
 \grule{list}{\gter{[} \gcat \gopt{expression \gcat \grep{\gter{,} \gcat expression}} \gcat \gter{]}}
 \end{ebnf}
+
+The expression-expression and element-expression are the two main expressions which are repeatedly used to form different expressions such as assignments, conditional expressions, lambda expressions and lists.
+
 \subsection{Patterns}
+The following patterns are constructed from the element-expression:
+
 \begin{ebnf}
 %Patterns
 \grule{pattern}{pattern\_expr \gcat \grep{pattern\_expr}}
@@ -126,3 +187,7 @@ The following operations are used throughout this section:
 \galt{\gter{this}}
 \galt{identifier}
 \end{ebnf}
+
+\todo{how do we describe patterns?}
+
+\todo{is a summary needed here?}
