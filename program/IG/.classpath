@@ -6,5 +6,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Scanner"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ScopeChecker"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Utilities"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Interpreter"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
