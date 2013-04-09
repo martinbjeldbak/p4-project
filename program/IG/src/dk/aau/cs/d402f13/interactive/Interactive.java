@@ -48,7 +48,7 @@ public class Interactive {
         }
         Parser p = new Parser();
         AstNode ast = p.parseAsExpression(tokens);
-        new ScopeChecker(ast);
+        //new ScopeChecker(ast);
         Interpreter i = new Interpreter();
         Value v = i.visit(ast);
         System.out.println(" = " + v);
