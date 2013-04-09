@@ -4,7 +4,7 @@ import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.ast.Visitor;
 import dk.aau.cs.d402f13.utilities.errors.ArgumentError;
-import dk.aau.cs.d402f13.utilities.errors.LegalValueError;
+import dk.aau.cs.d402f13.utilities.errors.NameError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 import dk.aau.cs.d402f13.values.BoolValue;
@@ -20,8 +20,7 @@ import dk.aau.cs.d402f13.values.Value;
 public class Interpreter extends Visitor {
   private SymbolTable symbolTable = new SymbolTable();
 
-  public Interpreter(AstNode root) throws StandardError {
-    visit(root);
+  public Interpreter() throws StandardError {
     FunValue fun = new FunValue(
       2, false,
       new Callable() {
@@ -47,9 +46,7 @@ public class Interpreter extends Visitor {
   
   @Override
   public Value visit(AstNode node) throws StandardError {
-    if(node.type == Type.GAME_DECL || node.type == Type.FUNC_DEF)
-      return (Value)super.visit(node);
-    throw new LegalValueError("Root node has to be a game declaration or a function definition", node);
+    return (Value)super.visit(node);
   }
 
   @Override
@@ -71,15 +68,12 @@ public class Interpreter extends Visitor {
 
   @Override
   protected CoordValue visitCoordLit(AstNode node) throws StandardError {
-    if(node.value != null && node.type == Type.COORD_LIT)
       return new CoordValue(node.value);
-    
-    throw new LegalValueError("Coordinate does not have a value or is not of correct type", node);
   }
 
   @Override
   protected Value visitDecl(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
+    
     return null;
   }
 
@@ -96,7 +90,10 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitFunction(AstNode node) throws StandardError {
-    return symbolTable.getFunction(node.value);
+    FunValue fun = symbolTable.getFunction(node.value);
+    if (fun == null)
+      throw new NameError("Undefined function: " + node.value);
+    return fun;
   }
 
   @Override
@@ -114,7 +111,6 @@ public class Interpreter extends Visitor {
     else
       throw new TypeError("Must be function or list value", node.get(0));
     
-    
     return null;
   }
 
@@ -127,14 +123,15 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitGameDecl(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
+    visit(node.getFirst());
+    
     return null;
   }
 
   @Override
   protected Value visitId(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    
+    return new StrValue(node.value);
   }
 
   @Override
@@ -148,18 +145,12 @@ public class Interpreter extends Visitor {
     if(b == BoolValue.trueValue())
       return visit(node.get(1));
 
-    
     return visit(node.get(2));    
   }
 
   @Override
   protected IntValue visitIntLit(AstNode node) throws StandardError {
-    if(node.value != null && node.type == Type.INT_LIT) {
       return new IntValue(node.value);
-    }
-    else {
-      throw new StandardError("Integer value must not be null and of type int", node);
-    }
   }
 
   @Override
@@ -170,23 +161,57 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitLambdaExpr(AstNode node) throws StandardError {
-    
+    return new FunValue(node.getFirst(), node.getLast(), symbolTable.currentScope());
   }
 
   @Override
   protected Value visitList(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    Value[] values = new Value[node.size()];
+    
+    for(int i = 0; i < node.size(); i++) {
+      values[i] = visit(node.get(i));
+    }
+    
+    return new ListValue(values);
   }
 
   @Override
   protected Value visitNotOperator(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    Value v = visit(node.getFirst());
+    
+    if(v instanceof BoolValue) {
+      return ((BoolValue)v).not();
+    }
+    throw new TypeError("Cannot use 'not' operator on type " + v.getType());
   }
 
   @Override
   protected Value visitOperator(AstNode node) throws StandardError {
+    Value a = visit(node.getFirst());
+    Value b = visit(node.getLast());
+    switch(node.value) {
+      case "and":
+        if((a instanceof BoolValue) && (b instanceof BoolValue))
+          return ((BoolValue)a).and((BoolValue)b);
+        throw new TypeError("Both 'and' operands need to be of type boolean", node);
+      case "or":
+        if((a instanceof BoolValue) && (b instanceof BoolValue))
+          return ((BoolValue)a).or((BoolValue)b);
+        throw new TypeError("Both 'or' operands need to be of type boolean", node);
+      case "<":
+        return a.lessThan(b);
+      case ">":
+        return a.greaterThan(b);
+      case "<=":
+        return a.lessThanEq(b);
+      case ">=":
+        return a.greaterThanEq(b);
+      case "==":
+        return a.equalsOp(b);
+      case "!=":
+        return a.notEqual(b);
+        //-------------------------------------------------------------------------------------
+    }
     
     return null;
   }
@@ -232,31 +257,15 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitProgram(AstNode node) throws StandardError {
-    if(node.value != null && node.type == Type.PROGRAM) {
-      for(AstNode child : node) {
-        if(child.type == Type.FUNC_DEF) {
-          visit(child);
-        }
-        else if(child.type == Type.GAME_DECL) {
-          visit(child);
-          break;
-        }
-        else {
-          throw new StandardError("Node is not of type function def or game decl", node);
-        }
-      }
+    for(AstNode child : node) {
+      visit(child);
     }
     return null;
   }
 
   @Override
   protected StrValue visitStringLit(AstNode node) throws StandardError {
-    if(node.value != null && node.type == Type.STRING_LIT) {
       return new StrValue(node.value);
-    }
-    else {
-      throw new StandardError("String literals cannot be null and have to be of type string", node);
-    }
   }
 
   @Override
@@ -267,8 +276,7 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitVar(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    return symbolTable.getVariable(node.value);
   }
 
   @Override

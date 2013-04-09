@@ -8,8 +8,8 @@ import dk.aau.cs.d402f13.values.*;
 
 public class SymbolTable {
   
-  private HashMap<String, FunValue> functions;
-  private HashMap<String, Value> identifiers;
+  private HashMap<String, FunValue> functions = new HashMap<String, FunValue>();
+  private HashMap<String, Value> identifiers = new HashMap<String, Value>();
   private Stack<Scope> scopeStack = new Stack<Scope>();
 
   public SymbolTable() {
@@ -34,6 +34,13 @@ public class SymbolTable {
   
   public void addVariable(String variable, Value value) {
     currentScope().addVariable(variable, value);
+  }
+  
+  public Value getVariable(String variable) {
+    if(currentScope() == null) {
+      return null;
+    }
+    return currentScope().getVariable(variable);
   }
   
   public Scope currentScope() {
