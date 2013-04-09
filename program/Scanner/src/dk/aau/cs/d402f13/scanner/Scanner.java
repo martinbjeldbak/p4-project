@@ -106,7 +106,7 @@ public class Scanner {
     return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
   }
 
-  public Token scanKeyword() throws Exception {
+  public Token scanKeyword() throws ScannerError {
     Token t = token(Type.FUNCTION);
     while (isAnycase()) {
       t.value += current();
@@ -224,7 +224,7 @@ public class Scanner {
     return t;
   }
 
-  public Token scanVar() throws Exception {
+  public Token scanVar() throws ScannerError {
     // called when token starts with $
     Token t = token(Token.Type.VAR);
     pop(); // remove initial $
@@ -238,7 +238,7 @@ public class Scanner {
     return t;
   }
 
-  public Token scanOperator() throws Exception {
+  public Token scanOperator() throws ScannerError {
     Token t = token(Type.NORMAL_OPERATOR);
     char c = current();
     t.value += c;
@@ -367,7 +367,7 @@ public class Scanner {
     return t;
   }
 
-  public Token scanString() throws SyntaxError {
+  public Token scanString() throws ScannerError {
     Token t = token(Type.STRING_LIT);
     pop();
     char c;
@@ -386,7 +386,7 @@ public class Scanner {
     return t;
   }
 
-  public Token scan() throws Exception {
+  public Token scan() throws ScannerError {
     while (isWhitespace()) {
       pop();
     }
