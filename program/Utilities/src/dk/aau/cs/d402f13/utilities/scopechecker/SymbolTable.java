@@ -7,36 +7,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-
-
 public class SymbolTable {
   public enum SymbolType {
     FUNCTION,
-    VARIABLE,
-    IDENTIFIER
+    VARIABLE
   }
   
-  ArrayList<SymbolInfo> symbols;
-  SymbolTable parent; //points to the scope enclosing its own scope, null if outermost scope
+  HashMap<SymbolInfo, Boolean> symbols; //Boolean is flagged if symbol is a declaration
+  SymbolTable parent; //points to a parent scope or null if global scope
   
   public SymbolTable getParent(){
     return this.parent;
   }
   
   public SymbolTable(){//for instantiating outer scope
-    symbols = new ArrayList<SymbolInfo>();
+    symbols = new HashMap<SymbolInfo, Boolean>(); //Boolean means declared or undeclared
   }
   
   public SymbolTable(SymbolTable parent){//for instantiating non outer scopes
     this(); //call other constructor
     this.parent = parent;
-  }
-  
-  public void print(){
-    System.out.println("*******SYMBOL TABLE*******");
-    for (SymbolInfo si : symbols){
-      si.print();
-    }
   }
   
   public void empty(){
@@ -48,46 +38,57 @@ public class SymbolTable {
   }
   
   public void checkErrors() throws ScopeError {
-    for (SymbolInfo s : symbols){   //this method is called just before exiting a scope
-      if (!s.declaration && !declared(s)){//if symbol is not a declaration and is not declared in visible scopes 
-        SymbolInfo closeMatching = findSuggestion(s).x; //find a name that looks similar and may have been mistyped
-        String suggestion = closeMatching != null ? ", did you mean '" + closeMatching.name + "'?" : "";
-        throw new ScopeError("Could not find declaration of: '" + s.name + "'" + suggestion, s);
+    for (SymbolInfo s : symbols.keySet()){   //this method is called just before exiting a scope
+      if (!symbols.get(s) && !declared(s)){//if symbol is not a declaration and is not declared in visible scopes 
+        if (s.type == SymbolType.VARIABLE){
+
+         error(s);
+        }
+        else if (s.type == SymbolType.FUNCTION){
+
+          //Functions you be used before they are declared, so when exiting a scope with an undcl function,
+          //transfer this undeclared symbol to the parent scope's symbol table, since it might be decl there
+          if (this.parent != null)
+            this.parent.foundUsedSymbol(s.type, s.name, s.line, s.offset);
+          else{
+            Boolean a = symbols.containsKey(new SymbolInfo(SymbolType.FUNCTION, "toActions", 30, 29));
+            Boolean b = symbols.containsKey(new SymbolInfo(SymbolType.FUNCTION, "findSquares", 30, 29));
+            error(s);
+          }
+        }
       }
     }
+  }
+  
+  void error(SymbolInfo s) throws ScopeError{
+    //Throw an error and try to find a suggestion, E.g. "Couldn't find findSometing, did you mean findSomething?"
+    SymbolInfo closeMatching = findSuggestion(s).x; //Looks in all visible scopes for similar symbols
+    String suggestion = closeMatching != null ? ", did you mean '" + closeMatching.name + "'?" : "";
+    throw new ScopeError("Could not find declaration of: '" + s.name + "'" + suggestion, s);
   }
   
   Boolean declared(SymbolInfo s){
     //Checks if a symbol is declared in either local or outer scopes
-    for (SymbolInfo si : symbols){
-      if (si.type == s.type && s.name.equals(si.name) && si.declaration){
-        return true;
-      }
-    }
-    if (this.parent == null)    //if this symbol table is in outer scope, symbol is not declared
-      return false;
-    else
-      return this.parent.declared(s); //else check if enclosing scope contains symbol 
+  if (symbols.containsKey(s) && symbols.get(s) == true) //true if declared in local scope, false if used in local scope, null if neither
+    return true;
+  if (this.parent == null)    //if this symbol table is in outer scope, symbol is not declared
+    return false;
+  else
+    return this.parent.declared(s); //else check if enclosing scope contains symbol 
   }
   
   public void foundDeclaredSymbol(SymbolType type, String name, int line, int offset) throws ScopeError{
-    for (SymbolInfo s : symbols){//if symbol is found but not declared, change it to declared
-      if (s.type == type && s.name.equals(name)){ 
-        if (!s.declaration){
-          s.declaration = true;
-          s.line = line;
-          s.offset = offset;
-        }
-        else{ //If a declaration in current scope already exists, the same type has been declared two times
-          throw new ScopeError("Double declaration.", new SymbolInfo(type, false, name, line, offset));
-        }
-        return;
-      }  
+    
+    SymbolInfo foundDec = new SymbolInfo(type, name, line, offset);
+    
+    //If a declaration in current scope already exists, the same type has been declared two times, which is an error
+    if (symbols.containsKey(foundDec) && symbols.get(foundDec) == true){
+      throw new ScopeError("Double declaration.", new SymbolInfo(type, name, line, offset));
     }
-   
+        
     System.out.println(nestPrefix() + name + " (" + type + ") decl on line " + line + ", offset " + offset  );
-    //if symbol is not found, insert it as declared
-    symbols.add(new SymbolInfo(type, true, name, line, offset));
+    //if symbol is not already declared, insert it as declared
+    symbols.put(foundDec, true);
   }
   
   public String nestPrefix(){ //used for printing, to show nest level
@@ -100,14 +101,14 @@ public class SymbolTable {
   }
   
   public void foundUsedSymbol(SymbolType type, String name, int line, int offset){
-    for (SymbolInfo s : symbols){//if symbol is already in table, don't insert it
-      if (s.type == type && s.name.equals(name)){
-        System.out.println(nestPrefix() + name + " (" + type + ") used on line " + line + ", offset " + offset );
-        return;
-      }  
+    SymbolInfo foundUse = new SymbolInfo(type, name, line, offset);
+    
+    if (symbols.containsKey(foundUse)){ //if another use or decl exists in local scope, don't add this use
+      System.out.println(nestPrefix() + name + " (" + type + ") used on line " + line + ", offset " + offset );
+      return;
     }
     //if symbol is not found, insert it as undeclared
-    symbols.add(new SymbolInfo(type, false, name, line, offset));
+    symbols.put(new SymbolInfo(type, name, line, offset), false);
     System.out.println(nestPrefix() + name + " (" + type + ") used on line " + line + ", offset " + offset );
   }
   
@@ -116,8 +117,8 @@ public class SymbolTable {
     //searches current scope for best suggestion
     SymbolInfo bestMatch = null;
     int bestDist = 1000; //start with high difference so any match will be better than this
-    for (SymbolInfo s : symbols){
-      if (s.declaration && si.type == s.type){
+    for (SymbolInfo s : symbols.keySet()){
+      if (symbols.get(s) && si.type == s.type){
         int dist =  Levenshtein.computeDistance(si.name, s.name);
         if (dist <= maxDis && dist < bestDist){
           bestMatch = s;
