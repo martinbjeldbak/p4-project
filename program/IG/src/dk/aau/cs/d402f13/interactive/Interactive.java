@@ -13,11 +13,8 @@ import dk.aau.cs.d402f13.scanner.Scanner;
 import dk.aau.cs.d402f13.utilities.PrettyPrinter;
 import dk.aau.cs.d402f13.utilities.Token;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
-import dk.aau.cs.d402f13.utilities.ast.Visitor;
 import dk.aau.cs.d402f13.utilities.errors.Error;
-import dk.aau.cs.d402f13.utilities.errors.StandardError;
-import dk.aau.cs.d402f13.utilities.errors.SyntaxError;
-import dk.aau.cs.d402f13.scopechecker.ScopeChecker;;
+import dk.aau.cs.d402f13.scopechecker.ScopeChecker;
 
 
 public class Interactive {
@@ -90,7 +87,8 @@ public class Interactive {
                 else{
                   System.out.println("Scope checking printing...");
                   start = new Date();
-                  new ScopeChecker(ast); //constructor invoke the visiting calls
+                  ScopeChecker sc = new ScopeChecker();
+                  sc.visit(ast);
                   time = new Date().getTime() - start.getTime();
                   System.out.println("Scope checking took " + time + " ms");
                 }

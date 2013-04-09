@@ -14,6 +14,10 @@ public class ScopeChecker extends DefaultVisitor {
     private SymbolTable currentST; //used for VARs - can be nested
     private boolean varDeclaringMode; //if true, next VAR seen is a declaration, else a use
    
+    public ScopeChecker(){
+    
+    }
+    
     public void openScope(){
       currentST = new SymbolTable(currentST); //make new symbolTable point to old symbolTable to preserve scope hierarchy
       System.out.println(currentST.nestPrefix() + "BEGIN SCOPE");
@@ -25,13 +29,16 @@ public class ScopeChecker extends DefaultVisitor {
       currentST.checkErrors(); //will throw a ScopeError exception if errors are found
       currentST = currentST.getParent();
     }
-    
-    public ScopeChecker(AstNode root) throws StandardError, ScopeError{
+
+  
+    @Override
+    protected Object visitProgram(AstNode node) throws StandardError {
       varDeclaringMode = false;
       openScope();
       insertDefaultFunctions(); //findSquares, union, ...
-      visit(root);
+      visitChildren(node);
       closeScope();
+      return null;
     }
     
    void insertDefaultFunctions() throws ScopeError{ //the functions that exists in our language
@@ -110,7 +117,7 @@ public class ScopeChecker extends DefaultVisitor {
     varDeclaringMode = true;
     visit(it.next()); //traverse the VARLIST (the arguments)
     varDeclaringMode = false;
-      visit(it.next()); //traverse the expression
+    visit(it.next()); //traverse the expression
     closeScope();
     return null;
   }
