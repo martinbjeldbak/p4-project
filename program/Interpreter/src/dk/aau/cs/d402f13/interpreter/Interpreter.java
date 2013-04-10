@@ -210,7 +210,14 @@ public class Interpreter extends Visitor {
         return a.equalsOp(b);
       case "!=":
         return a.notEqual(b);
-        //-------------------------------------------------------------------------------------
+      case "+":
+        return a.add(b);
+      case "-":
+        return a.subtract(b);
+      case "*":
+        return a.multiply(b);
+      case "/":
+        return a.divide(b);
     }
     
     return null;

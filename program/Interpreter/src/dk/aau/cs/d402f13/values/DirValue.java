@@ -69,7 +69,10 @@ public class DirValue extends Value {
   
   @Override
   public String toString() {
-    return "(" + this.x + "," + this.y + ")";
+    int xx = x;
+    int yy = y;
+    
+    return null;
   }
 
   @Override
