@@ -2,13 +2,33 @@ define slide[ $pattern ]
 	findSquares[ /this ($pattern empty)* $pattern !friend/ ]
 
 define toActions[ $list ]
-	forall[ $list, 
+	map[ $list, 
 		#[$item] =>
-			if( isEmpty[$item] ) then
-				move[ this, $item ]
-			else
-				moveAndCapture[ this, $item ]
+			moveAndCapture[ this, $item ]
 	]
+
+define pawnMove[ $p, $dir ]
+	if isFirstMove[$p] then
+		toActions[ findSquares[ / $p ($dir empty)2 / ] ]
+	else
+		map[ findSquares[ / $p ($dir empty) | (($dir e)|($dir w) foe) / ],
+			#[ $square ] =>
+				//Is it possible to move further one up on the board?
+				if size[ findSquares[ $board, / $square $dir / ] ] == 0 then
+					sequence[ moveAndCapture[ $p, $square ], promote[ $p, Queen ] ] //TODO: make it a user choice
+				else
+					moveAndCapture[ $p, $square ]
+		]
+	//En pasant
+	+	map[ filter[ / $p e|w foe Pawn /, #[$square] =>
+				let $foe = piecesOnSquare[$square][0],
+					$turn = currentTurn[$game]
+				in
+					lastTurn[$foe] == $turn - 1 
+					and history[ $turn ] == //TODO: how to check 
+			],
+			#[$square] => moveAndCapture[ $p, $square ]
+		]
 
 game {
 	title "Chess"
@@ -43,21 +63,9 @@ game {
 		name Pawn
 		possibleMoves toActions[
 			if isCurrentPlayer[White] then 	
-				if isFirstMove[this] then	
-					findSquares[ /this (n empty)2 / ]
-				else 
-					union[
-						findSquares[ /this n empty/ ],
-						findSquares[ /this (ne|nw) foe/ ]
-					]
+				pawnMove[ this, n ]
 			else 
-				if isFirstMove[this] then	
-					findSquares[ /this (s empty)2 / ]
-				else 
-					union[
-						findSquares[ /this s empty/ ],
-						findSquares[ /this (se|sw) foe/ ]
-					]
+				pawnMove[ this, s ]
 		]
 	}
 	piece {
@@ -74,16 +82,7 @@ game {
 	piece {
 		name Knight
 		possibleMoves toActions[
-			union[
-				findSquares[ /this n ne !friend/ ],
-				findSquares[ /this n nw !friend/ ],
-				findSquares[ /this s se !friend/ ],
-				findSquares[ /this s sw !friend/ ],
-				findSquares[ /this e ne !friend/ ],
-				findSquares[ /this e se !friend/ ],
-				findSquares[ /this w nw !friend/ ],
-				findSquares[ /this w sw !friend/ ]
-			]
+			findSquares[ /this (n ne|nw) | (s se|sw) | (e nw|se) | (w nw|sw) !friend/ ]
 		]
 	}
 	piece {
