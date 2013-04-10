@@ -21,6 +21,23 @@ public class ListValue extends Value {
   }
   
   @Override
+  public BoolValue equalsOp(Value other) {
+    if (!(other instanceof ListValue)) {
+      return BoolValue.falseValue();
+    }
+    Value[] otherValues = ((ListValue)other).getValues();
+    if (otherValues.length != values.length) {
+      return BoolValue.falseValue();
+    }
+    for (int i = 0; i < values.length; i++) {
+      if (otherValues[i].equalsOp(values[i]) != BoolValue.trueValue()) {
+        return BoolValue.falseValue();
+      }
+    }
+    return BoolValue.trueValue();
+  }
+  
+  @Override
   public String toString() {
     String s = "[";
     if (values.length > 0) {
