@@ -1,0 +1,12 @@
+
+\begin{figure}[ht]
+\begin{center}
+\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] {Function call}
+  child {node [ellipse, draw, xshift=0.5cm] {\textit{Element}}}
+  child {node [square, xshift=-0.5cm] {List}};
+\end{tikzpicture}
+\end{center}
+\capt{The abstract syntax tree for the variable list node.}
+\label{ast:funccall}
+\end{figure}

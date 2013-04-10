@@ -1,0 +1,14 @@
+
+\begin{figure}[ht]
+\begin{center}
+\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [ellipse, draw] {Literals}
+  child {node [square,xshift=1.5cm] {Integer} edge from parent [dashed];}
+  child {node [square,xshift=0.4cm] {Direction} edge from parent [dashed];}
+  child {node [square,xshift=-0.4cm] {Coordinate} edge from parent [dashed];}
+  child {node [square,xshift=-1.5cm] {String} edge from parent [dashed];};
+\end{tikzpicture}
+\end{center}
+\capt{The abstract node type for the literals.}
+\label{ast:literal}
+\end{figure}

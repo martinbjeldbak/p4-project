@@ -19,7 +19,7 @@ public class FunValue extends Value {
 
   public FunValue(AstNode params, AstNode expression) {
     this.expression = expression;
-    if (params.get(params.size() - 1).type == Type.VARS) {
+    if (params.size() > 0 && params.get(params.size() - 1).type == Type.VARS) {
       this.formalParameters = new String[params.size() - 1];
       varParams = params.get(params.size() - 1).value;
     }
