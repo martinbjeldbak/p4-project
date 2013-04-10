@@ -35,7 +35,7 @@ game{
 	
 	area{
 		name Edge
-		line [ House, Road, House]
+		line [ House, Road, House ]
 		
 		Edge{
 			
