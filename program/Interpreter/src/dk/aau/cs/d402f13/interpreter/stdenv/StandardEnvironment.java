@@ -36,7 +36,7 @@ public class StandardEnvironment extends SymbolTable {
       }
     ));
     addFunction("union", new FunValue(
-      1, false,
+      1, true,
       new Callable() {
         @Override
         public Value call(Interpreter interpreter, Value... actualParameters)
