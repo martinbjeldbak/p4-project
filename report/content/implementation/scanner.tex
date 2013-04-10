@@ -1,4 +1,6 @@
 \section{Scanner}
+This section presents our implementation of a scanner for our programming language.
+
 Our scanner takes raw source code in the form of a program written in \productname{} as input. It validates the lexical correctness of a \productname{} program, which means that it tries to determine if the input is in the language of \productname{}. It does so by identifying tokens defined in \productname{} from the input. If an input is met which cannot be recognized as a valid token, the source code is not a valid program in \productname{}, hence an exception is thrown. The exception contains information about the line and offset at which the input was determined to be incorrect.
 
 The strings which are converted to tokens are called lexemes. Many lexemes can be converted to the same type of token. Programs will typically contain many different identifiers, which in \productname{} will all be treated as an \tokenref{ID}. The name of the identifier will then be saved as a value belonging to the particular token.
