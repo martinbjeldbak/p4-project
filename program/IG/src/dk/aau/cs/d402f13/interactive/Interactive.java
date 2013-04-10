@@ -50,6 +50,9 @@ public class Interactive {
         }
         Parser p = new Parser();
         AstNode ast;
+        if (tokens.size() < 1) {
+          continue;
+        }
         if (tokens.get(0).type == Token.Type.DEFINE) {
           ast = p.parseAsDefinition(tokens);
         }
