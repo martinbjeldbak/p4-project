@@ -267,7 +267,11 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitVar(AstNode node) throws StandardError {
-    return symbolTable.getVariable(node.value);
+    Value v = symbolTable.getVariable(node.value);
+    if (v == null) {
+      throw new NameError("Undefined variable: " + node.value);
+    }
+    return v;
   }
 
   @Override
