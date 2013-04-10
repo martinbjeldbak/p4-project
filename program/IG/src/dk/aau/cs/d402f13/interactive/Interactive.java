@@ -65,15 +65,14 @@ public class Interactive {
           System.out.println(" = " + v + " (" + v.getClass().getSimpleName() + ")");
       }
       catch (Error e) {
-        System.out.flush();
-        System.err.println(e.getClass().getSimpleName() + ": " + e.getMessage()
+        System.out.println(e.getClass().getSimpleName() + ": " + e.getMessage()
             + " on input line " + e.getLine() + " column "
             + e.getColumn() + ":");
-        System.err.println(line);
+        System.out.println(line);
         for (int i = 1; i < e.getColumn(); i++) {
-          System.err.print("-");
+          System.out.print("-");
         }
-        System.err.println("^");
+        System.out.println("^");
         if (e instanceof InternalError) {
           e.printStackTrace();
         }
