@@ -7,6 +7,11 @@ define hello[] "Hello"
 define world[] "World"
 define movePiece[$from, $to] 0
 
+define reverse[$list]
+  if 0 == size[$list]
+    then []
+    else (reverse[$list[1, -1]]) + [$list[0]]
+
 define factorial[$n]
   if $n == 0
     then 1
