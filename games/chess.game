@@ -7,6 +7,29 @@ define toActions[ $list ]
 			moveAndCapture[ this, $item ]
 	]
 
+define pawnMove[ $p, $dir ]
+	if isFirstMove[$p] then
+		toActions[ findSquares[ / $p ($dir empty)2 / ] ]
+	else
+		map[ findSquares[ / $p ($dir empty) | (($dir e)|($dir w) foe) / ],
+			#[ $square ] =>
+				//Is it possible to move further one up on the board?
+				if size[ findSquares[ $board, / $square $dir / ] ] == 0 then
+					sequence[ moveAndCapture[ $p, $square ], promote[ $p, Queen ] ] //TODO: make it a user choice
+				else
+					moveAndCapture[ $p, $square ]
+		]
+	//En pasant
+	+	map[ filter[ / $p e|w foe Pawn /, #[$square] =>
+				let $foe = piecesOnSquare[$square][0],
+					$turn = currentTurn[$game]
+				in
+					lastTurn[$foe] == $turn - 1 
+					and history[ $turn ] == //TODO: how to check 
+			],
+			#[$square] => moveAndCapture[ $p, $square ]
+		]
+
 game {
 	title "Chess"
 	players [Black, White]
@@ -40,15 +63,9 @@ game {
 		name Pawn
 		possibleMoves toActions[
 			if isCurrentPlayer[White] then 	
-				if isFirstMove[this] then	
-					findSquares[ /this (n empty)2 / ]
-				else 
-					findSquares[ /this (n empty) | (ne|nw foe)/ ]
+				pawnMove[ this, n ]
 			else 
-				if isFirstMove[this] then	
-					findSquares[ /this (s empty)2 / ]
-				else 
-					findSquares[ /this (s empty) | (se|sw foe)/ ]
+				pawnMove[ this, s ]
 		]
 	}
 	piece {
