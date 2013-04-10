@@ -24,6 +24,17 @@ public abstract class Value {
     throw new TypeError("This value does not the '>=' operator");
   }
   
+  public boolean equals(Object o) {
+    if (!(o instanceof Value)) {
+      return false;
+    }
+    if (this == o) {
+      return true;
+    }
+    Value v = (Value)o;
+    return v.equalsOp(this) == BoolValue.trueValue();
+  }
+  
   public BoolValue equalsOp(Value other) {
     return BoolValue.falseValue();
   }
