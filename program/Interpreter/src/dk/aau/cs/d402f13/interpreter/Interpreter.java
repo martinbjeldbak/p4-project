@@ -21,23 +21,6 @@ public class Interpreter extends Visitor {
   private SymbolTable symbolTable = new SymbolTable();
 
   public Interpreter() throws StandardError {
-    FunValue fun = new FunValue(
-      2, false,
-      new Callable() {
-        @Override
-        public Value call(Interpreter interpreter, Value... actualParameters)
-            throws StandardError {
-          if (!(actualParameters[0] instanceof IntValue
-              && actualParameters[1] instanceof IntValue)) {
-            throw new ArgumentError("Invalid arguments, expected two integers");
-          }
-          int a = ((IntValue)actualParameters[0]).getValue();
-          int b = ((IntValue)actualParameters[1]).getValue();
-          return new IntValue(a + b);
-        }
-      }
-    );
-    symbolTable.addFunction("add", fun);
   }
   
   public SymbolTable getSymbolTable() {

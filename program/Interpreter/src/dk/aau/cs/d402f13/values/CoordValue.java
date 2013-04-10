@@ -48,7 +48,13 @@ public class CoordValue extends Value {
   
   @Override
   public String toString() {
-    return "(" + Integer.toString(x) + "," + Integer.toString(y) + ")";
+    //return "(" + Integer.toString(x) + ", " + Integer.toString(y) + ")";
+    
+    return null;
+  }
+  
+  private char toChar(int coord) {
+    
   }
   
   private boolean isLetter(char c) {
