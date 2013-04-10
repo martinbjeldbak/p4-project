@@ -37,59 +37,32 @@ public class SymbolTable {
     return this.parent == null ? 0 : this.parent.getNestLevel() + 1; 
   }
   
-  public void checkErrors() throws ScopeError {
+  public void checkFunctionErrors() throws ScopeError {
+    //this error check is done after closing the global scope
     for (SymbolInfo s : symbols.keySet()){   //this method is called just before exiting a scope
-      if (!symbols.get(s) && !declared(s)){//if symbol is not a declaration and is not declared in visible scopes 
-        if (s.type == SymbolType.VARIABLE){
-
-         error(s);
-        }
-        else if (s.type == SymbolType.FUNCTION){
-
-          //Functions you be used before they are declared, so when exiting a scope with an undcl function,
-          //transfer this undeclared symbol to the parent scope's symbol table, since it might be decl there
-          if (this.parent != null)
-            this.parent.foundUsedSymbol(s.type, s.name, s.line, s.offset);
-          else{
-            Boolean a = symbols.containsKey(new SymbolInfo(SymbolType.FUNCTION, "toActions", 30, 29));
-            Boolean b = symbols.containsKey(new SymbolInfo(SymbolType.FUNCTION, "findSquares", 30, 29));
-            error(s);
-          }
-        }
+      if (s.type == SymbolType.FUNCTION && !symbols.get(s)){ //if any function is marked as undeclared 
+            error(s, "Undeclared");
       }
     }
   }
   
-  void error(SymbolInfo s) throws ScopeError{
+  void error(SymbolInfo s, String msg) throws ScopeError{
     //Throw an error and try to find a suggestion, E.g. "Couldn't find findSometing, did you mean findSomething?"
     SymbolInfo closeMatching = findSuggestion(s).x; //Looks in all visible scopes for similar symbols
     String suggestion = closeMatching != null ? ", did you mean '" + closeMatching.name + "'?" : "";
-    throw new ScopeError("Could not find declaration of: '" + s.name + "'" + suggestion, s);
+    throw new ScopeError(msg + ": '" + s.name + "'" + suggestion, s);
   }
   
-  Boolean declared(SymbolInfo s){
+  Boolean visibleInScopes(SymbolInfo s){
     //Checks if a symbol is declared in either local or outer scopes
-  if (symbols.containsKey(s) && symbols.get(s) == true) //true if declared in local scope, false if used in local scope, null if neither
+  if (symbols.containsKey(s)) //true if declared in local scope, false if used in local scope, null if neither
     return true;
   if (this.parent == null)    //if this symbol table is in outer scope, symbol is not declared
     return false;
   else
-    return this.parent.declared(s); //else check if enclosing scope contains symbol 
+    return this.parent.visibleInScopes(s); //else check if enclosing scope contains symbol 
   }
-  
-  public void foundDeclaredSymbol(SymbolType type, String name, int line, int offset) throws ScopeError{
-    
-    SymbolInfo foundDec = new SymbolInfo(type, name, line, offset);
-    
-    //If a declaration in current scope already exists, the same type has been declared two times, which is an error
-    if (symbols.containsKey(foundDec) && symbols.get(foundDec) == true){
-      throw new ScopeError("Double declaration.", new SymbolInfo(type, name, line, offset));
-    }
-        
-    System.out.println(nestPrefix() + name + " (" + type + ") decl on line " + line + ", offset " + offset  );
-    //if symbol is not already declared, insert it as declared
-    symbols.put(foundDec, true);
-  }
+
   
   public String nestPrefix(){ //used for printing, to show nest level
     String prefix = "";
@@ -100,16 +73,41 @@ public class SymbolTable {
     return prefix;
   }
   
-  public void foundUsedSymbol(SymbolType type, String name, int line, int offset){
-    SymbolInfo foundUse = new SymbolInfo(type, name, line, offset);
-    
-    if (symbols.containsKey(foundUse)){ //if another use or decl exists in local scope, don't add this use
-      System.out.println(nestPrefix() + name + " (" + type + ") used on line " + line + ", offset " + offset );
-      return;
+  public void foundDeclVar(SymbolInfo symbol) throws ScopeError{
+    if (this.symbols.containsKey(symbol)){
+      error(symbol, "Double declaration");
     }
-    //if symbol is not found, insert it as undeclared
-    symbols.put(new SymbolInfo(type, name, line, offset), false);
-    System.out.println(nestPrefix() + name + " (" + type + ") used on line " + line + ", offset " + offset );
+    else{
+      this.symbols.put(symbol, null); //null, cause not necessary to save if a variable is decl or ref.
+    }
+  }  
+  public void foundUsedVar(SymbolInfo symbol) throws ScopeError{
+    if (!visibleInScopes(symbol)){
+      error(symbol, "Not declared");
+    }
+  }
+  public void foundDeclFunc(SymbolInfo symbol) throws ScopeError{
+    if (globalScope().symbols.containsKey(symbol)){
+      if (globalScope().symbols.get(symbol) == true){//true means declaration
+        error(symbol, "Double declaration");
+      }
+      else{
+        globalScope().symbols.put(symbol, true); //overwrites the symbol key to have true value associated -> means declaration 
+      }
+    }
+    else{
+      globalScope().symbols.put(symbol, true); //overwrites the symbol key to have true value associated -> means declaration 
+    }
+  }
+  public void foundUsedFunc(SymbolInfo symbol){
+    
+    if (!this.globalScope().symbols.containsKey(symbol)){    //if function doesn't exist in global scope
+      this.globalScope().symbols.put(symbol, false);        //insert function as undeclared
+    }
+  }
+  
+  SymbolTable globalScope(){ //Find the global scope recursively by following parent references
+    return this.parent == null ? this : this.parent.globalScope();
   }
   
   public Tuple<SymbolInfo, Integer> findSuggestion(SymbolInfo si){ //looks recursively in this scope + enclosing scopes
