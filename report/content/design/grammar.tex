@@ -1,16 +1,9 @@
 \section{Grammar}
 \label{sec:grammar}
 
-%should be possible to construct the language by reading this design document..
-%Notational conventions
-%Character classes
-%reserved tokens
-%literals
-%identifiers
-%program structure
-%expressions
-%patterns
-%section of abstract syntax tree will present the different node types
+This section presents our grammar with all the consisting parts of it. Firstly, we present our notational conventions followed by sections that present our character classes, the reserved words, the literals and the identifiers in our programming language. After this we present the actual structure of a program written in \productname{} followed by the expressions and patterns which the structure consists of.
+
+%Following this section the abstract node types section (\secref{sec:ant}) begins where we present the different node types for the program structure presented in this section.
 
 \subsection{Notational Conventions}
 We use a variant of Extended Backus-Naur Form to express the context-free grammar of
@@ -56,8 +49,6 @@ The following classes of characters will be used throughout this section:
 \grule{unichar}{\gcomment{any unicode character}}
 \grule{strchar}{unichar \gex quotebs}
 \end{ebnf}
-
-\todo{quotebs?}
 
 \subsection{Reserved Tokens}
 Our programming language needs to be able to distinguish between words (a sequence of characters or symbols) that are reserved for the language to function properly and words which a user has constructed to be used as e.g. function names.

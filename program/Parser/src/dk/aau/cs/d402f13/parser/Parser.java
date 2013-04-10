@@ -35,6 +35,14 @@ public class Parser {
     return expression();
   }
   
+  public AstNode parseAsDefinition(LinkedList<Token> tokens) throws SyntaxError {
+    this.tokens = tokens;
+    currentToken = null;
+    nextToken = tokens.peek();
+
+    return functionDefinition();
+  }
+  
   private boolean accept(Token.Type type) {
     if (lookAhead(type)) {
       currentToken = pop();

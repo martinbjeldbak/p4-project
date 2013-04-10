@@ -17,6 +17,7 @@ import dk.aau.cs.d402f13.utilities.Token;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.ast.Visitor;
 import dk.aau.cs.d402f13.utilities.errors.Error;
+import dk.aau.cs.d402f13.utilities.errors.InternalError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.SyntaxError;
 import dk.aau.cs.d402f13.values.Value;
@@ -29,7 +30,8 @@ public class Interactive {
     // TODO Auto-generated constructor stub
   }
   
-  public static void expressionI(BufferedReader reader) throws IOException {
+  public static void expressionI(BufferedReader reader) throws IOException, StandardError {
+    Interpreter interp = new Interpreter();
     while (true) {
       System.out.print("> ");
       String line = reader.readLine();
@@ -47,22 +49,33 @@ public class Interactive {
           tokens.add(ts);
         }
         Parser p = new Parser();
-        AstNode ast = p.parseAsExpression(tokens);
+        AstNode ast;
+        if (tokens.size() < 1) {
+          continue;
+        }
+        if (tokens.get(0).type == Token.Type.DEFINE) {
+          ast = p.parseAsDefinition(tokens);
+        }
+        else {
+          ast = p.parseAsExpression(tokens);
+        }
         //new ScopeChecker(ast);
-        Interpreter i = new Interpreter();
-        Value v = i.visit(ast);
-        System.out.println(" = " + v);
+        Value v = interp.visit(ast);
+        if (v != null) 
+          System.out.println(" = " + v + " (" + v.getClass().getSimpleName() + ")");
       }
       catch (Error e) {
-        System.out.flush();
-        System.err.println(e.getClass().getSimpleName() + ": " + e.getMessage()
+        System.out.println(e.getClass().getSimpleName() + ": " + e.getMessage()
             + " on input line " + e.getLine() + " column "
             + e.getColumn() + ":");
-        System.err.println(line);
+        System.out.println(line);
         for (int i = 1; i < e.getColumn(); i++) {
-          System.err.print("-");
+          System.out.print("-");
         }
-        System.err.println("^");
+        System.out.println("^");
+        if (e instanceof InternalError) {
+          e.printStackTrace();
+        }
       }
     }
   }
