@@ -29,11 +29,6 @@ public class CoordValue extends Value {
   public int getY() {
     return this.y;
   }
-
-  @Override
-  public Type getType() {
-    return Type.COORD_LIT;
-  }
   
   @Override
   public BoolValue equalsOp(Value other) {
@@ -46,8 +41,20 @@ public class CoordValue extends Value {
     return BoolValue.falseValue();
   }
   
+  @Override
+  public Type getType() {
+    return Type.COORD_LIT;
+  }
+  
+  @Override
+  public String toString() {
+    return "(" + Integer.toString(x) + "," + Integer.toString(y) + ")";
+  }
+  
   private boolean isLetter(char c) {
     return (c >= 'A' && c <= 'Z');
   }
+  
+
 
 }

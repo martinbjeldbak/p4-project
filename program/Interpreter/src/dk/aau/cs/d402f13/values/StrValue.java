@@ -24,13 +24,20 @@ public class StrValue extends Value {
   }
   
   @Override
-  public BoolValue notEqual(Value other) throws TypeError {
-    if(other instanceof StrValue) {
-      if(!this.value.equals(((StrValue) other).value))
-        return BoolValue.trueValue();
-    return BoolValue.falseValue();
-    }
-    throw new TypeError("Cannot use '!=' on string with type " + other.getType());
+  public Value add(Value other) throws TypeError {
+    
+    if(other instanceof StrValue) 
+      return new StrValue(this.value + ((StrValue)other).getValue());
+    else if(other instanceof IntValue)
+      return new StrValue(this.value + ((IntValue)other).toString());
+    else if(other instanceof BoolValue)
+      return new StrValue(this.value + ((BoolValue)other).toString());
+    else if(other instanceof CoordValue)
+      return new StrValue(this.value + ((CoordValue)other).toString());
+    else if(other instanceof DirValue)
+      return new StrValue(this.value + ((DirValue)other).toString());
+    
+    throw new TypeError("Cannot add a " + other.getType() + " to a string");
   }
   
   @Override
