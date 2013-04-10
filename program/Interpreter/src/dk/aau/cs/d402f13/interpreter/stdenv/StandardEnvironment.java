@@ -13,6 +13,10 @@ import dk.aau.cs.d402f13.values.Value;
 public class StandardEnvironment extends SymbolTable {
 
   public StandardEnvironment() {
+    
+    // Type checking functions
+    
+    // List functions
     addFunction("size", new FunValue(
       1, false,
       new Callable() {
@@ -22,7 +26,19 @@ public class StandardEnvironment extends SymbolTable {
           if (!(actualParameters[0] instanceof ListValue)) {
             throw new ArgumentError("Invalid argument, expected a list");
           }
-          int a = ((IntValue)actualParameters[0]).getValue();
+          return new IntValue(((ListValue)actualParameters[0]).getValues().length);
+        }
+      }
+    ));
+    addFunction("union", new FunValue(
+      1, false,
+      new Callable() {
+        @Override
+        public Value call(Interpreter interpreter, Value... actualParameters)
+            throws StandardError {
+          if (!(actualParameters[0] instanceof ListValue)) {
+            throw new ArgumentError("Invalid argument, expected a list");
+          }
           return new IntValue(((ListValue)actualParameters[0]).getValues().length);
         }
       }
