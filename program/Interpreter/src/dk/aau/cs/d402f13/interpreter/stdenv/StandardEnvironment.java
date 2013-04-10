@@ -1,5 +1,6 @@
 package dk.aau.cs.d402f13.interpreter.stdenv;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class StandardEnvironment extends SymbolTable {
         public Value call(Interpreter interpreter, Value... actualParameters)
             throws StandardError {
           if (!(actualParameters[0] instanceof ListValue)) {
-            throw new ArgumentError("Invalid argument, expected a list");
+            throw new ArgumentError("Invalid argument #1, expected a list");
           }
           return new IntValue(((ListValue)actualParameters[0]).getValues().length);
         }
@@ -42,16 +43,16 @@ public class StandardEnvironment extends SymbolTable {
         public Value call(Interpreter interpreter, Value... actualParameters)
             throws StandardError {
           if (!(actualParameters[0] instanceof ListValue)) {
-            throw new ArgumentError("Invalid argument (0), expected a list");
+            throw new ArgumentError("Invalid argument #1, expected a list");
           }
-          List<Value> result = Arrays.asList(((ListValue)actualParameters[0]).getValues());
+          List<Value> result = new ArrayList<Value>(Arrays.asList(((ListValue)actualParameters[0]).getValues()));
           for (int i = 1; i < actualParameters.length; i++) {
             if (!(actualParameters[i] instanceof ListValue)) {
-              throw new ArgumentError("Invalid argument (" + i + "), expected a list");
+              throw new ArgumentError("Invalid argument #" + (i + 1) + ", expected a list");
             }
             Value[] values = ((ListValue)actualParameters[i]).getValues();
             for (int j = 0; j < values.length; j++) {
-              if (result.contains(values[j])) {
+              if (!result.contains(values[j])) {
                 result.add(values[j]);
               }
             }
