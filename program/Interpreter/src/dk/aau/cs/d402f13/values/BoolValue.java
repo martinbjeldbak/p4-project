@@ -58,14 +58,4 @@ public class BoolValue extends Value {
     }
     return falseValue;
   }
-  
-  @Override
-  public BoolValue notEqual(Value other) throws TypeError {
-    if(other instanceof BoolValue) {
-      if(this != (BoolValue)other)
-        return trueValue;
-      return falseValue;
-    }
-    throw new TypeError("Cannot use '!=' operator on bool with type " + other.getType());
-  }
 }
