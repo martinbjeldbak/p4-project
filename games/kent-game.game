@@ -19,8 +19,7 @@ game {
     name White
     possibleDrops []
     possibleMoves union[
-      findSquares[/this e empty/],
-      findSquares[/this n empty/],
+      findSquares[/this e|n empty/],
       findSquares[/this e Black e empty/],
       findSquares[/this n Black n empty/]
     ]
@@ -29,8 +28,7 @@ game {
     name Black
     possibleDrops []
     possibleMoves union[
-      findSquares[/this w empty/],
-      findSquares[/this s empty/],
+      findSquares[/this w|s empty/],
       findSquares[/this w White w empty/],
       findSquares[/this s White s empty/]
     ]

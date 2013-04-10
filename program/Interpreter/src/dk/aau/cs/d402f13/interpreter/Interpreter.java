@@ -1,5 +1,6 @@
 package dk.aau.cs.d402f13.interpreter;
 
+import dk.aau.cs.d402f13.interpreter.stdenv.StandardEnvironment;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.ast.Visitor;
@@ -18,26 +19,9 @@ import dk.aau.cs.d402f13.values.StrValue;
 import dk.aau.cs.d402f13.values.Value;
 
 public class Interpreter extends Visitor {
-  private SymbolTable symbolTable = new SymbolTable();
+  private SymbolTable symbolTable = new StandardEnvironment();
 
   public Interpreter() throws StandardError {
-    FunValue fun = new FunValue(
-      2, false,
-      new Callable() {
-        @Override
-        public Value call(Interpreter interpreter, Value... actualParameters)
-            throws StandardError {
-          if (!(actualParameters[0] instanceof IntValue
-              && actualParameters[1] instanceof IntValue)) {
-            throw new ArgumentError("Invalid arguments, expected two integers");
-          }
-          int a = ((IntValue)actualParameters[0]).getValue();
-          int b = ((IntValue)actualParameters[1]).getValue();
-          return new IntValue(a + b);
-        }
-      }
-    );
-    symbolTable.addFunction("add", fun);
   }
   
   public SymbolTable getSymbolTable() {
@@ -283,7 +267,11 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitVar(AstNode node) throws StandardError {
-    return symbolTable.getVariable(node.value);
+    Value v = symbolTable.getVariable(node.value);
+    if (v == null) {
+      throw new NameError("Undefined variable: " + node.value);
+    }
+    return v;
   }
 
   @Override
