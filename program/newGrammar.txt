@@ -1,14 +1,19 @@
+// IDENTIFIERS
+
+constant          -> lowercase {anycase}
+type              -> uppercase {anycase}
+variable          -> "$" anycae {anycase}
 
 // PROGRAM STRUCTURE
 program           -> {definition}
-definition        -> function_def
+definition        -> constant_def
                    | type_def
-function_def      -> "define" function [varlist] "=" expression
+constant_def      -> "define" constant [varlist] "=" expression
 type_def          -> "type" type varlist ["extends" type list] [type_body]
 type_body         -> "{" {member_def} "}"
 member_def        -> abstract_def
-                   | function_def
-abstract_def      -> "define" "abstract" function [varlist]
+                   | constant_def
+abstract_def      -> "define" "abstract" constant [varlist]
 varlist           -> "[" [variable { "," variable} ["," vars] | vars] "]"
 vars              -> "..." variable
 
@@ -23,7 +28,7 @@ operation         -> minus_op [operator expression]
 minus_op          -> ["-"] call
 call              -> element [list]
 element           -> atomic {member_access}
-member_access     -> "." function [list]
+member_access     -> "." constant [list]
 atomic            -> "(" expression ")"
                    | variable
                    | list
@@ -35,7 +40,7 @@ atomic            -> "(" expression ")"
                    | integer
                    | string
                    | type
-                   | function
+                   | constant
 assignment        -> "let" variable "=" expression {"," variable "=" expression} "in" expression
 if_expr           -> "if" expression "then" expression "else" expression
 lambda_expr       -> "#" varlist "=>" expression
