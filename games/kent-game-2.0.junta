@@ -1,5 +1,5 @@
 type Solo[] extends Player[] {
-  define winCondition[$gameState]
+  define winCondition[$gameState] =
     8 == size[matchSquares[
       [A1, A2, A3, B1, B2, B3, C1, C2],
       /Black/,
@@ -7,7 +7,7 @@ type Solo[] extends Player[] {
     ]]
 }
 type White[$player] extends Piece[$player] {
-  define actions[$gameState]
+  define actions[$gameState] =
     union[
       findActions[/this e|n empty/, $gameState],
       findActions[/this e Black e empty/, $gameState],
@@ -15,7 +15,7 @@ type White[$player] extends Piece[$player] {
     ]
 }
 type Black[$player] extends Piece[$player] {
-  define actions[$gameState]
+  define actions[$gameState] =
     union[
       findSquares[/this w|s empty/, $gameState],
       findSquares[/this w White w empty/, $gameState],
