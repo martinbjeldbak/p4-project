@@ -19,12 +19,12 @@ expression        -> assignment
                    | lambda_expr
                    | "not" expression
                    | operation
-operation         -> call [operator expression]
+operation         -> minus_op [operator expression]
+minus_op          -> "-" call
 call              -> element [list]
 element           -> atomic {member_access}
 member_access     -> "." function [list]
 atomic            -> "(" expression ")"
-                   | "-" atomic
                    | variable
                    | list
                    | "/" pattern "/"
