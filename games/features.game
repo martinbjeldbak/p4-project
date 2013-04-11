@@ -90,17 +90,3 @@ define giveMeAnAction[]
   ]
                           
 
-game {
-  title (hello[]) + ", " + (world[]) + "!"
-  winCondition
-    let $f = #[$a] => 5 + $a,
-        $g = #[$a] => $a / 3
-      in (comp[$f, $g])[9]
-  tieCondition
-    let $x = let $x = 5 in $x + 5
-      in (let $x = $x - 5
-        in $x) + $x
-  tieCondition
-    let $a = #[$a] => #[$b, $c] => $b[$c + $a]
-      in ($a[12])[#[$b] => $b * 3, 5]
-}
