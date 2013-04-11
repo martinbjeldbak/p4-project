@@ -22,10 +22,9 @@ type Black[$player] extends Piece[$player] {
       findSquares[/this s White s empty/, $gameState]
     ]
 }
-type KentGame extends Game[“Kents Spil”] {
+type KentGame[] extends Game[“Kents Spil”] {
   constant $players = [Solo[]]
-  define board[]
-    GridBoard[5, 5]
-      .addPieces[White[$players[0], e, n], [A1, A2, A3, B1, B2, B3, C1, C2]]
-      .addPieces[White[$players[0], w, s], [C4, C5, D3, D4, D5, E3, E4, E5]]
+  constant $board = GridBoard[5, 5]
+    .addPieces[White[$players[0], e, n], [A1, A2, A3, B1, B2, B3, C1, C2]]
+    .addPieces[White[$players[0], w, s], [C4, C5, D3, D4, D5, E3, E4, E5]]
 }
