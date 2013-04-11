@@ -20,7 +20,7 @@ expression        -> assignment
                    | "not" expression
                    | operation
 operation         -> minus_op [operator expression]
-minus_op          -> "-" call
+minus_op          -> ["-"] call
 call              -> element [list]
 element           -> atomic {member_access}
 member_access     -> "." function [list]
