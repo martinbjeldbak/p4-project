@@ -1,15 +1,17 @@
-game {
+game NoughtsAndCrosses {
   title "Noughts and Crosses"
-  players [Noughts, Crosses]
+  player Noughts {
+  }
+  player Crosses {
+  }
   turnOrder [Crosses, Noughts]
-  board {
+  board Board {
     grid {
       width 3
       height 3
     }
   }
-  piece {
-    name XOPieces
+  piece Piece {
     possibleDrops emptySquares[board]
   }
   winCondition
