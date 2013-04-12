@@ -5,12 +5,11 @@ A scope is the context in which one or more variables exist.
 There are three types of scopes in \productname{}. Function scopes, lambda scopes and
 ``let''-scopes.
 
-\begin{dlist}
-\item What is scoping?
-\item Examples of static/lexical versus dynamic scoping
-\item Why do we want to use dynamic scoping
-\item What does that mean for \productname?
-\end{dlist}
+All named functions (\texttt{define}-ed functions, not lambda expressions) exist in
+the global scope. Also, it is not necessary to define a function before use, so something
+like the following is valid:
+
+\codesample{usebeforedefinition.junta}
 
 \subsection{Function scope}
 Consider a function definition such as:

@@ -7,7 +7,7 @@ public class SymbolInfo{
   int line;
   int offset;
   
-  SymbolInfo(SymbolType type, String name, int line, int offset){
+  public SymbolInfo(SymbolType type, String name, int line, int offset){
     this.type = type;
     this.name = name;
     this.line = line;

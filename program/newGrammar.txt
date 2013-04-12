@@ -1,0 +1,61 @@
+// IDENTIFIERS
+
+constant          -> lowercase {anycase}
+type              -> uppercase {anycase}
+variable          -> "$" anycae {anycase}
+
+// PROGRAM STRUCTURE
+program           -> {definition}
+definition        -> constant_def
+                   | type_def
+constant_def      -> "define" constant [varlist] "=" expression
+type_def          -> "type" type varlist ["extends" type list] [type_body]
+type_body         -> "{" {member_def} "}"
+member_def        -> abstract_def
+                   | constant_def
+abstract_def      -> "define" "abstract" constant [varlist]
+varlist           -> "[" [variable { "," variable} ["," vars] | vars] "]"
+vars              -> "..." variable
+
+// EXPRESSIONS
+
+expression        -> assignment
+                   | if_expr
+                   | lambda_expr
+                   | "not" expression
+                   | operation
+operation         -> minus_op [operator expression]
+minus_op          -> ["-"] call
+call              -> element [list]
+element           -> atomic {member_access}
+member_access     -> "." constant [list]
+atomic            -> "(" expression ")"
+                   | variable
+                   | list
+                   | "/" pattern "/"
+                   | "this"
+                   | "super"
+                   | direction
+                   | coordinate
+                   | integer
+                   | string
+                   | type
+                   | constant
+assignment        -> "let" variable "=" expression {"," variable "=" expression} "in" expression
+if_expr           -> "if" expression "then" expression "else" expression
+lambda_expr       -> "#" varlist "=>" expression
+list              -> "[" [expression {"," expression}] "]"
+
+// PATTERNS
+
+pattern           -> pattern_expr {pattern_expr}
+pattern_expr      -> pattern_val ["*" | "?" | "+"]
+                   | pattern_val "|" pattern_expr
+pattern_val       -> direction
+                   | variable
+                   | pattern_check
+                   | "!" pattern_check
+                   | "(" pattern ")" [integer]
+pattern_check     -> pattern_keyword
+                   | "this"
+                   | identifier
