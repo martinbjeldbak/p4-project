@@ -9,11 +9,11 @@ public abstract class Value {
   public abstract Type getType();
   
   public BoolValue lessThan(Value other) throws TypeError {
-    throw new TypeError("This value does not the '<' operator");
+    throw new TypeError("This value does not support the '<' operator");
   }
   
   public BoolValue lessThanEq(Value other) throws TypeError {
-    throw new TypeError("This value does not the '<=' operator");
+    throw new TypeError("This value does not support the '<=' operator");
   }
   
   public BoolValue greaterThan(Value other) throws TypeError {
@@ -21,7 +21,18 @@ public abstract class Value {
   }
   
   public BoolValue greaterThanEq(Value other) throws TypeError {
-    throw new TypeError("This value does not the '>=' operator");
+    throw new TypeError("This value does not support the '>=' operator");
+  }
+  
+  public boolean equals(Object o) {
+    if (!(o instanceof Value)) {
+      return false;
+    }
+    if (this == o) {
+      return true;
+    }
+    Value v = (Value)o;
+    return v.equalsOp(this) == BoolValue.trueValue();
   }
   
   public BoolValue equalsOp(Value other) {
@@ -35,7 +46,7 @@ public abstract class Value {
   }
   
   public Value add(Value other) throws TypeError {
-    throw new TypeError("This value does not the '+' operator");
+    throw new TypeError("This value does not support the '+' operator");
   }
   
   public Value subtract(Value other) throws TypeError {

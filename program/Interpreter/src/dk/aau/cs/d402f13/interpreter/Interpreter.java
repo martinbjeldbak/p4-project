@@ -1,5 +1,6 @@
 package dk.aau.cs.d402f13.interpreter;
 
+import dk.aau.cs.d402f13.interpreter.stdenv.StandardEnvironment;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.ast.Visitor;
@@ -18,7 +19,7 @@ import dk.aau.cs.d402f13.values.StrValue;
 import dk.aau.cs.d402f13.values.Value;
 
 public class Interpreter extends Visitor {
-  private SymbolTable symbolTable = new SymbolTable();
+  private SymbolTable symbolTable = new StandardEnvironment();
 
   public Interpreter() throws StandardError {
   }
@@ -266,7 +267,11 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitVar(AstNode node) throws StandardError {
-    return symbolTable.getVariable(node.value);
+    Value v = symbolTable.getVariable(node.value);
+    if (v == null) {
+      throw new NameError("Undefined variable: " + node.value);
+    }
+    return v;
   }
 
   @Override
