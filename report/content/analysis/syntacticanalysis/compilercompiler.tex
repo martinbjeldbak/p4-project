@@ -2,7 +2,7 @@
 \label{sec:ana-parsers}
 The principle of generating parsers is very systematic and therefore there are different automated tools to generate parsers for a specific grammar that meets some standards. A grammar must for instance not be ambiguous otherwise the tools cannot make a distinct parser for the grammar. A grammar is ambiguous if a string can be generated with more than one parse tree. We start by taking a look at the constructing of a handwritten parser. Then we take a look a two different parser generators that produce different parsers. Finally we sum up the pros and cons of the analysis on handwritten and generated parsers. 
 
-\subsection{Handwritten parsers}
+\subsubsection{Handwritten parsers}
 \label{sec:handparser}
 Why would you write a parser on your own when you have automated tools for this job? If we were to construct our own handwritten parser, and not use the tools alreadt built for this, it would be so that we would gain a greater understanding of how these parsers work. How are they constructed? What kind of errors could occur when trying to develop a parser? One of the best ways to learn is to fail - learn from the mistakes and correct them. But this is also a pain in the neck if a lot of errors are popping up and the person trying to get the job done does not have the expertise to resolve the errors and find a solution.
 
@@ -12,7 +12,7 @@ Programming languages evolve and their grammar can change. When this is the case
 
 This brings us to the topic of how reliable our handwritten parsers are compared to the generated parsers. So far we have discussed that the produced code for a handwritten parser will be error-prone so this will naturally bring us to conclude that this code must be less reliable than the automated generators produced code. This is a big con because we have to be able to rely on the output of the parser. To check the validity of a parser, it can be given a set of inputs that are almost in its language but contains a small error, which must cause the parser to reject the inputs. Additionally, a set of inputs can also be constructed, which is \textbf{in} the language, hence the parser must build a correct abstract syntax tree. For each input, the AST outputted by the handwritten parser can be compared to the one outputted by the parse generator tool. If the parse generator has not been constructed yet, one can choose to manually write the expected AST in XML, which most languages / programming frameworks support, using the grammar as reference.
 
-\subsection{Generated parsers}
+\subsubsection{Generated parsers}
 \label{sec:ana-genparser}
 There are quite a few automated parser generaters (compiler compilers). To construct af parser with a generator the developer must input the grammar into the generator, and it will output a parser for that specific grammar. This can be a bit different from software to software but the grammar is often expressed using the Extended Backus Naur Form (EBNF) and the output parser will be produced in the language the generator is meant to output. We take a short look at SableCC and JavaCC in the following two section that both produce Java source code.
 
