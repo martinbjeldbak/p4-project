@@ -138,11 +138,12 @@ The following grammar describes the expressions of the programming language:
 \galt{lambda\_expr}
 \galt{\gter{not} \gcat expression}
 \galt{operation}
-\grule{operation}{minus\_op \gcat \gopt{operator \gcat expression}}
-\grule{minus\_op}{\gopt{\gter{-}} \gcat call}
-\grule{call}{element \gcat \gopt{list}}
-\grule{element}{atomic \gcat \grep{member\_access}}
-\grule{member\_access}{\gter{.} \gcat constant \gcat \gopt{list}}
+\grule{operation}{negation \gcat \gopt{operator \gcat expression}}
+\grule{negation}{element}
+\galt{\gter{-} \gcat negation}
+\grule{element}{call\_sequence \gcat \grep{member\_access}}
+\grule{member\_access}{\gter{.} \gcat constant \gcat \grep{list}}
+\grule{call\_sequence}{atomic \gcat \grep{list}}
 \grule{atomic}{\gter{(} \gcat expression \gcat \gter{)}}
 \galt{variable}
 \galt{list}

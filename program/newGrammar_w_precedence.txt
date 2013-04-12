@@ -29,10 +29,11 @@ eq_sequence       -> cm_sequence {("=="|"!=") cm_sequence}
 cm_sequence       -> as_sequence {("<"|">"|"<="|">=") as_sequence}
 as_sequence       -> md_sequence {("+"|"-") md_sequence}
 md_sequence       -> negation {("*"|"/"|"%") negation}
-negation          -> ["-"] call
-call              -> element [list]
-element           -> atomic {member_access}
-member_access     -> "." constant [list]
+negation          -> element
+                   | "-" negation
+element           -> call_sequence {member_access}
+member_access     -> "." constant {list}
+call_sequence     -> atomic {list}
 atomic            -> "(" expression ")"
                    | variable
                    | list
