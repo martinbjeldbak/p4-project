@@ -113,7 +113,7 @@ The following grammar describes the actual construction of any program written i
 
 \begin{ebnf}
 %Program structure
-\grule{program}{\grep{function\_def} \gcat game\_decl}
+\grule{program}{\grep{definition}}
 \grule{definition}{constant\_def}
 \galt{type\_def}
 \grule{constant\_def}{\gter{define} \gcat function \gcat \gopt{varlist} \gcat \gter{=} \gcat \gcat expression}
@@ -133,25 +133,28 @@ The following grammar describes the expressions of the programming language:
 
 \begin{ebnf}
 %Expressions
-\grule{expression}{element \gcat operator \gcat expression}
-\galt{assignment}
+\grule{expression}{assignment}
 \galt{if\_expr}
 \galt{lambda\_expr}
-\galt{element \gcat \gopt{list}}
 \galt{\gter{not} \gcat expression}
-\grule{element}{\gter{(} \gcat expression \gcat \gter{)}}
-\galt{\gter{-} \gcat element}
+\galt{operation}
+\grule{operation}{minus\_op \gcat \gopt{operator \gcat expression}}
+\grule{minus\_op}{\gopt{\gter{-}} \gcat call}
+\grule{call}{element \gcat \gopt{list}
+\grule{element}{atomic \gcat \grep{member_access}}
+\grule{member\_access}{\gter{.} \gcat constant \gcat \gopt{list}}
+\grule{atomic}{\gter{(} \gcat expression \gcat \gter{)}}
 \galt{variable}
 \galt{list}
 \galt{\gter{/} \gcat pattern \gcat \gter{/}}
-\galt{keyword}
 \galt{\gter{this}}
+\galt{\gter{super}}
 \galt{direction}
 \galt{coordinate}
 \galt{integer}
 \galt{string}
-\galt{identifier}
-\galt{function}
+\galt{type}
+\galt{constant}
 \grule{assignment}{\gter{let} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression} \gcat \gter{in} \gcat expression}
 \grule{if\_expr}{\gter{if} \gcat expression \gcat \gter{then} \gcat expression \gcat \gter{else} \gcat expression}
 \grule{lambda\_expr}{\gter{\#} \gcat varlist \gcat \gter{=>} \gcat expression}
@@ -175,7 +178,7 @@ The following patterns are constructed from the element-expression:
 \galt{\gter{(} \gcat pattern \gcat \gter{)} \gcat \gopt{integer}}
 \grule{pattern\_check}{pattern\_keyword}
 \galt{\gter{this}}
-\galt{identifier}
+\galt{type}
 \end{ebnf}
 
 \todo{how do we describe patterns?}
