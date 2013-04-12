@@ -39,7 +39,7 @@ public abstract class Value {
   }
   
   public Value subtract(Value other) throws TypeError {
-    throw new TypeError("This value does not support subraction");
+    throw new TypeError("This value does not support subtraction");
   }
   
   public Value multiply(Value other) throws TypeError {
