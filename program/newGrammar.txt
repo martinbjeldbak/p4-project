@@ -58,4 +58,4 @@ pattern_val       -> direction
                    | "(" pattern ")" [integer]
 pattern_check     -> pattern_keyword
                    | "this"
-                   | identifier
+                   | type
