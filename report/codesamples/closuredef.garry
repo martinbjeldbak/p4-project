@@ -1,1 +1,1 @@
-define getAdder[$a] #[$b] => $a + $b
+define getAdder[$a] = #[$b] => $a + $b
