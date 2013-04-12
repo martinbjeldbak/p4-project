@@ -1,1 +1,1 @@
-define max[$a $b] if $a > $b then $a else $b
+define max[$a $b] = if $a > $b then $a else $b
