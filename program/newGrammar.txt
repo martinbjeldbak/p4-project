@@ -24,10 +24,8 @@ expression        -> assignment
                    | lambda_expr
                    | "not" expression
                    | operation
-as_sequence       -> md_sequence {(+|-} md_sequence}
-md_sequence       -> minus_op {(*|/|%) minus_op}
-operation         -> minus_op [operator expression]
-minus_op          -> ["-"] call
+operation         -> negation [operator expression]
+negation          -> ["-"] call
 call              -> element [list]
 element           -> atomic {member_access}
 member_access     -> "." constant [list]
