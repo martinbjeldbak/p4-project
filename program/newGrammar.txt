@@ -25,10 +25,11 @@ expression        -> assignment
                    | "not" expression
                    | operation
 operation         -> negation [operator expression]
-negation          -> ["-"] call
-call              -> element [list]
-element           -> atomic {member_access}
-member_access     -> "." constant [list]
+negation          -> element
+                   | "-" negation
+element           -> call_sequence {member_access}
+member_access     -> "." constant {list}
+call_sequence     -> atomic {list}
 atomic            -> "(" expression ")"
                    | variable
                    | list
