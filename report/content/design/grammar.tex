@@ -117,7 +117,7 @@ The following grammar describes the actual construction of any program written i
 \grule{definition}{constant\_def}
 \galt{type\_def}
 \grule{constant\_def}{\gter{define} \gcat function \gcat \gopt{varlist} \gcat \gter{=} \gcat \gcat expression}
-\grule{type\_def}{\gter{type} \gcat type \gcat varlist \gcat \gopt{\gter{extends} \gcat type \gcat list} \opt{type\_body}}
+\grule{type\_def}{\gter{type} \gcat type \gcat varlist \gcat \gopt{\gter{extends} \gcat type \gcat list} \gopt{type\_body}}
 \grule{type\_body}{\gter{\{} \gcat \grep{member\_def} \gcat \gter{\}}}
 \grule{member\_def}{abstract\_def}
 \galt{constant\_def}
@@ -140,8 +140,8 @@ The following grammar describes the expressions of the programming language:
 \galt{operation}
 \grule{operation}{minus\_op \gcat \gopt{operator \gcat expression}}
 \grule{minus\_op}{\gopt{\gter{-}} \gcat call}
-\grule{call}{element \gcat \gopt{list}
-\grule{element}{atomic \gcat \grep{member_access}}
+\grule{call}{element \gcat \gopt{list}}
+\grule{element}{atomic \gcat \grep{member\_access}}
 \grule{member\_access}{\gter{.} \gcat constant \gcat \gopt{list}}
 \grule{atomic}{\gter{(} \gcat expression \gcat \gter{)}}
 \galt{variable}
