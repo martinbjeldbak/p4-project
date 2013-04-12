@@ -9,16 +9,33 @@ import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.SymbolTable;
 import dk.aau.cs.d402f13.utilities.errors.ArgumentError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.values.BoolValue;
 import dk.aau.cs.d402f13.values.FunValue;
 import dk.aau.cs.d402f13.values.IntValue;
 import dk.aau.cs.d402f13.values.ListValue;
+import dk.aau.cs.d402f13.values.StrValue;
 import dk.aau.cs.d402f13.values.Value;
 
 public class StandardEnvironment extends SymbolTable {
 
   public StandardEnvironment() {
-    
+
+    ////////////////////////////////////
     // Type checking functions
+    ////////////////////////////////////
+    addFunction("isString", new FunValue(
+      1, false,
+      new Callable() {
+        @Override
+        public Value call(Interpreter interpreter, Value... actualParameters)
+            throws StandardError {
+          if (actualParameters[0] instanceof StrValue) {
+            return BoolValue.trueValue();
+          }
+          return BoolValue.falseValue();
+        }
+      }
+    ));
     
     ////////////////////////////////////
     // List functions

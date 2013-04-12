@@ -1,22 +1,22 @@
-game {
-  title "Noughts and Crosses"
-  players [Noughts, Crosses]
-  turnOrder [Crosses, Noughts]
-  board {
-    grid {
-      width 3
-      height 3
-    }
-  }
-  piece {
-    name XOPieces
-    possibleDrops emptySquares[board]
-  }
-  winCondition
-    size[findSquares[ /friend 
-			(n friend n) | (e friend e) |
-			(nw friend nw) | (ne friend ne )
-		friend/ ]] != 0
-  tieCondition
-    isFull[board]
+type NacGame[] extends Game["Noughts and Crosses"] {
+  define players = [NacPlayer[Crosses], NacPlayer[Noughts]]
+  define board = GridBoard[3, 3]
+}
+
+type NacPlayer[$pieceType] extends Player[] {
+  define winCondition[$gameState] =
+    0 != size[findSquares[
+      /friend (n friend n) | (e friend e) |
+		(nw friend nw) | (ne friend ne ) friend/,
+      $gameState]]
+  define tieCondition[$gameState] =
+    isFull[$gameState.board]
+  define actions[$gameState] =
+    addActions[$pieceType[this], $gameState.board.emptySquares]
+}
+
+type Crosses[$owner] = Piece[$owner] {
+}
+
+type Noughts[$owner] = Piece[$owner] {
 }
