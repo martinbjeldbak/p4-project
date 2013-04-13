@@ -126,7 +126,7 @@ The following grammar describes the actual construction of any program written i
 \grule{vars}{\gter{...} \gcat variable}
 \end{ebnf}
 
-The grammar describes that any program written in \productname{} can begin by defining user-defined functions (the functions definitions does not have to be there) followed by one game declaration. 
+The grammar describes that any program written in \productname{} consists of constants and types. Within these types and constants the programmer can for example define expressions and variable lists.
 
 \subsection{Expressions}
 The following grammar describes the expressions of the programming language:
@@ -162,10 +162,10 @@ The following grammar describes the expressions of the programming language:
 \grule{list}{\gter{[} \gcat \gopt{expression \gcat \grep{\gter{,} \gcat expression}} \gcat \gter{]}}
 \end{ebnf}
 
-The expression-expression and element-expression are the two main expressions which are repeatedly used to form different expressions such as assignments, conditional expressions, lambda expressions and lists.
+The expression-expression and atomic-expression are the two main expressions which are repeatedly used to form different expressions such as assignments, if expressions, lambda expressions, patterns, and lists.
 
 \subsection{Patterns}
-The following patterns are constructed from the element-expression:
+The following patterns are constructed from the atomic-expression:
 
 \begin{ebnf}
 %Patterns
@@ -182,6 +182,4 @@ The following patterns are constructed from the element-expression:
 \galt{type}
 \end{ebnf}
 
-\todo{how do we describe patterns?}
 
-\todo{is a summary needed here?}
