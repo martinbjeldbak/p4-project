@@ -1,6 +1,6 @@
 \section{Parser}
 
-In this section we present our handwritten parser for our programming language. We have written a recursive descent parser, which is within the class of LL(1) parsers. The grammar for our programming language is suiting for this because e.g. is does not have left-recursive productions. 
+In this section we present our handwritten parser for our programming language. We have written a recursive descent parser, which is within the class of LL(1) parsers. The grammar for \productname{} is suited for this because e.g. is does not have left-recursive productions. 
 
 %structured as the grammar
 The parser was very simple to implement, because it is structured in the same manner as the grammar is structured. For instance if the grammar expresses that the next set of terminals must begin with a left bracket (`[') then the parser will expect the next token to be a \tokenref{LBRACKET} which is the token name for a left bracket. 
@@ -25,46 +25,51 @@ Every grammar has a finite set of nonterminals and terminals that constitute the
 %node.addChild(expression())
 In the production for the if expression we have three terminals; the \gter{if}, \gter{then}, and the \gter{else}. These are all expected in the method for any if expression. When the parser finishes reading a terminal it knows that the following token will be an expression, and therefore a new child for the node is made with a call to the \methodref{expression}-method wherein we parse expressions. Finally the method returns the node containing every child for the whole if expression.
 
-%lookAhead methods - Element
-We mentioned earlier that the parser is an LL(1) parser which means that the parser is able to look ahead in the sequence of tokens. We have shown the look ahead method to determine if the next token is part of an element. Recall that the productions for the nonterminal is as follows:
+%lookAhead methods - atomic
+We mentioned earlier that the parser is an LL(1) parser which means that the parser is able to look ahead in the sequence of tokens. We have shown the look ahead method to determine if the next token is part of an atomic-expression. Recall that the productions for the nonterminal is as follows:
 
 \begin{ebnf}
-\grule{element}{\gter{(} \gcat expression \gcat \gter{)}}
+\grule{atomic}{\gter{(} \gcat expression \gcat \gter{)}}
 \galt{variable}
 \galt{list}
-\galt{pattern}
-\galt{keyword}
+\galt{\gter{/} \gcat pattern \gcat \gter{/}}
+\galt{\gter{this}}
+\galt{\gter{super}}
 \galt{direction}
 \galt{coordinate}
 \galt{integer}
 \galt{string}
-\galt{identifier}
-\galt{function}
+\galt{type}
+\galt{constant}
 \end{ebnf}
 
-This means that an element can be quite a few things. This is why we have constructed a method to determine whether the next token is part of an element. This method is shown in \lstref{lst:lookaheadelement}.
+This means that an atomic-expression can derive quite a few productions. This is why we have constructed a method to determine whether the next token is part of an atomic-expression. This method is shown in \lstref{lst:lookaheadatomic}.
 
-\lstinputlisting[caption="This shows what the lookAhead method expects for an element as input.", label=lst:lookaheadelement, language=Java]{listings/method_lookAheadElement.java}
+\lstinputlisting[caption="This shows what the lookAhead method expects for an atomic-expression as input.", label=lst:lookaheadatomic, language=Java]{listings/method_lookAheadAtomic.java}
 
-The method \methodref{lookAheadElement} makes use of two methods to figure out of the next token is part of an element. The first method is the \methodref{lookAhead}-method that takes a token as an argument and figures out if the next token in the sequence of tokens are equal to each other. The second method is like the method in \lstref{lst:lookaheadelement} but instead of checking for elements it checks for literals. Literals are one of four tokens; the \tokenref{direction, coordinate, integer} and \tokenref{string}. These are what the method \methodref{lookAheadLiteral} checks for. These methods return true or false.
+The method \methodref{lookAheadAtomic} makes use of two methods to figure out of the next token is part of an atomic-expression. The first method is the \methodref{lookAhead}-method that takes a token as an argument and figures out if the next token in the sequence of tokens are equal to each other. The second method is like the method in \lstref{lst:lookaheadatomic} but instead of checking for elements it checks for literals. Literals are one of four tokens; the \tokenref{direction, coordinate, integer}, and \tokenref{string}. These are what the method \methodref{lookAheadLiteral} checks for. These methods return true or false.
 
-%example of lookAheadElement
+%example of lookAheadAtomic
 %LL(1)
 In \lstref{lst:examplelookahead} we show an example of how the \methodref{lookAhead}-method is used in the parser. The example is taken from the \methodref{expression}-method. Recall that the production for an expression is as follows:
 
 \begin{ebnf}
-\grule{expression}{function\_call}
-\galt{element \gcat operator \gcat expression}
+\grule{expression}{assignment}
 \galt{if\_expr}
 \galt{lambda\_expr}
-\galt{element}
+\galt{\gter{not} \gcat expression}
+\galt{operation}
 \end{ebnf}
 
-The grammar shows that an element can be followed by an operator or nothing. If the element is followed by an operator, then the operator is followed by a new expression. This must be reflected in the code of the parser.
+The production of an expression is reflected in the code of the parser. An example of this is given in \lstref{lst:examplelookahead}.
 
-\lstinputlisting[caption="Use of the \methodref{lookAhead}-method. This example is from the \methodref{expression}-method.", label=lst:examplelookahead, language=Java]{listings/example_lookAheadElement.java}
+\lstinputlisting[caption="Use of the \methodref{lookAhead}-method. This example is from the \methodref{expression}-method.", label=lst:examplelookahead, language=Java]{listings/example_lookAheadAtomic.java}
 
-The code in \lstref{lst:examplelookahead} shows that the if-statement uses the \methodref{lookAheadElement}-method to determine if the next token is an element. If this is true, it enters the block of code inside the statement and creates a new node called ``element'' for this token. As we are inside the production for an expression the next thing the code checks for is if the next token after the \tokenref{element} is the type of an operator. The \methodref{accept}-method returns true if the types correspond, and false if they don't. If the method returns true, the parser enters the block of code and adds a new node called ``operation'' with two children - the element-node just created and a new node called ``expression'', because the parser knows that the operator must be followed by an expression. Finally it adds the operation-node to the original node of the whole method called ``node''.
-However, if this is not the case, the code just return the new node called ``element'' as a child for the node of the node of the whole expression. 
+The code presented in \lstref{lst:examplelookahead} is a small section of the \methodref{expression} method. We have removed code from the section which is not relevant for the example we are trying to show. The removed code is presented as \{...\}. In \lstref{lst:examplelookahead} we wish to present how the \methodref{lookAhead} methods are used.
 
-When the parser has parsed every token of the input it can produce an Abstract Syntax Tree that corresponds to the program written in the programming language. This shows that the parser is built very systematically according to the grammar of the programming language.
+An assignment begins with the reserved word \gter{let} and the first \methodref{lookAhead} method peeks for exactly that token to determine if the next production is an assignment. If method returns true that the next token is in fact the \gter{let} word, then the parser enters a new method namely the \methodref{assignment} method which checks to determine if the rest of the production is correctly written. The same is done for the if expression, lambda expression and operation.
+
+The operation production is a bit different, because it needs two look ahead methods to determine if the next production is an operation. An operation can begin with either an atomic value or a not-operator. So the code uses a \methodref{lookAheadAtomic} and a regular \methodref{lookAhead} with the specific token as a parameter to check if the next production is an operation.
+
+The methods return nodes which are connected with each other to an AST.
+When the parser has parsed every token of the input it can produce an AST that corresponds to the program written in \productname{}. This shows that the parser is built very systematically according to the grammar.
