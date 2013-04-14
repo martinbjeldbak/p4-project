@@ -6,18 +6,18 @@
 level 1/.style={sibling distance = 39mm},
 level 2/.style={sibling distance = 20mm}]
 
-\node [square] (z) {Assignment}
-  child {node [square,left of=b, xshift=-3.7cm] (a) {Variable}}
-  child {node [ellipse,draw,left of=c,xshift=-4.5cm] (b) {\textit{Expression}}}
-  child {node [square] (c) {Assignment} edge from parent[dashed]
-  	child {node [square,xshift=-1cm] (x) {Variable} edge from parent[solid]}
-  	child {node [ellipse,draw,solid,xshift=-1cm] (y) {\textit{Expression}} edge from parent[solid]}
+\node [square] {Assignment}
+  child {node [square,xshift=3cm] (a) {Variable}}
+  child {node [square,xshift=1.5cm] (b) {\textit{Expression}}}
+  child {node [rectangle] (c) {\textbf{Comma}} edge from parent[dashed]
+  	child {node [square, xshift=-1cm] (x) {Variable} edge from parent[solid]}
+  	child {node [square,solid,xshift=-1cm] (y) {\textit{Expression}} edge from parent[solid]}
   }
-  child {node [square,xshift=-1cm] (d) {Assignment} edge from parent[dashed]
+  child {node [rectangle,xshift=-1.5cm] (d) {\textbf{Comma}} edge from parent[dashed]
   	child {node [square,xshift=1cm] (o) {Variable} edge from parent[solid]}
-  	child {node [ellipse,draw,solid,xshift=1cm] (p) {\textit{Expression}} edge from parent[solid]}
+  	child {node [square,solid,xshift=1cm] (p) {\textit{Expression}} edge from parent[solid]}
   }
-  child {node [ellipse,draw,right of=d,xshift=1.5cm](e) {\textit{Expression}}};
+  child {node [square,xshift=-3cm](e) {\textit{Expression}}};
 
 \path (c)--(d) node [midway] {$\cdots$};
 \end{tikzpicture}
