@@ -3,9 +3,9 @@
 \begin{center}
 \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
 \node [square] {If expression}
-  child {node [label={[xshift=1.2cm, yshift=0.2cm]\textbf{if}}] [ellipse,draw] {\textit{Expression}}}
-  child {node [label={[xshift=-0.38cm, yshift=0.2cm]\textbf{then}}] [ellipse,draw] {\textit{Expression}}}
-  child {node [label={[xshift=-2.2cm, yshift=0.2cm]\textbf{else}}] [ellipse,draw] {\textit{Expression}}};
+  child {node [square,xshift=0.5cm] {\textit{Expression}}}
+  child {node [square] {\textit{Expression}}}
+  child {node [square,xshift=-0.5cm] {\textit{Expression}}};
 \end{tikzpicture}
 \end{center}
 \capt{The abstract syntax tree for the if expression node.}

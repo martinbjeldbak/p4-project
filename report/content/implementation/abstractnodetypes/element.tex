@@ -1,0 +1,15 @@
+
+\begin{figure}[ht]
+\begin{center}
+\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] {Element}
+  child {node [square] {Call sequence}}
+  child {node [square] (b) {Member access} edge from parent[dashed]}
+  child {node [square,xshift=0.3cm] (c) {Member access} edge from parent[dashed]};
+  
+\path (b)--(c) node [midway] {$\cdots$};
+\end{tikzpicture}
+\end{center}
+\capt{The abstract syntax tree for the element node.}
+\label{ast:element}
+\end{figure}
