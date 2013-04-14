@@ -8,10 +8,4 @@ public class PatternValue extends Value {
   public PatternValue(AstNode children) {
     
   }
-
-  @Override
-  public Type getType() {
-    return Type.PATTERN;
-  }
-
 }

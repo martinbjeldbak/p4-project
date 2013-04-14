@@ -43,12 +43,6 @@ public class BoolValue extends Value {
       return "true";
     return "false";
   }
-
-  @Override
-  public Type getType() {
-    // TODO Auto-generated method stub
-    return null;
-  }
   
   @Override
   public BoolValue equalsOp(Value other) {

@@ -12,7 +12,7 @@ public class CoordValue extends Value {
     
     for(char c : value.toCharArray()) {
       if(isLetter(c)) {
-        xx = xx * 26 + c - 'A' + 1;
+        xx = xx * 26 + (c - 'A') + 1;
       } else {
         yy = yy * 10 + Integer.parseInt(Character.toString(c));
       }
@@ -22,10 +22,18 @@ public class CoordValue extends Value {
     this.y = yy;
   }
   
+  /**
+   * Returns the X coordinate of the current coordinate object.
+   * @return the X coordinate
+   */
   public int getX() {
     return this.x;
   }
   
+  /**
+   * Returns the Y coordinate of the current coordinate object.
+   * @return the Y coordinate
+   */
   public int getY() {
     return this.y;
   }
@@ -42,19 +50,16 @@ public class CoordValue extends Value {
   }
   
   @Override
-  public Type getType() {
-    return Type.COORD_LIT;
-  }
-  
-  @Override
   public String toString() {
-    //return "(" + Integer.toString(x) + ", " + Integer.toString(y) + ")";
-    
-    return null;
+    return toColumn(x) + y;
   }
   
-  private char toChar(int coord) {
+  private String toColumn(int xValue) {
+    int xx = xValue;
     
+    
+    
+    return "";
   }
   
   private boolean isLetter(char c) {
