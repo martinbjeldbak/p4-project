@@ -78,10 +78,4 @@ public class FunValue extends Value {
     interpreter.getSymbolTable().closeScope();
     return ret;
   }
-
-  @Override
-  public Type getType() {
-    return Type.FUNCTION;
-  }
-
 }

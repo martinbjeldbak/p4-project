@@ -37,17 +37,11 @@ public class StrValue extends Value {
     else if(other instanceof DirValue)
       return new StrValue(this.value + ((DirValue)other).toString());
     
-    throw new TypeError("Cannot add a " + other.getType() + " to a string");
+    throw new TypeError("Cannot add a " + other + " to a string");
   }
   
   @Override
   public String toString() {
     return "" + this.value;
   }
-
-  @Override
-  public Type getType() {
-    return Type.STRING_LIT;
-  }
-
 }

@@ -26,7 +26,7 @@ public class IntValue extends Value {
         return BoolValue.trueValue();
       return BoolValue.falseValue();
     }
-    throw new TypeError("Cannot use '<' on int with type " + other.getType());
+    throw new TypeError("Cannot use '<' on int with " + other);
   }
   
   @Override
@@ -36,7 +36,7 @@ public class IntValue extends Value {
         return BoolValue.trueValue();
       return BoolValue.falseValue();
     }
-    throw new TypeError("Cannot use '<=' on int with type " + other.getType());
+    throw new TypeError("Cannot use '<=' on int with " + other);
   }
   
   @Override
@@ -46,7 +46,7 @@ public class IntValue extends Value {
         return BoolValue.trueValue();
       return BoolValue.falseValue();
     }
-    throw new TypeError("Cannot use '>' on int with type " + other.getType());
+    throw new TypeError("Cannot use '>' on int with " + other);
   }
   
   @Override
@@ -56,7 +56,7 @@ public class IntValue extends Value {
         return BoolValue.trueValue();
       return BoolValue.falseValue();
     }
-    throw new TypeError("Cannot use '>=' on int with type "  + other.getType());
+    throw new TypeError("Cannot use '>=' on int with " + other);
   }
   
   @Override
@@ -96,10 +96,5 @@ public class IntValue extends Value {
   @Override
   public String toString() {
     return "" + this.value;
-  }
-
-  @Override
-  public Type getType() {
-    return Type.INT_LIT;
   }
 }

@@ -166,7 +166,7 @@ public class Interpreter extends Visitor {
     if(v instanceof BoolValue) {
       return ((BoolValue)v).not();
     }
-    throw new TypeError("Cannot use 'not' operator on type " + v.getType());
+    throw new TypeError("Cannot use 'not' operator on " + v);
   }
 
   @Override

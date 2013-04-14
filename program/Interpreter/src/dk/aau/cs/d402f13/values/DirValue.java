@@ -71,10 +71,4 @@ public class DirValue extends Value {
   public String toString() {
     return "(" + Integer.toString(x) + ", " + Integer.toString(y) + ")";
   }
-
-  @Override
-  public Type getType() {
-    return Type.DIR_LIT;
-  }
-
 }

@@ -13,12 +13,6 @@ public class ListValue extends Value {
   public Value[] getValues() {
     return values;
   }
-
-  @Override
-  public Type getType() {
-    // TODO Auto-generated method stub
-    return null;
-  }
   
   @Override
   public BoolValue equalsOp(Value other) {
