@@ -1,127 +1,87 @@
-define slide[ $pattern ]
-	findSquares[ /this ($pattern empty)* $pattern !friend/ ]
+type Chess[] extends Game[]{
+	define players = [ ChessPlayer[ "Black" ], ChessPlayer[ "White" ] ]
+	define board = let $black = players[0], $white = players[1] in
+		GridBoard[ 8, 8 ] =
+			.addPieces[ Pawn[ $black, s ], [ A7, B7, C7, D7, E7, F7, G7, H7 ] ]
+			.addPieces[ Rook[ $black ],    [ A8, H8 ] ]
+			.addPieces[ Knight[ $black ],  [ B8, G8 ] ]
+			.addPieces[ Bishop[ $black ],  [ C8, F8 ] ]
+			.addPieces[ Queen[ $black ],   [ E8 ] ]
+			.addPieces[ King[ $black ],    [ D8 ] ]
+			
+			.addPieces[ Pawn[ $white, n ], [ A2, B2, C2, D2, E2, F2, G2, H2 ] ]
+			.addPieces[ Rook[ $white ],    [ A1, H1 ] ]
+			.addPieces[ Knight[ $white ],  [ B1, G1 ] ]
+			.addPieces[ Bishop[ $white ],  [ C1, F1 ] ]
+			.addPieces[ Queen[ $white ],   [ E1 ] ]
+			.addPieces[ King[ $white ],    [ D1 ] ]
+}
 
-define toActions[ $list ]
-	map[ $list, 
-		#[$item] =>
-			moveAndCapture[ this, $item ]
-	]
-
-define pawnMove[ $p, $dir ]
-	if isFirstMove[$p] then
-		toActions[ findSquares[ / $p ($dir empty)2 / ] ]
-	else
-		map[ findSquares[ / $p ($dir empty) | (($dir e)|($dir w) foe) / ],
-			#[ $square ] =>
-				//Is it possible to move further one up on the board?
-				if size[ findSquares[ $board, / $square $dir / ] ] == 0 then
-					sequence[ moveAndCapture[ $p, $square ], promote[ $p, Queen ] ] //TODO: make it a user choice
-				else
-					moveAndCapture[ $p, $square ]
-		]
-	//En pasant
-	+	map[ filter[ / $p e|w foe Pawn /, #[$square] =>
-				let $foe = piecesOnSquare[$square][0],
-					$turn = currentTurn[$game]
-				in
-					lastTurn[$foe] == $turn - 1 
-					and history[ $turn ] == //TODO: how to check 
-			],
-			#[$square] => moveAndCapture[ $p, $square ]
-		]
-
-game {
-	title "Chess"
-	players [Black, White]
-	turnOrder [White, Black]
-	board {
-		grid {
-			width 8
-			height 8
-		}
-		setup {
-			Black{
-				Pawn [A7, B7, C7, D7, E7, F7, G7, H7]
-				Rook [A8, H8]
-				Knight [B8, G8]
-				Bishop [C8, F8]
-				Queen [E8]
-				King [D8]
-			}
-			White{
-				Pawn [A2, B2, C2, D2, E2, F2, G2, H2]
-				Rook [A1, H1]
-				Knight [B1, G1]
-				Bishop [C1, F1]
-				Queen [E1]
-				King [D1]
-			}
-		}
-	}
+type ChessPlayer[ $color ] extends Player[]{
 	
-	piece {
-		name Pawn
-		possibleMoves toActions[
-			if isCurrentPlayer[White] then 	
-				pawnMove[ this, n ]
-			else 
-				pawnMove[ this, s ]
+//	define winCondition[$game] = findSquares[ /King !isSecure/ ] // questionable!	
+}
+
+type ChessPiece[ $player ] extends Piece[ $player ]{
+	define slide[ $game, $patterns ] =
+		toActions[ union[ map[ $patterns, #[$pattern] =>
+			findSquares[ / this ($pattern empty)* $pattern !friend/ ]
+		] ] ]
+	
+	define toActions[ $list ] =
+		map[ $list, #[$item] =>
+			moveAndCapture[ this, $item ]
 		]
-	}
-	piece {
-		name Rook
-		possibleMoves toActions[ 
-			union[
-				slide[ /n/ ],
-				slide[ /w/ ],
-				slide[ /s/ ],
-				slide[ /e/ ]
+}
+
+type Pawn[ $player, $dir ] extends ChessPiece[ $player ]{
+	define actions[$game] =
+		if isFirstMove[this] then
+			toActions[ findSquares[ / this ($dir empty)2 / ] ]
+		else
+			[]
+		+	map[ findSquares[ / this ($dir empty) | (($dir e)|($dir w) foe) / ],
+				#[ $square ] =>
+					//Is it possible to move further one up on the board?
+					if size[ findSquares[ $board, / $square $dir / ] ] == 0 then
+						sequence[ moveAndCapture[ this, $square ], promote[ this, Queen ] ] //TODO: make it a user choice
+					else
+						moveAndCapture[ this, $square ]
 			]
-		]
-	}
-	piece {
-		name Knight
-		possibleMoves toActions[
-			findSquares[ /this (n ne|nw) | (s se|sw) | (e nw|se) | (w nw|sw) !friend/ ]
-		]
-	}
-	piece {
-		name Bishop
-		possibleMoves toActions[
-			union[
-				slide[ /ne/ ],
-				slide[ /nw/ ],
-				slide[ /se/ ],
-				slide[ /sw/ ]
+		//En pasant
+		+	map[ filter[ / this e|w foe Pawn /, #[$square] =>
+					let $foe = piecesOnSquare[$square][0],
+						$turn = currentTurn[$game]
+					in
+						lastTurn[$foe] == $turn - 1 
+						and history[ $turn ] == moveEx[ $foe, / $square $dir $dir /, $square ]
+				],
+				#[$square] => sequence[ move[ this, findSquares[/ $square $dir /][0] ], remove[ $foe ] ]
 			]
-		]
-	}
-	piece {
-		name Queen
-		possibleMoves toActions[
-			union[
-				slide[ /ne/ ],
-				slide[ /nw/ ],
-				slide[ /se/ ],
-				slide[ /sw/ ],
-				slide[ /n/ ],
-				slide[ /e/ ],
-				slide[ /s/ ],
-				slide[ /w/ ]
-			]
-		]
-	}
-	piece {
-		name King
-		possibleMoves toActions[
-			union[
-				findSquares[/this (e|n|s|w) !friend/],
-				findSquares[/this (ne|nw|se|sw) !friend/]
-			]
-		]
-	}
-//	winCondition (
-// 		findSquares[/King !isSecure/] // questionable!	
-//   )
+}
+
+type Rook[ $player ] extends ChessPiece[ $player ]{
+	define actions[ $game ] =
+		slide[ $game, [ n, w, s, e ] ]
+}
+
+type Knight[ $player ] extends ChessPiece[ $player ]{
+	define actions[ $game ] =
+		findMoveActions[ $game, this, /this (n ne|nw) | (s se|sw) | (e nw|se) | (w nw|sw) !friend/ ]
+}
+
+type Bishop[ $player ] extends ChessPiece[ $player ]{
+	define actions[ $game ] =
+		slide[ $game, [ ne, nw, sw, se ] ]
+}
+
+type Queen[ $player ] extends ChessPiece[ $player ]{
+	define actions[ $game ] =
+		slide[ $game, [ n, w, s, e, ne, nw, sw, se ] ]
+}
+
+type King[ $player ] extends ChessPiece[ $player ]{
+	define actions[ $game ] =
+		findMoveActions[ $game, this, /this e|n|s|w|ne|nw|se|sw !friend/ ]
 }
 

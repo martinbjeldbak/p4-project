@@ -3,9 +3,8 @@
 \begin{center}
 \begin{tikzpicture}[level/.style={sibling distance=40mm/#1}]
 \node [square] {Program}
-  child {node [square] (a) {Function definition} edge from parent[dashed];}
-  child {node [square] (b) {Function definition} edge from parent[dashed];}
-  child {node [square, xshift=-0.8cm] {Game declaration}};
+  child {node [square,xshift=0.5cm] (a) {\textit{Definition}} edge from parent[dashed];}
+  child {node [square,xshift=-0.5cm] (b) {\textit{Definition}} edge from parent[dashed];};
 \path (a)--(b) node [midway] {$\cdots$};
 \end{tikzpicture}
 \end{center}

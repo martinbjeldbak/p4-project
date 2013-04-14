@@ -1,0 +1,13 @@
+\begin{figure}[ht]
+\begin{center}
+\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] {Type body}
+  child {node [square,xshift=-0.2cm] (a) {\textit{Member definition}}}
+  child {node [square,xshift=0.2cm] (b) {\textit{Member definition}}};
+  
+\path (a)--(b) node [midway] {$\cdots$};
+\end{tikzpicture}
+\end{center}
+\capt{The abstract syntax tree for the type body node.}
+\label{ast:typebody}
+\end{figure}

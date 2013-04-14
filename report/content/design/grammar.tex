@@ -57,10 +57,6 @@ The following is a list of reserved words which \productname{} will use to funct
 
 \begin{ebnf}
 %reserved
-\grule{keyword}{\gter{piece} \gor \gter{width} \gor \gter{height}}
-\galt{\gter{title} \gor \gter{players} \gor \gter{turnOrder} \gor \gter{board}}
-\galt{\gter{grid} \gor \gter{setup} \gor \gter{wall} \gor \gter{name} \gor \gter{possibleDrops}}
-\galt{\gter{possibleMoves} \gor \gter{winCondition} \gor \gter{tieCondition}}
 \grule{shared\_operator}{\gter{*} \gor \gter{+}}
 \grule{normal\_operator}{\gter{-} \gor \gter{!=} \gor \gter{==} \gor \gter{<=} \gor \gter{>=} \gor \gter{<} \gor \gter{>}}
 \grule{operator}{shared\_operator \gor normal\_operator \gor \gter{/}}
@@ -105,8 +101,8 @@ The following three identifiers are used throughout this section:
 
 \begin{ebnf}
 %Identifiers
-\grule{function}{lowercase \gcat anycase \gcat \grep{anycase}}
-\grule{identifier}{uppercase \gcat \grep{anycase}}
+\grule{constant}{lowercase \gcat \grep{anycase}}
+\grule{type}{uppercase \gcat \grep{anycase}}
 \grule{variable}{\gter{\$} \gcat anycase \gcat \grep{anycase}}
 \end{ebnf}
 
@@ -117,52 +113,59 @@ The following grammar describes the actual construction of any program written i
 
 \begin{ebnf}
 %Program structure
-\grule{program}{\grep{function\_def} \gcat game\_decl}
-\grule{function\_def}{\gter{define} \gcat function \gcat varlist \gcat expression}
-\grule{game\_decl}{\gter{game} \gcat declaration\_struct}
-\grule{declaration\_struct}{\gter{\{} \gcat declaration \gcat \grep{declaration} \gter{\}}}
-\grule{declaration}{\ggrp{keyword \gor identifier} \gcat structure}
-\grule{structure}{declaration\_struct \gor expression}
+\grule{program}{\grep{definition}}
+\grule{definition}{constant\_def}
+\galt{type\_def}
+\grule{constant\_def}{\gter{define} \gcat function \gcat \gopt{varlist} \gcat \gter{=} \gcat \gcat expression}
+\grule{type\_def}{\gter{type} \gcat type \gcat varlist \gcat \gopt{\gter{extends} \gcat type \gcat list} \gopt{type\_body}}
+\grule{type\_body}{\gter{\{} \gcat \grep{member\_def} \gcat \gter{\}}}
+\grule{member\_def}{abstract\_def}
+\galt{constant\_def}
+\grule{abstract\_def}{\gter{define} \gcat \gter{abstract} \gcat function \gcat \gopt{varlist}}
 \grule{varlist}{\gter{[} \gcat \gopt{variable \gcat \grep{\gter{,} \gcat variable} \gcat \gopt{\gter{,} \gcat vars} \gor vars} \gcat \gter{]}}
 \grule{vars}{\gter{...} \gcat variable}
 \end{ebnf}
 
-The grammar describes that any program written in \productname{} can begin by defining user-defined functions (the functions definitions does not have to be there) followed by one game declaration. 
+The grammar describes that any program written in \productname{} consists of constants and types. Within these types and constants the programmer can for example define expressions and variable lists.
 
 \subsection{Expressions}
 The following grammar describes the expressions of the programming language:
 
 \begin{ebnf}
 %Expressions
-\grule{expression}{element \gcat operator \gcat expression}
-\galt{assignment}
+\grule{expression}{assignment}
 \galt{if\_expr}
 \galt{lambda\_expr}
-\galt{element \gcat \gopt{list}}
 \galt{\gter{not} \gcat expression}
-\grule{element}{\gter{(} \gcat expression \gcat \gter{)}}
-\galt{\gter{-} \gcat element}
+\galt{operation}
+\grule{operation}{negation \gcat \gopt{operator \gcat expression}}
+\grule{negation}{element}
+\galt{\gter{-} \gcat negation}
+\grule{element}{call\_sequence \gcat \grep{member\_access}}
+\grule{member\_access}{\gter{.} \gcat constant \gcat \grep{list}}
+\grule{call\_sequence}{atomic \gcat \grep{list}}
+\grule{atomic}{\gter{(} \gcat expression \gcat \gter{)}}
 \galt{variable}
 \galt{list}
 \galt{\gter{/} \gcat pattern \gcat \gter{/}}
-\galt{keyword}
 \galt{\gter{this}}
+\galt{\gter{super}}
 \galt{direction}
 \galt{coordinate}
 \galt{integer}
 \galt{string}
-\galt{identifier}
-\galt{function}
+\galt{type}
+\galt{constant}
 \grule{assignment}{\gter{let} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression} \gcat \gter{in} \gcat expression}
 \grule{if\_expr}{\gter{if} \gcat expression \gcat \gter{then} \gcat expression \gcat \gter{else} \gcat expression}
 \grule{lambda\_expr}{\gter{\#} \gcat varlist \gcat \gter{=>} \gcat expression}
 \grule{list}{\gter{[} \gcat \gopt{expression \gcat \grep{\gter{,} \gcat expression}} \gcat \gter{]}}
 \end{ebnf}
 
-The expression-expression and element-expression are the two main expressions which are repeatedly used to form different expressions such as assignments, conditional expressions, lambda expressions and lists.
+The expression-expression and atomic-expression are the two main expressions which are repeatedly used to form different expressions such as assignments, if expressions, lambda expressions, patterns, and lists.
 
 \subsection{Patterns}
-The following patterns are constructed from the element-expression:
+The following patterns are constructed from the atomic-expression:
 
 \begin{ebnf}
 %Patterns
@@ -176,9 +179,7 @@ The following patterns are constructed from the element-expression:
 \galt{\gter{(} \gcat pattern \gcat \gter{)} \gcat \gopt{integer}}
 \grule{pattern\_check}{pattern\_keyword}
 \galt{\gter{this}}
-\galt{identifier}
+\galt{type}
 \end{ebnf}
 
-\todo{how do we describe patterns?}
 
-\todo{is a summary needed here?}

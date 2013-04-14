@@ -1,0 +1,12 @@
+\begin{figure}[ht]
+\begin{center}
+\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] {Constant definition}
+  child {node [square,xshift=0.7cm] {Constant}}
+  child {node [square] {Variable list} edge from parent [dashed]}
+  child {node [square,xshift=-0.7cm] {\textit{Expression}}};
+\end{tikzpicture}
+\end{center}
+\capt{The abstract syntax tree for the constant definition node.}
+\label{ast:constdef}
+\end{figure}

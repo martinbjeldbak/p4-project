@@ -1,0 +1,12 @@
+
+\begin{figure}[ht]
+\begin{center}
+\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] {Abstract definition}
+  child {node [square,xshift=0.3cm] {Constant}}
+  child {node [square,xshift=-0.3cm] {Variable list} edge from parent[dashed]};
+\end{tikzpicture}
+\end{center}
+\capt{The abstract syntax tree for the abstract definition node.}
+\label{ast:abstrdef}
+\end{figure}

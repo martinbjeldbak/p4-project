@@ -1,26 +1,21 @@
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{c}{// An implementation of the traditional}
 \PY{c}{// Noughts and Crosses game}
-\PY{k+kr}{game} \PYZob{}
-  \PY{k+kr}{title} \PY{l+s}{\PYZdq{}Noughts and Crosses\PYZdq{}}
-  \PY{k+kr}{players} [\PY{n+no}{Noughts} \PY{n+no}{Crosses}]
-  \PY{k+kr}{turnOrder} [\PY{n+no}{Crosses} \PY{n+no}{Noughts}]
-  \PY{k+kr}{board} \PYZob{}
-    \PY{k+kr}{grid} \PYZob{}
-      \PY{k+kr}{width} \PY{l+m}{3}
-      \PY{k+kr}{height} \PY{l+m}{3}
-    \PYZcb{}
-  \PYZcb{}
-  \PY{k+kr}{piece} \PYZob{}
-    \PY{k+kr}{name} \PY{n+no}{XOPiece}
-    \PY{k+kr}{possibleDrops} \PY{n+nf}{emptySquares}[\PY{k+kr}{board}]
-  \PYZcb{}
-  \PY{k+kr}{winCondition} (
-    (\PY{n+nf}{notEmpty}[(\PY{n+nf}{findSquares}[/\PY{k+kr}{friend} \PY{n+ni}{n} \PY{k+kr}{friend} \PY{n+ni}{n} \PY{k+kr}{friend}/])])
-      \PY{o+ow}{or} (\PY{n+nf}{notEmpty}[(\PY{n+nf}{findSquares}[/\PY{k+kr}{friend} \PY{n+ni}{e} \PY{k+kr}{friend} \PY{n+ni}{e} \PY{k+kr}{friend}/])])
-      \PY{o+ow}{or} (\PY{n+nf}{notEmpty}[(\PY{n+nf}{findSquares}[/\PY{k+kr}{friend} \PY{n+ni}{nw} \PY{k+kr}{friend} \PY{n+ni}{nw} \PY{k+kr}{friend}/])])
-      \PY{o+ow}{or} (\PY{n+nf}{notEmpty}[(\PY{n+nf}{findSquares}[/\PY{k+kr}{friend} \PY{n+ni}{ne} \PY{k+kr}{friend} \PY{n+ni}{ne} \PY{k+kr}{friend}/])])
-  )
-  \PY{k+kr}{tieCondition} \PY{n+nf}{isFull}[\PY{k+kr}{board}]
+\PY{k+kr}{type} \PY{n+no}{NacGame}[] \PY{k+kr}{extends} \PY{n+no}{Game}[\PY{l+s}{\PYZdq{}Noughts and Crosses\PYZdq{}}] \PYZob{}
+  \PY{k+kr}{define} \PY{n+nf}{players} = [\PY{n+no}{NacPlayer}[\PY{n+no}{Crosses}], \PY{n+no}{NacPlayer}[\PY{n+no}{Noughts}]]
+  \PY{k+kr}{define} \PY{n+nf}{board} = \PY{n+no}{GridBoard}[\PY{l+m}{3}, \PY{l+m}{3}]
 \PYZcb{}
+\PY{k+kr}{type} \PY{n+no}{NacPlayer}[\PY{n+nv}{\PYZdl{}pieceType}] \PY{k+kr}{extends} \PY{n+no}{Player}[] \PYZob{}
+  \PY{k+kr}{define} \PY{n+nf}{winCondition}[\PY{n+nv}{\PYZdl{}gameState}] =
+    \PY{l+m}{0} != \PY{n+nf}{size}[\PY{n+nf}{findSquares}[
+      /\PY{k+kr}{friend} (\PY{n+ni}{n} \PY{k+kr}{friend} \PY{n+ni}{n}) | (\PY{n+ni}{e} \PY{k+kr}{friend} \PY{n+ni}{e}) |
+		(\PY{n+ni}{nw} \PY{k+kr}{friend} \PY{n+ni}{nw}) | (\PY{n+ni}{ne} \PY{k+kr}{friend} \PY{n+ni}{ne} ) \PY{k+kr}{friend}/,
+      \PY{n+nv}{\PYZdl{}gameState}]]
+  \PY{k+kr}{define} \PY{n+nf}{tieCondition}[\PY{n+nv}{\PYZdl{}gameState}] =
+    \PY{n+nf}{isFull}[\PY{n+nv}{\PYZdl{}gameState}.\PY{n+nf}{board}]
+  \PY{k+kr}{define} \PY{n+nf}{actions}[\PY{n+nv}{\PYZdl{}gameState}] =
+    \PY{n+nf}{addActions}[\PY{n+nv}{\PYZdl{}pieceType[this}], \PY{n+nv}{\PYZdl{}gameState}.\PY{n+nf}{board}.\PY{n+nf}{emptySquares}]
+\PYZcb{}
+\PY{k+kr}{type} \PY{n+no}{Crosses}[\PY{n+nv}{\PYZdl{}owner}] \PY{k+kr}{extends} \PY{n+no}{Piece}[\PY{n+nv}{\PYZdl{}owner}]
+\PY{k+kr}{type} \PY{n+no}{Noughts}[\PY{n+nv}{\PYZdl{}owner}] \PY{k+kr}{extends} \PY{n+no}{Piece}[\PY{n+nv}{\PYZdl{}owner}]
 \end{Verbatim}
