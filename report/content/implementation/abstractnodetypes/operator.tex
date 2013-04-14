@@ -3,8 +3,8 @@
 \begin{center}
 \begin{tikzpicture}[level/.style={sibling distance=25mm/#1}]
 \node [square] {Operator}
-  child {node [ellipse,draw] {\textit{Element}}}
-  child {node [ellipse,draw] {\textit{Expression}}};
+  child {node [square] {Element}}
+  child {node [square] {\textit{Expression}}};
 \end{tikzpicture}
 \end{center}
 \capt{The abstract syntax tree for the operator node.}

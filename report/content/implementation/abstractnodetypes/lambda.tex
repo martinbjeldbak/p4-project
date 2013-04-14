@@ -3,8 +3,8 @@
 \begin{center}
 \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
 \node [square] {Lambda expression}
-  child {node [square] {Variable list}}
-  child {node [ellipse,draw] {\textit{Expression}}};
+  child {node [square,xshift=0.2cm] {Variable list}}
+  child {node [square,xshift=-0.2cm] {\textit{Expression}}};
 \end{tikzpicture}
 \end{center}
 \capt{The abstract syntax tree for the lambda expression node.}
