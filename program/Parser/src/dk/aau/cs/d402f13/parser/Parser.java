@@ -50,19 +50,19 @@ public class Parser {
     return expression();
   }
 
-//  /**
-//   * @param takes
-//   *          a linked list of tokens as parameters
-//   * @return returns an AST with definition as the root.
-//   * @throws SyntaxError
-//   */
-//  public AstNode parseAsDefinition(LinkedList<Token> tokens) throws SyntaxError {
-//    this.tokens = tokens;
-//    currentToken = null;
-//    nextToken = tokens.peek();
-//
-//    return functionDefinition();
-//  }
+  /**
+   * @param takes
+   *          a linked list of tokens as parameters
+   * @return returns an AST with definition as the root.
+   * @throws SyntaxError
+   */
+  public AstNode parseAsDefinition(LinkedList<Token> tokens) throws SyntaxError {
+    this.tokens = tokens;
+    currentToken = null;
+    nextToken = tokens.peek();
+
+    return definition();
+  }
 
   /**
    * @param takes
@@ -229,17 +229,21 @@ public class Parser {
   private AstNode program() throws SyntaxError {
     AstNode root = astNode(Type.PROGRAM, "");
     while (lookAhead(Token.Type.KEY_DEFINE) || lookAhead(Token.Type.KEY_TYPE)) {
-      if (accept(Token.Type.KEY_DEFINE)) {
-        root.addChild(constantDef());
-      }
-      else if (lookAhead(Token.Type.KEY_TYPE)) {
-        root.addChild(typeDef());
-      }
-      else {
-        unexpectedError("a definition");
-      }
+      root.addChild(definition());
     }
     return root;
+  }
+  
+  private AstNode definition() throws SyntaxError {
+    if (accept(Token.Type.KEY_DEFINE)) {
+      return constantDef();
+    }
+    else if (lookAhead(Token.Type.KEY_TYPE)) {
+      return typeDef();
+    }
+    else {
+      throw unexpectedError("a definition");
+    }
   }
 
   /**
