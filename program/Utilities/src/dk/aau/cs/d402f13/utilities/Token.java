@@ -3,35 +3,36 @@ package dk.aau.cs.d402f13.utilities;
 public class Token {
   public enum Type {
     // Keywords
-    KEYWORD, GAME, THIS,
-    PATTERN_KEYWORD,  // (friend, foe, ...)
+    KEY_THIS, KEY_SUPER, KEY_DEFINE, KEY_ABSTRACT, KEY_EXTENDS, KEY_TYPE,
+    KEY_PATTERN,  // (friend, foe, ...)
     
     // Operators
-    NOT_OPERATOR,
-    SHARED_OPERATOR, //those that is used both as normal_operator and pattern_operator
-    PATTERN_OPERATOR, NORMAL_OPERATOR,
-    
-    ASSIGN, TRIPLEDOTS,
+    OP_OR, OP_AND, OP_EQUALS, OP_NOT_EQUALS, OP_NOT, OP_LESS_THAN, OP_GREATER_THAN,
+    OP_LESS_OR_EQUALS, OP_GREATER_OR_EQUALS,
+    OP_PLUS, OP_MINUS, OP_MULT, OP_DIV, OP_MODULO, OP_ASSIGN, OP_LAMDA,
 
     // Literals
-    INT_LIT, DIR_LIT, COORD_LIT,
-    STRING_LIT,
+    LIT_INT, LIT_DIR, LIT_COORD, LIT_STRING,
+    
     // Identifiers
-    FUNCTION, ID, VAR,
-    // Program structure
-    DEFINE,
+    CONSTANT, TYPE, VAR,
+
     // Brackets
-    LBRACE, RBRACE, LPAREN, RPAREN,
-    LBRACKET, RBRACKET,
+    LBRACE, RBRACE, LPAREN, RPAREN, LBRACKET, RBRACKET,
+    
     // if-then-else
     IF, THEN, ELSE,
+    
     // lambda
-    LAMBDABEGIN, LAMBDAOP,
-    LET, IN, COMMA, 
-    // Pattern begin
-    PATTERNOP, // '/'
-    PATTERN_NOT,
-    PATTERN_OR, // | 
+    LAMBDA_BEGIN,
+    LET, IN, COMMA,
+    
+    // Pattern Operators
+    OP_PATTERN_QUESTION, // "?"
+    OP_PATTERN_NOT, // "!"
+    OP_PATTERN_OR, // "|" 
+    
+    // EOF
     EOF;
   }
 
