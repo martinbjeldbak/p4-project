@@ -7,38 +7,32 @@ public abstract class Visitor {
 
 //  case ASSIGNMENT:
   protected abstract Object visitAssignment(AstNode node) throws StandardError;
+// case CONSTANT:
+  protected abstract Object visitConstant(AstNode node) throws StandardError;
+// case TYPE:
+  protected abstract Object visitType(AstNode node) throws StandardError;
+// case TYPE_DEF:
+  protected abstract Object visitTypeDef(AstNode node) throws StandardError;
+// case TYPE_BODY:
+  protected abstract Object visitTypeBody(AstNode node) throws StandardError;
+// case ABSTRACT_DEF:
+  protected abstract Object visitAbstractDef(AstNode node) throws StandardError;
 //  case COORD_LIT:
   protected abstract Object visitCoordLit(AstNode node) throws StandardError;
-//  case DECL:
-  protected abstract Object visitDecl(AstNode node) throws StandardError;
-//  case DECL_STRUCT:
-  protected abstract Object visitDeclStruct(AstNode node) throws StandardError;
 //  case DIR_LIT:
   protected abstract Object visitDirLit(AstNode node) throws StandardError;
-//  case FUNCTION:
-  protected abstract Object visitFunction(AstNode node) throws StandardError;
-//  case FUNC_CALL:
-  protected abstract Object visitFuncCall(AstNode node) throws StandardError;
-//  case FUNC_DEF:
-  protected abstract Object visitFuncDef(AstNode node) throws StandardError;
-//  case GAME_DECL:
-  protected abstract Object visitGameDecl(AstNode node) throws StandardError;
-//  case ID:
-  protected abstract Object visitId(AstNode node) throws StandardError;
+// case CONSTANT_DEF:
+  protected abstract Object visitConstantDef(AstNode node) throws StandardError; 
 //  case IF_EXPR:
   protected abstract Object visitIfExpr(AstNode node) throws StandardError;
 //  case INT_LIT:
   protected abstract Object visitIntLit(AstNode node) throws StandardError;
-//  case KEYWORD:
-  protected abstract Object visitKeyword(AstNode node) throws StandardError;
 //  case LAMBDA_EXPR:
   protected abstract Object visitLambdaExpr(AstNode node) throws StandardError;
 //  case LIST:
   protected abstract Object visitList(AstNode node) throws StandardError;
 //  case NOT_OPERATOR:
   protected abstract Object visitNotOperator(AstNode node) throws StandardError;
-//  case OPERATOR:
-  protected abstract Object visitOperator(AstNode node) throws StandardError;
 //  case PATTERN:
   protected abstract Object visitPattern(AstNode node) throws StandardError;
 //  case PATTERN_KEYWORD:
@@ -55,6 +49,8 @@ public abstract class Visitor {
   protected abstract Object visitProgram(AstNode node) throws StandardError;
 //  case STRING_LIT:
   protected abstract Object visitStringLit(AstNode node) throws StandardError;
+// case SUPER:
+  protected abstract Object visitSuper(AstNode node) throws StandardError;
 //  case THIS:
   protected abstract Object visitThis(AstNode node) throws StandardError;
 //  case VAR:
@@ -65,71 +61,100 @@ public abstract class Visitor {
   protected abstract Object visitVars(AstNode node) throws StandardError;
 //  case NEGATION:
   protected abstract Object visitNegation(AstNode node) throws StandardError;
+//  case ELEMENT:
+  protected abstract Object visitElement(AstNode node) throws StandardError;
+//  case MEMBER_ACCESS:
+  protected abstract Object visitMemberAccess(AstNode node) throws StandardError;
+//  case CALL_SEQUENCE:
+  protected abstract Object visitCallSequence(AstNode node) throws StandardError;
+//  case LO_SEQUENCE:
+  protected abstract Object visitLoSequence(AstNode node) throws StandardError;
+//  case EQ_SEQUENCE:
+  protected abstract Object visitEqSequence(AstNode node) throws StandardError;
+//  case CM_SEQUENCE:
+  protected abstract Object visitCmSequence(AstNode node) throws StandardError;
+//  case AS_SEQUENCE:
+  protected abstract Object visitAsSequence(AstNode node) throws StandardError;
+//  case MD_SEQUENCE:
+  protected abstract Object visitMdSequence(AstNode node) throws StandardError;
   
   
   public Object visit(AstNode node) throws StandardError {
     try {
+      // ORdered after the enum Type in AstNode
       switch (node.type) {
-        case ASSIGNMENT:
-          return visitAssignment(node);
-        case COORD_LIT:
-          return visitCoordLit(node);
-        case DECL:
-          return visitDecl(node);
-        case DECL_STRUCT:
-          return visitDeclStruct(node);
-        case DIR_LIT:
-          return visitDirLit(node);
-        case FUNCTION:
-          return visitFunction(node);
-        case FUNC_CALL:
-          return visitFuncCall(node);
-        case FUNC_DEF:
-          return visitFuncDef(node);
-        case GAME_DECL:
-          return visitGameDecl(node);
-        case ID:
-          return visitId(node);
-        case IF_EXPR:
-          return visitIfExpr(node);
-        case INT_LIT:
-          return visitIntLit(node);
-        case KEYWORD:
-          return visitKeyword(node);
-        case LAMBDA_EXPR:
-          return visitLambdaExpr(node);
-        case LIST:
-          return visitList(node);
-        case NOT_OPERATOR:
-          return visitNotOperator(node);
-        case OPERATOR:
-          return visitOperator(node);
-        case PATTERN:
-          return visitPattern(node);
-        case PATTERN_KEYWORD:
-          return visitPatternKeyword(node);
-        case PATTERN_MULTIPLIER:
-          return visitPatternMultiplier(node);
-        case PATTERN_NOT:
-          return visitPatternNot(node);
-        case PATTERN_OPERATOR:
-          return visitPatternOperator(node);
-        case PATTERN_OR:
-          return visitPatternOr(node);
-        case PROGRAM:
-          return visitProgram(node);
-        case STRING_LIT:
-          return visitStringLit(node);
         case THIS:
           return visitThis(node);
+        case SUPER:
+          return visitSuper(node);
+        case PATTERN_KEYWORD:
+          return visitPatternKeyword(node);
+        case PATTERN_OPERATOR:
+          return visitPatternOperator(node);
+        case COORD_LIT:
+          return visitCoordLit(node);
+        case DIR_LIT:
+          return visitDirLit(node);
+        case INT_LIT:
+          return visitIntLit(node);
+        case STRING_LIT:
+          return visitStringLit(node);
+        case CONSTANT:
+          return visitConstant(node);
+        case TYPE:
+          return visitType(node);
         case VAR:
           return visitVar(node);
+        case PROGRAM:
+          return visitProgram(node);
+        case CONSTANT_DEF:
+          return visitConstantDef(node);
+        case TYPE_DEF:
+          return visitTypeDef(node);
+        case TYPE_BODY:
+          return visitTypeBody(node);
+        case ABSTRACT_DEF:
+          return visitAbstractDef(node);
         case VARLIST:
           return visitVarlist(node);
         case VARS:
           return visitVars(node);
+        case ASSIGNMENT:
+          return visitAssignment(node);
+        case IF_EXPR:
+          return visitIfExpr(node);
+        case LAMBDA_EXPR:
+          return visitLambdaExpr(node);
+        case LIST:
+          return visitList(node);
+        case ELEMENT:
+          return visitElement(node);
+        case MEMBER_ACCESS:
+          return visitMemberAccess(node);
+        case CALL_SEQUENCE:
+          return visitCallSequence(node);
+        case PATTERN:
+          return visitPattern(node);
+        case PATTERN_OR:
+          return visitPatternOr(node);
+        case PATTERN_MULTIPLIER:
+          return visitPatternMultiplier(node);
+        case PATTERN_NOT:
+          return visitPatternNot(node);
         case NEGATION:
           return visitNegation(node);
+        case LO_SEQUENCE:
+          return visitLoSequence(node);
+        case EQ_SEQUENCE:
+          return visitEqSequence(node);
+        case CM_SEQUENCE:
+          return visitCmSequence(node);
+        case AS_SEQUENCE:
+          return visitAsSequence(node);
+        case MD_SEQUENCE:
+          return visitMdSequence(node);
+        case NOT_OPERATOR:
+          return visitNotOperator(node);
         default:
           throw new StandardError("Unidentified node type: " + node.type);
       }

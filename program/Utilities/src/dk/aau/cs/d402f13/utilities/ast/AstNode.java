@@ -7,7 +7,7 @@ import java.util.Iterator;
 public class AstNode implements Iterable<AstNode> {
   public enum Type{
     //Keywords
-    THIS, SUPER, OPERATOR, PATTERN_KEYWORD, PATTERN_OPERATOR,
+    THIS, SUPER, PATTERN_KEYWORD, PATTERN_OPERATOR,
     //Literals
     INT_LIT, DIR_LIT, COORD_LIT, STRING_LIT,
     //Identifiers

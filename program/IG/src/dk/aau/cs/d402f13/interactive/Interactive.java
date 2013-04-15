@@ -53,7 +53,8 @@ public class Interactive {
         if (tokens.size() < 1) {
           continue;
         }
-        if (tokens.get(0).type == Token.Type.DEFINE) {
+        if (tokens.get(0).type == Token.Type.KEY_DEFINE ||
+            tokens.get(0).type == Token.Type.KEY_TYPE) {
           ast = p.parseAsDefinition(tokens);
         }
         else {

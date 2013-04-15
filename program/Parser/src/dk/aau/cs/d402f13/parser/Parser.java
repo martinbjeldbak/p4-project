@@ -50,19 +50,19 @@ public class Parser {
     return expression();
   }
 
-//  /**
-//   * @param takes
-//   *          a linked list of tokens as parameters
-//   * @return returns an AST with definition as the root.
-//   * @throws SyntaxError
-//   */
-//  public AstNode parseAsDefinition(LinkedList<Token> tokens) throws SyntaxError {
-//    this.tokens = tokens;
-//    currentToken = null;
-//    nextToken = tokens.peek();
-//
-//    return functionDefinition();
-//  }
+  /**
+   * @param takes
+   *          a linked list of tokens as parameters
+   * @return returns an AST with definition as the root.
+   * @throws SyntaxError
+   */
+  public AstNode parseAsDefinition(LinkedList<Token> tokens) throws SyntaxError {
+    this.tokens = tokens;
+    currentToken = null;
+    nextToken = tokens.peek();
+
+    return definition();
+  }
 
   /**
    * @param takes
@@ -229,17 +229,21 @@ public class Parser {
   private AstNode program() throws SyntaxError {
     AstNode root = astNode(Type.PROGRAM, "");
     while (lookAhead(Token.Type.KEY_DEFINE) || lookAhead(Token.Type.KEY_TYPE)) {
-      if (accept(Token.Type.KEY_DEFINE)) {
-        root.addChild(constantDef());
-      }
-      else if (lookAhead(Token.Type.KEY_TYPE)) {
-        root.addChild(typeDef());
-      }
-      else {
-        unexpectedError("a definition");
-      }
+      root.addChild(definition());
     }
     return root;
+  }
+  
+  private AstNode definition() throws SyntaxError {
+    if (accept(Token.Type.KEY_DEFINE)) {
+      return constantDef();
+    }
+    else if (lookAhead(Token.Type.KEY_TYPE)) {
+      return typeDef();
+    }
+    else {
+      throw unexpectedError("a definition");
+    }
   }
 
   /**
@@ -314,11 +318,12 @@ public class Parser {
     if (accept(Token.Type.VAR)) {
       node.addChild(astNode(Type.VAR, currentToken.value));
       while (accept(Token.Type.COMMA)) {
+        if (lookAhead(Token.Type.TRIPLEDOTS)) {
+          node.addChild(vars());
+          break;
+        }
         expect(Token.Type.VAR);
         node.addChild(astNode(Type.VAR, currentToken.value));
-      }
-      if (accept(Token.Type.COMMA)) {
-        node.addChild(vars());
       }
     }
     else if (lookAhead(Token.Type.TRIPLEDOTS)) {
@@ -406,15 +411,15 @@ public class Parser {
   
   private AstNode cmSequence() throws SyntaxError {
     AstNode next = asSequence();
-    if (accept(Token.Type.OP_LT) || accept(Token.Type.OP_LTEQ)
-        || accept(Token.Type.OP_GT) || accept(Token.Type.OP_GTEQ)) {
+    if (accept(Token.Type.OP_LESS_THAN) || accept(Token.Type.OP_LESS_OR_EQUALS)
+        || accept(Token.Type.OP_GREATER_THAN) || accept(Token.Type.OP_GREATER_OR_EQUALS)) {
       AstNode sequence = astNode(Type.CM_SEQUENCE, "");
       String operation = currentToken.value;
       sequence.addChild(next);
       sequence.addChild(asSequence());
       sequence.getLast().operation = operation;
-      while (accept(Token.Type.OP_LT) || accept(Token.Type.OP_LTEQ)
-          || accept(Token.Type.OP_GT) || accept(Token.Type.OP_GTEQ)) {
+      while (accept(Token.Type.OP_LESS_THAN) || accept(Token.Type.OP_LESS_OR_EQUALS)
+          || accept(Token.Type.OP_GREATER_THAN) || accept(Token.Type.OP_GREATER_OR_EQUALS)) {
         operation = currentToken.value;
         sequence.addChild(asSequence());
         sequence.getLast().operation = operation;
@@ -506,7 +511,7 @@ public class Parser {
 
   private AstNode memberAccess() throws SyntaxError {
     AstNode node = astNode(Type.MEMBER_ACCESS, "");
-    expect(Token.Type.DOT_OPERATOR);
+    expect(Token.Type.OP_DOT);
     expect(Token.Type.CONSTANT);
     node.addChild(astNode(Type.CONSTANT, currentToken.value));
     while (lookAhead(Token.Type.LBRACKET)) {
@@ -622,7 +627,7 @@ public class Parser {
     AstNode node = astNode(Type.LAMBDA_EXPR, "");
     expect(Token.Type.LAMBDA_BEGIN);
     node.addChild(varList());
-    expect(Token.Type.LAMBDA_OPERATOR);
+    expect(Token.Type.OP_LAMBDA);
     node.addChild(expression());
     return node;
   }
