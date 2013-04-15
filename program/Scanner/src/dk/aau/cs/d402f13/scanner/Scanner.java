@@ -14,7 +14,7 @@ import dk.aau.cs.d402f13.utilities.Token.Type;
 @SuppressWarnings("unused")
 public class Scanner {
   public static final String whitespace = " \t\r\n";
-  public static final String operators = "!&*+-=><?()%{}#[]/|.,";
+  public static final String operators = "!&*+-=><?(){}#[]/|,";
   
   private int line = 1;
   private int offset = -1;
@@ -106,7 +106,7 @@ public class Scanner {
     return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
   }
 
-  public Token scanKeyword() throws ScannerError {
+  public Token scanKeyword() throws Exception {
     Token t = token(Type.FUNCTION);
     while (isAnycase()) {
       t.value += current();
@@ -114,9 +114,77 @@ public class Scanner {
     }
     switch (t.value) {
       // Keywords
-      case "define":
-        t.type = Type.DEFINE;
+      case "this":
+        t.type = Type.KEY_THIS;
         break;
+      case "super":
+        t.type = Type.KEY_SUPER;
+        break;
+      case "define":
+        t.type = Type.KEY_DEFINE;
+        break;
+      case "abstract":
+        t.type = Type.KEY_ABSTRACT;
+        break;
+      case "extends":
+        t.type = Type.KEY_EXTENDS;
+        break;
+      case "type":
+        t.type = Type.KEY_TYPE_DEF;
+        break;
+      
+      // Pattern keywords
+      case "foe":
+      case "friend":
+      case "empty":
+      case "any":
+        t.type = Token.Type.KEY_PATTERN_KEYWORD;
+        break;
+        
+      // Operators
+      case "or":
+        t.type = Token.Type.OP_OR;
+        break;
+      case "and":
+        t.type = Token.Type.OP_AND;
+        break;
+      case "==":
+        t.type = Token.Type.OP_EQUALS;
+        break;
+      case "not":
+        t.type = Token.Type.OP_NOT;
+        break;
+      case "+":
+        t.type = Token.Type.OP_PLUS;
+        break;
+      case "-":
+        t.type = Token.Type.OP_MINUS;
+        break;
+      case "*":
+        t.type = Token.Type.OP_MULT;
+        break;
+      case "/":
+        t.type = Token.Type.OP_DIV;
+        break;
+      case "%":
+        t.type = Token.Type.OP_MODULO;
+        break;
+      case "=":
+        t.type = Token.Type.OP_ASSIGN;
+        break;
+      case "=>":
+        t.type = Token.Type.OP_LAMDA;
+        break;
+      case "#":
+        t.type = Token.Type.LAMBDA_BEGIN;
+        break;
+      case "let":
+        t.type = Token.Type.LET;
+        break;
+      case "in":
+        t.type = Token.Type.IN;
+        break;
+      
       case "if":
         t.type = Type.IF;
         break;
@@ -126,50 +194,7 @@ public class Scanner {
       case "else":
         t.type = Type.ELSE;
         break;
-      case "game":
-        t.type = Type.GAME;
-        break;
-      case "this":
-        t.type = Type.THIS;
-        break;
-      case "width":
-      case "height":
-      case "title":
-      case "players":
-      case "turnOrder":
-      case "board":
-      case "grid":
-      case "setup":
-      case "piece":
-      case "wall":
-      case "name":
-      case "possibleDrops":
-      case "possibleMoves":
-      case "winCondition":
-      case "tieCondition":
-        t.type = Token.Type.KEYWORD;
-        break;
-      // Operators
-      case "and":
-      case "or":
-        t.type = Token.Type.NORMAL_OPERATOR;
-        break;
-      case "let":
-        t.type = Token.Type.LET;
-        break;
-      case "in":
-        t.type = Token.Type.IN;
-        break;
-      case "not":
-        t.type = Token.Type.NOT_OPERATOR;
-        break;
-      // Pattern keywords
-      case "foe":
-      case "friend":
-      case "empty":
-      case "any":
-        t.type = Token.Type.PATTERN_KEYWORD;
-        break;
+
       // Direction literal
       case "ne":
       case "nw":
@@ -189,42 +214,27 @@ public class Scanner {
     return t;
   }
 
-  public Token scanUppercase() throws ScannerError {
-    // Can be ID or Coordinate, e.g. Noughts or A3
-    Boolean canBeID = true;
-	Boolean canBeCoord = true;
-	Boolean seenDigit = false;
-	Token t = token(Type.COORD_LIT);
+  public Token scanUppercase() {
+    // Can be Type or Coordinate, e.g. Int or A3
+    Token t = token(Type.TYPE);
     while (isAnycase()) {
-      if (isLowercase()){
-        canBeCoord = false; //coordinates can't contain lowercase letters
+      t.value += current();
+      pop();
+    }
+    // if digit comes after the alphacharacters, it must be a
+    // coordinate, else an identifier
+    if (isDigit()) {
+      t.type = Token.Type.COORD_LIT;
+      while (isDigit()){
+        t.value += current();
+        pop();
       }
-      t.value += current();
-      pop();
     }
-	while (isDigit()) {
-	  seenDigit = true;
-	  canBeID = false; //identifiers can't contain digits
-      t.value += current();
-      pop();
-    }
-	
-	canBeCoord = seenDigit ? canBeCoord : false; //if not containing a digit, it can't be coordinate
-	
-	if (canBeID)
-	{
-	  t.type = Token.Type.ID;
-	  if (canBeCoord)
-	    throw new ScannerError("ambiguity between coordinate or identifier: " + t.value, token(Type.EOF));
-	}
-	else{ //token is predeclared as COORD_LIT
-	  if (!canBeCoord) //token can neither be ID nor COORD_LIT
-	    throw new ScannerError("Invalid coordinate or identifier: " + t.value, token(Type.EOF));
-	}
     return t;
+
   }
 
-  public Token scanVar() throws ScannerError {
+  public Token scanVar() throws Exception {
     // called when token starts with $
     Token t = token(Token.Type.VAR);
     pop(); // remove initial $
@@ -232,14 +242,14 @@ public class Scanner {
       t.value += current();
       pop();
     }
-    if (t.value.length() <= 0) {
-      throw new ScannerError("Invalid unnamed variable", token(Type.EOF));
+    if (t.value.length() < 0) {
+      throw new ScannerError("Invalid variable: " + t.value, token(Type.EOF));
     }
     return t;
   }
 
-  public Token scanOperator() throws ScannerError {
-    Token t = token(Type.NORMAL_OPERATOR);
+  public Token scanOperator() throws Exception {
+    Token t = token(Type.OP_PLUS);
     char c = current();
     t.value += c;
     pop();
@@ -287,7 +297,7 @@ public class Scanner {
       case '?':
         t.type = Type.PATTERN_OPERATOR;
         break;
-      case '%':
+      case '@':
       case '-':
         t.type = Type.NORMAL_OPERATOR;
         break;
@@ -341,17 +351,6 @@ public class Scanner {
       case '#':
         t.type = Type.LAMBDABEGIN;
         break;
-      case '.':
-        if (current() == '.') {
-          t.value += '.';
-          pop();
-          if (current() == '.') {
-            t.value += '.';
-            pop();
-            t.type = Type.TRIPLEDOTS;
-            return t;
-          }
-        }
       default:
         throw new ScannerError("Undefined operator: " + t.value, token(Type.EOF));
     }
@@ -367,7 +366,7 @@ public class Scanner {
     return t;
   }
 
-  public Token scanString() throws ScannerError {
+  public Token scanString() throws SyntaxError {
     Token t = token(Type.STRING_LIT);
     pop();
     char c;
@@ -386,7 +385,7 @@ public class Scanner {
     return t;
   }
 
-  public Token scan() throws ScannerError {
+  public Token scan() throws Exception {
     while (isWhitespace()) {
       pop();
     }
