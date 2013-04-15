@@ -137,8 +137,12 @@ The following grammar describes the expressions of the programming language:
 \galt{if\_expr}
 \galt{lambda\_expr}
 \galt{\gter{not} \gcat expression}
-\galt{operation}
-\grule{operation}{negation \gcat \gopt{operator \gcat expression}}
+\galt{lo\_sequence}
+\grule{lo\_sequence}{eq\_sequence \gcat \grep{\ggrp{\gter{and} \gor \gter{or}} \gcat eq\_sequence}}
+\grule{eq\_sequence}{cm\_sequence \gcat \grep{\ggrp{\gter{==} \gor \gter{!=}} \gcat cm\_sequence}}
+\grule{cm\_sequence}{as\_sequence \gcat \grep{\ggrp{\gter{<} \gor \gter{>} \gor \gter{<=} \gor \gter{>=}} \gcat as\_sequence}}
+\grule{as\_sequence}{md\_sequence \gcat \grep{\ggrp{\gter{+} \gor \gter{-}} \gcat md\_sequence}}
+\grule{md\_sequence}{negation \gcat \grep{\ggrp{\gter{*} \gor \gter{/} \gor{\%}} \gcat negation}}
 \grule{negation}{element}
 \galt{\gter{-} \gcat negation}
 \grule{element}{call\_sequence \gcat \grep{member\_access}}

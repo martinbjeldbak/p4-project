@@ -532,6 +532,7 @@ public class Parser {
     }
     else if (accept(Token.Type.OP_DIV)){
       node = pattern();
+      expect(Token.Type.OP_DIV);
       return node;
     }
     else if(accept(Token.Type.KEY_THIS)){
