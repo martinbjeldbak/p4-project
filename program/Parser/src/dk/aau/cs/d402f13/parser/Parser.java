@@ -372,6 +372,22 @@ public class Parser {
       throw unexpectedError("an expression");
     }
   }
+  
+  private AstNode loSequence() throws SyntaxError {
+    AstNode next = eqSequence();
+    if (accept(Token.Type.O_AND) || accept(Token.Type.O_OR)) {
+      AstNode sequence = astNode(Type.LO_SEQUENCE, "");
+      String operation = currentToken.value;
+      sequence.addChild(next);
+      sequence.addChild(eqSequence());
+      sequence.getLast().operation = operation;
+      while (accept(Token.Type.O_AND) || accept(Token.Type.O_OR)) {
+        
+      }
+      return sequence;
+    }
+    return next;
+  }
 
   private AstNode operation() throws SyntaxError {
     AstNode operation = astNode(Type.OPERATION, "");
@@ -390,14 +406,7 @@ public class Parser {
       negation.addChild(negation());
       return negation;
     }
-    else if (lookAheadAtomic()) {
-      negation = astNode(Type.ELEMENT, "");
-      negation.addChild(element());
-      return negation;
-    }
-    else{
-      throw unexpectedError("a negation");
-    }
+    return element();
   }
 
   /**
