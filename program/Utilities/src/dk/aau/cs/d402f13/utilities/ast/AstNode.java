@@ -30,6 +30,8 @@ public class AstNode implements Iterable<AstNode> {
   private ArrayList<AstNode> children = new ArrayList<AstNode>();
   private static int counter = 0;
   
+  public String operation = null;
+  
   public void addChild(AstNode child){
     if(child != null){
       this.children.add(child);
