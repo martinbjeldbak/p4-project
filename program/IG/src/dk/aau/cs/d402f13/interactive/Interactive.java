@@ -180,6 +180,9 @@ public class Interactive {
               }
               System.err.println("^");
             }
+            if (e instanceof InternalError) {
+              e.printStackTrace();
+            }
           }
           input = "";
           break;
