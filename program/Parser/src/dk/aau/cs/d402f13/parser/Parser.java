@@ -314,11 +314,12 @@ public class Parser {
     if (accept(Token.Type.VAR)) {
       node.addChild(astNode(Type.VAR, currentToken.value));
       while (accept(Token.Type.COMMA)) {
+        if (lookAhead(Token.Type.TRIPLEDOTS)) {
+          node.addChild(vars());
+          break;
+        }
         expect(Token.Type.VAR);
         node.addChild(astNode(Type.VAR, currentToken.value));
-      }
-      if (accept(Token.Type.COMMA)) {
-        node.addChild(vars());
       }
     }
     else if (lookAhead(Token.Type.TRIPLEDOTS)) {
