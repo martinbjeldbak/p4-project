@@ -2,12 +2,15 @@
 \begin{figure}[ht]
 \begin{center}
 \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
-\node [square] {Operation}
-  child {node [square,xshift=0.5cm] {\textit{Negation}}}
-  child {node [square] {Operator} edge from parent[dashed]}
-  child {node [square,xshift=-0.5cm] {\textit{Expression}} edge from parent[dashed]};
+\node [square] {\textit{LHS}}
+  child {node [square,xshift=1.5cm] {\textit{RHS}}}
+  child {node [square,xshift=0.5cm] {\textit{RHS}}}
+  child {node [square,xshift=-0.5cm] (a) {\textit{RHS}} edge from parent[dashed];}
+  child {node [square,xshift=-1.5cm] (b) {\textit{RHS}} edge from parent[dashed];};
+  
+\path (a)--(b) node [midway] {$\cdots$};
 \end{tikzpicture}
 \end{center}
-\capt{The abstract syntax tree for the operation node.}
+\capt{The abstract AST for the different operation nodes.}
 \label{ast:operation}
 \end{figure}
