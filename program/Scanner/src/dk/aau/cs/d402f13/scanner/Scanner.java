@@ -236,7 +236,7 @@ public class Scanner {
         else if (current() == '>') {
           str += ">";
           pop();
-          return token(Type.OP_LAMDA, str);
+          return token(Type.OP_LAMBDA, str);
         }
         else
           return token(Type.OP_ASSIGN, str);

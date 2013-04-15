@@ -318,7 +318,7 @@ public class Parser {
     if (accept(Token.Type.VAR)) {
       node.addChild(astNode(Type.VAR, currentToken.value));
       while (accept(Token.Type.COMMA)) {
-        if (lookAhead(Token.Type.TRIPLEDOTS)) {
+        if (lookAhead(Token.Type.OP_DOT_DOT_DOT)) {
           node.addChild(vars());
           break;
         }
@@ -326,7 +326,7 @@ public class Parser {
         node.addChild(astNode(Type.VAR, currentToken.value));
       }
     }
-    else if (lookAhead(Token.Type.TRIPLEDOTS)) {
+    else if (lookAhead(Token.Type.OP_DOT_DOT_DOT)) {
       node.addChild(vars());
     }
     expect(Token.Type.RBRACKET);
@@ -339,7 +339,7 @@ public class Parser {
    */
   private AstNode vars() throws SyntaxError {
     AstNode node = astNode(Type.VARS, "");
-    expect(Token.Type.OP_TRIPLEDOTS);
+    expect(Token.Type.OP_DOT_DOT_DOT);
     expect(Token.Type.VAR);
     node.value = currentToken.value;
     return node;
