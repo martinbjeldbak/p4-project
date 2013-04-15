@@ -406,15 +406,15 @@ public class Parser {
   
   private AstNode cmSequence() throws SyntaxError {
     AstNode next = asSequence();
-    if (accept(Token.Type.OP_LT) || accept(Token.Type.OP_LTEQ)
-        || accept(Token.Type.OP_GT) || accept(Token.Type.OP_GTEQ)) {
+    if (accept(Token.Type.OP_LESS_THAN) || accept(Token.Type.OP_LESS_OR_EQUALS)
+        || accept(Token.Type.OP_GREATER_THAN) || accept(Token.Type.OP_GREATER_OR_EQUALS)) {
       AstNode sequence = astNode(Type.CM_SEQUENCE, "");
       String operation = currentToken.value;
       sequence.addChild(next);
       sequence.addChild(asSequence());
       sequence.getLast().operation = operation;
-      while (accept(Token.Type.OP_LT) || accept(Token.Type.OP_LTEQ)
-          || accept(Token.Type.OP_GT) || accept(Token.Type.OP_GTEQ)) {
+      while (accept(Token.Type.OP_LESS_THAN) || accept(Token.Type.OP_LESS_OR_EQUALS)
+          || accept(Token.Type.OP_GREATER_THAN) || accept(Token.Type.OP_GREATER_OR_EQUALS)) {
         operation = currentToken.value;
         sequence.addChild(asSequence());
         sequence.getLast().operation = operation;
@@ -506,7 +506,7 @@ public class Parser {
 
   private AstNode memberAccess() throws SyntaxError {
     AstNode node = astNode(Type.MEMBER_ACCESS, "");
-    expect(Token.Type.DOT_OPERATOR);
+    expect(Token.Type.OP_DOT);
     expect(Token.Type.CONSTANT);
     node.addChild(astNode(Type.CONSTANT, currentToken.value));
     while (lookAhead(Token.Type.LBRACKET)) {
@@ -622,7 +622,7 @@ public class Parser {
     AstNode node = astNode(Type.LAMBDA_EXPR, "");
     expect(Token.Type.LAMBDA_BEGIN);
     node.addChild(varList());
-    expect(Token.Type.LAMBDA_OPERATOR);
+    expect(Token.Type.OP_LAMBDA);
     node.addChild(expression());
     return node;
   }
