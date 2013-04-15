@@ -46,13 +46,14 @@ public class PrettyPrinter extends Visitor {
     return node.type == Type.VAR ||
         node.type == Type.LIST ||
         node.type == Type.PATTERN ||
-        node.type == Type.KEYWORD ||
+        node.type == Type.TYPE ||
         node.type == Type.DIR_LIT ||
         node.type == Type.COORD_LIT ||
         node.type == Type.INT_LIT ||
         node.type == Type.STRING_LIT ||
-        node.type == Type.ID ||
-        node.type == Type.FUNCTION;
+        node.type == Type.THIS ||
+        node.type == Type.SUPER ||
+        node.type == Type.CONSTANT;
   }
   
   //////////////////////////////////////
@@ -88,49 +89,17 @@ public class PrettyPrinter extends Visitor {
   }
 
   @Override
-  protected String visitDecl(AstNode node) throws StandardError {
-    String code = visit(node.get(0));
-    code += " ";
-    code += visit(node.get(1));
-    return code + "\n";
-  }
-
-  @Override
-  protected String visitDeclStruct(AstNode node) throws StandardError {
-    String code = "{\n";
-    incr();
-    for (AstNode child : node) {
-      code += indentation + visit(child);
-    }
-    decr();
-    return code + indentation + "}";
-  }
-
-  @Override
   protected String visitDirLit(AstNode node) throws StandardError {
     return node.value;
   }
 
   @Override
-  protected String visitFunction(AstNode node) throws StandardError {
+  protected String visitConstant(AstNode node) throws StandardError {
     return node.value;
   }
 
   @Override
-  protected String visitFuncCall(AstNode node) throws StandardError {
-    String code = "";
-    if (isElement(node.get(0))) {
-      code += visit(node.get(0));
-    }
-    else {
-      code += "(" + visit(node.get(0)) + ")";
-    }
-    code += visit(node.get(1));
-    return code;
-  }
-
-  @Override
-  protected String visitFuncDef(AstNode node) throws StandardError {
+  protected String visitConstantDef(AstNode node) throws StandardError {
     String code = "define ";
     code += visit(node.get(0)) + " ";
     code += visit(node.get(1)) + "\n";
@@ -138,18 +107,6 @@ public class PrettyPrinter extends Visitor {
     code += indentation + visit(node.get(2));
     decr();
     return code + "\n\n";
-  }
-
-  @Override
-  protected String visitGameDecl(AstNode node) throws StandardError {
-    String code = "game ";
-    code += visit(node.get(0));
-    return code;
-  }
-
-  @Override
-  protected String visitId(AstNode node) throws StandardError {
-    return node.value;
   }
 
   @Override
@@ -165,11 +122,6 @@ public class PrettyPrinter extends Visitor {
 
   @Override
   protected String visitIntLit(AstNode node) throws StandardError {
-    return node.value;
-  }
-
-  @Override
-  protected String visitKeyword(AstNode node) throws StandardError {
     return node.value;
   }
 
@@ -209,28 +161,6 @@ public class PrettyPrinter extends Visitor {
   @Override
   protected String visitNotOperator(AstNode node) throws StandardError {
     return "not " + visit(node.get(0));
-  }
-
-  @Override
-  protected String visitOperator(AstNode node) throws StandardError {
-    String left = "";
-    if (isElement(node.get(0))) {
-      left += visit(node.get(0));
-    }
-    else {
-      left += "(" + visit(node.get(0)) + ")";
-    }
-    incr();
-    String right = visit(node.get(1));
-    String code;
-    if (left.length() + right.length() > maxWidth) {
-      code = left + "\n" + indentation + node.value + " " + right;
-    }
-    else {
-      code = left + " " + node.value + " " + right;
-    }
-    decr();
-    return code;
   }
 
   @Override
@@ -336,6 +266,94 @@ public class PrettyPrinter extends Visitor {
       code += "(" + visit(node.get(0)) + ")";
     }
     return code;
+  }
+
+  @Override
+  protected Object visitType(AstNode node) throws StandardError {
+    return node.value;
+  }
+
+  @Override
+  protected Object visitTypeDef(AstNode node) throws StandardError {
+    String code = "type " + visit(node.getFirst()) + visit(node.get(1));
+    incr();
+    if (node.get(2).type == Type.TYPE) {
+      incr();
+      code += " " + visit(node.get(2)) + visit(node.get(3));
+      decr();
+    }
+    if (node.getLast().type == Type.TYPE_BODY) {
+      code += " {\n" + visit(node.getLast());
+      decr();
+      code += indentation + "}\n\n";
+    }
+    return code;
+  }
+
+  @Override
+  protected Object visitTypeBody(AstNode node) throws StandardError {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  protected Object visitAbstractDef(AstNode node) throws StandardError {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  protected Object visitSuper(AstNode node) throws StandardError {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  protected Object visitElement(AstNode node) throws StandardError {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  protected Object visitMemberAccess(AstNode node) throws StandardError {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  protected Object visitCallSequence(AstNode node) throws StandardError {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  protected Object visitLoSequence(AstNode node) throws StandardError {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  protected Object visitEqSequence(AstNode node) throws StandardError {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  protected Object visitCmSequence(AstNode node) throws StandardError {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  protected Object visitAsSequence(AstNode node) throws StandardError {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  protected Object visitMdSequence(AstNode node) throws StandardError {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }
