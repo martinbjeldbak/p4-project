@@ -1,0 +1,56 @@
+\usepackage{color,calc,graphicx,soul}
+
+\definecolor{nicered}{rgb}{.647,.129,.149}
+%\definecolor{nicered}{rgb}{.047,.136,.290} % aau color
+\makeatletter
+\newlength\dlf@normtxtw
+\setlength\dlf@normtxtw{\textwidth}
+\def\myhelvetfont{\def\sfdefault{mdput}}
+\newsavebox{\feline@chapter}
+\newcommand\feline@chapter@marker[1][4cm]{%
+  \sbox\feline@chapter{%
+    \resizebox{!}{#1}{\fboxsep=1pt%
+      \colorbox{nicered}{\color{white} \bfseries\sffamily\thechapter}%
+    }}%
+  \rotatebox{90}{%
+    \resizebox{%
+      \heightof{\usebox{\feline@chapter}}+\depthof{\usebox{\feline@chapter}}}%
+    {!}{\scshape\so\@chapapp}}\quad%
+  \raisebox{\depthof{\usebox{\feline@chapter}}}{\usebox{\feline@chapter}}%
+}
+\newcommand\feline@chm[1][4cm]{%
+  \sbox\feline@chapter{\feline@chapter@marker[#1]}%
+  \makebox[0pt][l]{% aka \rlap
+    \makebox[1cm][r]{\usebox\feline@chapter}%
+  }}
+\makechapterstyle{d402e13}{
+  % Inspried by daleif1 (http://goo.gl/YKLm7)
+
+  % Chapters
+  \renewcommand\chapnamefont{\normalfont\Large\scshape\raggedleft\so}
+  \renewcommand\chaptitlefont{\normalfont\huge\bfseries\scshape\color{nicered}\fontspec{OptimusPrinceps}}
+  \renewcommand\chapternamenum{\fontspec{OptimusPrinceps}}
+  \renewcommand\printchaptername{}
+  \renewcommand\printchapternum{\null\hfill\feline@chm[2.5cm]\par}
+  \renewcommand\afterchapternum{\par\vskip\midchapskip}
+  \renewcommand\printchaptertitle[1]{\chaptitlefont\raggedleft ##1\par}
+  
+  % Sections
+  \setsecheadstyle{\normalfont\Large\scshape\color{nicered}\fontspec{OptimusPrinceps}}
+
+  % Subsections
+  \setsubsecheadstyle{\normalfont\large\scshape\color{nicered}\fontspec{OptimusPrinceps}}
+  
+  % Parts
+  \renewcommand*{\partnamefont}{\color{white}}
+  \renewcommand*{\partnumfont}{\color{white}}
+  \renewcommand*{\parttitlefont}{
+    \hspace{100pt}
+    \resizebox{!}{80pt}{\fboxsep=1pt%
+      \colorbox{nicered}{\color{white} \bfseries\sffamily
+      \fontspec{OptimusPrinceps} Appendix}%
+    }%
+    \HUGE\color{nicered}
+  }
+}
+\makeatother
