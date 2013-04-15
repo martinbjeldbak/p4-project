@@ -276,36 +276,40 @@ public class PrettyPrinter extends Visitor {
   @Override
   protected Object visitTypeDef(AstNode node) throws StandardError {
     String code = "type " + visit(node.getFirst()) + visit(node.get(1));
-    incr();
     if (node.get(2).type == Type.TYPE) {
       incr();
       code += " " + visit(node.get(2)) + visit(node.get(3));
       decr();
     }
     if (node.getLast().type == Type.TYPE_BODY) {
-      code += " {\n" + visit(node.getLast());
-      decr();
-      code += indentation + "}\n\n";
+      code += " " + visit(node.getLast());
     }
-    return code;
+    return code + "\n\n";
   }
 
   @Override
   protected Object visitTypeBody(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    String code = "{\n";
+    incr();
+    for (AstNode child : node) {
+      code += indentation + visit(child);
+    }
+    decr();
+    return code + "}\n";
   }
 
   @Override
   protected Object visitAbstractDef(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    String code = "define abstract " + visit(node.getFirst());
+    if (node.getLast().type == Type.VARLIST) {
+      code += visit(node.getLast());
+    }
+    return code + "\n\n";
   }
 
   @Override
   protected Object visitSuper(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    return "super";
   }
 
   @Override
