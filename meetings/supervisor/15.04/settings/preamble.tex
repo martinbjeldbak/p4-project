@@ -1,0 +1,135 @@
+\PassOptionsToPackage{table}{xcolor}
+\documentclass[openright,twoside,10pt]{memoir}
+\usepackage{fontspec}
+
+% DOCUMENT LAYOUT
+\setromanfont[Ligatures=TeX,Numbers={Lining}]{Garamond}
+\setmonofont[Scale=0.8]{Consolas}
+\setsansfont[Scale=0.9]{Optima}
+%\usepackage[protrusion=true,factor=2000]{microtype} need beta 2.5 for XeTeX support
+\setsecnumdepth{subsection}
+
+% LANGUAGE
+\usepackage{polyglossia} %XeTeX babel
+\setdefaultlanguage[variant=uk]{english}
+
+% FONTS
+\usepackage{xunicode}
+
+%TIKZ
+\usepackage{fancybox}
+\usepackage{tikz}
+\usetikzlibrary{calc,trees,positioning,arrows,chains,shapes.geometric,%
+    decorations.pathreplacing,decorations.pathmorphing,shapes,%
+    matrix,shapes.symbols}
+        
+\tikzset{
+>=stealth',
+  punktchain/.style={
+    rectangle, rounded corners, draw=black, very thick, 
+    text width=6em, minimum height=1.5em, 
+    text centered, on chain},
+  combtree/.style={
+    rectangle, rounded corners, draw=black, very thick, 
+    text width=5em, minimum height=1.5em, 
+    text centered, on chain},
+  line/.style={draw, thick, <-},
+  element/.style={tape, top color=white, 
+  	bottom color=blue!50!black!60!, minimum width=8em,
+    draw=blue!40!black!90, very thick, text width=10em, 
+    minimum height=3.5em, text centered, on chain},
+  every join/.style={->, thick,shorten >=1pt},
+  decoration={brace},
+  tuborg/.style={decorate, very thick},
+  tubnode/.style={midway, right=2pt},
+}
+\tikzstyle{square}=[rectangle, draw, rounded corners=1mm, solid]
+
+% OTHER
+\usepackage{epstopdf} % to include eps files
+\usepackage{enumitem} % for [noitemsep] in enumerate/itemize lists
+\graphicspath{ {images/} }
+\usepackage{color}
+\usepackage{multicol}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{listings}	%for code examples
+ \lstset{ % http://stackoverflow.com/questions/741985/latex-source-code-listing-like-in-professional-books
+%         basicstyle=\footnotesize\ttfamily,% the size of the fonts
+                                % that are used for the code
+        basicstyle=\footnotesize\ttfamily,% the size of the fonts that are used for the code
+         numbers=left,                     % where to put the line-numbers
+         numberstyle=\tiny,                % the size of the fonts that are used for the line-numbers
+         stepnumber=1,                     % line numbering steps
+         numbersep=5pt,                    % how far the line-numbers are from the code
+         tabsize=2,                        % sets default tabsize to 2 spaces
+         breaklines=true,                  % sets automatic line breaking
+         keywordstyle=\color{shkeyword},        % language function text color
+                frame=b,
+ %        keywordstyle=[1]\textbf,    % Stil der Keywords
+ %        keywordstyle=[2]\textbf,    %
+ %        keywordstyle=[3]\textbf,    %
+ %        keywordstyle=[4]\textbf,   \sqrt{\sqrt{}} %
+         stringstyle=\color{shstring}, % string text color
+%         stringstyle=\color{red},
+        commentstyle=\color{shcomment},
+         showspaces=false,           % show spaces adding particular underscores
+         showtabs=false,             % show tabs within strings adding particular underscores   
+         showstringspaces=false,     % underline spaces within strings
+         xleftmargin=17pt,
+         framexleftmargin=17pt,
+         framexrightmargin=5pt,
+         framexbottommargin=4pt,
+         language=Java
+ }
+
+% grammar stuff
+
+% PARAGRAPH SPACING
+\parskip=5pt plus 2pt minus 1pt
+\parindent=0pt
+
+% WIDER MARGINS
+\let\oldmarginpar\marginpar
+\renewcommand\marginpar[1]{\-\oldmarginpar[\raggedleft\footnotesize #1]%
+{\raggedright\footnotesize\color{red} #1}}
+% Margins
+\setstocksize{11in}{8.5in}
+\settrimmedsize{11in}{8.5in}{*}
+\settrims{0in}{0in}
+\settypeblocksize{9.0in}{6in}{*}
+\setlrmargins{1.25in}{*}{*}
+\setulmargins{1.0in}{*}{*}
+\setheadfoot{14pt}{26pt}
+\setheaderspaces{*}{13pt}{*}
+
+% Fra settings.tex
+\setlrmarginsandblock{3.5cm}{2.5cm}{*}
+\setulmarginsandblock{2.5cm}{3.0cm}{*}
+
+\checkandfixthelayout
+
+% CHANGE BULLETS IN ITEMIZE
+\renewcommand{\labelitemi}{$\bullet$}
+\renewcommand{\labelitemii}{$\circ$}
+\renewcommand{\labelitemiii}{$\cdot$}
+
+%colors
+\definecolor{shcomment}{rgb}{0.12, 0.38, 0.18 }
+\definecolor{shkeyword}{rgb}{0.37, 0.08, 0.25}  % #5F1441
+\definecolor{shstring}{rgb}{0.06, 0.10, 0.98} % #101AF9
+
+%table colors
+\usepackage{colortbl}
+\definecolor{lightgray}{rgb}{0.95, 0.95, 0.95}
+
+% macros
+\input{settings/macros}
+\input{settings/chapstyles}
+
+\chapterstyle{d402e13}
+
+
+% Pygments syntex highlightning
+\usepackage{fancyvrb}
+\input{settings/pygments}
