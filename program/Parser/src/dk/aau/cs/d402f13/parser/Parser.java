@@ -253,6 +253,7 @@ public class Parser {
   private AstNode constantDef() throws SyntaxError {
     AstNode node = astNode(Type.CONSTANT_DEF, "");
     expect(Token.Type.CONSTANT); //constant eller function?
+    node.addChild(astNode(Type.CONSTANT, currentToken.value));
     if (lookAhead(Token.Type.LBRACKET)) {
       node.addChild(varList());
     }

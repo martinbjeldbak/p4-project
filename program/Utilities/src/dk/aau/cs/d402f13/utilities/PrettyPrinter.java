@@ -102,10 +102,15 @@ public class PrettyPrinter extends Visitor {
   protected String visitConstantDef(AstNode node) throws StandardError {
     String code = "define ";
     code += visit(node.get(0)) + " ";
-    code += visit(node.get(1)) + "\n";
-    incr();
-    code += indentation + visit(node.get(2));
-    decr();
+    if (node.size() == 3) {
+      code += visit(node.get(1)) + "=\n";
+      incr();
+      code += indentation + visit(node.get(2));
+      decr();
+    }
+    else {
+      code += "= " + visit(node.get(1));
+    }
     return code + "\n\n";
   }
 
