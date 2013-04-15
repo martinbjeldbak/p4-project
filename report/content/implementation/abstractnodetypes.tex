@@ -131,7 +131,7 @@ Figure \ref{ast:variablelist} illustrates this by having a root and three childr
 The following eight subsections present the different expressions in \productname{}. The sections are structured as follows:
 
 \begin{dlist}
-\item Operation and negation
+\item Operations with precedence and negation
 \item Element
 \item Member access
 \item Call sequence
@@ -141,20 +141,42 @@ The following eight subsections present the different expressions in \productnam
 \item List
 \end{dlist}
 
-\subsubsection{Operation and negation}
-We have joined two expressions in this section, because they are intertwined. We will only visualise the operation expression because the negation expression simply consists of a root and one child. The following productions present the grammar for the two expressions:
+\subsubsection{Operations with precedence and negation}
+In this section we introduce the five different groupings of operations such as logical operators, equality operators, etc., and finally we present the production called negation. We illustrate the five groupings of operators but we have omitted the negation node, because it is merely a root with one child. The following grammar presents the productions for the different operations:
 
-\begin{ebnf}%
-\grule{operation}{negation \gcat \gopt{operator \gcat expression}}
-\grule{negation}{element}
-\galt{\gter{-} \gcat negation}
-\end{ebnf}%
+\begin{ebnf}
+\grule{lo\_sequence}{eq\_sequence \gcat \grep{\ggrp{\gter{and} \gor \gter{or}} \gcat eq\_sequence}}
+\grule{eq\_sequence}{cm\_sequence \gcat \grep{\ggrp{\gter{==} \gor \gter{!=}} \gcat cm\_sequence}}
+\grule{cm\_sequence}{as\_sequence \gcat \grep{\ggrp{\gter{<} \gor \gter{>} \gor \gter{<=} \gor \gter{>=}} \gcat as\_sequence}}
+\grule{as\_sequence}{md\_sequence \gcat \grep{\ggrp{\gter{+} \gor \gter{-}} \gcat md\_sequence}}
+\grule{md\_sequence}{negation \gcat \grep{\ggrp{\gter{*} \gor \gter{/} \gor{\%}} \gcat negation}}
+\end{ebnf}
 
-The grammar specifies that an operation consists of a negation and the choice to add an operator followed by an expression. The negation can be an element or begin with the \gter{-} symbol followed by another negation.
+The meaning of these different groupings of operators have been described in \secref{sec:grammar}. To refresh the readers memory, the sequences are intentionally placed in this specific order to ensure the correct precedence for these operators.
+
+Since the productions look a lot like each other we will only illustrate an abstract AST which shows how we have implemented the different operations. Figure \ref{ast:operation} shows this.
 
 \input{content/implementation/abstractnodetypes/operation}
 
-Figure \ref{ast:operation} illustrates the operation expression. It can have either one child or three children. If a operator follows the negation then there must be an expression after the operator.
+Figure \ref{ast:operation} illustrates that the node for each production, with the left-hand side (LHS) of the production as the root, will only be constructed if there is at least two of the right-hand sides (RHS) with one operator between them. This means that the sequence should look like the following:
+
+\begin{ebnf}
+\grule{lo\_sequence}{eq\_sequence \gcat \gter{and} \gcat eq\_sequence}
+\end{ebnf}
+
+So, in the above example the RHS is $eq\_sequence$ and the operator is $\gter{and}$. In \figref{ast:operation} we do not show the operators, which can make it a bit cryptic to look at and understand. If there is only one RHS then the node is not constructed but the next production will be evaluated. Otherwise the AST would end up with many single-child nodes. This is illustrated in \figref{ast:badexample}.
+
+\input{content/implementation/abstractnodetypes/badexample}
+
+Figure \ref{ast:badexample} illustrates this very clearly. We will end up with a long list, which is not necessary and it will just make it less efficient to read the AST. With our implementation we will have a more efficient and more compact AST.
+
+The grammar specified earlier in this section that the last operation ($md\_sequence$) consists of negations and the choice to add an operator between negations. The negation production can be an element or begin with the \gter{-} symbol followed by another negation.
+The following productions present the grammar for the negation expression:
+
+\begin{ebnf}
+\grule{negation}{element}
+\galt{\gter{-} \gcat negation}
+\end{ebnf}
 
 \subsubsection{Element}
 
