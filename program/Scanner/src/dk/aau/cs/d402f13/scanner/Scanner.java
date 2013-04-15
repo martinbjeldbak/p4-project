@@ -162,7 +162,7 @@ public class Scanner {
       case "w":
         return token(Type.LIT_DIR, str);
       default:
-        if (str.length() < 2) {
+        if (str.length() < 1) {
           throw new ScannerError("Invalid function or keyword: " + str, token(Type.EOF));
         }
         return token(Type.CONSTANT, str);

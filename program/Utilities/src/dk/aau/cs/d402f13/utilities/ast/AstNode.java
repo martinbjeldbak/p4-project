@@ -90,7 +90,7 @@ public class AstNode implements Iterable<AstNode> {
   }
   
   private void print(String prefix){
-    System.out.println(prefix + "- " + type + " (" + value + ") <" + line + ":" + offset + ">");
+    System.out.println(prefix + "- " + type + " (" + value + ") [" + operation + "] <" + line + ":" + offset + ">");
     for(AstNode n : children){
       n.print(prefix + " ");
     }
