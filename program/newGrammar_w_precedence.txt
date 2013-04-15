@@ -2,7 +2,7 @@
 
 constant          -> lowercase {anycase}
 type              -> uppercase {anycase}
-variable          -> "$" anycae {anycase}
+variable          -> "$" anycase {anycase}
 
 // PROGRAM STRUCTURE
 program           -> {definition}
