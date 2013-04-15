@@ -3,11 +3,12 @@ package dk.aau.cs.d402f13.utilities;
 public class Token {
   public enum Type {
     // Keywords
-    KEY_THIS, KEY_SUPER, KEY_DEFINE, KEY_ABSTRACT, KEY_EXTENDS, KEY_TYPE_DEF,
-    KEY_PATTERN_KEYWORD,  // (friend, foe, ...)
+    KEY_THIS, KEY_SUPER, KEY_DEFINE, KEY_ABSTRACT, KEY_EXTENDS, KEY_TYPE,
+    KEY_PATTERN,  // (friend, foe, ...)
     
     // Operators
-    OP_OR, OP_AND, OP_EQUALS, OP_NOT, 
+    OP_OR, OP_AND, OP_EQUALS, OP_NOT_EQUALS, OP_NOT, OP_LESS_THAN, OP_GREATER_THAN,
+    OP_LESS_OR_EQUALS, OP_GREATER_OR_EQUALS,
     OP_PLUS, OP_MINUS, OP_MULT, OP_DIV, OP_MODULO, OP_ASSIGN, OP_LAMDA,
 
     // Literals
