@@ -55,17 +55,23 @@ public class CoordValue extends Value {
   }
   
   private String toColumn(int xValue) {
-    int xx = xValue;
+    char[] col = Integer.toString(xValue).toCharArray();
+    String ret = "";
     
-    
-    
-    return "";
+    for(char c : col)
+      ret += intCharToLetter(c);
+ 
+    return ret;
+  }
+  
+  private Character intCharToLetter(char value) {
+    if (value > 0 && value < 27)
+      return Character.valueOf((char)(value + 'A' - 1));
+    else
+      return null;
   }
   
   private boolean isLetter(char c) {
     return (c >= 'A' && c <= 'Z');
   }
-  
-
-
 }
