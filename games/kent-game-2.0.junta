@@ -9,17 +9,17 @@ type Solo[] extends Player[] {
 type White[$player] extends Piece[$player] {
   define actions[$gameState] =
     union[
-      findActions[/this e|n empty/, $gameState],
-      findActions[/this e Black e empty/, $gameState],
-      findActions[/this n Black n empty/, $gameState]
+      findMoves[/this e|n empty/, $gameState],
+      findMoves[/this e Black e empty/, $gameState],
+      findMoves[/this n Black n empty/, $gameState]
     ]
 }
 type Black[$player] extends Piece[$player] {
   define actions[$gameState] =
     union[
-      findSquares[/this w|s empty/, $gameState],
-      findSquares[/this w White w empty/, $gameState],
-      findSquares[/this s White s empty/, $gameState]
+      findMoves[/this w|s empty/, $gameState],
+      findMoves[/this w White w empty/, $gameState],
+      findMoves[/this s White s empty/, $gameState]
     ]
 }
 type KentGame[] extends Game[“Kents Spil”] {
