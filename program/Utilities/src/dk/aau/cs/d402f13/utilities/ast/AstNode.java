@@ -20,6 +20,9 @@ public class AstNode implements Iterable<AstNode> {
     ELEMENT, MEMBER_ACCESS, CALL_SEQUENCE,
     //Patterns
     PATTERN, PATTERN_OR, PATTERN_MULTIPLIER, PATTERN_NOT,
+    // OPERATIONS
+    NEGATION, LO_SEQUENCE, EQ_SEQUENCE, CM_SEQUENCE, AS_SEQUENCE,
+    MD_SEQUENCE,
     // Special
     NOT_OPERATOR,  
   }
