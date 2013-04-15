@@ -36,33 +36,33 @@ public class Parser {
     return program();
   }
 
-//  /**
-//   * @param takes
-//   *          a linked list of tokens as parameters
-//   * @return returns an AST with expression as the root.
-//   * @throws SyntaxError
-//   */
-//  public AstNode parseAsExpression(LinkedList<Token> tokens) throws SyntaxError {
-//    this.tokens = tokens;
-//    currentToken = null;
-//    nextToken = tokens.peek();
-//
-//    return expression();
-//  }
-//
-//  /**
-//   * @param takes
-//   *          a linked list of tokens as parameters
-//   * @return returns an AST with definition as the root.
-//   * @throws SyntaxError
-//   */
-//  public AstNode parseAsDefinition(LinkedList<Token> tokens) throws SyntaxError {
-//    this.tokens = tokens;
-//    currentToken = null;
-//    nextToken = tokens.peek();
-//
-//    return functionDefinition();
-//  }
+  /**
+   * @param takes
+   *          a linked list of tokens as parameters
+   * @return returns an AST with expression as the root.
+   * @throws SyntaxError
+   */
+  public AstNode parseAsExpression(LinkedList<Token> tokens) throws SyntaxError {
+    this.tokens = tokens;
+    currentToken = null;
+    nextToken = tokens.peek();
+
+    return expression();
+  }
+
+  /**
+   * @param takes
+   *          a linked list of tokens as parameters
+   * @return returns an AST with definition as the root.
+   * @throws SyntaxError
+   */
+  public AstNode parseAsDefinition(LinkedList<Token> tokens) throws SyntaxError {
+    this.tokens = tokens;
+    currentToken = null;
+    nextToken = tokens.peek();
+
+    return definition();
+  }
 
   /**
    * @param takes
@@ -173,8 +173,8 @@ public class Parser {
    *         Otherwise false.
    */
   private boolean lookAheadLiteral() {
-    return lookAhead(Token.Type.INT_LIT) || lookAhead(Token.Type.DIR_LIT)
-        || lookAhead(Token.Type.COORD_LIT) || lookAhead(Token.Type.STRING_LIT);
+    return lookAhead(Token.Type.LIT_INT) || lookAhead(Token.Type.LIT_DIR)
+        || lookAhead(Token.Type.LIT_COORD) || lookAhead(Token.Type.LIT_STRING);
   }
 
   /**
@@ -183,8 +183,8 @@ public class Parser {
   private boolean lookAheadAtomic() {
     return lookAhead(Token.Type.LPAREN) || lookAhead(Token.Type.VAR)
         || lookAhead(Token.Type.LBRACKET)
-        || lookAhead(Token.Type.PATTERN_BEGIN) || lookAhead(Token.Type.THIS)
-        || lookAhead(Token.Type.SUPER) || lookAheadLiteral()
+        || lookAhead(Token.Type.OP_DIV) || lookAhead(Token.Type.KEY_THIS)
+        || lookAhead(Token.Type.KEY_SUPER) || lookAheadLiteral()
         || lookAhead(Token.Type.TYPE) || lookAhead(Token.Type.CONSTANT);
   }
 
@@ -192,7 +192,7 @@ public class Parser {
    * @return
    */
   private boolean lookAheadOperation() {
-    return lookAhead(Token.Type.NOT_OPERATOR) || lookAheadAtomic();
+    return lookAhead(Token.Type.OP_MINUS) || lookAheadAtomic();
   }
 
   /**
@@ -201,14 +201,14 @@ public class Parser {
   private boolean lookAheadExpression() {
     return lookAhead(Token.Type.LET) || lookAhead(Token.Type.IF)
         || lookAhead(Token.Type.LAMBDA_BEGIN)
-        || lookAhead(Token.Type.NOT_OPERATOR) || lookAheadOperation();
+        || lookAhead(Token.Type.OP_NOT) || lookAheadOperation();
   }
 
   /**
    * @return
    */
   private boolean lookAheadPatternCheck() {
-    return lookAhead(Token.Type.PATTERN_KEYWORD) || lookAhead(Token.Type.THIS)
+    return lookAhead(Token.Type.KEY_PATTERN) || lookAhead(Token.Type.KEY_THIS)
         || lookAhead(Token.Type.TYPE);
   }
 
@@ -216,8 +216,8 @@ public class Parser {
    * @return
    */
   private boolean lookAheadPatternValue() {
-    return lookAhead(Token.Type.DIR_LIT) || lookAhead(Token.Type.VAR)
-        || lookAheadPatternCheck() || lookAhead(Token.Type.PATTERN_NOT)
+    return lookAhead(Token.Type.LIT_DIR) || lookAhead(Token.Type.VAR)
+        || lookAheadPatternCheck() || lookAhead(Token.Type.OP_PATTERN_NOT)
         || lookAhead(Token.Type.LPAREN);
   }
 
@@ -228,15 +228,22 @@ public class Parser {
    */
   private AstNode program() throws SyntaxError {
     AstNode root = astNode(Type.PROGRAM, "");
-    while (lookAhead(Token.Type.DEFINE) || lookAhead(Token.Type.TYPE)) {
-      if (lookAhead(Token.Type.DEFINE)) {
-        root.addChild(constantDef());
-      }
-      else if (lookAhead(Token.Type.TYPE)) {
-        root.addChild(typeDef());
-      }
+    while (lookAhead(Token.Type.KEY_DEFINE) || lookAhead(Token.Type.KEY_TYPE)) {
+      root.addChild(definition());
     }
     return root;
+  }
+  
+  private AstNode definition() throws SyntaxError {
+    if (accept(Token.Type.KEY_DEFINE)) {
+      return constantDef();
+    }
+    else if (lookAhead(Token.Type.KEY_TYPE)) {
+      return typeDef();
+    }
+    else {
+      throw unexpectedError("a definition");
+    }
   }
 
   /**
@@ -245,20 +252,18 @@ public class Parser {
    */
   private AstNode constantDef() throws SyntaxError {
     AstNode node = astNode(Type.CONSTANT_DEF, "");
-    expect(Token.Type.DEFINE);
     expect(Token.Type.CONSTANT); //constant eller function?
     if (lookAhead(Token.Type.LBRACKET)) {
       node.addChild(varList());
     }
-    expect(Token.Type.ASSIGN_OPERATOR);
+    expect(Token.Type.OP_ASSIGN);
     node.addChild(expression());
     return node;
   }
 
   private AstNode abstractDef() throws SyntaxError {
-    AstNode node = astNode(Type.ABSTRACT_DEF, currentToken.value);
-    expect(Token.Type.DEFINE);
-    expect(Token.Type.ABSTRACT);
+    AstNode node = astNode(Type.ABSTRACT_DEF, "");
+    expect(Token.Type.KEY_ABSTRACT);
     expect(Token.Type.CONSTANT); //constant eller function?
     node.addChild(astNode(Type.CONSTANT, currentToken.value));
     if (lookAhead(Token.Type.LBRACKET)) {
@@ -272,12 +277,12 @@ public class Parser {
    * @throws SyntaxError
    */
   private AstNode typeDef() throws SyntaxError {
-    AstNode node = astNode(Type.TYPE_DEF, currentToken.value);
-    expect(Token.Type.tTYPE); // "type"
+    AstNode node = astNode(Type.TYPE_DEF, "");
+    expect(Token.Type.KEY_TYPE); // "type"
     expect(Token.Type.TYPE);  // type
     node.addChild(astNode(Type.TYPE, currentToken.value));
     node.addChild(varList());
-    if (accept(Token.Type.EXTENDS)) {
+    if (accept(Token.Type.KEY_EXTENDS)) {
       expect(Token.Type.TYPE);
       node.addChild(astNode(Type.TYPE, currentToken.value));
       node.addChild(list());
@@ -291,8 +296,8 @@ public class Parser {
   private AstNode typeBody() throws SyntaxError {
     AstNode typebody = astNode(Type.TYPE_BODY, "");
     expect(Token.Type.LBRACE);
-    while (accept(Token.Type.DEFINE)) {
-      if (accept(Token.Type.ABSTRACT)) {
+    while (accept(Token.Type.KEY_DEFINE)) {
+      if (lookAhead(Token.Type.KEY_ABSTRACT)) {
         typebody.addChild(abstractDef());
       }
       else {
@@ -313,11 +318,12 @@ public class Parser {
     if (accept(Token.Type.VAR)) {
       node.addChild(astNode(Type.VAR, currentToken.value));
       while (accept(Token.Type.COMMA)) {
+        if (lookAhead(Token.Type.TRIPLEDOTS)) {
+          node.addChild(vars());
+          break;
+        }
         expect(Token.Type.VAR);
         node.addChild(astNode(Type.VAR, currentToken.value));
-      }
-      if (accept(Token.Type.COMMA)) {
-        node.addChild(vars());
       }
     }
     else if (lookAhead(Token.Type.TRIPLEDOTS)) {
@@ -333,7 +339,7 @@ public class Parser {
    */
   private AstNode vars() throws SyntaxError {
     AstNode node = astNode(Type.VARS, "");
-    expect(Token.Type.TRIPLEDOTS);
+    expect(Token.Type.OP_TRIPLEDOTS);
     expect(Token.Type.VAR);
     node.value = currentToken.value;
     return node;
@@ -354,19 +360,13 @@ public class Parser {
     else if (lookAhead(Token.Type.LAMBDA_BEGIN)) {
       return lambdaExpression();
     }
-    else if (accept(Token.Type.NOT_OPERATOR)) {
-      if (lookAheadExpression()) {
-        // is this correct?
-        AstNode notExpression = astNode(Type.NOT_OPERATOR, "");
-        notExpression.addChild(expression());
-        return notExpression;
-      }
-      else {
-        throw unexpectedError("an expression");
-      }
+    else if (accept(Token.Type.OP_NOT)) {
+      AstNode notExpression = astNode(Type.NOT_OPERATOR, "");
+      notExpression.addChild(expression());
+      return notExpression;
     }
-    else if (lookAheadAtomic() || lookAhead(Token.Type.NOT_OPERATOR)) {
-      return operation();
+    else if (lookAheadAtomic() || lookAhead(Token.Type.OP_MINUS)) {
+      return loSequence();
     }
     else {
       throw unexpectedError("an expression");
@@ -375,34 +375,102 @@ public class Parser {
   
   private AstNode loSequence() throws SyntaxError {
     AstNode next = eqSequence();
-    if (accept(Token.Type.O_AND) || accept(Token.Type.O_OR)) {
+    if (accept(Token.Type.OP_AND) || accept(Token.Type.OP_OR)) {
       AstNode sequence = astNode(Type.LO_SEQUENCE, "");
       String operation = currentToken.value;
       sequence.addChild(next);
       sequence.addChild(eqSequence());
       sequence.getLast().operation = operation;
-      while (accept(Token.Type.O_AND) || accept(Token.Type.O_OR)) {
-        
+      while (accept(Token.Type.OP_AND) || accept(Token.Type.OP_OR)) {
+        operation = currentToken.value;
+        sequence.addChild(eqSequence());
+        sequence.getLast().operation = operation;
       }
       return sequence;
     }
     return next;
   }
-
-  private AstNode operation() throws SyntaxError {
-    AstNode operation = astNode(Type.OPERATION, "");
-    operation.addChild(negation());
-    if (accept(Token.Type.SHARED_OPERATOR)){
-      operation.addChild(astNode(Type.OPERATOR, currentToken.value));
-      operation.addChild(expression());
+  
+  private AstNode eqSequence() throws SyntaxError {
+    AstNode next = cmSequence();
+    if (accept(Token.Type.OP_EQUALS) || accept(Token.Type.OP_NOT_EQUALS)) {
+      AstNode sequence = astNode(Type.EQ_SEQUENCE, "");
+      String operation = currentToken.value;
+      sequence.addChild(next);
+      sequence.addChild(cmSequence());
+      sequence.getLast().operation = operation;
+      while (accept(Token.Type.OP_EQUALS) || accept(Token.Type.OP_NOT_EQUALS)) {
+        operation = currentToken.value;
+        sequence.addChild(cmSequence());
+        sequence.getLast().operation = operation;
+      }
+      return sequence;
     }
-    return operation;
+    return next;
+  }
+  
+  private AstNode cmSequence() throws SyntaxError {
+    AstNode next = asSequence();
+    if (accept(Token.Type.OP_LESS_THAN) || accept(Token.Type.OP_LESS_OR_EQUALS)
+        || accept(Token.Type.OP_GREATER_THAN) || accept(Token.Type.OP_GREATER_OR_EQUALS)) {
+      AstNode sequence = astNode(Type.CM_SEQUENCE, "");
+      String operation = currentToken.value;
+      sequence.addChild(next);
+      sequence.addChild(asSequence());
+      sequence.getLast().operation = operation;
+      while (accept(Token.Type.OP_LESS_THAN) || accept(Token.Type.OP_LESS_OR_EQUALS)
+          || accept(Token.Type.OP_GREATER_THAN) || accept(Token.Type.OP_GREATER_OR_EQUALS)) {
+        operation = currentToken.value;
+        sequence.addChild(asSequence());
+        sequence.getLast().operation = operation;
+      }
+      return sequence;
+    }
+    return next;
+  }
+  
+  private AstNode asSequence() throws SyntaxError {
+    AstNode next = mdSequence();
+    if (accept(Token.Type.OP_PLUS) || accept(Token.Type.OP_MINUS)) {
+      AstNode sequence = astNode(Type.AS_SEQUENCE, "");
+      String operation = currentToken.value;
+      sequence.addChild(next);
+      sequence.addChild(mdSequence());
+      sequence.getLast().operation = operation;
+      while (accept(Token.Type.OP_PLUS) || accept(Token.Type.OP_MINUS)) {
+        operation = currentToken.value;
+        sequence.addChild(mdSequence());
+        sequence.getLast().operation = operation;
+      }
+      return sequence;
+    }
+    return next;
+  }
+  
+  private AstNode mdSequence() throws SyntaxError {
+    AstNode next = negation();
+    if (accept(Token.Type.OP_MULT) || accept(Token.Type.OP_DIV)
+        || accept(Token.Type.OP_MODULO)) {
+      AstNode sequence = astNode(Type.MD_SEQUENCE, "");
+      String operation = currentToken.value;
+      sequence.addChild(next);
+      sequence.addChild(negation());
+      sequence.getLast().operation = operation;
+      while (accept(Token.Type.OP_MULT) || accept(Token.Type.OP_DIV)
+          || accept(Token.Type.OP_MODULO)) {
+        operation = currentToken.value;
+        sequence.addChild(negation());
+        sequence.getLast().operation = operation;
+      }
+      return sequence;
+    }
+    return next;
   }
   
   private AstNode negation() throws SyntaxError {
     AstNode negation = null;
-    if (accept(Token.Type.NOT_OPERATOR)) { // "-"?
-      negation = astNode(Type.NOT_OPERATOR, "");
+    if (accept(Token.Type.OP_MINUS)) { // "-"?
+      negation = astNode(Type.NEGATION, "");
       negation.addChild(negation());
       return negation;
     }
@@ -414,24 +482,36 @@ public class Parser {
    * @throws SyntaxError
    */
   private AstNode element() throws SyntaxError {
-    AstNode node = callSequence();
-    while (lookAhead(Token.Type.DOT_OPERATOR)) {
-      node.addChild(memberAccess());
+    AstNode next = callSequence();
+    if (lookAhead(Token.Type.OP_DOT)) {
+      AstNode element = astNode(Type.ELEMENT, "");
+      element.addChild(next);
+      element.addChild(memberAccess());
+      while (lookAhead(Token.Type.OP_DOT)) {
+        element.addChild(memberAccess());
+      }
+      return element;
     }
-    return node;
+    return next;
   }
 
   private AstNode callSequence() throws SyntaxError {
-    AstNode node = atomic();
-    while (lookAhead(Token.Type.LBRACKET)) {
-      node.addChild(list());
+    AstNode next = atomic();
+    if (lookAhead(Token.Type.LBRACKET)) {
+      AstNode sequence = astNode(Type.CALL_SEQUENCE, "");
+      sequence.addChild(next);
+      sequence.addChild(list());
+      while (lookAhead(Token.Type.LBRACKET)) {
+        sequence.addChild(list());
+      }
+      return sequence;
     }
-    return node;
+    return next;
   }
 
   private AstNode memberAccess() throws SyntaxError {
     AstNode node = astNode(Type.MEMBER_ACCESS, "");
-    expect(Token.Type.DOT_OPERATOR);
+    expect(Token.Type.OP_DOT);
     expect(Token.Type.CONSTANT);
     node.addChild(astNode(Type.CONSTANT, currentToken.value));
     while (lookAhead(Token.Type.LBRACKET)) {
@@ -455,33 +535,34 @@ public class Parser {
       node = list();
       return node;
     }
-    else if (accept(Token.Type.PATTERN_BEGIN)){
+    else if (accept(Token.Type.OP_DIV)){
       node = pattern();
+      expect(Token.Type.OP_DIV);
       return node;
     }
-    else if(accept(Token.Type.THIS)){
+    else if(accept(Token.Type.KEY_THIS)){
       node = astNode(Type.THIS, "");
       return node;
     }
-    else if(accept(Token.Type.SUPER)){
+    else if(accept(Token.Type.KEY_SUPER)){
       node = astNode(Type.SUPER, "");
       return node;
     }
     else if(lookAheadLiteral()){ 
-      if(accept(Token.Type.DIR_LIT)){ 
+      if(accept(Token.Type.LIT_DIR)){ 
         node = astNode(Type.DIR_LIT, currentToken.value);
         return node;
       }
-      else if(accept(Token.Type.COORD_LIT)){
+      else if(accept(Token.Type.LIT_COORD)){
         node = astNode(Type.COORD_LIT, currentToken.value);
         return node;
       }
-      else if(accept(Token.Type.INT_LIT)){
+      else if(accept(Token.Type.LIT_INT)){
         node = astNode(Type.INT_LIT, currentToken.value);
         return node;
       }
       else{
-        expect(Token.Type.STRING_LIT);
+        expect(Token.Type.LIT_STRING);
         node = astNode(Type.STRING_LIT, currentToken.value);
         return node;
       }
@@ -508,13 +589,13 @@ public class Parser {
     expect(Token.Type.LET);
     expect(Token.Type.VAR);
     node.addChild(astNode(Type.VAR, currentToken.value));
-    expect(Token.Type.ASSIGN_OPERATOR);
+    expect(Token.Type.OP_ASSIGN);
     node.addChild(expression());
     while (accept(Token.Type.COMMA)) {
       AstNode assignment = astNode(Type.ASSIGNMENT, "");
       expect(Token.Type.VAR);
       assignment.addChild(astNode(Type.VAR, currentToken.value));
-      expect(Token.Type.ASSIGN_OPERATOR);
+      expect(Token.Type.OP_ASSIGN);
       assignment.addChild(expression());
       node.addChild(assignment);
     }
@@ -546,7 +627,7 @@ public class Parser {
     AstNode node = astNode(Type.LAMBDA_EXPR, "");
     expect(Token.Type.LAMBDA_BEGIN);
     node.addChild(varList());
-    expect(Token.Type.LAMBDA_OPERATOR);
+    expect(Token.Type.OP_LAMBDA);
     node.addChild(expression());
     return node;
   }
@@ -589,14 +670,14 @@ public class Parser {
    */
   private AstNode patternExpression() throws SyntaxError {
     AstNode subject = patternValue();
-    if (accept(Token.Type.PATTERN_OR)) {
+    if (accept(Token.Type.OP_PATTERN_OR)) {
       AstNode node = astNode(Type.PATTERN_OR, "");
       node.addChild(subject);
       node.addChild(patternExpression());
       return node;
     }
-    else if (accept(Token.Type.PATTERN_OPERATOR)
-        || accept(Token.Type.SHARED_OPERATOR)) {
+    else if (accept(Token.Type.OP_PATTERN_QUESTION) || accept(Token.Type.OP_PLUS)
+        || accept(Token.Type.OP_MULT)) {
       AstNode node = astNode(Type.PATTERN_OPERATOR, currentToken.value);
       node.addChild(subject);
       return node;
@@ -610,24 +691,24 @@ public class Parser {
    */
   private AstNode patternValue() throws SyntaxError {
     AstNode node = null;
-    if (accept(Token.Type.DIR_LIT)) {
+    if (accept(Token.Type.LIT_DIR)) {
       node = astNode(Type.DIR_LIT, currentToken.value);
     }
     else if (accept(Token.Type.VAR)) {
       node = astNode(Type.VAR, currentToken.value);
     }
-    else if (lookAhead(Token.Type.PATTERN_KEYWORD)
-        || lookAhead(Token.Type.THIS) || lookAhead(Token.Type.TYPE)) {
+    else if (lookAhead(Token.Type.KEY_PATTERN)
+        || lookAhead(Token.Type.KEY_THIS) || lookAhead(Token.Type.TYPE)) {
       node = patternCheck();
     }
-    else if (accept(Token.Type.PATTERN_NOT)) {
+    else if (accept(Token.Type.OP_PATTERN_NOT)) {
       node = astNode(Type.PATTERN_NOT, "");
       node.addChild(patternCheck());
     }
     else if (accept(Token.Type.LPAREN)) {
       node = pattern();
       expect(Token.Type.RPAREN);
-      if (accept(Token.Type.INT_LIT)) {
+      if (accept(Token.Type.LIT_INT)) {
         AstNode mult = astNode(Type.PATTERN_MULTIPLIER, currentToken.value);
         mult.addChild(node);
         node = mult;
@@ -645,10 +726,10 @@ public class Parser {
    */
   private AstNode patternCheck() throws SyntaxError {
     AstNode node = null;
-    if (accept(Token.Type.PATTERN_KEYWORD)) {
+    if (accept(Token.Type.KEY_PATTERN)) {
       node = astNode(Type.PATTERN_KEYWORD, currentToken.value);
     }
-    else if (accept(Token.Type.THIS)) {
+    else if (accept(Token.Type.KEY_THIS)) {
       node = astNode(Type.THIS, "");
     }
     else if (accept(Token.Type.TYPE)) {

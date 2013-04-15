@@ -7,7 +7,7 @@ import java.util.Iterator;
 public class AstNode implements Iterable<AstNode> {
   public enum Type{
     //Keywords
-    THIS, SUPER, OPERATOR, PATTERN_KEYWORD, PATTERN_OPERATOR,
+    THIS, SUPER, PATTERN_KEYWORD, PATTERN_OPERATOR,
     //Literals
     INT_LIT, DIR_LIT, COORD_LIT, STRING_LIT,
     //Identifiers
@@ -16,10 +16,13 @@ public class AstNode implements Iterable<AstNode> {
     PROGRAM, CONSTANT_DEF, TYPE_DEF, TYPE_BODY,  ABSTRACT_DEF, 
     VARLIST, VARS, 
     //Expressions
-    ASSIGNMENT, IF_EXPR, LAMBDA_EXPR, OPERATION, LIST, 
+    ASSIGNMENT, IF_EXPR, LAMBDA_EXPR, LIST, 
     ELEMENT, MEMBER_ACCESS, CALL_SEQUENCE,
     //Patterns
     PATTERN, PATTERN_OR, PATTERN_MULTIPLIER, PATTERN_NOT,
+    // OPERATIONS
+    NEGATION, LO_SEQUENCE, EQ_SEQUENCE, CM_SEQUENCE, AS_SEQUENCE,
+    MD_SEQUENCE,
     // Special
     NOT_OPERATOR,  
   }

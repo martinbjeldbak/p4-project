@@ -14,7 +14,7 @@ import dk.aau.cs.d402f13.utilities.Token.Type;
 @SuppressWarnings("unused")
 public class Scanner {
   public static final String whitespace = " \t\r\n";
-  public static final String operators = "!&*+-=><?()%{}#[]/|.,";
+  public static final String operators = "!&*+-=><?(){}#[]/|,";
   
   private int line = 1;
   private int offset = -1;
@@ -27,7 +27,7 @@ public class Scanner {
   public Scanner(InputStream input) throws UnsupportedEncodingException {
     this.input = new InputStreamReader(input, "UTF-8");
     pop();
-    pop(); // Double-pop! (To get info into currentChar and nextChar
+    pop(); // Double-pop! (To get info into currentChar and nextChar)
   }
 
   public char current() {
@@ -62,11 +62,11 @@ public class Scanner {
     return (char)currentChar;
   }
   
-  public Token token(Token.Type type, String value) {
+  public Token token(Type type, String value) {
     return new Token(type, value, line, offset);
   }
   
-  public Token token(Token.Type type) {
+  public Token token(Type type) {
     return token(type, "");
   }
 
@@ -107,69 +107,50 @@ public class Scanner {
   }
 
   public Token scanKeyword() throws ScannerError {
-    Token t = token(Type.FUNCTION);
-    while (isAnycase()) {
-      t.value += current();
+    String str = "";
+    while(isAnycase()) {
+      str += current();
       pop();
     }
-    switch (t.value) {
+    switch (str) {
       // Keywords
-      case "define":
-        t.type = Type.DEFINE;
-        break;
-      case "if":
-        t.type = Type.IF;
-        break;
-      case "then":
-        t.type = Type.THEN;
-        break;
-      case "else":
-        t.type = Type.ELSE;
-        break;
-      case "game":
-        t.type = Type.GAME;
-        break;
       case "this":
-        t.type = Type.THIS;
-        break;
-      case "width":
-      case "height":
-      case "title":
-      case "players":
-      case "turnOrder":
-      case "board":
-      case "grid":
-      case "setup":
-      case "piece":
-      case "wall":
-      case "name":
-      case "possibleDrops":
-      case "possibleMoves":
-      case "winCondition":
-      case "tieCondition":
-        t.type = Token.Type.KEYWORD;
-        break;
-      // Operators
-      case "and":
-      case "or":
-        t.type = Token.Type.NORMAL_OPERATOR;
-        break;
-      case "let":
-        t.type = Token.Type.LET;
-        break;
-      case "in":
-        t.type = Token.Type.IN;
-        break;
-      case "not":
-        t.type = Token.Type.NOT_OPERATOR;
-        break;
+        return token(Type.KEY_THIS, str);
+      case "super":
+        return token(Type.KEY_SUPER, str);     
+      case "define":
+        return token(Type.KEY_DEFINE, str);    
+      case "abstract":
+        return token(Type.KEY_ABSTRACT, str);    
+      case "extends":
+        return token(Type.KEY_EXTENDS, str);    
+      case "type":
+        return token(Type.KEY_TYPE, str);
+        
       // Pattern keywords
       case "foe":
       case "friend":
       case "empty":
-      case "any":
-        t.type = Token.Type.PATTERN_KEYWORD;
-        break;
+        return token(Type.KEY_PATTERN, str);
+        
+      // Operators
+      case "or":
+        return token(Type.OP_OR, str);
+      case "and":
+        return token(Type.OP_AND, str);
+      case "not":
+        return token(Type.OP_NOT, str);  
+      case "let":
+        return token(Type.LET, str);
+      case "in":
+        return token(Type.IN, str);
+      case "if":
+        return token(Type.IF, str);
+      case "then":
+        return token(Type.THEN, str);
+      case "else":
+        return token(Type.ELSE, str);
+           
       // Direction literal
       case "ne":
       case "nw":
@@ -179,156 +160,62 @@ public class Scanner {
       case "s":
       case "e":
       case "w":
-        t.type = Token.Type.DIR_LIT;
-        break;
+        return token(Type.LIT_DIR, str);
       default:
-        if (t.value.length() < 2) {
-          throw new ScannerError("Invalid function or keyword: " + t.value, token(Type.EOF));
+        if (str.length() < 2) {
+          throw new ScannerError("Invalid function or keyword: " + str, token(Type.EOF));
         }
+        return token(Type.CONSTANT, str);
     }
-    return t;
   }
 
-  public Token scanUppercase() throws ScannerError {
-    // Can be ID or Coordinate, e.g. Noughts or A3
-    Boolean canBeID = true;
-	Boolean canBeCoord = true;
-	Boolean seenDigit = false;
-	Token t = token(Type.COORD_LIT);
+  public Token scanUppercase() {
+    // Can be Type or Coordinate, e.g. Int or A3
+    Token t = token(Type.TYPE);
     while (isAnycase()) {
-      if (isLowercase()){
-        canBeCoord = false; //coordinates can't contain lowercase letters
+      t.value += current();
+      pop();
+    }
+    // if digit comes after the alphacharacters, it must be a
+    // coordinate, else an identifier
+    if (isDigit()) {
+      t.type = Type.LIT_COORD;
+      while (isDigit()){
+        t.value += current();
+        pop();
       }
-      t.value += current();
-      pop();
     }
-	while (isDigit()) {
-	  seenDigit = true;
-	  canBeID = false; //identifiers can't contain digits
-      t.value += current();
-      pop();
-    }
-	
-	canBeCoord = seenDigit ? canBeCoord : false; //if not containing a digit, it can't be coordinate
-	
-	if (canBeID)
-	{
-	  t.type = Token.Type.ID;
-	  if (canBeCoord)
-	    throw new ScannerError("ambiguity between coordinate or identifier: " + t.value, token(Type.EOF));
-	}
-	else{ //token is predeclared as COORD_LIT
-	  if (!canBeCoord) //token can neither be ID nor COORD_LIT
-	    throw new ScannerError("Invalid coordinate or identifier: " + t.value, token(Type.EOF));
-	}
     return t;
+
   }
 
   public Token scanVar() throws ScannerError {
     // called when token starts with $
-    Token t = token(Token.Type.VAR);
+    Token t = token(Type.VAR);
     pop(); // remove initial $
     while (isAnycase()) {
       t.value += current();
       pop();
     }
-    if (t.value.length() <= 0) {
-      throw new ScannerError("Invalid unnamed variable", token(Type.EOF));
+    if (t.value.length() < 0) {
+      throw new ScannerError("Invalid variable: " + t.value, token(Type.EOF));
     }
     return t;
   }
 
   public Token scanOperator() throws ScannerError {
-    Token t = token(Type.NORMAL_OPERATOR);
+    String str = "";
     char c = current();
-    t.value += c;
+    str += c;
     pop();
     switch (c) {
-      case '[':
-        t.type = Type.LBRACKET;
-        break;
-      case ']':
-        t.type = Type.RBRACKET;
-        break;
-      case '{':
-        t.type = Type.LBRACE;
-        break;
-      case '}':
-        t.type = Type.RBRACE;
-        break;
-      case '(':
-        t.type = Type.LPAREN;
-        break;
-      case ')':
-        t.type = Type.RPAREN;
-        break;
-      case ',':
-        t.type = Type.COMMA;
-        break;
-      case '|':
-        t.type = Type.PATTERN_OR;
-        break;
+
       case '+':
-      case '*':
-        t.type = Type.SHARED_OPERATOR; //can be both normal operator and pattern operator
-        break;
-      case '!':
-        if (current() == '=') {
-          t.value += '=';
-          pop();
-          t.type = Type.NORMAL_OPERATOR; // !=
-          break;
-        }
-        else{
-          t.type = Type.PATTERN_NOT; // !
-          break;
-        }
-          
-      case '?':
-        t.type = Type.PATTERN_OPERATOR;
-        break;
-      case '%':
+        return token(Type.OP_PLUS, str);
       case '-':
-        t.type = Type.NORMAL_OPERATOR;
-        break;
-      case '=':
-        if (current() == '>') {
-          pop();
-          t.type = Type.LAMBDAOP; // =>
-          break;
-        }
-        else if (current() == '=') {
-          t.value += '=';
-          pop();
-          t.type = Type.NORMAL_OPERATOR; // ==
-          break;
-        }
-        else{
-          t.type = Type.ASSIGN; // =
-          break;
-        }
-      case '>':
-        if (current() == '=') {  // >=
-          t.value += '=';
-          pop();
-          t.type = Type.NORMAL_OPERATOR;
-          break;
-        }
-        else {
-          t.type = Type.NORMAL_OPERATOR; // >
-          break;
-        }
-      case '<':
-        if (current() == '=') { // <=
-          t.value += '=';
-          pop();
-          t.type = Type.NORMAL_OPERATOR;
-          break;
-        }
-        else {
-          t.type = Type.NORMAL_OPERATOR; // <
-          break;
-        }
+        return token(Type.OP_MINUS, str);        
+      case '*':
+        return token(Type.OP_MULT, str);
       case '/':
         if (current() == '/') {
           while (!isEol()) {
@@ -336,30 +223,98 @@ public class Scanner {
           }
           return scan();
         }
-        t.type = Type.PATTERNOP;
-        break;
+        return token(Type.OP_DIV, str);
+      case '%':
+        return token(Type.OP_MODULO, str);
+      
+      case '=':
+        if(current() == '=' ){
+          str += "=";
+          pop();
+          return token(Type.OP_EQUALS, str);
+        }
+        else if (current() == '>') {
+          str += ">";
+          pop();
+          return token(Type.OP_LAMDA, str);
+        }
+        else
+          return token(Type.OP_ASSIGN, str);
+      
+      case '>':
+        if (current() == '=') {  // >=
+          str += "=";
+          pop();
+          return token(Type.OP_GREATER_OR_EQUALS, str);
+        }
+        else {
+          return token(Type.OP_GREATER_THAN, str);
+        }
+        
+      case '<':
+        if (current() == '=') { // <=
+          str += "=";
+          pop();
+          return token(Type.OP_GREATER_OR_EQUALS, str);
+        }
+        else {
+          return token(Type.OP_LESS_THAN, str);
+        }
+      
       case '#':
-        t.type = Type.LAMBDABEGIN;
-        break;
+        return token(Type.LAMBDA_BEGIN, str);
+        
+      case '!':
+        if (current() == '=') {
+          str += "=";
+          pop();
+          return token(Type.OP_NOT_EQUALS, str);
+        }
+        else{
+          return token(Type.OP_PATTERN_NOT, str);
+        }
+        
+      case '|':
+        return token(Type.OP_PATTERN_OR, str); 
+      case '?':
+        return token(Type.OP_PATTERN_QUESTION, str);  
+        
       case '.':
         if (current() == '.') {
-          t.value += '.';
+          str += ".";
           pop();
           if (current() == '.') {
-            t.value += '.';
+            str += ".";
             pop();
-            t.type = Type.TRIPLEDOTS;
-            return t;
+            return token(Type.OP_DOT_DOT_DOT, str);
           }
+          else throw new ScannerError("Undefined operator: " + str, token(Type.EOF));
         }
+        else {
+          return token(Type.OP_DOT, ".");
+        }
+        
+      case ',':
+        return token(Type.COMMA, str);   
+      case '[':
+        return token(Type.LBRACKET, str);    
+      case ']':
+        return token(Type.RBRACKET, str);
+      case '{':
+        return token(Type.LBRACE, str);       
+      case '}':
+        return token(Type.RBRACE, str);        
+      case '(':
+        return token(Type.LPAREN, str);        
+      case ')':
+        return token(Type.RPAREN, str);          
       default:
-        throw new ScannerError("Undefined operator: " + t.value, token(Type.EOF));
+        throw new ScannerError("Undefined operator: " + str, token(Type.EOF));
     }
-    return t;
   }
 
   public Token scanNumeric() {
-    Token t = token(Type.INT_LIT);
+    Token t = token(Type.LIT_INT);
     while (isDigit()) {
       t.value += current();
       pop();
@@ -368,7 +323,7 @@ public class Scanner {
   }
 
   public Token scanString() throws ScannerError {
-    Token t = token(Type.STRING_LIT);
+    Token t = token(Type.LIT_STRING);
     pop();
     char c;
     while ((c = current()) != '"') {
@@ -415,7 +370,7 @@ public class Scanner {
   }
 
   public static void main(String[] args) throws Exception {
-    // FileInputStream f = new FileInputStream("programExample1.txt");
+    //FileInputStream f = new FileInputStream("kent-game-2.0.junta");
     Scanner s = new Scanner(System.in);
     Token t;
     while ((t = s.scan()).type != Type.EOF) {
