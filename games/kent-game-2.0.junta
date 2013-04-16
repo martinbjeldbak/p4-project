@@ -1,10 +1,10 @@
 type Solo[] extends Player[] {
   define winCondition[$gameState] =
-    8 == size[matchSquares[
+    size[matchSquares[
       [A1, A2, A3, B1, B2, B3, C1, C2],
       /Black/,
       $gameState
-    ]]
+    ]] == 8
 }
 type White[$player] extends Piece[$player] {
   define actions[$gameState] =
@@ -22,7 +22,7 @@ type Black[$player] extends Piece[$player] {
       findMoves[/this s White s empty/, $gameState]
     ]
 }
-type KentGame[] extends Game[“Kents Spil”] {
+type KentGame[] extends Game["Kents Spil"] {
   define players = [Solo[]]
   define board = GridBoard[5, 5]
     .addPieces[White[players[0], e, n], [A1, A2, A3, B1, B2, B3, C1, C2]]
