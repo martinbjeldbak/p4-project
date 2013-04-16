@@ -11,6 +11,27 @@ operand.
 The available types are described in \secref{sec:types}.
 Operations that are not described in this section can be considered invalid.
 
+\subsection{Operator precedence}
+
+The operator precedence is a set of rules clarifying which operations, in an expression,
+should be performed first. The reason for operator precedence in programming languages,
+is to. 
+
+\tab[\textwidth]{operatorPrecedence}{2}{caption}
+         {Operator precedence}
+  {Level}{Operator & Description}{
+    \tabrow{1}{\texttt{f[]} & Function/constructor invocation and list access}
+    \tabrow{2}{\texttt{r.m r.m[]} & Record member access and member invocation}
+    \tabrow{3}{\texttt{-} & Unary negation operation}
+    \tabrow{4}{\texttt{* / \%} & Multiplication, division, and modulo}
+    \tabrow{5}{\texttt{+ -} & Addition and subtraction}
+    \tabrow{6}{\texttt{< > <= >=} & Comparison operators}
+    \tabrow{7}{\texttt{== !=} & Equality operators}
+    \tabrow{8}{\texttt{and or} & Logical $and$ and $or$}
+    \tabrow{9}{\texttt{not} & Logical $not$}
+    \tabrow{10}{\texttt{if let \#} & if expressions, let expressions, and lambda expressions}
+}
+
 \subsection{Boolean operators}
 
 These operators only accept boolean operands and only return boolean values.
