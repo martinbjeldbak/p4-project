@@ -12,7 +12,7 @@ import org.newdawn.slick.SlickException;
 import dk.aau.cs.d402f13.utilities.types.Gridboard;
 import dk.aau.cs.d402f13.utilities.types.Piece;
 
-public class SimulatedGridboard {
+public class SimulatedGridboard extends SimulatedBoard {
 	Image gridImg = null;
 	
 	Gridboard board;
@@ -26,7 +26,8 @@ public class SimulatedGridboard {
 		return board.getHeight();
 	}
 	
-	public SimulatedGridboard( Gridboard b ) {
+	public SimulatedGridboard( SimulatedGame game, Gridboard b ) {
+		super( game );
 		board = b;
 		for( Piece p : b.getPieces() ){
 			pieces.add( new SimulatedPieces( p ) );
@@ -57,22 +58,20 @@ public class SimulatedGridboard {
 	}
 	
 	private void renderPiece( Graphics g, SimulatedPieces p, int x, int y, int size, int offsetX, int offsetY) throws SlickException{
-		p.setImage( new Image( p.getImgPath() ) );
+		p.setImage( game.getImage( p.getImgPath() ) );
 		
 		int borderSize = (int) (size * 0.05);
 		float scale = (size - borderSize * 2) / (float)p.imageSize();
 
 		int imgYOffset = (int) ((p.imageSize() - p.PieceImg.getHeight() ) * scale / 2);
 		int imgXOffset = (int) ((p.imageSize() - p.PieceImg.getWidth() ) * scale / 2);
-		
-	//	g.setColor(Color.cyan);
-	//	g.fillRect( x * size + offsetX + borderSize, y * size + offsetY + borderSize, size-5, size-5);
+
 		p.PieceImg.draw( x * size + imgXOffset + offsetX + borderSize, y * size + imgYOffset + offsetY + borderSize, scale);
 		
 	}
 	
 	
-	public void drawBoard( GameContainer gc, Graphics g, int height, int width ) throws SlickException{
+	public void drawBoard( Graphics g, int height, int width ) throws SlickException{
 		int numSquaresX = board.getWidth();
 		int numSquaresY = board.getHeight();
 		int size = (int) ((height) / ((Math.max(numSquaresX, numSquaresY)) + 2.25));
