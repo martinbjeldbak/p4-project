@@ -8,7 +8,16 @@ public class Piece {
 	private String imgPath = null;
 	
 	private Player player;
+	private Square square;
 	
+	public Square getSquare() {
+		return square;
+	}
+
+	public void setSquare(Square square) {
+		this.square = square;
+	}
+
 	List<Action> actions = new ArrayList<Action>();
 	
 	public List<Action> playerActions(Game g) {

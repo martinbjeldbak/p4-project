@@ -5,30 +5,35 @@ import java.util.List;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import dk.aau.cs.d402f13.utilities.types.Game;
+import dk.aau.cs.d402f13.utilities.types.Gridboard;
+
 public class SimulatedGame {
 	List<SimulatedPieces> pieces;
 	
-	SimulatedBoard board = null;
+	SimulatedGridboard board = null;
+	Game game;
 	
-	private String title;
 	
 	public String getTitle() {
-		return this.title;
-	}
-	
-	public void setTitle(String value) {
-		this.title = value;
-	}
-	
-	public void addPiece( SimulatedPieces p ){
-		pieces.add( p );
+		return game.getTitle();
 	}
 	
 	public void load_resources(){
 		
 	}
 	
+	public SimulatedGridboard getBoard(){
+		return board;
+	}
+	
 	public SimulatedGame (Game g){
+		game = g;
+		Object obj = g.getBoard();
+		if( obj instanceof Gridboard )
+			board = new SimulatedGridboard( (Gridboard)obj );
+		else
+			; //TODO:
 		pieces = new ArrayList<SimulatedPieces>();
 	}
 	

@@ -5,7 +5,8 @@ import java.util.List;
 
 public class Board {
 
-	List<Piece> pieces = new ArrayList<Piece>();
+	protected List<Piece> pieces = new ArrayList<Piece>();
+	protected List<Square> squares = new ArrayList<Square>();
 	
 	public List<Piece> getPieces() {
 		return pieces; 
