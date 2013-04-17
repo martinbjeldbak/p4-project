@@ -1,22 +1,14 @@
 package dk.aau.cs.d402f13.simulator;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import dk.aau.cs.d402f13.utilities.types.Gridboard;
 import dk.aau.cs.d402f13.utilities.types.Piece;
 
 public class SimulatedGridboard extends SimulatedBoard {
-	Image gridImg = null;
-	
-	Gridboard board;
-	List<SimulatedPieces> pieces = new ArrayList<SimulatedPieces>();
+	private Gridboard board;
 	
 	public int getWidth() {
 		return board.getWidth();
@@ -71,14 +63,17 @@ public class SimulatedGridboard extends SimulatedBoard {
 	}
 	
 	
-	public void drawBoard( Graphics g, int height, int width ) throws SlickException{
+	public void drawBoard( Graphics g, int width, int height ) throws SlickException{
 		int numSquaresX = board.getWidth();
 		int numSquaresY = board.getHeight();
-		int size = (int) ((height) / ((Math.max(numSquaresX, numSquaresY)) + 2.25));
-			size = Math.min(size, 64);
+		int size_x = (int) ((width) / (numSquaresX + 2.25));
+		int size_y = (int) ((height) / (numSquaresY + 2.25));
+		
+		int size = Math.min( Math.min(size_x, size_y), 64 );
+		
 		int borderWidth = size / 8;
 		int borderHeight = size / 8;
-		int offsetX = (int) ((height - ((size + 0.25)*numSquaresX )) / 2);
+		int offsetX = (int) ((width - ((size + 0.25)*numSquaresX )) / 2);
 		int offsetY = (int) ((height - ((size + 0.25)*numSquaresY )) / 2);
 		
 		
