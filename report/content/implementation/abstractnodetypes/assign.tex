@@ -8,12 +8,12 @@ level 2/.style={sibling distance = 20mm}]
 
 \node [square] {Assignment}
   child {node [square,xshift=3cm] (a) {Variable}}
-  child {node [square,xshift=1.5cm] (b) {\textit{Expression}}}
-  child {node [rectangle] (c) {\textbf{Comma}} edge from parent[dashed]
+  child {node [square,xshift=1.2cm] (b) {\textit{Expression}}}
+  child {node [square,xshift=-0.5cm] (c) {Assignment} edge from parent[dashed]
   	child {node [square, xshift=-1cm] (x) {Variable} edge from parent[solid]}
   	child {node [square,solid,xshift=-1cm] (y) {\textit{Expression}} edge from parent[solid]}
   }
-  child {node [rectangle,xshift=-1.5cm] (d) {\textbf{Comma}} edge from parent[dashed]
+  child {node [square,xshift=-1.5cm] (d) {Assignment} edge from parent[dashed]
   	child {node [square,xshift=1cm] (o) {Variable} edge from parent[solid]}
   	child {node [square,solid,xshift=1cm] (p) {\textit{Expression}} edge from parent[solid]}
   }
