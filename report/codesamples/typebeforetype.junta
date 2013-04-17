@@ -1,0 +1,2 @@
+type B[] extends A[]
+type A[]
