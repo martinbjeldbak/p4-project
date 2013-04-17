@@ -54,6 +54,7 @@ public class Simulator extends BasicGame {
         if ( input.isMousePressed(input.MOUSE_LEFT_BUTTON) ) {
             x = input.getMouseX();
             y = input.getMouseY();
+            System.out.println("Mouse click detected: " + x + "x" + y);
         }
 	}
 	
