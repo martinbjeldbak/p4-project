@@ -1,17 +1,13 @@
 package dk.aau.cs.d402f13.simulator;
 
 import org.newdawn.slick.Image;
-import org.newdawn.slick.SlickException;
 
 import dk.aau.cs.d402f13.utilities.types.Piece;
 import dk.aau.cs.d402f13.utilities.types.Square;
 
 public class SimulatedPieces {
-	Piece piece;
-	
-	//List listOfMoves = new ArrayList<Moves>();
+	private Piece piece;
 	private String name;
-	//Moves moves = new Moves(listOfMoves);
 	Image PieceImg = null;
 	
 	public void setImage( Image img ){
@@ -20,10 +16,6 @@ public class SimulatedPieces {
 
 	public String getName() {
 		return name;
-	}
-
-	public void setName(String value) {
-		this.name = value;
 	}
 	
 	public Square getSquare(){
@@ -37,7 +29,6 @@ public class SimulatedPieces {
 	
 	public SimulatedPieces( Piece p ) {
 		piece = p;
-		//PieceImg = img;
 	}
 	
 	public int imageSize(){
