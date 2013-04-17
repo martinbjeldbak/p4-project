@@ -3,9 +3,10 @@
 \begin{center}
 \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
 \node [square] {Call sequence}
-  child {node [square,xshift=1cm] {\textit{Atomic}}}
-  child {node [square] (a) {List} edge from parent[dashed]}
-  child {node [square,xshift=-1cm] (b) {List} edge from parent[dashed]};
+  child {node [square,xshift=2.3cm] {\textit{Atomic}}}
+  child {node [square,xshift=0.8cm] {List}}
+  child {node [square,xshift=-0.8cm] (a) {List} edge from parent[dashed];}
+  child {node [square,xshift=-2.3cm] (b) {List} edge from parent[dashed];};
   
 \path (a)--(b) node [midway] {$\cdots$};
 \end{tikzpicture}
