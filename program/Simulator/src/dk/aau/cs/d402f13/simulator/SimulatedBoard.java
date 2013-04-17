@@ -2,7 +2,7 @@ package dk.aau.cs.d402f13.simulator;
 
 import org.newdawn.slick.Image;
 
-public class Board {
+public class SimulatedBoard {
 	
 	private int width;
 	private int height;
@@ -24,9 +24,7 @@ public class Board {
 		this.height = value;
 	}
 	
-	public Board(int width, int height) {
-		this.width = width;
-		this.height = height;
+	public SimulatedBoard() {
 	}
 	
 	
