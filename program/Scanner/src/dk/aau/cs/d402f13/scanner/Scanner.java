@@ -14,7 +14,7 @@ import dk.aau.cs.d402f13.utilities.Token.Type;
 @SuppressWarnings("unused")
 public class Scanner {
   public static final String whitespace = " \t\r\n";
-  public static final String operators = "!&*+-=><?(){}#[]/|,";
+  public static final String operators = "!&*+-=><?%(){}#[]/|,.";
   
   private int line = 1;
   private int offset = -1;
@@ -162,7 +162,7 @@ public class Scanner {
       case "w":
         return token(Type.LIT_DIR, str);
       default:
-        if (str.length() < 2) {
+        if (str.length() < 1) {
           throw new ScannerError("Invalid function or keyword: " + str, token(Type.EOF));
         }
         return token(Type.CONSTANT, str);
@@ -236,7 +236,7 @@ public class Scanner {
         else if (current() == '>') {
           str += ">";
           pop();
-          return token(Type.OP_LAMDA, str);
+          return token(Type.OP_LAMBDA, str);
         }
         else
           return token(Type.OP_ASSIGN, str);
