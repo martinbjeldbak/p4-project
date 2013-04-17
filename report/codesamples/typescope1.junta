@@ -1,7 +1,7 @@
 type MyType[$a] {
-  define aConstant = 15
+  define aConstant = 15 / $a
   define aMethodA[$b] = aConstant + $a + $b
   define aMethodB[$b] = this.aMethodA[$b]
 }
 
-define use = MyType[5].aMethodB[2] // 22
+define use = MyType[5].aMethodB[2] // 10 = 15 / 5 + 5 + 2

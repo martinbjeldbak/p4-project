@@ -1,0 +1,17 @@
+// Abstract type because of abstract members
+type A[$a] {
+  define abstract constantA
+  define methodA[$arg] = constantA + $arg / $a
+}
+// Abstract type because of unimplemented members
+type B[$b, $c] extends A[$b + $c] {
+  // Overrides method in A (must have same arity)
+  define methodA[$arg] = super.methodA[$arg + 2]
+}
+// Concrete type, implements abstract member from A
+type C[] extends B[2, 3] {
+  // Overrides member in A (must be a constant)
+  define constantA = 5
+}
+
+define use = C[].methodA[10]
