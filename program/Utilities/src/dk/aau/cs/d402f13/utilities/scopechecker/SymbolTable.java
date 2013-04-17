@@ -10,7 +10,9 @@ import java.util.HashSet;
 public class SymbolTable {
   public enum SymbolType {
     FUNCTION,
-    VARIABLE
+    VARIABLE,
+    TYPE,
+    MEMBER //belongs to a type and is a constant. Can reference a function
   }
   
   HashMap<SymbolInfo, Boolean> symbols; //Boolean is flagged if symbol is a declaration
