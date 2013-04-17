@@ -58,7 +58,12 @@ public class AstNode implements Iterable<AstNode> {
 
   private void exportNode(OutputStreamWriter os) throws IOException {
     int thisN = counter;
-    os.write("  N" + thisN + " [label=\"" + type + "\\n" + value + "\"]\n");
+    if (operation == null) {
+      os.write("  N" + thisN + " [label=\"" + type + "\\n" + value + "\"]\n");
+    }
+    else {
+      os.write("  N" + thisN + " [label=\"" + type + "\\n(" + operation + ") " + value + "\"]\n");
+    }
     for (AstNode n : children) {
       counter++;
       os.write("  N" + thisN + " -> N" + counter + "\n");

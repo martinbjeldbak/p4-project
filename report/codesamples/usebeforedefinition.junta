@@ -1,2 +1,2 @@
-define functionA[] functionB[]
-define functionB[] 5
+define functionA[] = functionB[]
+define functionB[] = 5
