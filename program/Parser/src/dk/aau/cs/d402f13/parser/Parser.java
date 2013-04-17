@@ -231,6 +231,9 @@ public class Parser {
     while (lookAhead(Token.Type.KEY_DEFINE) || lookAhead(Token.Type.KEY_TYPE)) {
       root.addChild(definition());
     }
+    if (nextToken != null) {
+      throw unexpectedError("definitions");
+    }
     return root;
   }
   
