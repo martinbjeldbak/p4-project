@@ -4,6 +4,7 @@
 \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
 \node [square] {Element}
   child {node [square] {Call sequence}}
+  child {node [square] {Member access}}
   child {node [square] (b) {Member access} edge from parent[dashed]}
   child {node [square,xshift=0.3cm] (c) {Member access} edge from parent[dashed]};
   

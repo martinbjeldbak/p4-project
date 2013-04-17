@@ -8,7 +8,7 @@ define world[] = "World"
 define movePiece[$from, $to] = 0
 
 define reverse[$list] =
-  if 0 == size[$list]
+  if size[$list] == 0
     then []
     else (reverse[$list[1, -1]]) + [$list[0]]
 
@@ -34,13 +34,13 @@ define map[$f, $list] =
       else [$f[$list[0]]] + map[$f, $list[1, -1]]
 
 define contains[$needle, $haystack] =
-  (0 == size[$haystack])
-    and (($needle == $haystack[0])
+  size[$haystack] == 0
+    and ($needle == $haystack[0]
       or contains[$needle, $haystack[1, -1]]
     )
 
 define find[$needle, $haystack] =
-  if 0 == size[$haystack]
+  if size[$haystack] == 0
     then -1
     else if $needle == $haystack[0]
       then 0
@@ -50,7 +50,7 @@ define find[$needle, $haystack] =
           else $r
 
 define filter[$predicate, $list] =
-  if 1 > size[$list]
+  if size[$list] < 1
     then $list
     else (if $predicate[$list[0]]
       then $list[0]
@@ -58,13 +58,13 @@ define filter[$predicate, $list] =
 
 
 define qsort[$list] =
-  if 1 >= size[$list]
+  if size[$list] <= 1
     then $list
     else let $p = $list[0],
              $rest = $list[1, -1],
              $lesser = filter[#[$x] => $x < $p, $rest],
              $greater = filter[#[$x] => $x >= $p, $rest]
-      in (qsort[$lesser]) + [$p] + (qsort[$greater])
+      in qsort[$lesser] + [$p] + qsort[$greater]
 
 define varsTestOne[$a, ... $args] = 0
 define varsTestTwo[$a, $b, ... $args] = 0
