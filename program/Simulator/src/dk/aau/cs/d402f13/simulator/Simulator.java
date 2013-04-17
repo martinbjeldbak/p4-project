@@ -31,14 +31,14 @@ public class Simulator extends BasicGame {
 
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException {
-		int displayWidth = 800;
-		int displayHeight = 600;
+		int displayWidth = gc.getWidth();
+		int displayHeight = gc.getHeight();
 		
 		g.setColor(Color.white);
 		g.fillRect(0, 0, displayWidth, displayHeight);
 		
 		if( game != null && game.getBoard() != null ){
-			game.getBoard().drawBoard( gc, g, displayHeight, displayHeight );
+			game.getBoard().drawBoard( g, displayHeight, displayHeight );
 		}
 		
 
@@ -48,6 +48,13 @@ public class Simulator extends BasicGame {
 
 	@Override
 	public void update(GameContainer gc, int d) throws SlickException {
+        Input input = gc.getInput();
+
+        int x, y;
+        if ( input.isMousePressed(input.MOUSE_LEFT_BUTTON) ) {
+            x = input.getMouseX();
+            y = input.getMouseY();
+        }
 	}
 	
 	public Simulator(String gamePath) {

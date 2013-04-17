@@ -1,6 +1,7 @@
 package dk.aau.cs.d402f13.simulator;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -10,17 +11,25 @@ import dk.aau.cs.d402f13.utilities.types.Gridboard;
 
 public class SimulatedGame {
 	List<SimulatedPieces> pieces;
+	Hashtable<String,Image> imgCache = new Hashtable<String,Image>();
 	
 	SimulatedGridboard board = null;
 	Game game;
 	
+	public Image getImage( String path ) throws SlickException{
+		if( imgCache.containsKey(path) ){
+			return imgCache.get( path );
+		}
+		else{
+			Image img = new Image( path );
+			imgCache.put(path, img);
+			return img;
+		}
+	}
+	
 	
 	public String getTitle() {
 		return game.getTitle();
-	}
-	
-	public void load_resources(){
-		
 	}
 	
 	public SimulatedGridboard getBoard(){
@@ -31,7 +40,7 @@ public class SimulatedGame {
 		game = g;
 		Object obj = g.getBoard();
 		if( obj instanceof Gridboard )
-			board = new SimulatedGridboard( (Gridboard)obj );
+			board = new SimulatedGridboard( this, (Gridboard)obj );
 		else
 			; //TODO:
 		pieces = new ArrayList<SimulatedPieces>();
