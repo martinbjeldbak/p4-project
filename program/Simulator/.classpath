@@ -10,5 +10,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/Simon Buus/Downloads/jars/lwjgl-2.8.5/jar/jinput.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Simon Buus/Downloads/jars/lwjgl-2.8.5/jar/lwjgl_util.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Utilities"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

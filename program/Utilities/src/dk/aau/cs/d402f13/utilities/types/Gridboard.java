@@ -5,6 +5,14 @@ public class Gridboard extends Board {
 	int height;
 	int width;
 	
+	public Gridboard( int width, int height ){
+		this.height = height;
+		this.width = width;
+		for( int i=0; i < width * height; i++ ){
+			squares.add( new Square() );
+		}
+	}
+	
 	public int getHeight() {
 		return height;
 	}
@@ -21,5 +29,23 @@ public class Gridboard extends Board {
 		width = value;
 	}
 	
+	public int squareCoordinateX( Square s ){
+		int index = squares.indexOf(s);
+		if( index == -1 )
+			return -1;
+		
+		return index % getWidth();
+	}
 	
+	public int squareCoordinateY( Square s ){
+		int index = squares.indexOf(s);
+		if( index == -1 )
+			return -1;
+		
+		return index / getWidth();
+	}
+	
+	public Square getSquareAt( int x, int y ){
+		return squares.get( x + y* width);
+	}
 }

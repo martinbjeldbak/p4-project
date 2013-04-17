@@ -7,7 +7,16 @@ public class Game {
 	
 	Board board = null; 
 	List<Player> players = new ArrayList<Player>();
+	String title;
 	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
 	public Board getBoard() {
 		return board;
 	}
