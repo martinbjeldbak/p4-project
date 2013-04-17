@@ -79,7 +79,12 @@ in superclasses. The following example shows how inheritance works:
 \codesample{typescope2.junta}
 
 \productname{} doesn't have an \keyword{abstract}-keyword for type definitions, only
-for constant/function definitions.
+for constant/function definitions. A type is implicitly marked as abstract if it has
+unimplemented abstract members. In the above example the type \type{A} is abstract,
+since because it's member, \constant{constantA}, is abstract. Likewise, the type
+\type{B} is abstract because it extends \type{A}, but doesn't implement the abstract
+member of \type{A}. The type \type{C} on the other hand is not abstract, since it
+implements the abstract constant.
 
 \subsection{Lambda expression scope}
 
