@@ -1,3 +1,4 @@
+/*
 package dk.aau.cs.d402f13.scopechecker;
 
 import java.util.Iterator;
@@ -130,3 +131,4 @@ public class ScopeChecker extends DefaultVisitor {
     return null;
   }
 }
+*/
