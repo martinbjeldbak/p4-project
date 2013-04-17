@@ -4,16 +4,17 @@
   \PY{k+kr}{define} \PY{k+kr}{abstract} \PY{n+nf}{constantA}
   \PY{k+kr}{define} \PY{n+nf}{methodA}[\PY{n+nv}{\PYZdl{}arg}] = \PY{n+nf}{constantA} + \PY{n+nv}{\PYZdl{}arg} / \PY{n+nv}{\PYZdl{}a}
 \PYZcb{}
-\PY{c}{// Abstract type because of unimplemented members}
+\PY{c}{// Abstract type because of unimplemented members (constantA)}
 \PY{k+kr}{type} \PY{n+no}{B}[\PY{n+nv}{\PYZdl{}b}, \PY{n+nv}{\PYZdl{}c}] \PY{k+kr}{extends} \PY{n+no}{A}[\PY{n+nv}{\PYZdl{}b} + \PY{n+nv}{\PYZdl{}c}] \PYZob{}
   \PY{c}{// Overrides method in A (must have same arity)}
   \PY{k+kr}{define} \PY{n+nf}{methodA}[\PY{n+nv}{\PYZdl{}arg}] = \PY{k+kr}{super}.\PY{n+nf}{methodA}[\PY{n+nv}{\PYZdl{}arg} + \PY{l+m}{2}]
 \PYZcb{}
 \PY{c}{// Concrete type, implements abstract member from A}
-\PY{k+kr}{type} \PY{n+no}{C}[] \PY{k+kr}{extends} \PY{n+no}{B}[\PY{l+m}{2}, \PY{l+m}{3}] \PYZob{}
+\PY{k+kr}{type} \PY{n+no}{C}[] \PY{k+kr}{extends} \PY{n+no}{B}[\PY{l+m}{2}, \PY{l+m}{4}] \PYZob{}
   \PY{c}{// Overrides member in A (must be a constant)}
   \PY{k+kr}{define} \PY{n+nf}{constantA} = \PY{l+m}{5}
+  \PY{k+kr}{define} \PY{n+nf}{anotherMethod}[\PY{n+nv}{\PYZdl{}arg}] = \PY{n+nf}{methodA}[\PY{n+nv}{\PYZdl{}arg} / \PY{l+m}{2}]
 \PYZcb{}
 
-\PY{k+kr}{define} \PY{n+nf}{use} = \PY{n+no}{C}[].\PY{n+nf}{methodA}[\PY{l+m}{10}]
+\PY{k+kr}{define} \PY{n+nf}{use} = \PY{n+no}{C}[].\PY{n+nf}{anotherMethod}[\PY{l+m}{20}] \PY{c}{// 7 = 5 + (20 / 2 + 2) / (2 + 4)}
 \end{Verbatim}

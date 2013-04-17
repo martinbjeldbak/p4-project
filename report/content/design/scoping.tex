@@ -70,7 +70,13 @@ parameters along with type members.
 
 \subsubsection{Inheritance}
 
-\productname{} supports type inheritance.
+\productname{} supports single inheritance between types. An inheriting type, will
+inherit all the members of its super type(s) (if \type{C} extends \type{B}, which
+extends \type{A}, then \type{C} inherits all members from both \type{B} and \type{A}).
+This also introduces the \keyword{super}-keyword, which can be used to access members
+in superclasses. The following example shows how inheritance works:
+
+\codesample{typescope2.junta}
 
 \subsection{Lambda expression scope}
 
