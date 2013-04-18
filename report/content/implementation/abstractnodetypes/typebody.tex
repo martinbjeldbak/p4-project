@@ -2,8 +2,10 @@
 \begin{center}
 \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
 \node [square] {Type body}
-  child {node [square,xshift=-0.2cm] (a) {\textit{Member definition}}}
-  child {node [square,xshift=0.2cm] (b) {\textit{Member definition}}};
+  child {node [square,xshift=-0.2cm] (a) {\textit{Member definition}} edge from
+parent[dashed];}
+  child {node [square,xshift=0.2cm] (b) {\textit{Member definition}} edge from
+parent[dashed];};
   
 \path (a)--(b) node [midway] {$\cdots$};
 \end{tikzpicture}
