@@ -3,12 +3,12 @@
 \begin{center}
 \begin{tikzpicture}[level 3/.style={sibling distance = 20mm}]
 
-\node [square] {\textbf{LHS}}
-  child {node [square,yshift=0.5cm] {\textbf{RHS}}
-    child {node [square,yshift=0.5cm] {\textbf{RHS}}
-      child {node [square,yshift=0.5cm] {\textbf{RHS}}}
-      child {node [square,yshift=0.5cm] (a) {\textbf{RHS}} edge from parent[dashed]}
-      child {node [square,yshift=0.5cm] (b) {\textbf{RHS}} edge from parent[dashed]}
+\node [square] {LHS}
+  child {node [square,yshift=0.5cm] {RHS}
+    child {node [square,yshift=0.5cm] {RHS}
+      child {node [square,yshift=0.5cm] {RHS}}
+      child {node [square,yshift=0.5cm] (a) {RHS} edge from parent[dashed]}
+      child {node [square,yshift=0.5cm] (b) {RHS} edge from parent[dashed]}
     }
   }; 
 

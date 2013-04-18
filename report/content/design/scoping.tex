@@ -1,15 +1,23 @@
-\section{Scoping}
+\section{Scope}
 \label{sec:scoping}
 
 A scope is the context in which one or more variables exist.
-There are three types of scopes in \productname{}. Function scopes, lambda scopes and
+There are five types of scopes in \productname{}. The global scope,
+type scopes, function scopes, lambda scopes and
 ``let''-scopes.
 
-All named functions (\texttt{define}-ed functions, not lambda expressions) exist in
-the global scope. Also, it is not necessary to define a function before use, so something
+\subsection{The global scope}
+
+All named constants/functions defined outside of types exist in the global scope.
+Also, it is not necessary to define a function before use, so something
 like the following is valid:
 
 \codesample{usebeforedefinition.junta}
+
+All types also exist in the global scope, and again it isn't necessary to define
+a type before using (extending or constructing):
+
+\codesample{typebeforetype.junta}
 
 \subsection{Function scope}
 Consider a function definition such as:
@@ -24,15 +32,67 @@ When calling the function:
 A new scope will be created and the values $5$ and $23$
 are assigned to \variable{a} and \variable{b}, respectively.
 
-Named functions (such as \function{max}) always exist in the global scope.
+%Named functions defined outside of type definitions (such as \function{max})
+%always exist in the global scope.
+
+\subsection{Type scope}
+
+A type consists of a number of members, these can be either functions or constants.
+Consider the following type definition:
+
+\codesample{typescope1.junta}
+
+In the first line a type, \type{MyType}, is defined, with a constructor taking one
+argument, \variable{a}. \type{MyType} has three members, a constant (\constant{aConstant})
+and two methods (\constant{aMethodA} and \constant{aMethodB}). Unlike constants defined
+outside of types, which exist in the global scope, type members can only be accessed by
+using the dot-operator on an instance of that type.
+
+When constructing the type in the last line (\texttt{\type{MyType}[\literal{5}]})
+an instance is returned, in which the value $5$ is assigned to \variable{a}.
+At construction all constants are evaluated, meaning that in the example
+the constant \constant{aConstant} is evaluated to $15 / \variable{a} = 15 / 5 = 3$.
+
+Using the dot-operator, the method \constant{aMethodB} is called on the instance of
+\type{MyType} with $2$ as an argument. In the definition of this method, we use the
+\keyword{this}-keyword to refer to the current instance, in order to call another
+method, \constant{aMethodA}. This is in fact unnecessary, since the
+\constant{aMethodB}-method is freely accessible within the type scope anyway. The
+\keyword{this}-keyword has other more useful uses, such as passing the current
+instance to other functions or constructors. In the \constant{aMethodA}-method
+the sum of the constant \constant{aConstant} (this time accessed without the
+\keyword{this}-keyword), the constructor parameter \variable{a}, and the function
+parameter \variable{b} is evaluated and returned.
+
+Each type method can be thought of as having a reference to the type scope of an
+instance, so that when the method is called, it has access to the constructor 
+parameters along with type members.
+
+\subsubsection{Inheritance}
+
+\productname{} supports single inheritance between types. An inheriting type, will
+inherit all the members of its super type(s) (if \type{C} extends \type{B}, which
+extends \type{A}, then \type{C} inherits all members from both \type{B} and \type{A}).
+This also introduces the \keyword{super}-keyword, which can be used to access members
+in superclasses. The following example shows how inheritance works:
+
+\codesample{typescope2.junta}
+
+\productname{} doesn't have an \keyword{abstract}-keyword for type definitions, only
+for constant/function definitions. A type is implicitly marked as abstract if it has
+unimplemented abstract members. In the above example the type \type{A} is abstract,
+since because it's member, \constant{constantA}, is abstract. Likewise, the type
+\type{B} is abstract because it extends \type{A}, but doesn't implement the abstract
+member of \type{A}. The type \type{C} on the other hand is not abstract, since it
+implements the abstract constant.
 
 \subsection{Lambda expression scope}
 
-When a lambda expression is created, a reference to the scope it was created
-in is saved with it. This is known as a closure, and means that a lambda
+When a lambda expression is created, a reference to the scope it was created in
+is saved with it. This is known as a closure, and means that a lambda
 expression may access variables outside of its own scope. The accessible
-variables are the variables that were available at the time of the creation
-of the lambda expression.
+variables are the variables that were available at the time of the creation of
+the lambda expression.
 
 Consider the following example:
 
