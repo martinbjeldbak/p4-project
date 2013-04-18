@@ -44,6 +44,7 @@ public class BoolValue extends Value {
     return "false";
   }
   
+  /** {@inheritDoc}  */
   @Override
   public BoolValue equalsOp(Value other) {
     if(other instanceof BoolValue) {

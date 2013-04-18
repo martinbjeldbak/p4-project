@@ -45,6 +45,7 @@ public class FunValue extends Value {
     this.currentScope = currentScope;
   }
   
+  @Override
   public Value call(Interpreter interpreter, Value ... actualParameters) throws StandardError {
     if (varParams == null) {
       if (actualParameters.length != formalParameters.length) {
