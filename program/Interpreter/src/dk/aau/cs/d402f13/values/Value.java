@@ -1,10 +1,16 @@
 package dk.aau.cs.d402f13.values;
 
+import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.errors.DivideByZeroError;
+import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public abstract class Value {
+  
+  public Value call(Interpreter interpreter, Value ... actualParameters) throws StandardError {
+    throw new TypeError("This value does not support being called");
+  }
   
   /**
    * The 'less than' operator. Returns true or false. The Value argument must
@@ -64,10 +70,20 @@ public abstract class Value {
     return v.equalsOp(this) == BoolValue.trueValue();
   }
   
+  /**
+   * The equality comparison operator '=='.
+   * @param other the value to be compared with
+   * @return a true BoolValue if the values are equal
+   */
   public BoolValue equalsOp(Value other) {
     return BoolValue.falseValue();
   }
   
+  /**
+   * The negated equality operator '!='.
+   * @param other the value to be compared with
+   * @return a true BoolValue if the values are not equal
+   */
   public final BoolValue notEqual(Value other) {
     if(this.equalsOp(other) == BoolValue.falseValue())
       return BoolValue.trueValue();
@@ -113,5 +129,14 @@ public abstract class Value {
    */
   public Value divide(Value other) throws TypeError, DivideByZeroError {
     throw new TypeError("This value does not support division");
+  }
+  
+  /**
+   * Negates the value.
+   * @return a new value as result of the negation
+   * @throws TypeError
+   */
+  public Value negate() throws TypeError {
+    throw new TypeError("This value does not support negation");
   }
 }

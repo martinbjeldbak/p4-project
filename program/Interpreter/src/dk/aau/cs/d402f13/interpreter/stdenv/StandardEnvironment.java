@@ -23,7 +23,7 @@ public class StandardEnvironment extends SymbolTable {
     ////////////////////////////////////
     // Type checking functions
     ////////////////////////////////////
-    addFunction("isString", new FunValue(
+    addConstant("isString", new FunValue(
       1, false,
       new Callable() {
         @Override
@@ -40,7 +40,7 @@ public class StandardEnvironment extends SymbolTable {
     ////////////////////////////////////
     // List functions
     ////////////////////////////////////
-    addFunction("size", new FunValue(
+    addConstant("size", new FunValue(
       1, false,
       new Callable() {
         @Override
@@ -53,7 +53,7 @@ public class StandardEnvironment extends SymbolTable {
         }
       }
     ));
-    addFunction("union", new FunValue(
+    addConstant("union", new FunValue(
       1, true,
       new Callable() {
         @Override

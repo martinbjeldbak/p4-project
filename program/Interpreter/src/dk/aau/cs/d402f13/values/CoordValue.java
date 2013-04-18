@@ -55,18 +55,28 @@ public class CoordValue extends Value {
   }
   
   private String toColumn(int xValue) {
-    char[] col = Integer.toString(xValue).toCharArray();
-    String ret = "";
+    System.out.println("xValue: " + xValue);
+    StringBuilder sb = new StringBuilder();
+    int remain = xValue;
     
-    for(char c : col)
-      ret += intCharToLetter(c);
- 
-    return ret;
+    // FIXME: DOESNT WORK WITH 'Z'
+    do {
+      if(remain % 26 == 0)
+        sb.append(intCharToLetter(26));
+      else
+        sb.append(intCharToLetter(remain % 26));
+      remain = remain / 26;
+    } while (remain > 0);
+
+   return sb.reverse().toString();
   }
   
-  private Character intCharToLetter(char value) {
-    if (value > 0 && value < 27)
+  private Character intCharToLetter(int value) {
+    if (value >= 0 && value < 27) {
       return Character.valueOf((char)(value + 'A' - 1));
+    }
+    else if(value == 0)
+      return 'Z';
     else
       return null;
   }

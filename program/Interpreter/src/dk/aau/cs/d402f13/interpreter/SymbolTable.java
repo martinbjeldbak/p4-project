@@ -14,8 +14,9 @@ import dk.aau.cs.d402f13.values.*;
  */
 public class SymbolTable {
   
-  private HashMap<String, FunValue> functions = new HashMap<String, FunValue>();
+  private HashMap<String, Value> constants = new HashMap<String, Value>();
   private HashMap<String, Value> identifiers = new HashMap<String, Value>();
+  private HashMap<String, TypeValue> types = new HashMap<String, TypeValue>();
   private Stack<Scope> scopeStack = new Stack<Scope>();
 
   public SymbolTable() {  
@@ -41,23 +42,23 @@ public class SymbolTable {
   }
   
   /**
-   * Stores a function in the symbol table.
+   * Stores a constant to the symbol table.
    * @param name  a unique string identifying the function
    * @param value the function and all it entails which was
    *              stored with 'name'
    */
-  public void addFunction(String name, FunValue value) {
-    functions.put(name, value);
+  public void addConstant(String name, Value value) {
+    constants.put(name, value);
   }
   
   /**
-   * Get a function from the symbol table. Returns null if none
+   * Get a constant from the symbol table. Returns null if none
    * are found.
    * @param name the unique string the function was stored with
    * @return     the stored function
    */
-  public FunValue getFunction(String name) {
-    return functions.get(name);
+  public Value getConstant(String name) {
+    return constants.get(name);
   }
   
   /**
@@ -80,6 +81,25 @@ public class SymbolTable {
       return null;
     }
     return currentScope().getVariable(variable);
+  }
+  
+  /**
+   * Adds a type (class) to the symbol table with a unique identifier
+   * @param name the unique name for the type
+   * @param type an instance of the Type to be stored in the symbol table
+   */
+  public void addType(String name, TypeValue type) {
+    types.put(name, type);
+  }
+  
+  /**
+   * Gets a Type from the symbol table that was stored with the unique
+   * identifier. Can return null
+   * @param name the unique identifier for the Type
+   * @return a Value with instance Type
+   */
+  public TypeValue getType(String name) {
+    return types.get(name);
   }
   
   /**
