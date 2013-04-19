@@ -2,6 +2,7 @@ package dk.aau.cs.d402f13.values;
 
 import java.util.HashMap;
 
+import dk.aau.cs.d402f13.interpreter.Callable;
 import dk.aau.cs.d402f13.interpreter.Member;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 
@@ -11,7 +12,10 @@ public class TypeValue extends Value {
   private String name;
   private String varParams = null;
   private TypeValue parent;
+  private String parentName;
   private AstNode parentConstructor;
+  
+  private Callable callable = null;
 
   public TypeValue(String name, AstNode params) {
     this.name = name;
@@ -28,10 +32,19 @@ public class TypeValue extends Value {
     }
   }
   
-  public TypeValue(String name, AstNode params, TypeValue parent, AstNode parenParams) {
+  public TypeValue(String name, AstNode params, String parent, AstNode parenParams) {
     this(name, params);
-    this.parent = parent;
+    this.parentName = parent;
     this.parentConstructor = parenParams;
+  }
+  
+  public TypeValue(String name, int minArity, boolean varArgs, Callable callable) {
+    this.name = name;
+    this.callable = callable;
+    formalParameters = new String[minArity];
+    if (varArgs) {
+      varParams = "";
+    }
   }
   
   public void addMember(String name, Member member) {
