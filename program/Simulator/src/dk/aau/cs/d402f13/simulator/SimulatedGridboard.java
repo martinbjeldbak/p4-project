@@ -2,6 +2,7 @@ package dk.aau.cs.d402f13.simulator;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import dk.aau.cs.d402f13.utilities.types.Gridboard;
@@ -40,24 +41,19 @@ public class SimulatedGridboard extends SimulatedBoard {
 	}
 	
 
-	private void renderBoard( Graphics g, int x, int y, int size, int width, int height){
+	private void renderBoard( Graphics g, int x, int y, int size, int width, int height) throws SlickException{
 
 		for( int iy=0; iy<height; iy++ ){
 			for( int ix=0; ix<width; ix++ ){
-				if (((iy + ix) % 2) == 0) {
-					g.setColor(Color.white);
-				}
-				else {
-					g.setColor(Color.black);
-				}	
-				g.fillRect(x + ix * size, y + iy * size, size, size);
+				Square s = board.getSquareAt( ix, iy );
+				Image img = game.getImage( s.getImgPath() );
 				
-				if( selected != null ){
-					Square s = board.getSquareAt( ix, iy );
-					if( s == selected ){
-						g.setColor( new Color(255,0,0,127) );
-						g.fillRect(x + ix * size, y + iy * size, size, size);
-					}
+				int imgMax = Math.max(img.getWidth(), img.getHeight());
+				img.draw( x + ix * size, y + iy * size, (float)size /(float) imgMax );
+				
+				if( s == selected ){
+					g.setColor( new Color(255,0,0,127) );
+					g.fillRect(x + ix * size, y + iy * size, size, size);
 				}
 			}
 		}

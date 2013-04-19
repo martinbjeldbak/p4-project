@@ -25,7 +25,7 @@ public class Simulator extends BasicGame {
 	private SimulatedGame game = null;
 	TrueTypeFont gtwFont = null;
 	
-	public Simulator(String gamePath) {
+	public Simulator(String gamePath) throws CloneNotSupportedException {
 		super("Junta Simulator");
 		game = new SimulatedGame( new ChessGame() );
 	}
@@ -53,6 +53,7 @@ public class Simulator extends BasicGame {
 	
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException {
+		g.setAntiAlias(true);
 		int displayWidth = gc.getWidth();
 		int displayHeight = gc.getHeight();
 		
@@ -111,7 +112,7 @@ public class Simulator extends BasicGame {
 		return "Junta Simulator - " + game.getTitle();
 	}
 
-	public static void main(String[] args) throws SlickException { 
+	public static void main(String[] args) throws SlickException, CloneNotSupportedException { 
 		
 		Simulator juntaSimulator = new Simulator("chess.junta");
 		AppGameContainer app = new AppGameContainer(juntaSimulator);
