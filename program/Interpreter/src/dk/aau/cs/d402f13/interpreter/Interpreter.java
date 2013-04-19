@@ -317,6 +317,7 @@ public class Interpreter extends Visitor {
           break;
         case "or":
           v = ((BoolValue)v).or((BoolValue)val);
+          break;
         default:
           v = val;
         }
