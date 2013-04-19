@@ -23,8 +23,12 @@ expression        -> assignment
                    | if_expr
                    | lambda_expr
                    | "not" expression
-                   | operation
-operation         -> negation [operator expression]
+                   | lo_sequence
+lo_sequence       -> eq_sequence {("and"|"or") eq_sequence}
+eq_sequence       -> cm_sequence {("=="|"!="|"is") cm_sequence}
+cm_sequence       -> as_sequence {("<"|">"|"<="|">=") as_sequence}
+as_sequence       -> md_sequence {("+"|"-") md_sequence}
+md_sequence       -> negation {("*"|"/"|"%") negation}
 negation          -> element
                    | "-" negation
 element           -> call_sequence {member_access}

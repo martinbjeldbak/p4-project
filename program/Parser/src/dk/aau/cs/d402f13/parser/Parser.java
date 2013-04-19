@@ -397,13 +397,15 @@ public class Parser {
   
   private AstNode eqSequence() throws SyntaxError {
     AstNode next = cmSequence();
-    if (accept(Token.Type.OP_EQUALS) || accept(Token.Type.OP_NOT_EQUALS)) {
+    if (accept(Token.Type.OP_EQUALS) || accept(Token.Type.OP_NOT_EQUALS)
+        || accept(Token.Type.OP_IS)) {
       AstNode sequence = astNode(Type.EQ_SEQUENCE, "");
       String operation = currentToken.value;
       sequence.addChild(next);
       sequence.addChild(cmSequence());
       sequence.getLast().operation = operation;
-      while (accept(Token.Type.OP_EQUALS) || accept(Token.Type.OP_NOT_EQUALS)) {
+      while (accept(Token.Type.OP_EQUALS) || accept(Token.Type.OP_NOT_EQUALS)
+          || accept(Token.Type.OP_IS)) {
         operation = currentToken.value;
         sequence.addChild(cmSequence());
         sequence.getLast().operation = operation;
