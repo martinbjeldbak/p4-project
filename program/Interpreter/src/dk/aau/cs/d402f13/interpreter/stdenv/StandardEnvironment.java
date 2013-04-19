@@ -14,25 +14,23 @@ import dk.aau.cs.d402f13.values.FunValue;
 import dk.aau.cs.d402f13.values.IntValue;
 import dk.aau.cs.d402f13.values.ListValue;
 import dk.aau.cs.d402f13.values.StrValue;
+import dk.aau.cs.d402f13.values.TypeValue;
 import dk.aau.cs.d402f13.values.Value;
 
 public class StandardEnvironment extends SymbolTable {
 
   public StandardEnvironment() {
-
-    ////////////////////////////////////
-    // Type checking functions
-    ////////////////////////////////////
-    addConstant("isString", new FunValue(
-      1, false,
+    
+    addType("Integer", new TypeValue(
+      "Integer", 1, false,
       new Callable() {
         @Override
         public Value call(Interpreter interpreter, Value... actualParameters)
             throws StandardError {
-          if (actualParameters[0] instanceof StrValue) {
-            return BoolValue.trueValue();
+          if (!(actualParameters[0] instanceof IntValue)) {
+            throw new ArgumentError("Invalid argument #1, expected an integer");
           }
-          return BoolValue.falseValue();
+          return actualParameters[0];
         }
       }
     ));

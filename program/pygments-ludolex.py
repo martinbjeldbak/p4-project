@@ -14,7 +14,7 @@ class LudoLexer(RegexLexer):
             (r'[0-9]+', Number),
             (r'[A-Z]+[0-9]+', Generic.Subheading),
             (r'\b(in|let|define|type|abstract|this|super|extends|if|then|else)\b', Keyword.Reserved),
-            (r'\b(and|or)\b', Operator.Word),
+            (r'\b(is|not|and|or)\b', Operator.Word),
             (r'\b(friend|foe|empty)\b', Keyword.Reserved),
             (r'"([^"\\]|\\.)*"', String),
             (r'\b(n|s|e|w|ne|nw|se|sw)\b', Name.Entity),

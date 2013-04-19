@@ -134,6 +134,8 @@ public class Scanner {
         return token(Type.KEY_PATTERN, str);
         
       // Operators
+      case "is":
+        return token(Type.OP_IS, str);
       case "or":
         return token(Type.OP_OR, str);
       case "and":
