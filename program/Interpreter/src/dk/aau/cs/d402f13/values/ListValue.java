@@ -56,7 +56,7 @@ public class ListValue extends Value {
     int b;
     
     if(actualParameters.length < 1) {
-      throw new ArgumentError("Unexpected number of arguments, expected at least 1 "); // TODO
+      throw new ArgumentError("Unexpected number of arguments, expected at least 1 ");
     }
 
     if(!(actualParameters[0] instanceof IntValue)) {
@@ -72,7 +72,7 @@ public class ListValue extends Value {
     
     if(actualParameters.length == 2) {
       if(!(actualParameters[1] instanceof IntValue)) {
-      }   
+      }
       b = ((IntValue)actualParameters[1]).getValue();
       if (b < 0) {
         b = values.length + b;
