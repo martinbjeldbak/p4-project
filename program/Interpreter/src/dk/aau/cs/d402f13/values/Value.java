@@ -131,6 +131,10 @@ public abstract class Value {
     throw new TypeError("This value does not support division");
   }
   
+  public Value mod(Value other) throws TypeError {
+    throw new TypeError("This value does not support modulo");
+  }
+  
   /**
    * Negates the value.
    * @return a new value as result of the negation
