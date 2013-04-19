@@ -3,10 +3,7 @@ package dk.aau.cs.d402f13.utilities.types;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Piece {
-	
-	private String imgPath = null;
-	
+public abstract class Piece {
 	private Player player;
 	private Square square = null;
 	
@@ -28,13 +25,7 @@ public class Piece {
 		this.actions = actions;
 	}
 	
-	public String getImgPath() {
-		return imgPath;
-	}
-	
-	public void setImgPath(String value) {
-		imgPath = value;
-	}
+	public abstract String getImgPath();
 
 	public Player getPlayer() {
 		return player;
