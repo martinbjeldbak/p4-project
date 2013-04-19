@@ -201,7 +201,7 @@ public class Interpreter extends Visitor {
     TypeValue type;
     String name = node.getFirst().value;
     if (node.size() > 3) {
-      type = new TypeValue(name, node.get(1), (TypeValue)visit(node.get(2)), node.get(3));
+      type = new TypeValue(name, node.get(1), node.get(2).value, node.get(3));
     }
     else {
       type = new TypeValue(name, node.get(1));
