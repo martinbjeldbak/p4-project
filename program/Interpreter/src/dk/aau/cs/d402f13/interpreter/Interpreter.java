@@ -181,6 +181,10 @@ public class Interpreter extends Visitor {
   @Override
   protected Value visitConstant(AstNode node) throws StandardError {
     Value v = symbolTable.getConstant(node.value);
+    if (v instanceof ConstValue) {
+      v = ((ConstValue)v).evaluate(this);
+      symbolTable.addConstant(node.value, v);
+    }
     if (v == null) {
       throw new NameError("Undefined constant: " + node.value);
     }
@@ -263,7 +267,7 @@ public class Interpreter extends Visitor {
   @Override
   protected Value visitConstantDef(AstNode node) throws StandardError {
     if (node.size() < 3) {
-      symbolTable.addConstant(node.getFirst().value, visit(node.getLast()));
+      symbolTable.addConstant(node.getFirst().value, new ConstValue(node.getLast()));
     }
     else
       symbolTable.addConstant(node.getFirst().value, new FunValue(node.get(1), node.get(2)));
