@@ -9,7 +9,7 @@ is also evident in the definition of the $if$-expression in \secref{sec:grammar}
 all $if$-expressions must have the $else$-branch.
 
 \subsection{Integer}
-The integer-type in \productname{} represents a 32-bit integer.
+The \type{Integer}-type in \productname{} represents a 32-bit integer.
 
 An integer-value can be created using an integer-literal, such as \texttt{2155} or \texttt{0}.
 
@@ -101,34 +101,18 @@ Some other examples are:
 \codesample{listaccess4.junta}
 
 \subsection{Type}
-The \emph{Type}-type represents a reference to a certain data type.
+The \type{Type}-type is a kind of metatype, which every other type (including itself)
+is an instance of. As with functions,
+types in \productname{} are first-class citizens, and can be referred to and passed
+around as any other type. Types are defined in the global scope using the
+\keyword{type}-keyword, and their names must always start with an uppercase letter.
 
-\subsection{Identifier}
-An identifier is a reference to a certain object. It always begins with an uppercase letter.
-Consider for instance the \productname-implementation
-of Noughts and Crosses. The implementation uses three identifiers; \identifier{Noughts},
-\identifier{Crosses}, and \identifier{XOPiece}. An identifier doesn't have to be declared, and no matter
-where it is used, it always refers to the same object. Two differently named identifiers can't refer
-to the same object. Some uses of an identifier may add more identity to the object referred to by that
-identifier. Consider for example the line:
-
-\codesample{nncplayers.garry}
-
-In this line, the objects referred to by \identifier{Noughts} and \identifier{Crosses}, are declared
-to be players. This means that further on, when using \identifier{Noughts} and \identifier{Crosses},
-they can only be used in contexts where a player-object is applicable.
-
-The other identifier, \identifier{XOPiece}, is used as a name for the one type of piece in
-Noughts and Crosses:
-
-\codesample{nncpiece.garry}
-
-This means that further on \identifier{XOPiece} will refer to that type of piece.
-
+All built-in types, as well as user-defined types, can be referred in expressions using
+their name.
 
 \subsection{Action}
 
-Actions represent state changes in a board game. A state change could for instance be a the movement
+The \type{Action}-type represent state changes in a board game. A state change could for instance be the movement
 of a piece on the board. Action-values are returned from certain built-in action functions. An example
 of such a function could be:
 
