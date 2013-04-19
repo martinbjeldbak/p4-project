@@ -46,6 +46,8 @@ public class Gridboard extends Board {
 	}
 	
 	public Square getSquareAt( int x, int y ){
+		if( x >= width || y >= height || x < 0 || y < 0 )
+			return null;
 		return squares.get( x + y* width);
 	}
 }
