@@ -8,7 +8,7 @@ public class Piece {
 	private String imgPath = null;
 	
 	private Player player;
-	private Square square;
+	private Square square = null;
 	
 	public Square getSquare() {
 		return square;

@@ -19,5 +19,13 @@ public class Board {
 	public void addPiece(Piece p) {
 		this.pieces.add(p);
 	}
+	
+	public Piece findPieceOnSquare( Square s ){
+		for( Piece p : pieces ){
+			if( p.getSquare() == s)
+				return p;
+		}
+		return null;
+	}
 }
 	
