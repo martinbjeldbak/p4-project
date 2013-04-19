@@ -49,5 +49,9 @@ public class SimulatedGame {
 	public List<SimulatedPieces> getPieces(){
 		return pieces;
 	}
+	
+	public Game getGame(){
+		return game;
+	}
 }
 
