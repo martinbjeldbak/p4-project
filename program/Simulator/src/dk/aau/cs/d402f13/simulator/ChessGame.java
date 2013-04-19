@@ -9,14 +9,16 @@ import dk.aau.cs.d402f13.utilities.types.Piece;
 import dk.aau.cs.d402f13.utilities.types.Square;
 
 class WhiteSquare extends Square{
-	WhiteSquare(){
-		setImgPath( "img/white.png" );
+	@Override
+	public String getImgPath(){
+		return "img/white.png";
 	}
 }
 
 class BlackSquare extends Square{
-	BlackSquare(){
-		setImgPath( "img/black.png" );
+	@Override
+	public String getImgPath(){
+		return "img/Black.png";
 	}
 }
 
@@ -37,13 +39,81 @@ class ChessBoard extends Gridboard{
 	
 }
 
-public class ChessGame extends Game {
+abstract class ChessPiece extends Piece{
+	private boolean color;
+	private String name;
+	public ChessPiece( boolean color, String name ){
+		this.color = color;
+		this.name = name;
+	}
 	
-	public Piece addPiece(int coordX, int coodY, String imgPath, Gridboard b) {
-		Piece p = new Piece();
-		p.setSquare(b.getSquareAt(coordX, coodY));
-		p.setImgPath( imgPath );
-		return p;
+	@Override
+	public String getImgPath(){
+		String colorText = color ? "Black_" : "White_";
+		return "img/" + colorText + name + ".png";
+	}
+	
+	public ChessPiece setPosition( Gridboard b, int x, int y ){
+		setSquare( b.getSquareAt(x, y) );
+		return this;
+	}
+}
+
+class Pawn extends ChessPiece{
+	public Pawn(boolean color ) {
+		super(color, "Pawn");
+	}
+}
+
+class Rook extends ChessPiece{
+	public Rook(boolean color ) {
+		super(color, "Rook");
+	}
+}
+
+class Knight extends ChessPiece{
+	public Knight(boolean color ) {
+		super(color, "Knight");
+	}
+}
+
+class Bishop extends ChessPiece{
+	public Bishop(boolean color ) {
+		super(color, "Bishop");
+	}
+}
+
+class Queen extends ChessPiece{
+	public Queen(boolean color ) {
+		super(color, "King");
+	}
+}
+
+class King extends ChessPiece{
+	public King(boolean color ) {
+		super(color, "Queen");
+	}
+}
+
+public class ChessGame extends Game {
+	private void addTeam( Gridboard b, boolean color, List<Piece> pieces ){
+		int front = color ? 1 : 6;
+		int back = color ? 0 : 7;
+		
+		for( int i=0; i<8; i++ )
+			pieces.add( new Pawn( color ).setPosition( b, i, front) );
+
+		pieces.add( new Rook( color ).setPosition(b, 0, back ) );
+		pieces.add( new Rook( color ).setPosition(b, 7, back ) );
+		
+		pieces.add( new Knight( color ).setPosition(b, 1, back ) );
+		pieces.add( new Knight( color ).setPosition(b, 6, back ) );
+
+		pieces.add( new Bishop( color ).setPosition(b, 2, back ) );
+		pieces.add( new Bishop( color ).setPosition(b, 5, back ) );
+
+		pieces.add( new Queen( color ).setPosition(b, 3, back ) );
+		pieces.add( new King( color ).setPosition(b, 4, back ) );
 	}
 	
 	public ChessGame() throws CloneNotSupportedException{
@@ -52,38 +122,8 @@ public class ChessGame extends Game {
 		
 		List<Piece> pieces = new ArrayList<Piece>();
 
-		for( int i=0; i<8; i++ ){
-			pieces.add( addPiece(i, 1, "img/Black_Pawn.png", b ) );
-		}
-		
-		pieces.add( addPiece(0, 0, "img/Black_Rook.png", b ) );
-		pieces.add( addPiece(7, 0, "img/Black_Rook.png", b ) );
-
-		pieces.add( addPiece(1, 0, "img/Black_Knight.png", b ) );
-		pieces.add( addPiece(6, 0, "img/Black_Knight.png", b ) );
-		
-		pieces.add( addPiece(2, 0, "img/Black_Bishop.png", b ) );
-		pieces.add( addPiece(5, 0, "img/Black_Bishop.png", b ) );
-		
-		pieces.add( addPiece(4, 0, "img/Black_Queen.png", b ) );
-		pieces.add( addPiece(3, 0, "img/Black_King.png", b ) );
-		
-		for( int i=0; i<8; i++ ){
-			pieces.add( addPiece(i, 6, "img/White_Pawn.png", b ) );
-		}
-		
-		pieces.add( addPiece(0, 7, "img/White_Rook.png", b ) );
-		pieces.add( addPiece(7, 7, "img/White_Rook.png", b ) );
-
-		pieces.add( addPiece(1, 7, "img/White_Knight.png", b ) );
-		pieces.add( addPiece(6, 7, "img/White_Knight.png", b ) );
-		
-		pieces.add( addPiece(2, 7, "img/White_Bishop.png", b ) );
-		pieces.add( addPiece(5, 7, "img/White_Bishop.png", b ) );
-		
-		pieces.add( addPiece(4, 7, "img/White_Queen.png", b ) );
-		pieces.add( addPiece(3, 7, "img/White_King.png", b ) );
-		
+		addTeam( b, false, pieces );
+		addTeam( b, true, pieces );
 		
 		b.setPieces( pieces );
 		setBoard( b );
