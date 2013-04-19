@@ -35,6 +35,12 @@ public abstract class DefaultVisitor extends Visitor {
   }
   
   @Override
+  protected Object visitAbstractTypeDef(AstNode node) throws StandardError {
+    visitChildren(node);
+    return null;
+  }
+  
+  @Override
   protected Object visitTypeBody(AstNode node) throws StandardError {
     visitChildren(node);
     return null;

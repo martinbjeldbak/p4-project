@@ -43,7 +43,7 @@
 \newcommand{\function}[1]{\texttt{\color[rgb]{0.012 0.408 0.733}#1}}
 \newcommand{\keyword}[1]{\texttt{\color[rgb]{0.000 0.529 0.000}#1}}
 
-\newcommand{\operator}[4][]{\texttt{#1 \textbf{\color{nicered}#2} #3 $\rightarrow$ #4}}
+\newcommand{\operator}[4][]{\texttt{\type{#1} \textbf{\color{nicered}#2} \type{#3} $\rightarrow$ \type{#4}}}
 
 \newcommand{\opstar}{$*$}
 
@@ -62,6 +62,7 @@
   \label{fig:#2}
 \end{figure}}
 
+%rules for ebnf
 \newcommand{\grule}[2]{$#1$ & $\rightarrow$ & $#2$ \\}
 \newcommand{\galt}[1]{& | & $#1$ \\}
 \newcommand{\grange}{\cdots}
@@ -76,6 +77,13 @@
 \newcommand{\gter}[1]{\texttt{"#1"}}
 \newcommand{\gex}{\: - \:}
 \newcommand{\gcat}{ \: }
+
+%rules for formation rules
+\newcommand{\frule}[2]{$#1$ & $\texttt{::=}$ & $#2$ \\}
+\newcommand{\falt}[1]{& | & $#1$ \\}
+\newcommand{\for}{ \: | \: }
+\newcommand{\fter}[1]{\texttt{#1}}
+\newcommand{\fcat}{ \: }
 
 % Table
 \newcommand{\tab}[8][\textwidth]{
