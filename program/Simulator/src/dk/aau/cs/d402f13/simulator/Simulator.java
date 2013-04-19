@@ -53,7 +53,6 @@ public class Simulator extends BasicGame {
 	
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException {
-		g.setAntiAlias(true);
 		int displayWidth = gc.getWidth();
 		int displayHeight = gc.getHeight();
 		
@@ -84,26 +83,21 @@ public class Simulator extends BasicGame {
 
 	@Override
 	public void update(GameContainer gc, int d) throws SlickException {
-        Input input = gc.getInput();
-
-        int x, y;
-        if ( input.isMousePressed(Input.MOUSE_LEFT_BUTTON) ) {
-            x = input.getMouseX();
-            y = input.getMouseY();
-            
-            Square s = game.getBoard().findSquare(x, y);
-            if( s != null ){
-            	Piece p = game.getGame().getBoard().findPieceOnSquare(s);
-            	if( p != null ){
-            		game.getBoard().setSelected(s);
-            		System.out.println("Square img: " + p.getImgPath());
-            	}
-            	else
-            		game.getBoard().setSelected(null);
-            }
-        	else
-        		game.getBoard().setSelected(null);
-            System.out.println("Mouse click detected: " + x + "x" + y);
+        
+	}
+	
+	@Override
+	public void mousePressed( int button, int x, int y ){
+        if( button == Input.MOUSE_LEFT_BUTTON ){
+        	//Select a square if a piece is on it
+        	game.getBoard().setSelected(null);
+        	Square s = game.getBoard().findSquare(x, y);
+	        if( s != null ){
+	        	Piece p = game.getGame().getBoard().findPieceOnSquare(s);
+	        	if( p != null ){
+	        		game.getBoard().setSelected(s);
+	        	}
+	        }
         }
 	}
 	
@@ -112,8 +106,7 @@ public class Simulator extends BasicGame {
 		return "Junta Simulator - " + game.getTitle();
 	}
 
-	public static void main(String[] args) throws SlickException, CloneNotSupportedException { 
-		
+	public static void main(String[] args) throws SlickException, CloneNotSupportedException {
 		Simulator juntaSimulator = new Simulator("chess.junta");
 		AppGameContainer app = new AppGameContainer(juntaSimulator);
 		app.setDisplayMode(1024, 600, false);
