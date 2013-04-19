@@ -55,7 +55,6 @@ public class CoordValue extends Value {
   }
   
   private String toColumn(int xValue) {
-    System.out.println("xValue: " + xValue);
     StringBuilder sb = new StringBuilder();
     int remain = xValue;
     
