@@ -51,7 +51,7 @@ The following classes of characters will be used throughout this section:
 \end{ebnf}
 
 \subsection{Reserved Tokens}
-Our programming language needs to be able to distinguish between words (a sequence of characters or symbols) that are reserved for the language to function properly and words which a user has constructed to be used as e.g. function names.
+Our programming language needs to be able to distinguish between words (a sequence of characters or symbols) that are reserved for the language to function properly and words which a user has constructed to be used as e.g. constant names.
 
 The following is a list of reserved words which \productname{} will use to function properly and they will be refered to throughout this section:
 
@@ -106,7 +106,7 @@ The following three identifiers are used throughout this section:
 \grule{variable}{\gter{\$} \gcat anycase \gcat \grep{anycase}}
 \end{ebnf}
 
-This description means that every function must start with a lowercase character and not uppercase. If an uppercase character begins a sequence of characters, the parser will interpret this as an identifier which is quite different from a function. Furthermore, all variables begin with a dollar symbol followed by at least one character.
+This description means that every constant must start with a lowercase character and not uppercase. If an uppercase character begins a sequence of characters, the parser will interpret this as an type which is quite different from a constant. Furthermore, all variables begin with a dollar symbol followed by at least one character.
 
 \subsection{Program Structure}
 The following grammar describes the actual construction of any program written in \productname{}:
@@ -116,12 +116,12 @@ The following grammar describes the actual construction of any program written i
 \grule{program}{\grep{definition}}
 \grule{definition}{constant\_def}
 \galt{type\_def}
-\grule{constant\_def}{\gter{define} \gcat function \gcat \gopt{varlist} \gcat \gter{=} \gcat \gcat expression}
+\grule{constant\_def}{\gter{define} \gcat constant \gcat \gopt{varlist} \gcat \gter{=} \gcat \gcat expression}
 \grule{type\_def}{\gter{type} \gcat type \gcat varlist \gcat \gopt{\gter{extends} \gcat type \gcat list} \gopt{type\_body}}
 \grule{type\_body}{\gter{\{} \gcat \grep{member\_def} \gcat \gter{\}}}
 \grule{member\_def}{abstract\_def}
 \galt{constant\_def}
-\grule{abstract\_def}{\gter{define} \gcat \gter{abstract} \gcat function \gcat \gopt{varlist}}
+\grule{abstract\_def}{\gter{define} \gcat \gter{abstract} \gcat constant \gcat \gopt{varlist}}
 \grule{varlist}{\gter{[} \gcat \gopt{variable \gcat \grep{\gter{,} \gcat variable} \gcat \gopt{\gter{,} \gcat vars} \gor vars} \gcat \gter{]}}
 \grule{vars}{\gter{...} \gcat variable}
 \end{ebnf}

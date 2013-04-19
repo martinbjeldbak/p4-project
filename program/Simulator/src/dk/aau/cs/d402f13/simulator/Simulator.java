@@ -17,6 +17,9 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.util.ResourceLoader;
 
+import dk.aau.cs.d402f13.utilities.types.Piece;
+import dk.aau.cs.d402f13.utilities.types.Square;
+
 public class Simulator extends BasicGame {
 		
 	private SimulatedGame game = null;
@@ -86,6 +89,19 @@ public class Simulator extends BasicGame {
         if ( input.isMousePressed(Input.MOUSE_LEFT_BUTTON) ) {
             x = input.getMouseX();
             y = input.getMouseY();
+            
+            Square s = game.getBoard().findSquare(x, y);
+            if( s != null ){
+            	Piece p = game.getGame().getBoard().findPieceOnSquare(s);
+            	if( p != null ){
+            		game.getBoard().setSelected(s);
+            		System.out.println("Square img: " + p.getImgPath());
+            	}
+            	else
+            		game.getBoard().setSelected(null);
+            }
+        	else
+        		game.getBoard().setSelected(null);
             System.out.println("Mouse click detected: " + x + "x" + y);
         }
 	}
