@@ -81,9 +81,23 @@ public class DirValue extends Value {
       DirValue oDir = (DirValue)other;   
       return new DirValue((x + oDir.getX()), y + (oDir.getY()));
     }
+    else if(other instanceof CoordValue) {
+      CoordValue oCoord = (CoordValue)other;
+      return new CoordValue(x + oCoord.getX(), y + oCoord.getY());
+    }
     else if(other instanceof StrValue)
       return new StrValue(this.toString() + ((StrValue)other).getValue());
     throw new TypeError("Addition cannot be done on direction with " + other);
+  }
+  
+  /** {@inheritDoc}  */
+  @Override
+  public Value subtract(Value other) throws TypeError {
+    if(other instanceof DirValue) {
+      DirValue oDir = (DirValue)other;
+      return new DirValue(x - oDir.getX(), y - oDir.getY());
+    }
+    throw new TypeError("Cannot subtract a " + other + " from a direction");
   }
   
   /** {@inheritDoc}  */
