@@ -405,6 +405,9 @@ public class Interpreter extends Visitor {
       case "/":
         v = v.divide(val);
         break;
+      case "%":
+        v = v.mod(val);
+        break;
       default:
         v = val;
       }
