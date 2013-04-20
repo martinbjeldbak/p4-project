@@ -49,6 +49,13 @@ public class CoordValue extends Value {
     return BoolValue.falseValue();
   }
   
+  /** {@inheritDoc}  */
+  public Value add(Value other) throws TypeError {
+    if(other instanceof StrValue)
+      return new StrValue(this.toString() + ((StrValue)other).getValue());
+    throw new TypeError("Addition cannot be done on coordinates with " + other);
+  }
+  
   @Override
   public String toString() {
     return toColumn(x) + y;

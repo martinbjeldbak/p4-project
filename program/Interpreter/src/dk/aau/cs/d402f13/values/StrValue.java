@@ -14,6 +14,7 @@ public class StrValue extends Value {
     return this.value;
   }
   
+  /** {@inheritDoc}  */
   @Override
   public BoolValue equalsOp(Value other) {
     if(other instanceof StrValue) {
@@ -23,6 +24,7 @@ public class StrValue extends Value {
     return BoolValue.falseValue();
   }
   
+  /** {@inheritDoc}  */
   @Override
   public Value add(Value other) throws TypeError {
     
