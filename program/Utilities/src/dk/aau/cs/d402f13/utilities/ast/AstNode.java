@@ -13,7 +13,7 @@ public class AstNode implements Iterable<AstNode> {
     //Identifiers
     CONSTANT, TYPE, VAR,
     //Program structure
-    PROGRAM, CONSTANT_DEF, TYPE_DEF, TYPE_BODY,  ABSTRACT_DEF, 
+    PROGRAM, CONSTANT_DEF, TYPE_DEF, ABSTRACT_TYPE_DEF, TYPE_BODY,  ABSTRACT_DEF, 
     VARLIST, VARS, 
     //Expressions
     ASSIGNMENT, IF_EXPR, LAMBDA_EXPR, LIST, 
