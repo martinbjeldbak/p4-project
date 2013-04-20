@@ -37,6 +37,14 @@ public class BoolValue extends Value {
     return trueValue;
   }
   
+  /** {@inheritDoc}  */
+  @Override
+  public Value add(Value other) throws TypeError {
+    if(other instanceof StrValue)
+      return new StrValue(this + ((StrValue)other).getValue());
+    throw new TypeError("Addition cannot be done on booleans with " + other);
+  }
+  
   @Override
   public String toString() {
     if(this == trueValue)
