@@ -6,6 +6,36 @@ import java.util.List;
 import dk.aau.cs.d402f13.utilities.types.Game;
 import dk.aau.cs.d402f13.utilities.types.Gridboard;
 import dk.aau.cs.d402f13.utilities.types.Piece;
+import dk.aau.cs.d402f13.utilities.types.Square;
+
+class WhiteSquare extends Square{
+	WhiteSquare(){
+		setImgPath( "img/white.png" );
+	}
+}
+
+class BlackSquare extends Square{
+	BlackSquare(){
+		setImgPath( "img/black.png" );
+	}
+}
+
+class ChessBoard extends Gridboard{
+
+	public ChessBoard() throws CloneNotSupportedException {
+		super(8, 8);
+		
+	}
+	
+	@Override
+	public List<Square> squareTypes(){
+		List<Square> list = new ArrayList<Square>();
+		list.add( new WhiteSquare() );
+		list.add( new BlackSquare() );
+		return list;
+	}
+	
+}
 
 public class ChessGame extends Game {
 	
@@ -16,9 +46,9 @@ public class ChessGame extends Game {
 		return p;
 	}
 	
-	public ChessGame(){
+	public ChessGame() throws CloneNotSupportedException{
 		setTitle( "Chess" );
-		Gridboard b = new Gridboard( 8, 8 );
+		Gridboard b = new ChessBoard();
 		
 		List<Piece> pieces = new ArrayList<Piece>();
 

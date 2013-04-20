@@ -9,21 +9,21 @@ is also evident in the definition of the $if$-expression in \secref{sec:grammar}
 all $if$-expressions must have the $else$-branch.
 
 \subsection{Integer}
-The integer-type in \productname{} represents a 32-bit integer.
+The \type{Integer}-type in \productname{} represents a 32-bit integer.
 
-An integer-value can be created using an integer-literal, such as \texttt{2155} or \texttt{0}.
+An \type{Integer}-value can be created using an integer-literal, such as \texttt{2155} or \texttt{0}.
 
 \subsection{String}
-The string-type represents a UTF-8 encoded string.
+The \type{String}-type represents a UTF-8 encoded string.
 
-A string-value is created using a string-literal, such as \texttt{"Hello, World!"} or \texttt{""}.
+A \type{String}-value is created using a string-literal, such as \texttt{"Hello, World!"} or \texttt{""}.
 
 \subsection{Direction}
-The direction-type represents a direction on a game board. It works like a vector
+The \type{Direction}-type represents a direction on a game board. It works like a vector
 in the sense that they can be combined to compute new directions. The basic directions
 are \texttt{n}, \texttt{e}, \texttt{s} and \texttt{w} (north, east, south and west).
 On a 2-dimensional grid (such as for chess) north is up, east is right, south is down and 
-west is left.
+west is left. The \texttt{n}-direction is shown on \figref{fig:direction_n}.
 
 The directions \texttt{ne}, \texttt{nw},
 \texttt{se} and \texttt{sw} are also available, although these could also be produced
@@ -43,6 +43,7 @@ This type represents a position in a grid, i.e. on the game board. It is created
 a coordinate-literal, e.g. \texttt{A1} or \texttt{AH23}. The first part (the alphabetical part)
 represents the column (or x-value), i.e. \texttt{A} means column $1$ and \texttt{AH} means
 column $1 \cdot 26 + 8 = 34$. The second part (the numeric part) represents the row (or y-value).
+In \figref{fig:coordinates} all available coordinates on an $8 \times 8 $ board are shown.
 
 \fig{coordinates}{All coordinates on an $8 \times 8$ board.}
 
@@ -50,10 +51,8 @@ column $1 \cdot 26 + 8 = 34$. The second part (the numeric part) represents the 
 \label{sec:functiontype}
 Functions in \productname{} are first-class citizens, meaning that they can be used as any
 other value. A function name without a list of arguments results in a reference to that
-function. Function references can be passed as arguments to other functions or as a return
-value.
-
-\todo{Maybe a description of what first-class citizins are?}
+function, a value of type \type{Function}. Function references can be passed as arguments 
+to other functions or as a return value.
 
 Another way to create function references, is to use anonymous functions in the form
 of lambda expressions. A lambda expression is created by combining a list of input-variables
@@ -67,16 +66,20 @@ of a lambda expression. The scope rules of lambda expressions are further descri
 while the declaration of named functions is described in \secref{sec:functions}.
 
 \subsection{Boolean}
-Although there are no boolean constants (``true'' and ``false'') in \productname, the type still exists, since
-boolean values can be returned by some expressions. Boolean values are also required in the condition of
+Although there are no boolean constants (``true'' and ``false'') in \productname,
+the type, \type{Boolean}, still exists, since boolean values can be returned by
+some expressions. Boolean values are also required in the condition-part of
 if-expressions.
 
 \subsection{Pattern}
-A unique feature of \productname{} is patterns.
-a pattern used for matching patterns on the board.
+The \type{Pattern}-type represents a special kind of expression used for
+matching certain board configurations in \productname{}.
 
 \subsection{List}
-A list is an ordered collection of values. The same value may occur more than once. Lists are created using square brackets containing a comma separated list of elements. The empty list can be created with $\texttt{[]}$. Lists are important, and necessary when calling functions.
+The \type{List}-type represents an ordered collection of values. The same value
+may occur more than once. Lists are created using square brackets containing a
+comma separated list of elements. The empty list can be created with
+$\texttt{[]}$. Lists are important, and necessary when calling functions.
 
 List values may be accessed by calling the list as if it was a function.
 The following expression will return the element at offset 1 in the list
@@ -101,34 +104,21 @@ Some other examples are:
 \codesample{listaccess4.junta}
 
 \subsection{Type}
-The \emph{Type}-type represents a reference to a certain data type.
+The \type{Type}-type is a kind of metatype, which every other type (including itself)
+is an instance of. As with functions,
+types in \productname{} are first-class citizens, and can be referred to and passed
+around as any other type. Types are defined in the global scope using the
+\keyword{type}-keyword, and their names must always start with an uppercase letter.
 
-\subsection{Identifier}
-An identifier is a reference to a certain object. It always begins with an uppercase letter.
-Consider for instance the \productname-implementation
-of Noughts and Crosses. The implementation uses three identifiers; \identifier{Noughts},
-\identifier{Crosses}, and \identifier{XOPiece}. An identifier doesn't have to be declared, and no matter
-where it is used, it always refers to the same object. Two differently named identifiers can't refer
-to the same object. Some uses of an identifier may add more identity to the object referred to by that
-identifier. Consider for example the line:
+All built-in types, as well as user-defined types, can be referred in expressions using
+their name. For instance in the following expression the \type{Integer}-value (\literal{25}) is compared
+to the \type{Type}-value (\type{Integer}) using the \texttt{is}-operator:
 
-\codesample{nncplayers.garry}
-
-In this line, the objects referred to by \identifier{Noughts} and \identifier{Crosses}, are declared
-to be players. This means that further on, when using \identifier{Noughts} and \identifier{Crosses},
-they can only be used in contexts where a player-object is applicable.
-
-The other identifier, \identifier{XOPiece}, is used as a name for the one type of piece in
-Noughts and Crosses:
-
-\codesample{nncpiece.garry}
-
-This means that further on \identifier{XOPiece} will refer to that type of piece.
-
+\codesample{intisint.junta}
 
 \subsection{Action}
 
-Actions represent state changes in a board game. A state change could for instance be a the movement
+The \type{Action}-type represent state changes in a board game. A state change could for instance be the movement
 of a piece on the board. Action-values are returned from certain built-in action functions. An example
 of such a function could be:
 

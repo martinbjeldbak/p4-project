@@ -181,6 +181,10 @@ public class Interpreter extends Visitor {
   @Override
   protected Value visitConstant(AstNode node) throws StandardError {
     Value v = symbolTable.getConstant(node.value);
+    if (v instanceof ConstValue) {
+      v = ((ConstValue)v).evaluate(this);
+      symbolTable.addConstant(node.value, v);
+    }
     if (v == null) {
       throw new NameError("Undefined constant: " + node.value);
     }
@@ -201,7 +205,7 @@ public class Interpreter extends Visitor {
     TypeValue type;
     String name = node.getFirst().value;
     if (node.size() > 3) {
-      type = new TypeValue(name, node.get(1), (TypeValue)visit(node.get(2)), node.get(3));
+      type = new TypeValue(name, node.get(1), node.get(2).value, node.get(3));
     }
     else {
       type = new TypeValue(name, node.get(1));
@@ -225,21 +229,26 @@ public class Interpreter extends Visitor {
    */
   @Override
   protected Value visitAbstractTypeDef(AstNode node) throws StandardError {
-    TypeValue type;
+    AbstractTypeValue type;
     String name = node.getFirst().value;
     if (node.size() > 3) {
-      type = new TypeValue(name, node.get(1), (TypeValue)visit(node.get(2)), node.get(3));
+      type = new AbstractTypeValue(name, node.get(1), node.get(2).value, node.get(3));
     }
     else {
-      type = new TypeValue(name, node.get(1));
+      type = new AbstractTypeValue(name, node.get(1));
     }
     
     if (node.getLast().type == AstNode.Type.TYPE_BODY) {
       for (AstNode defNode : node.getLast()) {
-        //type.addMember(defNode.getFirst().value, new Member());
+        if (defNode.type == Type.ABSTRACT_DEF) {
+          type.addAbstractMember(defNode.getFirst().value, new AbstractMember(defNode));
+        }
+        else {
+          type.addMember(defNode.getFirst().value, new Member(defNode));
+        }
       }
     }
-    
+    symbolTable.addType(name, type);
     return null;
   }
 
@@ -258,7 +267,7 @@ public class Interpreter extends Visitor {
   @Override
   protected Value visitConstantDef(AstNode node) throws StandardError {
     if (node.size() < 3) {
-      symbolTable.addConstant(node.getFirst().value, visit(node.getLast()));
+      symbolTable.addConstant(node.getFirst().value, new ConstValue(node.getLast()));
     }
     else
       symbolTable.addConstant(node.getFirst().value, new FunValue(node.get(1), node.get(2)));
@@ -308,6 +317,7 @@ public class Interpreter extends Visitor {
           break;
         case "or":
           v = ((BoolValue)v).or((BoolValue)val);
+          break;
         default:
           v = val;
         }
