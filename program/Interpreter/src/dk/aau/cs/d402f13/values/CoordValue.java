@@ -5,6 +5,11 @@ import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public class CoordValue extends Value {
   private final int x, y;
+  
+  public CoordValue(int x, int y) {
+    this.x = x;
+    this.y = y;
+  }
 
   public CoordValue(String value) {
     int xx = 0;
@@ -50,10 +55,29 @@ public class CoordValue extends Value {
   }
   
   /** {@inheritDoc}  */
+  @Override
   public Value add(Value other) throws TypeError {
     if(other instanceof StrValue)
       return new StrValue(this.toString() + ((StrValue)other).getValue());
+    else if(other instanceof DirValue) {
+      DirValue oDir = (DirValue)other;
+      return new CoordValue(x + oDir.getX(), y + oDir.getY());
+    }
     throw new TypeError("Addition cannot be done on coordinates with " + other);
+  }
+  
+  /** {@inheritDoc}  */
+  @Override
+  public Value subtract(Value other) throws TypeError {
+    if(other instanceof CoordValue) {
+      CoordValue oCoord = (CoordValue)other;
+      return new CoordValue(x - oCoord.getX(), y - oCoord.getY());
+    }
+    else if(other instanceof DirValue) {
+      DirValue oDir = (DirValue)other;
+      return new CoordValue(x - oDir.getX(), y - oDir.getY());
+    }
+    throw new TypeError("Cannot subract a " + other + " from a coordinate");
   }
   
   @Override

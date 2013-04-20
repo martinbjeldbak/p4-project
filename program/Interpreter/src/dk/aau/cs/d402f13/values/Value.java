@@ -131,6 +131,12 @@ public abstract class Value {
     throw new TypeError("This value does not support division");
   }
   
+  /**
+   * The modulo '%' operator. Returns a new Value.
+   * @param other the RHS of the modulo operator
+   * @return      a new value as a result of the modulo operation
+   * @throws TypeError if the types aren't compatible
+   */
   public Value mod(Value other) throws TypeError {
     throw new TypeError("This value does not support modulo");
   }
