@@ -17,12 +17,15 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.util.ResourceLoader;
 
+import dk.aau.cs.d402f13.utilities.types.Piece;
+import dk.aau.cs.d402f13.utilities.types.Square;
+
 public class Simulator extends BasicGame {
 		
 	private SimulatedGame game = null;
 	TrueTypeFont gtwFont = null;
 	
-	public Simulator(String gamePath) {
+	public Simulator(String gamePath) throws CloneNotSupportedException {
 		super("Junta Simulator");
 		game = new SimulatedGame( new ChessGame() );
 	}
@@ -50,6 +53,7 @@ public class Simulator extends BasicGame {
 	
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException {
+		g.setAntiAlias(true);
 		int displayWidth = gc.getWidth();
 		int displayHeight = gc.getHeight();
 		
@@ -86,6 +90,19 @@ public class Simulator extends BasicGame {
         if ( input.isMousePressed(Input.MOUSE_LEFT_BUTTON) ) {
             x = input.getMouseX();
             y = input.getMouseY();
+            
+            Square s = game.getBoard().findSquare(x, y);
+            if( s != null ){
+            	Piece p = game.getGame().getBoard().findPieceOnSquare(s);
+            	if( p != null ){
+            		game.getBoard().setSelected(s);
+            		System.out.println("Square img: " + p.getImgPath());
+            	}
+            	else
+            		game.getBoard().setSelected(null);
+            }
+        	else
+        		game.getBoard().setSelected(null);
             System.out.println("Mouse click detected: " + x + "x" + y);
         }
 	}
@@ -95,7 +112,7 @@ public class Simulator extends BasicGame {
 		return "Junta Simulator - " + game.getTitle();
 	}
 
-	public static void main(String[] args) throws SlickException { 
+	public static void main(String[] args) throws SlickException, CloneNotSupportedException { 
 		
 		Simulator juntaSimulator = new Simulator("chess.junta");
 		AppGameContainer app = new AppGameContainer(juntaSimulator);

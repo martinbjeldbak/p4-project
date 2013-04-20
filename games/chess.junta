@@ -1,7 +1,7 @@
 type Chess[] extends Game[]{
 	define players = [ ChessPlayer[ "Black" ], ChessPlayer[ "White" ] ]
 	define board = let $black = players[0], $white = players[1] in
-		GridBoard[ 8, 8 ]
+		ChessBoard[]
 			.addPieces[ Pawn[ $black, s ], [ A7, B7, C7, D7, E7, F7, G7, H7 ] ]
 			.addPieces[ Rook[ $black ],    [ A8, H8 ] ]
 			.addPieces[ Knight[ $black ],  [ B8, G8 ] ]
@@ -15,6 +15,12 @@ type Chess[] extends Game[]{
 			.addPieces[ Bishop[ $white ],  [ C1, F1 ] ]
 			.addPieces[ Queen[ $white ],   [ E1 ] ]
 			.addPieces[ King[ $white ],    [ D1 ] ]
+}
+
+type WhiteSquare[] extends Square[];
+type BlackSquare[] extends Square[];
+type ChessBoard[] extends GridBoard[ 8,8 ]{
+	define squareTypes[] = [ WhiteSquare, BlackSquare ]
 }
 
 type ChessPlayer[ $color ] extends Player[]{
