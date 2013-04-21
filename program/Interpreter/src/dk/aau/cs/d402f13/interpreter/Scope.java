@@ -28,7 +28,7 @@ public class Scope {
    */
   public Scope(Scope parent) {
     this.parent = parent;
-    if (parent.thisObject != null) {
+    if (parent != null) {
       thisObject = parent.thisObject;
     }
   }
