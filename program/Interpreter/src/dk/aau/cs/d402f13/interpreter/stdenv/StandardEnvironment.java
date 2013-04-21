@@ -35,6 +35,21 @@ public class StandardEnvironment extends SymbolTable {
     addType("Type", TypeValue.type());
     
     ////////////////////////////////////
+    // Type functions
+    ////////////////////////////////////
+    
+    addConstant("typeOf", new FunValue(
+      1, false,
+      new Callable() {
+        @Override
+        public Value call(Interpreter interpreter, Value... actualParameters)
+            throws StandardError {
+          return actualParameters[0].getType();
+        }
+      }
+    ));
+    
+    ////////////////////////////////////
     // List functions
     ////////////////////////////////////
     addConstant("size", new FunValue(
