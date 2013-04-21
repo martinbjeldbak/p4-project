@@ -8,6 +8,16 @@ public class DirValue extends Value {
   private final int x;
   private final int y;
   
+  private static TypeValue type = new TypeValue("Direction", 1, false);
+  
+  public TypeValue getType() {
+    return type;
+  }
+  
+  public static TypeValue type() {
+    return type;
+  }
+  
   public DirValue(int x, int y) {
     this.x = x;
     this.y = y;

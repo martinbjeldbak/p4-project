@@ -8,6 +8,17 @@ import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public abstract class Value {
   
+  public abstract TypeValue getType();
+  
+  /** @TODO check inheritance */
+  public boolean is(TypeValue type) {
+    return type == getType();
+  }
+  
+  public Value as(TypeValue type) {
+    return this;
+  }
+  
   public Value call(Interpreter interpreter, Value ... actualParameters) throws StandardError {
     throw new TypeError("This value does not support being called");
   }

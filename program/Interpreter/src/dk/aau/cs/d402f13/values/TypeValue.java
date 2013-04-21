@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import dk.aau.cs.d402f13.interpreter.Callable;
 import dk.aau.cs.d402f13.interpreter.Member;
+import dk.aau.cs.d402f13.interpreter.stdenv.constructors.DefaultConstructor;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 
 public class TypeValue extends Value {
@@ -16,6 +17,16 @@ public class TypeValue extends Value {
   private AstNode parentConstructor;
   
   private Callable callable = null;
+  
+  private static TypeValue type = new TypeValue("Type", 1, false);
+  
+  public TypeValue getType() {
+    return type;
+  }
+  
+  public static TypeValue type() {
+    return type;
+  }
 
   public TypeValue(String name, AstNode params) {
     this.name = name;
@@ -45,6 +56,15 @@ public class TypeValue extends Value {
     if (varArgs) {
       varParams = "";
     }
+  }
+  
+  public TypeValue(String name, int minArity, boolean varArgs) {
+    this.name = name;
+    formalParameters = new String[minArity];
+    if (varArgs) {
+      varParams = "";
+    }
+    this.callable = new DefaultConstructor(this);
   }
   
   public void addMember(String name, Member member) {

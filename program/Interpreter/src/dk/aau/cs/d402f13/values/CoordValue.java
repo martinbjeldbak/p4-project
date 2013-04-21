@@ -6,6 +6,16 @@ import dk.aau.cs.d402f13.utilities.errors.TypeError;
 public class CoordValue extends Value {
   private final int x, y;
   
+  private static TypeValue type = new TypeValue("Coordinate", 1, false);
+  
+  public TypeValue getType() {
+    return type;
+  }
+  
+  public static TypeValue type() {
+    return type;
+  }
+
   public CoordValue(int x, int y) {
     this.x = x;
     this.y = y;

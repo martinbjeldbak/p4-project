@@ -53,8 +53,10 @@ define filter[$predicate, $list] =
   if size[$list] < 1
     then $list
     else (if $predicate[$list[0]]
-      then $list[0]
-      else []) + filter[$predicate, $list[1, -1]]
+      then [$list[0]]
+      else []) + (if size[$list] > 1
+        then filter[$predicate, $list[1, -1]]
+        else [])
 
 
 define qsort[$list] =
@@ -66,27 +68,5 @@ define qsort[$list] =
              $greater = filter[#[$x] => $x >= $p, $rest]
       in qsort[$lesser] + [$p] + qsort[$greater]
 
-define varsTestOne[$a, ... $args] = 0
-define varsTestTwo[$a, $b, ... $args] = 0
-define do[... $actions] = 0
-define sequence[... $actions] = 0
-define bind[$result, $action] = 0
-define writeLine[$line] = 0
-define readLine[] = 0
-
-define testIo[] =
-  sequence[
-    writeLine["What is your name?"],
-    bind[
-      readLine[],
-      #[$name] => writeLine["Nice to meet you, " + $name]
-    ]
-  ]
-
-define giveMeAnAction[] =
-  sequence[
-    movePiece[A1, A2],
-    movePiece[A2, A3]
-  ]
                           
-
+define main = qsort[[26, 2, 1, -2, 35, 2]]
