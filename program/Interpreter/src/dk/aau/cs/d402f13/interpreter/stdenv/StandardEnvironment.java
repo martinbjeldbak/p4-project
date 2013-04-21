@@ -58,10 +58,8 @@ public class StandardEnvironment extends SymbolTable {
         @Override
         public Value call(Interpreter interpreter, Value... actualParameters)
             throws StandardError {
-          if (!(actualParameters[0] instanceof ListValue)) {
-            throw new ArgumentError("Invalid argument #1, expected a list");
-          }
-          return new IntValue(((ListValue)actualParameters[0]).getValues().length);
+          ListValue a = (ListValue)TypeValue.expect(actualParameters, 0, ListValue.type());
+          return new IntValue(a.getValues().length);
         }
       }
     ));
@@ -71,15 +69,11 @@ public class StandardEnvironment extends SymbolTable {
         @Override
         public Value call(Interpreter interpreter, Value... actualParameters)
             throws StandardError {
-          if (!(actualParameters[0] instanceof ListValue)) {
-            throw new ArgumentError("Invalid argument #1, expected a list");
-          }
-          List<Value> result = new ArrayList<Value>(Arrays.asList(((ListValue)actualParameters[0]).getValues()));
+          ListValue a = (ListValue)TypeValue.expect(actualParameters, 0, ListValue.type());
+          List<Value> result = new ArrayList<Value>(Arrays.asList(a.getValues()));
           for (int i = 1; i < actualParameters.length; i++) {
-            if (!(actualParameters[i] instanceof ListValue)) {
-              throw new ArgumentError("Invalid argument #" + (i + 1) + ", expected a list");
-            }
-            Value[] values = ((ListValue)actualParameters[i]).getValues();
+            ListValue b = (ListValue)TypeValue.expect(actualParameters, i, ListValue.type());
+            Value[] values = b.getValues();
             for (int j = 0; j < values.length; j++) {
               if (!result.contains(values[j])) {
                 result.add(values[j]);
