@@ -15,30 +15,10 @@ import dk.aau.cs.d402f13.values.*;
 public class SymbolTable {
   
   private HashMap<String, Value> constants = new HashMap<String, Value>();
-  private HashMap<String, Value> identifiers = new HashMap<String, Value>();
   private HashMap<String, TypeValue> types = new HashMap<String, TypeValue>();
   private Stack<Scope> scopeStack = new Stack<Scope>();
 
   public SymbolTable() {  
-  }
-  
-  /**
-   * Stores an identifier in the symbol table.
-   * @param name  a unique string identifier of the value
-   * @param value a value that 'name' maps to
-   */
-  public void addIdentifier(String name, Value value) {
-    identifiers.put(name, value);
-  }
-  
-  /**
-   * Retrieves an identifier from the symbol table. Returns null if
-   * none are found.
-   * @param name the unique string the identifier was stored with
-   * @return     the stored Value
-   */
-  public Value getIdentifier(String name) {
-    return identifiers.get(name);
   }
   
   /**

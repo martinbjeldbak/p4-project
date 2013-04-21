@@ -86,6 +86,9 @@ public abstract class Value {
    * @return a true BoolValue if the values are equal
    */
   public BoolValue equalsOp(Value other) {
+    if (this == other) {
+      return BoolValue.trueValue();
+    }
     return BoolValue.falseValue();
   }
   
