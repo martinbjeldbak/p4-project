@@ -343,6 +343,14 @@ public class Interpreter extends Visitor {
       case "!=":
         v = v.notEqual(val);
         break;
+      case "is":
+        if (!val.is(TypeValue.type())) {
+          throw new TypeError("Expected second operand to be of type Type", node.getLast());
+        }
+        v = v.is((TypeValue)val.as(TypeValue.type()))
+            ? BoolValue.trueValue()
+            : BoolValue.falseValue();
+        break;
       default:
         v = val;
       }

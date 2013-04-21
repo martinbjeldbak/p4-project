@@ -10,9 +10,8 @@ public abstract class Value {
   
   public abstract TypeValue getType();
   
-  /** @TODO check inheritance */
   public boolean is(TypeValue type) {
-    return type == getType();
+    return getType().isSubtypeOf(type);
   }
   
   public Value as(TypeValue type) {
