@@ -150,7 +150,8 @@ public class TypeValue extends Value {
         ret = new ObjectValue(this, scope);
       }
       else {
-        throw new StandardError("NOT IMPLEMENTED");
+        Value[] parentParams = ((ListValue)interpreter.visit(parentConstructor)).getValues();
+        ret = new ObjectValue(this, scope, parent.call(interpreter, parentParams));
         /** @TODO IMPLEMENT! */
         //return new ObjectValue(this, parent.call(interpreter, ))
       }

@@ -24,7 +24,7 @@ public class DefaultConstructor implements Callable {
     if (!actualParameters[0].is(type)) {
       throw new ArgumentError("Invalid argument #1, expected type " + type);
     }
-    return actualParameters[0];
+    return actualParameters[0].as(type);
   }
 
 }
