@@ -76,7 +76,7 @@ public class TypeValue extends Value {
     if (type == this) {
       return true;
     }
-    if (parent != null && type.isSubtypeOf(parent)) {
+    if (parent != null && parent.isSubtypeOf(type)) {
       return true;
     }
     return false;
