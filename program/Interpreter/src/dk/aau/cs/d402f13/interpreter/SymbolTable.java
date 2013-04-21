@@ -72,6 +72,13 @@ public class SymbolTable {
     types.put(name, type);
   }
   
+  public ObjectValue getThis() {
+    if(currentScope() == null) {
+      return null;
+    }
+    return currentScope().getThis();
+  }
+  
   /**
    * Gets a Type from the symbol table that was stored with the unique
    * identifier. Can return null

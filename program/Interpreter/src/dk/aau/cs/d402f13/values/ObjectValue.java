@@ -29,6 +29,10 @@ public class ObjectValue extends Value {
     return type;
   }
   
+  public Value getParent() {
+    return parent;
+  }
+  
   public Value getRoot() {
     Value obj = this;
     while (obj instanceof ObjectValue && ((ObjectValue)obj).parent != null) {
@@ -147,6 +151,10 @@ public class ObjectValue extends Value {
       return getRoot().negate();
     }
     return super.negate();
+  }
+
+  public void setScope(Scope scope) {
+    this.scope = scope;
   }
   
 }

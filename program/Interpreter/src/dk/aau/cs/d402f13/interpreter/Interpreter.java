@@ -147,8 +147,11 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitThis(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    ObjectValue thisObject = symbolTable.getThis();
+    if (thisObject == null) {
+      throw new NameError("Invalid use of this-keyword");
+    }
+    return thisObject;
   }
 
   @Override
@@ -276,8 +279,11 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitSuper(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    ObjectValue thisObject = symbolTable.getThis();
+    if (thisObject == null || thisObject.getParent() == null) {
+      throw new NameError("Invalid use of super-keyword");
+    }
+    return thisObject.getParent();
   }
 
   @Override
