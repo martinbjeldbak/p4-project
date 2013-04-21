@@ -125,6 +125,7 @@ public class IntValue extends Value {
     throw new TypeError("Division cannot be done on ints with " + other);
   }
   
+  /** {@inheritDoc}  */
   @Override
   public Value mod(Value other) throws TypeError {
     if(other instanceof IntValue)
