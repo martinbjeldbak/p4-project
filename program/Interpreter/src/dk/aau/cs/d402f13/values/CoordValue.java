@@ -92,31 +92,27 @@ public class CoordValue extends Value {
   
   @Override
   public String toString() {
-    return toColumn(x) + y;
+    return toColumn(x) + y + " (" + x + ", " + y + ")";
   }
   
   private String toColumn(int xValue) {
     StringBuilder sb = new StringBuilder();
     int remain = xValue;
     
-    // FIXME: DOESNT WORK WITH 'Z'
     do {
-      if(remain % 26 == 0)
-        sb.append(intCharToLetter(26));
-      else
-        sb.append(intCharToLetter(remain % 26));
-      remain = remain / 26;
+      sb.append(intCharToLetter(remain % 26));
+      remain = (remain - 1) / 26;
     } while (remain > 0);
 
    return sb.reverse().toString();
   }
   
   private Character intCharToLetter(int value) {
-    if (value >= 0 && value < 27) {
+    if(value == 0)
+      return 'Z';
+    else if (value > 0 && value <= 27) {
       return Character.valueOf((char)(value + 'A' - 1));
     }
-    else if(value == 0)
-      return 'Z';
     else
       return null;
   }
