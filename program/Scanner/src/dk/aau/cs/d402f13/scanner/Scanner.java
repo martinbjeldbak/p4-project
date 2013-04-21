@@ -171,16 +171,23 @@ public class Scanner {
     }
   }
 
-  public Token scanUppercase() {
+  public Token scanUppercase() throws ScannerError {
     // Can be Type or Coordinate, e.g. Int or A3
     Token t = token(Type.TYPE);
+    boolean isUppercase = true;
     while (isAnycase()) {
+      if (isLowercase()) {
+        isUppercase = false;
+      }
       t.value += current();
       pop();
     }
     // if digit comes after the alphacharacters, it must be a
     // coordinate, else an identifier
     if (isDigit()) {
+      if (!isUppercase) {
+        throw new ScannerError("Invalid coordinate literal", token(Type.LIT_COORD));
+      }
       t.type = Type.LIT_COORD;
       while (isDigit()){
         t.value += current();
