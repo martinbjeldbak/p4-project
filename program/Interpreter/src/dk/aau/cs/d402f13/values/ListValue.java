@@ -14,6 +14,16 @@ public class ListValue extends Value {
 
   private Value[] values = null;
   
+  private static TypeValue type = new TypeValue("List", 1, false);
+  
+  public TypeValue getType() {
+    return type;
+  }
+  
+  public static TypeValue type() {
+    return type;
+  }
+  
   public ListValue(Value ... values) {
     this.values = values;
   }

@@ -7,6 +7,16 @@ public class BoolValue extends Value {
   
   private static BoolValue trueValue = new BoolValue();
   private static BoolValue falseValue = new BoolValue();
+  
+  private static TypeValue type = new TypeValue("Boolean", 1, false);
+  
+  public TypeValue getType() {
+    return type;
+  }
+  
+  public static TypeValue type() {
+    return type;
+  }
 
   private BoolValue() {
   }

@@ -8,6 +8,16 @@ import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public class IntValue extends Value {
   private final int value;
+  
+  private static TypeValue type = new TypeValue("Integer", 1, false);
+  
+  public TypeValue getType() {
+    return type;
+  }
+  
+  public static TypeValue type() {
+    return type;
+  }
 
   public IntValue(String value) {
       this.value = Integer.parseInt(value);

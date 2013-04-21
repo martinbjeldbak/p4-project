@@ -10,9 +10,12 @@ import dk.aau.cs.d402f13.interpreter.SymbolTable;
 import dk.aau.cs.d402f13.utilities.errors.ArgumentError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.values.BoolValue;
+import dk.aau.cs.d402f13.values.CoordValue;
+import dk.aau.cs.d402f13.values.DirValue;
 import dk.aau.cs.d402f13.values.FunValue;
 import dk.aau.cs.d402f13.values.IntValue;
 import dk.aau.cs.d402f13.values.ListValue;
+import dk.aau.cs.d402f13.values.PatternValue;
 import dk.aau.cs.d402f13.values.StrValue;
 import dk.aau.cs.d402f13.values.TypeValue;
 import dk.aau.cs.d402f13.values.Value;
@@ -21,19 +24,15 @@ public class StandardEnvironment extends SymbolTable {
 
   public StandardEnvironment() {
     
-    addType("Integer", new TypeValue(
-      "Integer", 1, false,
-      new Callable() {
-        @Override
-        public Value call(Interpreter interpreter, Value... actualParameters)
-            throws StandardError {
-          if (!(actualParameters[0] instanceof IntValue)) {
-            throw new ArgumentError("Invalid argument #1, expected an integer");
-          }
-          return actualParameters[0];
-        }
-      }
-    ));
+    addType("Boolean", BoolValue.type());
+    addType("Coordinate", CoordValue.type());
+    addType("Direction", DirValue.type());
+    addType("Function", FunValue.type());
+    addType("Integer", IntValue.type());
+    addType("List", ListValue.type());
+    addType("Pattern", PatternValue.type());
+    addType("String", StrValue.type());
+    addType("Type", TypeValue.type());
     
     ////////////////////////////////////
     // List functions

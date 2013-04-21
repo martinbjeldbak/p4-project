@@ -16,6 +16,16 @@ public class FunValue extends Value {
   private AstNode expression = null;
   private Callable callable = null;
   private Scope currentScope = null;
+  
+  private static TypeValue type = new TypeValue("Function", 1, false);
+  
+  public TypeValue getType() {
+    return type;
+  }
+  
+  public static TypeValue type() {
+    return type;
+  }
 
   public FunValue(AstNode params, AstNode expression) {
     this.expression = expression;
