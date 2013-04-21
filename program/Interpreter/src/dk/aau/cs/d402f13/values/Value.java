@@ -14,8 +14,11 @@ public abstract class Value {
     return getType().isSubtypeOf(type);
   }
   
-  public Value as(TypeValue type) {
-    return this;
+  public Value as(TypeValue type) throws StandardError {
+    if (getType() == type) {
+      return this;
+    }
+    throw new TypeError("Invalid cast to type " + type);
   }
   
   public Value call(Interpreter interpreter, Value ... actualParameters) throws StandardError {
