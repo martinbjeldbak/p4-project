@@ -68,7 +68,10 @@ define qsort[$list] =
              $greater = filter[#[$x] => $x >= $p, $rest]
       in qsort[$lesser] + [$p] + qsort[$greater]
 
-type Unsigned[$i]
-  extends Integer[if $i < 0 then -$i else $i]
+type Unsigned[$i] extends Integer[if $i < 0 then -$i else $i]
+
+type MyListA[... $list] extends Function[#[$offset] => $list[$offset]]
+
+type MyListB[... $list] extends List[$list]
                           
-define main = qsort[[26, 2, 1, -2, 35, 2]]
+define main = qsort[MyListB[26, 2, 1, -2, 35, 2]]
