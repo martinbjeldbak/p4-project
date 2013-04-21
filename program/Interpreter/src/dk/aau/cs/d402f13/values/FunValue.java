@@ -89,4 +89,38 @@ public class FunValue extends Value {
     interpreter.getSymbolTable().closeScope();
     return ret;
   }
+  
+  @Override
+  public String toString() {
+    String s = "Function[";
+    if (formalParameters.length > 0) {
+      if (formalParameters[0] == null) {
+        s += "$arg";
+      }
+      else {
+        s += "$" + formalParameters[0];
+      }
+    }
+    for (int i = 1; i < formalParameters.length; i++) {
+      if (formalParameters[i] == null) {
+        s += ", $arg";
+      }
+      else {
+        s += ", $" + formalParameters[i];
+      }
+    }
+    if (varParams != null) {
+      if (formalParameters.length > 0) {
+        s += ", ";
+      }
+      s += "... $";
+      if (varParams.equals("")) {
+        s += "args";
+      }
+      else {
+        s += varParams;
+      }
+    }
+    return s + "]";
+  }
 }

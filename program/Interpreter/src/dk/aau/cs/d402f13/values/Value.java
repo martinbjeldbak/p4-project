@@ -162,4 +162,9 @@ public abstract class Value {
   public Value negate() throws TypeError {
     throw new TypeError("This value does not support negation");
   }
+  
+  @Override
+  public String toString() {
+    return getType().toString() + "@" + hashCode();
+  }
 }
