@@ -155,7 +155,7 @@ public class Interpreter extends Visitor {
   protected Value visitVar(AstNode node) throws StandardError {
     Value v = symbolTable.getVariable(node.value);
     if (v == null) {
-      throw new NameError("Undefined variable: " + node.value);
+      throw new NameError("Undefined variable: $" + node.value);
     }
     return v;
   }

@@ -16,10 +16,5 @@ public class ObjectValue extends Value {
   public TypeValue getType() {
     return type;
   }
-  
-  @Override
-  public String toString() {
-    return type.toString() + "@" + hashCode();
-  }
 
 }
