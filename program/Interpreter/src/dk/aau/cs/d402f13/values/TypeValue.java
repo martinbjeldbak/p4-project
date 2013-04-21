@@ -122,11 +122,14 @@ public class TypeValue extends Value {
     }
     Scope scope = new Scope();
     interpreter.getSymbolTable().openScope(scope);
-    Value ret;
     if (callable != null) {
+      Value ret;
       ret = callable.call(interpreter, actualParameters);
+      interpreter.getSymbolTable().closeScope();
+      return ret;
     }
     else {
+      ObjectValue ret;
       // Initialize object attributes
       for (int i = 0; i < formalParameters.length; i++) {
         interpreter.getSymbolTable().addVariable(formalParameters[i], actualParameters[i]);
@@ -152,12 +155,11 @@ public class TypeValue extends Value {
       else {
         Value[] parentParams = ((ListValue)interpreter.visit(parentConstructor)).getValues();
         ret = new ObjectValue(this, scope, parent.call(interpreter, parentParams));
-        /** @TODO IMPLEMENT! */
-        //return new ObjectValue(this, parent.call(interpreter, ))
       }
+      ret.setScope(new Scope(scope, ret));
+      interpreter.getSymbolTable().closeScope();
+      return ret;
     }
-    interpreter.getSymbolTable().closeScope();
-    return ret;
   }
   
   public static Value expect(Value parameter, TypeValue type) throws StandardError {
