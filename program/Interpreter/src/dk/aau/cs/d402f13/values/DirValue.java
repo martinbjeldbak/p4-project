@@ -60,7 +60,6 @@ public class DirValue extends Value {
     default:
       this.x = 0;
       this.y = 0;
-      break;
     }
   }
   
@@ -75,10 +74,15 @@ public class DirValue extends Value {
   /** {@inheritDoc}  */
   @Override
   public BoolValue equalsOp(Value other) {
-    if(other instanceof DirValue) {
-      DirValue otherDirection = (DirValue)other;
-      
-      if((this.x == otherDirection.getX()) && (this.y == otherDirection.getY()))
+    if(other.is(DirValue.type())) {
+      DirValue oDir = null;
+      try {
+        oDir = (DirValue)other.as(DirValue.type());
+      } catch (TypeError typeError) {
+        return BoolValue.falseValue();
+      }
+
+      if((this.x == oDir.getX()) & (this.y == oDir.getY()))
         return BoolValue.trueValue();
     }
     return BoolValue.falseValue();
@@ -87,24 +91,26 @@ public class DirValue extends Value {
   /** {@inheritDoc}  */
   @Override
   public Value add(Value other) throws TypeError {
-    if(other instanceof DirValue) {
-      DirValue oDir = (DirValue)other;   
+    if(other.is(DirValue.type())) {
+      DirValue oDir = (DirValue)other.as(DirValue.type());
       return new DirValue((x + oDir.getX()), y + (oDir.getY()));
     }
-    else if(other instanceof CoordValue) {
-      CoordValue oCoord = (CoordValue)other;
+    else if(other.is(CoordValue.type())) {
+      CoordValue oCoord = (CoordValue)other.as(CoordValue.type());
       return new CoordValue(x + oCoord.getX(), y + oCoord.getY());
     }
-    else if(other instanceof StrValue)
-      return new StrValue(this.toString() + ((StrValue)other).getValue());
+    else if(other.is(StrValue.type())) {
+      StrValue oStr = (StrValue)other.as(StrValue.type());
+      return new StrValue(this.toString() + oStr.getValue());
+    }
     throw new TypeError("Addition cannot be done on direction with " + other);
   }
   
   /** {@inheritDoc}  */
   @Override
   public Value subtract(Value other) throws TypeError {
-    if(other instanceof DirValue) {
-      DirValue oDir = (DirValue)other;
+    if(other.is(DirValue.type())) {
+      DirValue oDir = (DirValue)other.as(DirValue.type());
       return new DirValue(x - oDir.getX(), y - oDir.getY());
     }
     throw new TypeError("Cannot subtract a " + other + " from a direction");

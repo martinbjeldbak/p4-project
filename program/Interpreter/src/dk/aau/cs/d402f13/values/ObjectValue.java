@@ -38,6 +38,7 @@ public class ObjectValue extends Value {
     while (obj instanceof ObjectValue && ((ObjectValue)obj).parent != null) {
       obj = ((ObjectValue)obj).parent;
     }
+
     return obj;
   }
   
