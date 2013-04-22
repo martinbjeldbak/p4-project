@@ -12,6 +12,10 @@ import dk.aau.cs.d402f13.utilities.errors.StandardError;
 
 public class ConstValue extends Value {
   private AstNode expression = null;
+  
+  public TypeValue getType() {
+    return null;
+  }
 
   public ConstValue(AstNode expression) {
     this.expression = expression;

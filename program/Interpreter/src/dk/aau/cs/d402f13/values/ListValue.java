@@ -1,15 +1,28 @@
 package dk.aau.cs.d402f13.values;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.errors.ArgumentError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public class ListValue extends Value {
 
   private Value[] values = null;
+  
+  private static TypeValue type = new TypeValue("List", 1, false);
+  
+  public TypeValue getType() {
+    return type;
+  }
+  
+  public static TypeValue type() {
+    return type;
+  }
   
   public ListValue(Value ... values) {
     this.values = values;
@@ -47,46 +60,98 @@ public class ListValue extends Value {
     }
     return s + "]";
   }
+
+  /** {@inheritDoc}  */
+  @Override
+  public Value add(Value other) throws TypeError {
+    if(other instanceof ListValue) {
+      Value[] oValues = ((ListValue)other).getValues();  
+      Value[] ret = new Value[values.length + oValues.length];
+      
+      System.arraycopy(values, 0, ret, 0, values.length);
+      System.arraycopy(oValues, 0, ret, values.length, oValues.length);
+      
+      return new ListValue(ret);
+    }
+    // Else add the single element to the list
+    Value[] ret = new Value[values.length + 1];
+    System.arraycopy(values, 0, ret, 0, values.length);
+    ret[values.length] = other;
+    
+    return new ListValue(ret);
+  }
   
-  // TODO: Addition and subtraction
+  /** {@inheritDoc}  */
+  @Override
+  public Value subtract(Value other) throws TypeError {
+    if(other instanceof ListValue) {
+      List<Value> oValueList = Arrays.asList(((ListValue)other).getValues());      
+      List<Value> valueList = Arrays.asList(values);
+ 
+      for(Value val : oValueList) {
+        if(valueList.contains(val)) {
+          try {
+          valueList.remove(val);
+          }
+          catch(UnsupportedOperationException uoe) {
+            valueList = new ArrayList<Value>(valueList);
+            valueList.remove(val);
+          }
+        }
+      }
+      Value[] resultArray = new Value[valueList.size()];
+      return new ListValue(valueList.toArray(resultArray));
+    }
+    // Else remove the single element
+    List<Value> valueList = Arrays.asList(values);
+    
+    if(valueList.contains(other)) {
+      try {
+        valueList.remove(other);
+      }
+      catch(UnsupportedOperationException uoe) {
+        valueList = new ArrayList<Value>(valueList);
+        valueList.remove(other);         
+      }
+    }
+  
+    Value[] resultArray = new Value[valueList.size()];
+    return new ListValue(valueList.toArray(resultArray));
+  }
 
   @Override
   public Value call(Interpreter interpreter, Value ... actualParameters) throws StandardError {
     int a;
     int b;
     
-    if(actualParameters.length < 1) {
-      throw new ArgumentError("Unexpected number of arguments, expected at least 1 "); // TODO
-    }
+    if(actualParameters.length < 1)
+      throw new ArgumentError("Unexpected number of arguments, expected at least 1");
 
-    if(!(actualParameters[0] instanceof IntValue)) {
-    }
+    if(!(actualParameters[0] instanceof IntValue))
+      throw new ArgumentError("First argument needs to be of type int");
     a = ((IntValue)actualParameters[0]).getValue();
 
-    if (a < 0) {
+    if (a < 0)
       a = values.length + a;
-    }
-    if (a < 0 || a >= values.length) {
+    if (a < 0 || a >= values.length)
       throw new ArgumentError("Argument out of bounds");
-    }
     
     if(actualParameters.length == 2) {
-      if(!(actualParameters[1] instanceof IntValue)) {
-      }   
+      if(!(actualParameters[1] instanceof IntValue))
+        throw new ArgumentError("Second argument also needs to be of type int");
       b = ((IntValue)actualParameters[1]).getValue();
-      if (b < 0) {
+      
+      if (b < 0)
         b = values.length + b;
-      }
+      
       if (b < 0 || b >= values.length) {
         throw new ArgumentError("Argument out of bounds");
       }
       return new ListValue(Arrays.copyOfRange(values, a, b + 1));
     }
-    else if (actualParameters.length > 2) {
+    else if (actualParameters.length > 2)
       throw new ArgumentError("Using too many arguments, expected max 2");
-    }
-    else{
+    else
       return values[a];
-    }
   }
 }

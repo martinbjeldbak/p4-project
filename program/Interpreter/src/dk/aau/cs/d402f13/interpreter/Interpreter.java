@@ -147,15 +147,18 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitThis(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    ObjectValue thisObject = symbolTable.getThis();
+    if (thisObject == null) {
+      throw new NameError("Invalid use of this-keyword");
+    }
+    return thisObject;
   }
 
   @Override
   protected Value visitVar(AstNode node) throws StandardError {
     Value v = symbolTable.getVariable(node.value);
     if (v == null) {
-      throw new NameError("Undefined variable: " + node.value);
+      throw new NameError("Undefined variable: $" + node.value);
     }
     return v;
   }
@@ -276,8 +279,11 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitSuper(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    ObjectValue thisObject = symbolTable.getThis();
+    if (thisObject == null || thisObject.getParent() == null) {
+      throw new NameError("Invalid use of super-keyword");
+    }
+    return thisObject.getParent();
   }
 
   @Override
@@ -342,6 +348,14 @@ public class Interpreter extends Visitor {
         break;
       case "!=":
         v = v.notEqual(val);
+        break;
+      case "is":
+        if (!val.is(TypeValue.type())) {
+          throw new TypeError("Expected second operand to be of type Type", node.getLast());
+        }
+        v = v.is((TypeValue)val.as(TypeValue.type()))
+            ? BoolValue.trueValue()
+            : BoolValue.falseValue();
         break;
       default:
         v = val;
@@ -414,6 +428,9 @@ public class Interpreter extends Visitor {
         break;
       case "/":
         v = v.divide(val);
+        break;
+      case "%":
+        v = v.mod(val);
         break;
       default:
         v = val;

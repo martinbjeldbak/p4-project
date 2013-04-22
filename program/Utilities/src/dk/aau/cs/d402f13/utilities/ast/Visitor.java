@@ -13,7 +13,7 @@ public abstract class Visitor {
   protected abstract Object visitType(AstNode node) throws StandardError;
 // case TYPE_DEF:
   protected abstract Object visitTypeDef(AstNode node) throws StandardError;
-// case TYPE_DEF:
+//case ABSTRACT_TYPE_DEF:
   protected abstract Object visitAbstractTypeDef(AstNode node) throws StandardError;
 // case TYPE_BODY:
   protected abstract Object visitTypeBody(AstNode node) throws StandardError;

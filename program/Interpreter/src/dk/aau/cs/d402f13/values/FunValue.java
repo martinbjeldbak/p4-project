@@ -16,6 +16,16 @@ public class FunValue extends Value {
   private AstNode expression = null;
   private Callable callable = null;
   private Scope currentScope = null;
+  
+  private static TypeValue type = new TypeValue("Function", 1, false);
+  
+  public TypeValue getType() {
+    return type;
+  }
+  
+  public static TypeValue type() {
+    return type;
+  }
 
   public FunValue(AstNode params, AstNode expression) {
     this.expression = expression;
@@ -78,5 +88,39 @@ public class FunValue extends Value {
     }
     interpreter.getSymbolTable().closeScope();
     return ret;
+  }
+  
+  @Override
+  public String toString() {
+    String s = "Function[";
+    if (formalParameters.length > 0) {
+      if (formalParameters[0] == null) {
+        s += "$arg";
+      }
+      else {
+        s += "$" + formalParameters[0];
+      }
+    }
+    for (int i = 1; i < formalParameters.length; i++) {
+      if (formalParameters[i] == null) {
+        s += ", $arg";
+      }
+      else {
+        s += ", $" + formalParameters[i];
+      }
+    }
+    if (varParams != null) {
+      if (formalParameters.length > 0) {
+        s += ", ";
+      }
+      s += "... $";
+      if (varParams.equals("")) {
+        s += "args";
+      }
+      else {
+        s += varParams;
+      }
+    }
+    return s + "]";
   }
 }
