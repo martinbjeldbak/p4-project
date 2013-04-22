@@ -11,6 +11,7 @@ import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.errors.ArgumentError;
 import dk.aau.cs.d402f13.utilities.errors.NameError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public class TypeValue extends Value {
   private HashMap<String, Member> members = new HashMap<String, Member>();
@@ -164,14 +165,14 @@ public class TypeValue extends Value {
   
   public static Value expect(Value parameter, TypeValue type) throws StandardError {
     if (!parameter.is(type)) {
-      throw new ArgumentError("Invalid type for value, expected " + type.toString());
+      throw new TypeError("Invalid type for value, expected " + type.toString());
     }
     return parameter.as(type);
   }
 
   public static Value expect(Value[] parameters, int i, TypeValue type) throws StandardError {
     if (!parameters[i].is(type)) {
-      throw new ArgumentError("Invalid type for argument #" + i + ", expected " + type.toString());
+      throw new TypeError("Invalid type for argument #" + i + ", expected " + type.toString());
     }
     return parameters[i].as(type);
   }
