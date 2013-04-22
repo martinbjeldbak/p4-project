@@ -1,6 +1,7 @@
 package dk.aau.cs.d402f13.values;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import dk.aau.cs.d402f13.interpreter.Callable;
 import dk.aau.cs.d402f13.interpreter.Interpreter;
@@ -104,13 +105,7 @@ public class TypeValue extends Value {
     members.put(name, member);
   }
   
-  public Member getMember(String name) {
-    return members.get(name);
-  }
-  
-  @Override
-  public Value call(Interpreter interpreter, Value... actualParameters)
-      throws StandardError {
+  public Value getInstance(Interpreter interpreter, Value... actualParameters) throws StandardError {
     if (varParams == null) {
       if (actualParameters.length != formalParameters.length) {
         throw new ArgumentError("Invalid number of arguments, expected " + formalParameters.length);
@@ -155,14 +150,25 @@ public class TypeValue extends Value {
       }
       else {
         Value[] parentParams = ((ListValue)interpreter.visit(parentConstructor)).getValues();
-        ret = new ObjectValue(this, scope, parent.call(interpreter, parentParams));
+        ret = new ObjectValue(this, scope, parent.getInstance(interpreter, parentParams));
       }
       ret.setScope(new Scope(scope, ret));
+      interpreter.getSymbolTable().openScope(ret.getScope());
+      for (Entry<String, Member> e : members.entrySet()) {
+        ret.addMember(e.getKey(), e.getValue().getValue(interpreter));
+      }
+      interpreter.getSymbolTable().closeScope();
       interpreter.getSymbolTable().closeScope();
       return ret;
     }
   }
   
+  @Override
+  public Value call(Interpreter interpreter, Value... actualParameters)
+      throws StandardError {
+    return getInstance(interpreter, actualParameters);
+  }
+
   public static Value expect(Value parameter, TypeValue type) throws TypeError {
     if (!parameter.is(type)) {
       throw new TypeError("Invalid type for value, expected " + type.toString());
