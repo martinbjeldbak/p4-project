@@ -4,8 +4,11 @@ import java.util.HashMap;
 
 import dk.aau.cs.d402f13.interpreter.AbstractMember;
 import dk.aau.cs.d402f13.interpreter.Callable;
+import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.Member;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
+import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public class AbstractTypeValue extends TypeValue {
   private HashMap<String, AbstractMember> abstractMembers = new HashMap<String, AbstractMember>();
@@ -26,5 +29,11 @@ public class AbstractTypeValue extends TypeValue {
 
   public void addAbstractMember(String name, AbstractMember member) {
     abstractMembers.put(name, member);
+  }
+  
+  @Override
+  public Value call(Interpreter interpreter, Value... actualParameters)
+      throws StandardError {
+    throw new TypeError("Unable to construct abstract type " + toString());
   }
 }

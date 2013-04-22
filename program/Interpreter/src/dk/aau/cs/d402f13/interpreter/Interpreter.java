@@ -5,6 +5,7 @@ import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.ast.Visitor;
 import dk.aau.cs.d402f13.utilities.errors.*;
+import dk.aau.cs.d402f13.utilities.errors.InternalError;
 import dk.aau.cs.d402f13.values.*;
 
 public class Interpreter extends Visitor {
@@ -165,14 +166,12 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitVarlist(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    throw new InternalError("Invalid visit");
   }
 
   @Override
   protected Value visitVars(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    throw new InternalError("Invalid visit");
   }
 
   @Override
@@ -257,14 +256,12 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitTypeBody(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    throw new InternalError("Invalid visit");
   }
 
   @Override
   protected Value visitAbstractDef(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    throw new InternalError("Invalid visit");
   }
 
   @Override
@@ -288,14 +285,22 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitElement(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    Value object = visit(node.getFirst());
+    for (int i = 1; i < node.size(); i++) {
+      AstNode memberAccess = node.get(i);
+      String member = memberAccess.getFirst().value;
+      object = object.getMember(member);
+      for (int j = 1; j < memberAccess.size(); j++) {
+        ListValue list = (ListValue)visit(memberAccess.get(j));
+        object = object.call(this, list.getValues());
+      }
+    }
+    return object;
   }
 
   @Override
   protected Value visitMemberAccess(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    throw new InternalError("Invalid visit");
   }
 
   @Override

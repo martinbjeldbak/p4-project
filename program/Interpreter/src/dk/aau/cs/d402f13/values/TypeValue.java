@@ -104,13 +104,7 @@ public class TypeValue extends Value {
     members.put(name, member);
   }
   
-  public Member getMember(String name) {
-    return members.get(name);
-  }
-  
-  @Override
-  public Value call(Interpreter interpreter, Value... actualParameters)
-      throws StandardError {
+  public Value getInstance(Interpreter interpreter, Value... actualParameters) throws StandardError {
     if (varParams == null) {
       if (actualParameters.length != formalParameters.length) {
         throw new ArgumentError("Invalid number of arguments, expected " + formalParameters.length);
@@ -155,12 +149,18 @@ public class TypeValue extends Value {
       }
       else {
         Value[] parentParams = ((ListValue)interpreter.visit(parentConstructor)).getValues();
-        ret = new ObjectValue(this, scope, parent.call(interpreter, parentParams));
+        ret = new ObjectValue(this, scope, parent.getInstance(interpreter, parentParams));
       }
       ret.setScope(new Scope(scope, ret));
       interpreter.getSymbolTable().closeScope();
       return ret;
     }
+  }
+  
+  @Override
+  public Value call(Interpreter interpreter, Value... actualParameters)
+      throws StandardError {
+    return getInstance(interpreter, actualParameters);
   }
   
   public static Value expect(Value parameter, TypeValue type) throws StandardError {
