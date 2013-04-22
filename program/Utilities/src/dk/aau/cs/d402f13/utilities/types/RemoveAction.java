@@ -12,6 +12,6 @@ public class RemoveAction extends Action {
 	}
 	
 	void applyAction( Game g ){
-		g.getBoard().removePiece(p);
+		g.board().removePiece(p);
 	}
 }

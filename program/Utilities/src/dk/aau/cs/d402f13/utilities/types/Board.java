@@ -28,7 +28,7 @@ public class Board {
 	
 	public Piece findPieceOnSquare( Square s ){
 		for( Piece p : pieces ){
-			if( p.getSquare() == s)
+			if( p.square() == s)
 				return p;
 		}
 		return null;

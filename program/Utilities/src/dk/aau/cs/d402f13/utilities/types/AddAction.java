@@ -17,7 +17,7 @@ public class AddAction extends Action {
 	}
 	
 	void applyAction( Game g ){
-		g.getBoard().addPiece(p);
+		g.board().addPiece(p);
 		p.setSquare(s);
 	}
 }
