@@ -333,7 +333,7 @@ public class Interpreter extends Visitor {
           v = ((BoolValue)v).or((BoolValue)val);
           break;
         default:
-          v = val;
+          throw new InternalError("Unimplemented operator: " + child.operation);
         }
       }
       else
@@ -366,7 +366,7 @@ public class Interpreter extends Visitor {
             : BoolValue.falseValue();
         break;
       default:
-        v = val;
+        throw new InternalError("Unimplemented operator: " + child.operation);
       }
     }
     return v;
@@ -394,7 +394,7 @@ public class Interpreter extends Visitor {
         v = v.greaterThanEq(val);
         break;
       default:
-        v = val;
+        throw new InternalError("Unimplemented operator: " + child.operation);
       }
     }
     return v;
@@ -416,7 +416,7 @@ public class Interpreter extends Visitor {
         v = v.subtract(val);
         break;
       default:
-        v = val;
+        throw new InternalError("Unimplemented operator: " + child.operation);
       }
     }
     return v;
@@ -441,7 +441,7 @@ public class Interpreter extends Visitor {
         v = v.mod(val);
         break;
       default:
-        v = val;
+        throw new InternalError("Unimplemented operator: " + child.operation);
       }
     }
     return v;

@@ -75,7 +75,7 @@ type MyListA[... $list] extends Function[#[$offset] => $list[$offset]]
 type MyListB[... $list] extends List[$list]
 
 type A[$b] {
-	define aNumber = 2
+	define abstract aNumber
 	define aFunc[$a] = $a + aNumber
 }
 
@@ -85,6 +85,6 @@ type B[$c] extends A[$c + 1] {
     define mySuperType = typeOf[super]
 }
 
-define main = B[3].bVal
+define main = B[3].mySuperType
                           
 define main = qsort[MyListB[26, 2, 1, -2, 35, 2]]
