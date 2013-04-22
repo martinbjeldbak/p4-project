@@ -18,8 +18,14 @@ public class TypeVisitor extends DefaultVisitor
   public TypeVisitor(){
     typeTable = new ArrayList<TypeSymbolInfo>();
     currentType = null;
-    //Add default types
-    typeTable.add(new TypeSymbolInfo(null, "Piece", -1, 0));
+    addStandardEnvironment();
+  }
+  void addStandardEnvironment(){
+    typeTable.add( new TypeSymbolInfo(null, "Piece", 1, -1, 0 ) );
+    typeTable.add( new TypeSymbolInfo(null, "Player", 0, -1, 0 ) );
+    typeTable.add( new TypeSymbolInfo(null, "Game", 1, -1, 0 ) );
+    typeTable.add( new TypeSymbolInfo(null, "GridBoard", 2, -1, 0 ) );
+    typeTable.add( new TypeSymbolInfo(null, "Square", 0, -1, 0 ) );
   }
   public ArrayList<TypeSymbolInfo> getTypeTable(){
     return this.typeTable;
