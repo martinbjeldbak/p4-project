@@ -32,36 +32,50 @@ public abstract class SimulatedBoard {
 	}
 	
 	public void mouseClicked( int button, int x, int y ){
-    	selected = null;
-    	hintSquares.clear();
-    	
-
         if( button == Input.MOUSE_LEFT_BUTTON ){
-	    	//Select a square if a piece is on it
 	    	Square s = findSquare(x, y);
-	        if( s != null ){
-	        	Piece p = game.getGame().getBoard().findPieceOnSquare(s);
-	        	if( p != null ){
-	        		List<Action> actions = p.actions( game.getGame() );
-	        		selected = s;
-	        		
-	        		//TODO: fix
-	        		for( Action a : actions ){
-	        			if( (Object)a instanceof MoveAction ){
-	        				MoveAction ma = (MoveAction)a;
-	        				hintSquares.add( ma.getTo() );
-	        			}
-	        		}
-	        		
-	        		//Start drag
-	        		dragged = p;
-	        		dragStartX = x;
-	        		dragStartY = y;
-	        		dragOffsetX = 0;
-	        		dragOffsetY = 0;
-	        		alignDrag();
-	        	}
-	        }
+	    	
+	    	if( null != selected && squareIsHinted( s ) ){
+	    		//Clicked on a square with an action
+	    		//Apply the action
+	    		Action act;
+	    		if( selected == s )
+	    			act = findDropAction( s );
+	    		else
+	    			act = findMoveAction( selected, s );
+	    		game.getGame().applyAction( act );
+	        	selected = null;
+	        	hintSquares.clear();
+	    	}
+	    	else{
+	        	selected = null;
+	        	hintSquares.clear();
+        	
+		    	//Select a square if a piece is on it
+		        if( s != null ){
+		        	Piece p = game.getGame().getBoard().findPieceOnSquare(s);
+		        	if( p != null ){
+		        		List<Action> actions = p.actions( game.getGame() );
+		        		selected = s;
+		        		
+		        		//TODO: fix
+		        		for( Action a : actions ){
+		        			if( (Object)a instanceof MoveAction ){
+		        				MoveAction ma = (MoveAction)a;
+		        				hintSquares.add( ma.getTo() );
+		        			}
+		        		}
+		        		
+		        		//Start drag
+		        		dragged = p;
+		        		dragStartX = x;
+		        		dragStartY = y;
+		        		dragOffsetX = 0;
+		        		dragOffsetY = 0;
+		        		alignDrag();
+		        	}
+		        }
+	    	}
         }
 	}
 	
@@ -77,14 +91,47 @@ public abstract class SimulatedBoard {
 			if( dragged != null ){
 				//TODO: check position and act
 				Square end = findSquare( dragStartX + dragOffsetX, dragStartY + dragOffsetY );
-				if( squareIsHinted( end ) ){
-					System.out.println("Stopped on valid square");
+				if( squareIsHinted( end ) && end != selected ){
+					//end == selected is handled in mousePressed!
+					Action act = findMoveAction( dragged.getSquare(), end );
+					game.getGame().applyAction( act );
+					
+			    	selected = null;
+			    	hintSquares.clear();
 				}
 			}
 		}
-		
+
 		dragged = null;
 	}
 	
 	protected abstract void alignDrag();
+	
+	private Action findDropAction( Square s ){
+		//TODO:
+		System.out.println("Not implemented");
+		return null;
+	}
+	
+	private Action findMoveAction( Square start, Square end ){
+		Piece p = game.getGame().getBoard().findPieceOnSquare( start );
+		if( p == null ){
+			System.out.println("Couldn't find piece!!!");
+			return null;
+		}
+		
+		for( Action a : p.actions( game.getGame() ) ){
+			Action startAction = a;
+			do{
+				if( (Object)a instanceof MoveAction ){
+					MoveAction ma = (MoveAction)a;
+					if( ma.getTo() == end && ma.getPiece() == p )
+						return startAction;
+				}
+			} while( (a = a.next()) != null );
+		}
+
+		System.out.println("Couldn't find Action!!!");
+		return null;
+	}
 }
