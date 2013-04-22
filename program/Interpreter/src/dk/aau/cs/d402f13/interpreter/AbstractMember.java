@@ -22,7 +22,7 @@ public class AbstractMember {
   public AbstractMember(AstNode definition) {
     if(definition.size() == 2) {
       function = true;
-      if (definition.get(1).getLast().type == Type.VARS) {
+      if (definition.get(1).size() > 0 && definition.get(1).getLast().type == Type.VARS) {
         varParams = true;
         minArity = definition.get(1).size() - 1;
       }
