@@ -1,4 +1,4 @@
-type Chess[] extends Game[]{
+type Chess[] extends Game["Chess"]{
 	define players = [ ChessPlayer[ "Black" ], ChessPlayer[ "White" ] ]
 	define board = let $black = players[0], $white = players[1] in
 		ChessBoard[]
@@ -17,8 +17,8 @@ type Chess[] extends Game[]{
 			.addPieces[ King[ $white ],    [ D1 ] ]
 }
 
-type WhiteSquare[] extends Square[];
-type BlackSquare[] extends Square[];
+type WhiteSquare[] extends Square[]
+type BlackSquare[] extends Square[]
 type ChessBoard[] extends GridBoard[ 8,8 ]{
 	define squareTypes[] = [ WhiteSquare, BlackSquare ]
 }
