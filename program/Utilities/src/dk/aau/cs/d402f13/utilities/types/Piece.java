@@ -1,11 +1,13 @@
 package dk.aau.cs.d402f13.utilities.types;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Piece {
 	private Player player;
 	private Square square = null;
+
+	public abstract String getImgPath();
+	public abstract List<Action> actions( Game g );
 	
 	public Square getSquare() {
 		return square;
@@ -15,17 +17,6 @@ public abstract class Piece {
 		this.square = square;
 	}
 
-	List<Action> actions = new ArrayList<Action>();
-	
-	public List<Action> playerActions(Game g) {
-		return actions;
-	}
-	
-	public void setPlayerActions(List<Action> actions) {
-		this.actions = actions;
-	}
-	
-	public abstract String getImgPath();
 
 	public Player getPlayer() {
 		return player;
