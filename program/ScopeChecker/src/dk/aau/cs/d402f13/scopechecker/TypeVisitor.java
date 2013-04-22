@@ -18,8 +18,14 @@ public class TypeVisitor extends DefaultVisitor
   public TypeVisitor(){
     typeTable = new ArrayList<TypeSymbolInfo>();
     currentType = null;
-    //Add default types
-    typeTable.add(new TypeSymbolInfo(null, "Piece", -1, 0));
+    addStandardEnvironment();
+  }
+  void addStandardEnvironment(){
+    typeTable.add( new TypeSymbolInfo(null, "Piece", 1, -1, 0 ) );
+    typeTable.add( new TypeSymbolInfo(null, "Player", 0, -1, 0 ) );
+    typeTable.add( new TypeSymbolInfo(null, "Game", 1, -1, 0 ) );
+    typeTable.add( new TypeSymbolInfo(null, "GridBoard", 2, -1, 0 ) );
+    typeTable.add( new TypeSymbolInfo(null, "Square", 0, -1, 0 ) );
   }
   public ArrayList<TypeSymbolInfo> getTypeTable(){
     return this.typeTable;
@@ -100,7 +106,10 @@ public class TypeVisitor extends DefaultVisitor
         member.IncrArg(); 
         varListIt.next();
       }
-      currentType.addAbstractMember(member);
+      currentType.addAbstractFunction(member);
+    }
+    else{   //if no varlist exists, the definition is an abstract constant
+      currentType.addAbstractConstant(member);
     }
     return null;
   }
@@ -121,13 +130,18 @@ public class TypeVisitor extends DefaultVisitor
     //find name
     Member member = new Member(it.next().value);
     
-    //find varlist, which is the members arguments
-    Iterator<AstNode> varListIt = it.next().iterator();
-    while (varListIt.hasNext()){
-      member.IncrArg();
-      varListIt.next();
+    //find varlist if any exist, which is the members arguments
+    if (it.hasNext() && it.next().type == Type.VARLIST){
+      Iterator<AstNode> varListIt = it.next().iterator();
+      while (varListIt.hasNext()){
+        member.IncrArg(); 
+        varListIt.next();
+      }
+      currentType.addConcreteFunction(member);
     }
-    currentType.addConcreteMember(member);
+    else{   //if no varlist exists, the definition is an abstract constant
+      currentType.addConcreteConstant(member);
+    }
     
     return null;
   }

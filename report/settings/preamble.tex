@@ -9,6 +9,17 @@
 %\usepackage[protrusion=true,factor=2000]{microtype} need beta 2.5 for XeTeX support
 \setsecnumdepth{subsection}
 
+%math
+\usepackage{amsmath}
+
+%big-step-semantic
+\newcommand{\infrule}[2]
+           {\parbox{4.5cm}{$$ \frac{#1}{#2}\hspace{.5cm}$$}}
+	
+\newcommand{\ra}{\rightarrow}
+\newcommand{\lag}{\langle}
+\newcommand{\rag}{\rangle}
+
 % LANGUAGE
 \usepackage{polyglossia} %XeTeX babel
 \setdefaultlanguage[variant=uk]{english}

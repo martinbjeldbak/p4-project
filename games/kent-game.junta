@@ -1,10 +1,10 @@
 type Solo[] extends Player[] {
   define winCondition[$gameState] =
-    size[matchSquares[
+    matchSquares[
       [A1, A2, A3, B1, B2, B3, C1, C2],
       /Black/,
       $gameState
-    ]] == 8
+    ].size == 8
 }
 type White[$player] extends Piece[$player] {
   define actions[$gameState] =

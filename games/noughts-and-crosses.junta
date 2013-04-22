@@ -4,12 +4,12 @@ type NacGame[] extends Game["Noughts and Crosses"] {
 }
 type NacPlayer[$pieceType] extends Player[] {
   define winCondition[$gameState] =
-    size[findSquares[
+    findSquares[
       /friend (n friend n) | (e friend e) |
 		(nw friend nw) | (ne friend ne ) friend/,
-      $gameState]] != 0
+      $gameState].size != 0
   define tieCondition[$gameState] =
-    isFull[$gameState.board]
+    $gameState.board.isFull
   define actions[$gameState] =
     addActions[$pieceType[this], $gameState.board.emptySquares]
 }

@@ -156,7 +156,6 @@ public class Interactive {
                   start = new Date();
                   ScopeChecker scopeChecker = new ScopeChecker();
                   scopeChecker.visit(ast);
-                  ast.print();
                   time = new Date().getTime() - start.getTime();
                   System.out.println("Scope checking took " + time + " ms");
                   if (line.equals(":i")) {

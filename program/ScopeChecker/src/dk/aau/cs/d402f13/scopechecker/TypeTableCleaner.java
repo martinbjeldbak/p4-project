@@ -17,18 +17,20 @@ public class TypeTableCleaner {
   void propagateMembers(ArrayList<TypeSymbolInfo> typeTable) throws ScopeError{
     for (TypeSymbolInfo tsi : typeTable){
        if (tsi.parent != null){
-         propagateAbstractMembers(tsi); //if parent has an abstract member, give it to this type as well + check for errors
-         propagateConcreteMembers(tsi); //if parent has an concrete member, give it to this type as well + check for errors
+         propagateAbstractFunctions(tsi); //if parent has an abstract member, give it to this type as well + check for errors
+         propagateConcreteFunctions(tsi); //if parent has an concrete member, give it to this type as well + check for errors
+         propagateAbstractConstants(tsi);
+         propagateConcreteConstants(tsi);
        }
     }
   }
-  void propagateAbstractMembers(TypeSymbolInfo tsi) throws ScopeError{
-    for (Member pm : tsi.parent.abstractMembers){
+  void propagateAbstractFunctions(TypeSymbolInfo tsi) throws ScopeError{
+    for (Member pm : tsi.parent.abstractFunctions){
       Boolean overridden = false;
-      for (Member m : tsi.concreteMembers){
+      for (Member m : tsi.concreteFunctions){
         if (m.name.equals(pm.name)){
          if (pm.args != m.args){
-          throw new ScopeError("Number of arguments does not match overloaded member " + m.name, tsi);
+          throw new ScopeError("Number of arguments does not match overloaded abstract function " + m.name, tsi);
         }
          else{
            overridden = true;
@@ -36,16 +38,16 @@ public class TypeTableCleaner {
       }
     }
     if (!overridden)
-      tsi.addAbstractMember(pm); //propagate the parents member to this type
+      tsi.addAbstractFunction(pm); //propagate the parents member to this type
     }
   }
-  void propagateConcreteMembers(TypeSymbolInfo tsi) throws ScopeError{
-    for (Member pm : tsi.parent.concreteMembers){
+  void propagateConcreteFunctions(TypeSymbolInfo tsi) throws ScopeError{
+    for (Member pm : tsi.parent.concreteFunctions){
       Boolean overridden = false;
-      for (Member m : tsi.concreteMembers){
+      for (Member m : tsi.concreteFunctions){
         if (m.name.equals(pm.name)){
          if (pm.args != m.args){
-          throw new ScopeError("Number of arguments does not match overloaded member " + m.name, tsi);
+          throw new ScopeError("Number of arguments does not match overloaded concrete function " + m.name, tsi);
         }
          else{
            overridden = true;
@@ -53,7 +55,36 @@ public class TypeTableCleaner {
       }
     }
     if (!overridden)
-      tsi.addConcreteMember(pm); //propagate the parents member to this type
+      tsi.addConcreteFunction(pm); //propagate the parents constant to this type
+    }
+  }
+  void propagateAbstractConstants(TypeSymbolInfo tsi) throws ScopeError{
+    for (Member pm : tsi.parent.abstractConstants){
+      Boolean overridden = false;
+      for (Member m : tsi.concreteConstants){
+        if (m.name.equals(pm.name)){
+           overridden = true;
+      }
+    }
+    if (!overridden)
+      tsi.addAbstractConstant(pm); //propagate the parents constant to this type
+    }
+  }
+  void propagateConcreteConstants(TypeSymbolInfo tsi) throws ScopeError{
+    for (Member pm : tsi.parent.concreteConstants){
+      Boolean overridden = false;
+      for (Member m : tsi.concreteConstants){
+        if (m.name.equals(pm.name)){
+         if (pm.args != m.args){
+          throw new ScopeError("Number of arguments does not match overloaded constant " + m.name, tsi);
+        }
+         else{
+           overridden = true;
+         }
+      }
+    }
+    if (!overridden)
+      tsi.addConcreteConstant(pm); //propagate the parents constant to this type
     }
   }
   ArrayList<TypeSymbolInfo> topologicalSort(ArrayList<TypeSymbolInfo> typeTable) throws ScopeError{
@@ -101,7 +132,7 @@ public class TypeTableCleaner {
   public void markAbstractTypes(ArrayList<TypeSymbolInfo> typeTable) {
     //if a type contains any abstract member (also propagated members), it must be marked as abstract for use in interpreter
     for (TypeSymbolInfo tsi : typeTable){
-      if (tsi.abstractMembers.size() != 0)
+      if (tsi.abstractFunctions.size() != 0 || tsi.abstractConstants.size() != 0)
         tsi.markASTnodeAsAbstract();
     }
   }

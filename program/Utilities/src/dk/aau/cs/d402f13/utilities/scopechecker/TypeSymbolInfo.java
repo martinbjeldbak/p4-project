@@ -9,10 +9,13 @@ public class TypeSymbolInfo extends SymbolInfo{
   public TypeSymbolInfo parent;
   public String parentName;
   public int args;
-  public ArrayList<String> parentVarArgs;   //var args for call to supers constructor
+  public ArrayList<String> parentVarArgs;       //var args for call to supers constructor
   public int parentCallArgs;                    //number of arguments in call to supers constructor
-  public ArrayList<Member> concreteMembers;
-  public ArrayList<Member> abstractMembers;
+  public ArrayList<Member> abstractConstants;   //constants with no impl
+  public ArrayList<Member> concreteConstants;   //constant with impl
+  public ArrayList<Member> abstractFunctions;   //functions with no impl
+  public ArrayList<Member> concreteFunctions;   //functions with impl
+
   public int children; //number of children extending this type in a direct link
  
   
@@ -23,8 +26,15 @@ public class TypeSymbolInfo extends SymbolInfo{
    this.parentName = "";
    this.parentCallArgs = 0;
    this.args = 0; //constructor args
-   this.concreteMembers = new ArrayList<Member>();
-   this.abstractMembers = new ArrayList<Member>();
+   this.abstractConstants = new ArrayList<Member>();
+   this.concreteConstants = new ArrayList<Member>();
+   this.abstractFunctions = new ArrayList<Member>(); 
+   this.concreteFunctions = new ArrayList<Member>();
+  }
+  
+  public TypeSymbolInfo(AstNode node, String name, int argCount, int line, int offset){
+    this(node, name, line, offset);
+    this.args = argCount;
   }
 
   public void setParent(TypeSymbolInfo parent){
@@ -33,11 +43,17 @@ public class TypeSymbolInfo extends SymbolInfo{
   public void setParentName(String parentName){
     this.parentName = parentName;
   }
-  public void addConcreteMember(Member member){
-    concreteMembers.add(member);
+  public void addConcreteFunction(Member member){
+    concreteFunctions.add(member);
   }
-  public void addAbstractMember(Member member){
-    abstractMembers.add(member);
+  public void addAbstractFunction(Member member){
+    abstractFunctions.add(member);
+  }
+  public void addConcreteConstant(Member member){
+    concreteConstants.add(member);
+  }
+  public void addAbstractConstant(Member member){
+    abstractConstants.add(member);
   }
   public void incrArgCount(){
     this.args++;
@@ -46,7 +62,7 @@ public class TypeSymbolInfo extends SymbolInfo{
     this.parentCallArgs++;
   }
 
-  public void markASTnodeAsAbstract() {
+  public void markASTnodeAsAbstract() { //the scopechecker marks abstract types for the interpreter
    this.node.type = Type.ABSTRACT_TYPE_DEF; 
   }
 }
