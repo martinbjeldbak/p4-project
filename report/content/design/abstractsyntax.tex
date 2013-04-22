@@ -1,0 +1,97 @@
+\section{Abstract syntax}
+In the following subsections we will describe how programs, written in
+\productname{}, behave. First we begin by defining the different formulation
+rules, followed by our big-step-semantics for \productname{}.
+
+\subsection{Syntactic categories}
+Before we can describe the behaviour of programs written in
+\productname{}, we must first present the syntax of programs. At this point, we 
+are only interested in a notion of abstract syntax because we do not need to
+concern ourselves with operator precedence and so forth.
+
+The abstract syntax of programming languages is defined as
+follows:\cite[page 27]{tt-hh}
+
+\begin{dlist}
+  \item A collection of syntactic categories
+  \item For each syntactic category we have a finite set of formulation rules
+    that define how the elements of the given category can be built and
+    combined
+\end{dlist}
+
+Table \ref{table:syn-cat} shows the syntactic cateogries for
+\productname{}.
+
+\begin{table}[ht]
+  \begin{center}
+    \begin{tabular}{rl}
+      \hline
+      $n \in$ & $\mathbf{Integer}$       \\
+      $x \in$ & $\mathbf{Variable}$      \\
+      $s \in$ & $\mathbf{String}$        \\
+      $E \in$ & $\mathbf{Expression}$    \\
+      $P \in$ & $\mathbf{Pattern}$       \\
+      $L \in$ & $\mathbf{List}$          \\
+      $X \in$ & $\mathbf{Variable list}$ \\
+      $Y \in$ & $\mathbf{Coordinate}$    \\
+      $Z \in$ & $\mathbf{Direction}$     \\
+      $C \in$ & $\mathbf{Constant}$      \\
+      $T \in$ & $\mathbf{Type}$          \\
+      $D \in$ & $\mathbf{Definitions}$   \\
+      \hline
+    \end{tabular}  
+    \capt{The syntactic categories of \productname{}.}
+    \label{table:syn-cat}
+  \end{center}
+\end{table}
+
+In \tableref{table:syn-cat} we have one letter that defines one syntactic
+category. For instance we have $n \in \mathbf{Integer}$, which means that when
+we see a $n$ in the formulation rules this is actually an integer value.
+
+\subsection{Formulation rules}
+
+Each syntactic category is used in one or more of the formulation rules
+presented in \figref{fig:form-rules}. The $\mathbf{::=}$ means that the
+left-hand side of the rule can be any one of the $\for$-separated right-hand
+sides.
+
+\begin{figure}[ht]
+  \begin{center}
+    \begin{tabular}[ht]{r p{10cm}}
+      $E\; \mathbf{::=}$ & $n$ \for $x$ \for $s$ \for $Y$ \for $Z$ \for $T$ \for $C$ \for
+      $L$ \for $\texttt{-} E$ \for $\texttt{(}\; E\; \texttt{)}$ \for
+      $\texttt{/}\; P\; \texttt{/}$ \for $E_{1}\; L$ \for $E_{1}\texttt{.}C$
+      \for $\texttt{\#}\; X\; \texttt{=>}\; E$ \for $\texttt{if}\; E_{1}\;
+      \texttt{then}\; E_{2}\; \texttt{else}\; E3$ \for $E_{1}\; \texttt{is}\;
+      E_{2}$ \for $\texttt{not}\; E$ \for $E_{1}\; \texttt{and}\; E_{2}$ \for
+      $E_{1} \;\texttt{or}\; E_{2}$ \for $E_{1}\; \texttt{==}\; E_{2}$ \for
+      $E_{1}\; \texttt{!=}\; E_{2}$ \for $E_{1}\; \texttt{<}\; E_{2}$ \for
+      $E_{1}\; \texttt{>}\; E_{2}$ \for $E_{1}\; \texttt{<=}\; E_{2}$ \for
+      $E_{1}\; \texttt{>=}\; E_{2}$ \for $E_{1}\; \texttt{+}\; E_{2}$ \for
+      $E_{1}\; \texttt{-}\; E_{2}$ \for $E_{1}\; \texttt{*}\; E_{2}$ \for
+      $E_{1}\; \texttt{/}\; E_{2}$ \for $E_{1}\; \texttt{\%}\; E_{2}$ \for
+      \texttt{this} \for \texttt{super} \for $\texttt{let}\; x_{1}\;
+      \texttt{=}\; E_{1},\; x_{2}\; \texttt{=}\; E_{2},\; \cdots,\; x(k)\;
+      \texttt{=}\; E(k)\; \texttt{in}\; E(k+1)$ \\
+      $L\; ::=$ & $\texttt{[} E_{1},\; \cdots, E(k) \texttt{]}$ \\
+      $X\; ::=$ & $\texttt{[} x_{1},\; \cdots,\; x(k) \texttt{]}$ \for
+      $\texttt{[} x_{1},\; \cdots,\; \dots x(k) \texttt{]}$ \for $\texttt{[}
+      \dots x \texttt{]}$ \\
+      $D\; ::=$ & $\texttt{define}\; C\; \texttt{=}\; E$ \for $\texttt{define}\;
+      C\; X\; \texttt{=}\; E$ \for $\texttt{type}\; T\; X$ \for
+      $\texttt{define}\; \texttt{abstract}\; C\; X$ \for $\texttt{define}\;
+      \texttt{abstract}\; T\;  X\; \texttt{extends}\; T\;  L$ \for
+      $\texttt{define}\; \texttt{abstract}\; T\;  X\; \texttt{extends}\; T\; L\;
+      D$ \for $\texttt{define}\; \texttt{abstract}\; C$ 
+    \end{tabular}  
+    \capt{The formulation rules for the syntactic categories of \productname{}.}
+    \label{fig:form-rules} 
+  \end{center}
+\end{figure}
+
+In \figref{fig:form-rules} we have used ``$\cdots$'' to illustrate a repetition
+of some element in the rule. We have also used the slightly different
+$``\dots''$ to illustrate the three dots that precede a variable argument (vars)
+which we presented in \secref{sec:grammar}.
+

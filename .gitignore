@@ -9,3 +9,10 @@ report/*.pdf
 *.blg
 *.class
 docs/gruppekontrakt.pdf
+/games/test.junta
+/program/IG/ast.dot
+/program/Parser/ast.dot
+/program/ScannerParser/bin/dk/aau/cs/d402f13/ScannerParser/lexer/lexer.dat
+/program/ScannerParser/bin/dk/aau/cs/d402f13/ScannerParser/parser/parser.dat
+/program/ScopeChecker/ast.dot
+/report/listings/scopeCheckerConstructor.java
