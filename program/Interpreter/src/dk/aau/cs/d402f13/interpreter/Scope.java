@@ -9,11 +9,17 @@ public class Scope {
   private Scope parent;
   private HashMap<String, Value> variableValues = new HashMap<String, Value>();
   
+  private ObjectValue thisObject;
+  
   /**
    * Instantiate a new, empty scope.
    */
   public Scope() {
     this.parent = null;
+  }
+  
+  public Scope(ObjectValue thisObject) {
+    this.thisObject = thisObject;
   }
 
   /**
@@ -22,6 +28,18 @@ public class Scope {
    */
   public Scope(Scope parent) {
     this.parent = parent;
+    if (parent != null) {
+      thisObject = parent.thisObject;
+    }
+  }
+  
+  public Scope(Scope parent, ObjectValue thisObject) {
+    this.parent = parent;
+    this.thisObject = thisObject;
+  }
+  
+  public ObjectValue getThis() {
+    return thisObject;
   }
   
   /**

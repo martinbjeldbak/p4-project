@@ -8,6 +8,16 @@ import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public class IntValue extends Value {
   private final int value;
+  
+  private static TypeValue type = new TypeValue("Integer", 1, false);
+  
+  public TypeValue getType() {
+    return type;
+  }
+  
+  public static TypeValue type() {
+    return type;
+  }
 
   public IntValue(String value) {
       this.value = Integer.parseInt(value);
@@ -78,30 +88,49 @@ public class IntValue extends Value {
   /** {@inheritDoc}  */
   @Override
   public Value add(Value other) throws TypeError {
-    return new IntValue(this.value + ((IntValue)other).getValue());
+    if(other instanceof IntValue)
+      return new IntValue(this.value + ((IntValue)other).getValue());
+    else if(other instanceof StrValue)
+      return new StrValue(value + ((StrValue)other).getValue());
+    throw new TypeError("Addition cannot be done on ints with " + other);
   }
   
   /** {@inheritDoc}  */
   @Override
   public Value subtract(Value other) throws TypeError {
-    return new IntValue(this.value - ((IntValue)other).getValue());
+    if(other instanceof IntValue)
+      return new IntValue(this.value - ((IntValue)other).getValue());
+    throw new TypeError("Subtraction cannot be done on ints with " + other);   
   }
   
   /** {@inheritDoc}  */
   @Override
   public Value multiply(Value other) throws TypeError {
-    return new IntValue(this.value * ((IntValue)other).getValue());
+    if(other instanceof IntValue)
+      return new IntValue(this.value * ((IntValue)other).getValue());
+    throw new TypeError("Multiplication cannot be done on ints with " + other);
   }
   
   /** {@inheritDoc}  */
   @Override
   public Value divide(Value other) throws TypeError, DivideByZeroError {
-    IntValue rOperand = (IntValue)other;
-    
-    if(rOperand.getValue() == 0)
-      throw new DivideByZeroError("Division by 0");
-    
-    return new IntValue(this.value / rOperand.getValue());
+    if(other instanceof IntValue) {
+      IntValue rOperand = (IntValue)other;
+      
+      if(rOperand.getValue() == 0)
+        throw new DivideByZeroError("Division by 0");
+      
+      return new IntValue(this.value / rOperand.getValue());
+    }
+    throw new TypeError("Division cannot be done on ints with " + other);
+  }
+  
+  /** {@inheritDoc}  */
+  @Override
+  public Value mod(Value other) throws TypeError {
+    if(other instanceof IntValue)
+      return new IntValue(value % ((IntValue)other).getValue());
+    throw new TypeError("Modular arithmetic cannot be done on ints with " + other);
   }
   
   @Override

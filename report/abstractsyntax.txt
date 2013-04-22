@@ -1,0 +1,30 @@
+Syntactic categories:
+
+n = Integers
+x = Variables
+s = String
+E = Expressions
+P = Patterns
+L = List
+X = Variable list
+Y = C|dinates
+Z = Directions
+C = Constants
+T = Types
+D = Definitions
+
+Formulation rules:
+% ..  = sequence
+% ... = ``tripledots''
+
+E ::= n | x | o | Y | Z | T | C | L | - E | ( E ) | / P / 
+  | E1 L | E1.C | # X => E |if E1 then E2 else E3 | E1 is E2 
+  | not E | E1 and E2 | E1 | E2 |E1 == E2 | E1 != E2 | E1 < E2 
+  | E1 > E2 | E1 <= E2 | E1 >= E2 |E1 + E2 | E1 - E2 | E1 * E2 
+  | E1 / E2 | E1 % E2 | this | super 
+  | let x1 = E1, x2 = E2, .., x(k) = E(k) in E(k+1)
+L ::= [ E1, .., E(k) ]
+X ::= [ x1, .., x(k) ] | [ x1, .., ...x(k) ] | [ ...x ]
+D ::= define C = E | define C  X = E | define abstract C 
+  | define abstract C  X | type T  X | define abstract T  X
+    extends T  L | define abstract T  X extends T  L  D

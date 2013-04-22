@@ -8,6 +8,19 @@ import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public abstract class Value {
   
+  public abstract TypeValue getType();
+  
+  public boolean is(TypeValue type) {
+    return getType().isSubtypeOf(type);
+  }
+  
+  public Value as(TypeValue type) throws StandardError {
+    if (getType() == type) {
+      return this;
+    }
+    throw new TypeError("Invalid cast to type " + type);
+  }
+  
   public Value call(Interpreter interpreter, Value ... actualParameters) throws StandardError {
     throw new TypeError("This value does not support being called");
   }
@@ -76,6 +89,9 @@ public abstract class Value {
    * @return a true BoolValue if the values are equal
    */
   public BoolValue equalsOp(Value other) {
+    if (this == other) {
+      return BoolValue.trueValue();
+    }
     return BoolValue.falseValue();
   }
   
@@ -132,11 +148,26 @@ public abstract class Value {
   }
   
   /**
+   * The modulo '%' operator. Returns a new Value.
+   * @param other the RHS of the modulo operator
+   * @return      a new value as a result of the modulo operation
+   * @throws TypeError if the types aren't compatible
+   */
+  public Value mod(Value other) throws TypeError {
+    throw new TypeError("This value does not support modulo");
+  }
+  
+  /**
    * Negates the value.
    * @return a new value as result of the negation
    * @throws TypeError
    */
   public Value negate() throws TypeError {
     throw new TypeError("This value does not support negation");
+  }
+  
+  @Override
+  public String toString() {
+    return getType().toString() + "@" + hashCode();
   }
 }

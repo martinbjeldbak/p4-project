@@ -3,6 +3,7 @@ package dk.aau.cs.d402f13.simulator;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.IOException;
+import java.util.List;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
@@ -17,12 +18,17 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.util.ResourceLoader;
 
+import dk.aau.cs.d402f13.utilities.types.Action;
+import dk.aau.cs.d402f13.utilities.types.MoveAction;
+import dk.aau.cs.d402f13.utilities.types.Piece;
+import dk.aau.cs.d402f13.utilities.types.Square;
+
 public class Simulator extends BasicGame {
 		
 	private SimulatedGame game = null;
 	TrueTypeFont gtwFont = null;
 	
-	public Simulator(String gamePath) {
+	public Simulator(String gamePath) throws CloneNotSupportedException {
 		super("Junta Simulator");
 		game = new SimulatedGame( new ChessGame() );
 	}
@@ -80,13 +86,30 @@ public class Simulator extends BasicGame {
 
 	@Override
 	public void update(GameContainer gc, int d) throws SlickException {
-        Input input = gc.getInput();
-
-        int x, y;
-        if ( input.isMousePressed(Input.MOUSE_LEFT_BUTTON) ) {
-            x = input.getMouseX();
-            y = input.getMouseY();
-            System.out.println("Mouse click detected: " + x + "x" + y);
+        
+	}
+	
+	@Override
+	public void mousePressed( int button, int x, int y ){
+        if( button == Input.MOUSE_LEFT_BUTTON ){
+        	//Select a square if a piece is on it
+        	game.getBoard().setSelected(null);
+        	game.getBoard().clearHints();
+        	Square s = game.getBoard().findSquare(x, y);
+	        if( s != null ){
+	        	Piece p = game.getGame().getBoard().findPieceOnSquare(s);
+	        	if( p != null ){
+	        		List<Action> actions = p.actions( game.getGame() );
+	        		game.getBoard().setSelected( s );
+	        		
+	        		for( Action a : actions ){
+	        			if( (Object)a instanceof MoveAction ){
+	        				MoveAction ma = (MoveAction)a;
+	        				game.getBoard().addHint( ma.getTo() );
+	        			}
+	        		}
+	        	}
+	        }
         }
 	}
 	
@@ -95,8 +118,7 @@ public class Simulator extends BasicGame {
 		return "Junta Simulator - " + game.getTitle();
 	}
 
-	public static void main(String[] args) throws SlickException { 
-		
+	public static void main(String[] args) throws SlickException, CloneNotSupportedException {
 		Simulator juntaSimulator = new Simulator("chess.junta");
 		AppGameContainer app = new AppGameContainer(juntaSimulator);
 		app.setDisplayMode(1024, 600, false);

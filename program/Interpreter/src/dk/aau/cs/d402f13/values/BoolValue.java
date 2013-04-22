@@ -7,6 +7,16 @@ public class BoolValue extends Value {
   
   private static BoolValue trueValue = new BoolValue();
   private static BoolValue falseValue = new BoolValue();
+  
+  private static TypeValue type = new TypeValue("Boolean", 1, false);
+  
+  public TypeValue getType() {
+    return type;
+  }
+  
+  public static TypeValue type() {
+    return type;
+  }
 
   private BoolValue() {
   }
@@ -35,6 +45,14 @@ public class BoolValue extends Value {
     if (this == falseValue && other == falseValue)
       return falseValue;
     return trueValue;
+  }
+  
+  /** {@inheritDoc}  */
+  @Override
+  public Value add(Value other) throws TypeError {
+    if(other instanceof StrValue)
+      return new StrValue(this + ((StrValue)other).getValue());
+    throw new TypeError("Addition cannot be done on booleans with " + other);
   }
   
   @Override
