@@ -1,8 +1,6 @@
 package dk.aau.cs.d402f13.simulator;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
@@ -10,7 +8,6 @@ import dk.aau.cs.d402f13.utilities.types.Game;
 import dk.aau.cs.d402f13.utilities.types.Gridboard;
 
 public class SimulatedGame {
-	List<SimulatedPieces> pieces;
 	Hashtable<String,Image> imgCache = new Hashtable<String,Image>();
 	
 	SimulatedGridboard board = null;
@@ -43,11 +40,6 @@ public class SimulatedGame {
 			board = new SimulatedGridboard( this, (Gridboard)obj );
 		else
 			; //TODO:
-		pieces = new ArrayList<SimulatedPieces>();
-	}
-	
-	public List<SimulatedPieces> getPieces(){
-		return pieces;
 	}
 	
 	public Game getGame(){
