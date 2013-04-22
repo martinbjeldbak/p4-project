@@ -280,6 +280,9 @@ public class Interpreter extends Visitor {
     if (thisObject == null || thisObject.getParent() == null) {
       throw new NameError("Invalid use of super-keyword");
     }
+    if (thisObject.getParent() instanceof ObjectValue) {
+      return ((ObjectValue)thisObject.getParent()).getAsSuper();
+    }
     return thisObject.getParent();
   }
 
