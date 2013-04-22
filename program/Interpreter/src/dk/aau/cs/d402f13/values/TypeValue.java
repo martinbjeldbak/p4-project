@@ -163,14 +163,14 @@ public class TypeValue extends Value {
     }
   }
   
-  public static Value expect(Value parameter, TypeValue type) throws StandardError {
+  public static Value expect(Value parameter, TypeValue type) throws TypeError {
     if (!parameter.is(type)) {
       throw new TypeError("Invalid type for value, expected " + type.toString());
     }
     return parameter.as(type);
   }
 
-  public static Value expect(Value[] parameters, int i, TypeValue type) throws StandardError {
+  public static Value expect(Value[] parameters, int i, TypeValue type) throws TypeError {
     if (!parameters[i].is(type)) {
       throw new TypeError("Invalid type for argument #" + i + ", expected " + type.toString());
     }
