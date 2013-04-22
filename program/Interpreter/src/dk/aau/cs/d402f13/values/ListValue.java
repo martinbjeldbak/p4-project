@@ -34,10 +34,17 @@ public class ListValue extends Value {
   
   @Override
   public BoolValue equalsOp(Value other) {
-    if (!(other instanceof ListValue)) {
+    if(other.isNot(ListValue.type())) {
       return BoolValue.falseValue();
     }
-    Value[] otherValues = ((ListValue)other).getValues();
+
+    Value[] otherValues = new Value[0];
+    try {
+      otherValues = ((ListValue)other.as(ListValue.type())).getValues();
+    } catch (TypeError typeError) {
+      return BoolValue.falseValue();
+    }
+
     if (otherValues.length != values.length) {
       return BoolValue.falseValue();
     }
@@ -64,34 +71,35 @@ public class ListValue extends Value {
   /** {@inheritDoc}  */
   @Override
   public Value add(Value other) throws TypeError {
-    if(other instanceof ListValue) {
-      Value[] oValues = ((ListValue)other).getValues();  
+    if(other.is(ListValue.type())) {
+      Value[] oValues = ((ListValue)other.as(ListValue.type())).getValues();
       Value[] ret = new Value[values.length + oValues.length];
-      
+
       System.arraycopy(values, 0, ret, 0, values.length);
       System.arraycopy(oValues, 0, ret, values.length, oValues.length);
-      
+
       return new ListValue(ret);
     }
     // Else add the single element to the list
     Value[] ret = new Value[values.length + 1];
     System.arraycopy(values, 0, ret, 0, values.length);
     ret[values.length] = other;
-    
+
     return new ListValue(ret);
   }
   
   /** {@inheritDoc}  */
   @Override
   public Value subtract(Value other) throws TypeError {
-    if(other instanceof ListValue) {
-      List<Value> oValueList = Arrays.asList(((ListValue)other).getValues());      
+    if(other.is(ListValue.type())) {
+      Value[] oValues = ((ListValue)other.as(ListValue.type())).getValues();
+      List<Value> oValueList = Arrays.asList(oValues);
       List<Value> valueList = Arrays.asList(values);
- 
+
       for(Value val : oValueList) {
         if(valueList.contains(val)) {
           try {
-          valueList.remove(val);
+            valueList.remove(val);
           }
           catch(UnsupportedOperationException uoe) {
             valueList = new ArrayList<Value>(valueList);
@@ -104,17 +112,17 @@ public class ListValue extends Value {
     }
     // Else remove the single element
     List<Value> valueList = Arrays.asList(values);
-    
+
     if(valueList.contains(other)) {
       try {
         valueList.remove(other);
       }
       catch(UnsupportedOperationException uoe) {
         valueList = new ArrayList<Value>(valueList);
-        valueList.remove(other);         
+        valueList.remove(other);
       }
     }
-  
+
     Value[] resultArray = new Value[valueList.size()];
     return new ListValue(valueList.toArray(resultArray));
   }
@@ -127,7 +135,7 @@ public class ListValue extends Value {
     if(actualParameters.length < 1)
       throw new ArgumentError("Unexpected number of arguments, expected at least 1");
 
-    if(!(actualParameters[0] instanceof IntValue))
+    if(actualParameters[0].isNot(IntValue.type()))
       throw new ArgumentError("First argument needs to be of type int");
     a = ((IntValue)actualParameters[0]).getValue();
 
@@ -137,7 +145,7 @@ public class ListValue extends Value {
       throw new ArgumentError("Argument out of bounds");
     
     if(actualParameters.length == 2) {
-      if(!(actualParameters[1] instanceof IntValue))
+      if(actualParameters[1].isNot(IntValue.type()))
         throw new ArgumentError("Second argument also needs to be of type int");
       b = ((IntValue)actualParameters[1]).getValue();
       
