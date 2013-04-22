@@ -43,7 +43,7 @@ public class ObjectValue extends Value {
   
   /** {@inheritDoc}  */
   @Override
-  public Value as(TypeValue type) throws StandardError {
+  public Value as(TypeValue type) throws TypeError {
     Value obj = this;
     while (obj.getType() != type) {
       if (!(obj instanceof ObjectValue) || ((ObjectValue)obj).parent == null) {

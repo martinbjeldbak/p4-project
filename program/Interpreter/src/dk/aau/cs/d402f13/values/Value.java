@@ -14,7 +14,7 @@ public abstract class Value {
     return getType().isSubtypeOf(type);
   }
   
-  public Value as(TypeValue type) throws StandardError {
+  public Value as(TypeValue type) throws TypeError {
     if (getType() == type) {
       return this;
     }
