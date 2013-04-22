@@ -1,15 +1,14 @@
 package dk.aau.cs.d402f13.utilities.scopechecker;
-import dk.aau.cs.d402f13.utilities.scopechecker.SymbolTable.SymbolType;
 
 public class SymbolInfo{
-  SymbolType type;
-  String name;
-  int line;
-  int offset;
+  public String name;
+  public int line;
+  public int offset;
+  public boolean declared;
   
-  public SymbolInfo(SymbolType type, String name, int line, int offset){
-    this.type = type;
+  public SymbolInfo(String name, boolean declared, int line, int offset){
     this.name = name;
+    this.declared = declared;
     this.line = line;
     this.offset = offset;
   }
@@ -24,7 +23,7 @@ public class SymbolInfo{
   //override equals and hashcode so symbols can be put in a hashmap
   @Override
   public int hashCode() {
-    return this.name.hashCode() ^ this.type.hashCode();
+    return this.name.hashCode() ^ this.getClass().hashCode();
   }
 
   @Override
@@ -37,7 +36,7 @@ public class SymbolInfo{
           return false;
   
       SymbolInfo other = (SymbolInfo) obj;
-      if (other.name.equals(this.name) && other.type.equals(this.type))
+      if (other.name.equals(this.name))
         return true;
       return false;
   }

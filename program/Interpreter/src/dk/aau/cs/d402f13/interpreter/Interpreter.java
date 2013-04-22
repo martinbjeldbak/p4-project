@@ -5,6 +5,7 @@ import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.ast.Visitor;
 import dk.aau.cs.d402f13.utilities.errors.*;
+import dk.aau.cs.d402f13.utilities.errors.InternalError;
 import dk.aau.cs.d402f13.values.*;
 
 public class Interpreter extends Visitor {
@@ -147,7 +148,11 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitThis(AstNode node) throws StandardError {
-    ObjectValue thisObject = symbolTable.getThis();
+    Value thisValue = symbolTable.getThis();
+    if (!(thisValue instanceof ObjectValue)) {
+      throw new NameError("Invalid use of super-keyword");
+    }
+    ObjectValue thisObject = (ObjectValue)thisValue;
     if (thisObject == null) {
       throw new NameError("Invalid use of this-keyword");
     }
@@ -165,14 +170,12 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitVarlist(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    throw new InternalError("Invalid visit");
   }
 
   @Override
   protected Value visitVars(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    throw new InternalError("Invalid visit");
   }
 
   @Override
@@ -216,7 +219,7 @@ public class Interpreter extends Visitor {
     
     if (node.getLast().type == AstNode.Type.TYPE_BODY) {
       for (AstNode defNode : node.getLast()) {
-        type.addMember(defNode.getFirst().value, new Member(defNode));
+        type.addTypeMember(defNode.getFirst().value, new Member(defNode));
       }
     }
     symbolTable.addType(name, type);
@@ -247,7 +250,7 @@ public class Interpreter extends Visitor {
           type.addAbstractMember(defNode.getFirst().value, new AbstractMember(defNode));
         }
         else {
-          type.addMember(defNode.getFirst().value, new Member(defNode));
+          type.addTypeMember(defNode.getFirst().value, new Member(defNode));
         }
       }
     }
@@ -257,14 +260,12 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitTypeBody(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    throw new InternalError("Invalid visit");
   }
 
   @Override
   protected Value visitAbstractDef(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    throw new InternalError("Invalid visit");
   }
 
   @Override
@@ -279,23 +280,42 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitSuper(AstNode node) throws StandardError {
-    ObjectValue thisObject = symbolTable.getThis();
+    Value thisValue = symbolTable.getThis();
+    if (!(thisValue instanceof ObjectValue)) {
+      throw new NameError("Invalid use of super-keyword");
+    }
+    ObjectValue thisObject = (ObjectValue)thisValue;
     if (thisObject == null || thisObject.getParent() == null) {
       throw new NameError("Invalid use of super-keyword");
+    }
+    if (thisObject.getParent() instanceof ObjectValue) {
+      return ((ObjectValue)thisObject.getParent()).getAsSuper();
     }
     return thisObject.getParent();
   }
 
   @Override
   protected Value visitElement(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    Value object = visit(node.getFirst());
+    for (int i = 1; i < node.size(); i++) {
+      AstNode memberAccess = node.get(i);
+      String memberName = memberAccess.getFirst().value;
+      Value memberObject = object.getMember(memberName);
+      if (memberObject instanceof ConstMemberValue) {
+        memberObject = ((ConstMemberValue)memberObject).evaluate(this, object);
+      }
+      object = memberObject;
+      for (int j = 1; j < memberAccess.size(); j++) {
+        ListValue list = (ListValue)visit(memberAccess.get(j));
+        object = object.call(this, list.getValues());
+      }
+    }
+    return object;
   }
 
   @Override
   protected Value visitMemberAccess(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    throw new InternalError("Invalid visit");
   }
 
   @Override
@@ -325,7 +345,7 @@ public class Interpreter extends Visitor {
           v = ((BoolValue)v).or((BoolValue)val);
           break;
         default:
-          v = val;
+          throw new InternalError("Unimplemented operator: " + child.operation);
         }
       }
       else
@@ -358,7 +378,7 @@ public class Interpreter extends Visitor {
             : BoolValue.falseValue();
         break;
       default:
-        v = val;
+        throw new InternalError("Unimplemented operator: " + child.operation);
       }
     }
     return v;
@@ -386,7 +406,7 @@ public class Interpreter extends Visitor {
         v = v.greaterThanEq(val);
         break;
       default:
-        v = val;
+        throw new InternalError("Unimplemented operator: " + child.operation);
       }
     }
     return v;
@@ -408,7 +428,7 @@ public class Interpreter extends Visitor {
         v = v.subtract(val);
         break;
       default:
-        v = val;
+        throw new InternalError("Unimplemented operator: " + child.operation);
       }
     }
     return v;
@@ -433,7 +453,7 @@ public class Interpreter extends Visitor {
         v = v.mod(val);
         break;
       default:
-        v = val;
+        throw new InternalError("Unimplemented operator: " + child.operation);
       }
     }
     return v;

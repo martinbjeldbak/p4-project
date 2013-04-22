@@ -1,6 +1,7 @@
 package dk.aau.cs.d402f13.values;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import dk.aau.cs.d402f13.interpreter.Callable;
 import dk.aau.cs.d402f13.interpreter.Interpreter;
@@ -11,9 +12,11 @@ import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.errors.ArgumentError;
 import dk.aau.cs.d402f13.utilities.errors.NameError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public class TypeValue extends Value {
   private HashMap<String, Member> members = new HashMap<String, Member>();
+  private HashMap<String, Value> staticMembers = new HashMap<String, Value>();
   private String[] formalParameters;
   private String name;
   private String varParams = null;
@@ -47,6 +50,15 @@ public class TypeValue extends Value {
       this.formalParameters[i] = params.get(i).value;
     }
   }
+
+  public TypeValue(String name, int minArity, boolean varArgs) {
+    this.name = name;
+    formalParameters = new String[minArity];
+    if (varArgs) {
+      varParams = "";
+    }
+    this.callable = new DefaultConstructor(this);
+  }
   
   public TypeValue(String name, AstNode params, String parent, AstNode parenParams) {
     this(name, params);
@@ -62,15 +74,6 @@ public class TypeValue extends Value {
       varParams = "";
     }
   }
-  
-  public TypeValue(String name, int minArity, boolean varArgs) {
-    this.name = name;
-    formalParameters = new String[minArity];
-    if (varArgs) {
-      varParams = "";
-    }
-    this.callable = new DefaultConstructor(this);
-  }
 
   public boolean isSubtypeOf(TypeValue type) {
     if (type == this) {
@@ -80,6 +83,15 @@ public class TypeValue extends Value {
       return true;
     }
     return false;
+  }
+  
+  public void ensureSuperType(Interpreter interpreter) throws NameError {
+    if (parent == null && parentName != null) {
+      parent = interpreter.getSymbolTable().getType(parentName);
+      if (parent == null) {
+        throw new NameError("Type extends undefined type: " + parentName);
+      }
+    }
   }
   
   public boolean isSupertypeOf(TypeValue type) {
@@ -99,17 +111,15 @@ public class TypeValue extends Value {
     return name;
   }
   
-  public void addMember(String name, Member member) {
-    members.put(name, member);
-  }
-  
-  public Member getMember(String name) {
+  public Member getTypeMember(String name) {
     return members.get(name);
   }
   
-  @Override
-  public Value call(Interpreter interpreter, Value... actualParameters)
-      throws StandardError {
+  public void addTypeMember(String name, Member member) {
+    members.put(name, member);
+  }
+  
+  public Value getInstance(Interpreter interpreter, Value... actualParameters) throws StandardError {
     if (varParams == null) {
       if (actualParameters.length != formalParameters.length) {
         throw new ArgumentError("Invalid number of arguments, expected " + formalParameters.length);
@@ -143,36 +153,50 @@ public class TypeValue extends Value {
         interpreter.getSymbolTable().addVariable(varParams, new ListValue(varParamsList));
       }
       // Find parent
-      if (parentName != null && parent == null) {
-        parent = interpreter.getSymbolTable().getType(parentName);
-        if (parent == null) {
-          throw new NameError("Type extends undefined type: " + parentName);
-        }
-      }
+      ensureSuperType(interpreter);
       if (parent == null) {
         ret = new ObjectValue(this, scope);
       }
       else {
         Value[] parentParams = ((ListValue)interpreter.visit(parentConstructor)).getValues();
-        ret = new ObjectValue(this, scope, parent.call(interpreter, parentParams));
+        ret = new ObjectValue(this, scope, parent.getInstance(interpreter, parentParams));
       }
       ret.setScope(new Scope(scope, ret));
+      interpreter.getSymbolTable().openScope(ret.getScope());
+      for (Entry<String, Member> e : members.entrySet()) {
+        ret.addMember(e.getKey(), e.getValue().getValue(interpreter));
+      }
+      interpreter.getSymbolTable().closeScope();
       interpreter.getSymbolTable().closeScope();
       return ret;
     }
   }
   
-  public static Value expect(Value parameter, TypeValue type) throws StandardError {
+  @Override
+  public Value call(Interpreter interpreter, Value... actualParameters)
+      throws StandardError {
+    return getInstance(interpreter, actualParameters);
+  }
+
+  public static Value expect(Value parameter, TypeValue type) throws TypeError {
     if (!parameter.is(type)) {
-      throw new ArgumentError("Invalid type for value, expected " + type.toString());
+      throw new TypeError("Invalid type for value, expected " + type.toString());
     }
     return parameter.as(type);
   }
 
-  public static Value expect(Value[] parameters, int i, TypeValue type) throws StandardError {
+  public static Value expect(Value[] parameters, int i, TypeValue type) throws TypeError {
     if (!parameters[i].is(type)) {
-      throw new ArgumentError("Invalid type for argument #" + i + ", expected " + type.toString());
+      throw new TypeError("Invalid type for argument #" + i + ", expected " + type.toString());
     }
     return parameters[i].as(type);
+  }
+
+  public Value getStaticMember(String member) {
+    return staticMembers.get(member);
+  }
+  
+  public void addStaticMember(String member, Value value) {
+    staticMembers.put(member, value);
   }
 }
