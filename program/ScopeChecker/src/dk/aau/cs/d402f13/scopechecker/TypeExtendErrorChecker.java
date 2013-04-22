@@ -3,7 +3,6 @@ package dk.aau.cs.d402f13.scopechecker;
 import java.util.ArrayList;
 import java.util.HashSet;
 import dk.aau.cs.d402f13.utilities.errors.ScopeError;
-import dk.aau.cs.d402f13.utilities.scopechecker.Member;
 import dk.aau.cs.d402f13.utilities.scopechecker.TypeSymbolInfo;
 
 public class TypeExtendErrorChecker {
