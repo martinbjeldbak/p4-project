@@ -5,11 +5,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import dk.aau.cs.d402f13.interpreter.Callable;
+import dk.aau.cs.d402f13.interpreter.ConstantCallable;
 import dk.aau.cs.d402f13.interpreter.Interpreter;
+import dk.aau.cs.d402f13.interpreter.Member;
 import dk.aau.cs.d402f13.interpreter.SymbolTable;
 import dk.aau.cs.d402f13.utilities.errors.ArgumentError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.values.BoolValue;
+import dk.aau.cs.d402f13.values.ConstMemberValue;
+import dk.aau.cs.d402f13.values.ConstValue;
 import dk.aau.cs.d402f13.values.CoordValue;
 import dk.aau.cs.d402f13.values.DirValue;
 import dk.aau.cs.d402f13.values.FunValue;
@@ -24,15 +28,88 @@ public class StandardEnvironment extends SymbolTable {
 
   public StandardEnvironment() {
     
+    ////////////////////////////////////
+    // type: Boolean
+    ////////////////////////////////////
     addType("Boolean", BoolValue.type());
+    
+    ////////////////////////////////////
+    // type: Coordinate
+    ////////////////////////////////////
     addType("Coordinate", CoordValue.type());
+    
+    ////////////////////////////////////
+    // type: Direction
+    ////////////////////////////////////
     addType("Direction", DirValue.type());
+    
+    ////////////////////////////////////
+    // type: Function
+    ////////////////////////////////////
     addType("Function", FunValue.type());
+    
+    ////////////////////////////////////
+    // type: Integer
+    ////////////////////////////////////
     addType("Integer", IntValue.type());
+    
+    ////////////////////////////////////
+    // type: List
+    ////////////////////////////////////
     addType("List", ListValue.type());
+    
+    ListValue.type().addStaticMember("size", new ConstMemberValue(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        ListValue a = (ListValue)object;
+        return new IntValue(a.getValues().length);
+      }
+    }));
+    
+    ListValue.type().addStaticMember("sort", new ConstMemberValue(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters)
+          throws StandardError {
+        return interpreter.getSymbolTable().getThis();
+      }
+    }));
+    
+    ////////////////////////////////////
+    // type: Pattern
+    ////////////////////////////////////
     addType("Pattern", PatternValue.type());
+    
+    ////////////////////////////////////
+    // type: String
+    ////////////////////////////////////
     addType("String", StrValue.type());
+    
+    ////////////////////////////////////
+    // type: Type
+    ////////////////////////////////////
     addType("Type", TypeValue.type());
+    
+    TypeValue.type().addStaticMember("isSubtypeOf", new ConstMemberValue(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters)
+          throws StandardError {
+        TypeValue a = (TypeValue)interpreter.getSymbolTable().getThis();
+        TypeValue b = (TypeValue)TypeValue.expect(actualParameters, 0, TypeValue.type());
+        a.ensureSuperType(interpreter);
+        return a.isSubtypeOf(b) ? BoolValue.trueValue() : BoolValue.falseValue();
+      }
+    }));
+    
+    TypeValue.type().addStaticMember("isSupertypeOf", new ConstMemberValue(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters)
+          throws StandardError {
+        TypeValue a = (TypeValue)interpreter.getSymbolTable().getThis();
+        TypeValue b = (TypeValue)TypeValue.expect(actualParameters, 0, TypeValue.type());
+        b.ensureSuperType(interpreter);
+        return a.isSupertypeOf(b) ? BoolValue.trueValue() : BoolValue.falseValue();
+      }
+    }));
     
     ////////////////////////////////////
     // Type functions

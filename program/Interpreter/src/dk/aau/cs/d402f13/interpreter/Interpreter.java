@@ -148,7 +148,11 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitThis(AstNode node) throws StandardError {
-    ObjectValue thisObject = symbolTable.getThis();
+    Value thisValue = symbolTable.getThis();
+    if (!(thisValue instanceof ObjectValue)) {
+      throw new NameError("Invalid use of super-keyword");
+    }
+    ObjectValue thisObject = (ObjectValue)thisValue;
     if (thisObject == null) {
       throw new NameError("Invalid use of this-keyword");
     }
@@ -215,7 +219,7 @@ public class Interpreter extends Visitor {
     
     if (node.getLast().type == AstNode.Type.TYPE_BODY) {
       for (AstNode defNode : node.getLast()) {
-        type.addMember(defNode.getFirst().value, new Member(defNode));
+        type.addTypeMember(defNode.getFirst().value, new Member(defNode));
       }
     }
     symbolTable.addType(name, type);
@@ -246,7 +250,7 @@ public class Interpreter extends Visitor {
           type.addAbstractMember(defNode.getFirst().value, new AbstractMember(defNode));
         }
         else {
-          type.addMember(defNode.getFirst().value, new Member(defNode));
+          type.addTypeMember(defNode.getFirst().value, new Member(defNode));
         }
       }
     }
@@ -276,7 +280,11 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitSuper(AstNode node) throws StandardError {
-    ObjectValue thisObject = symbolTable.getThis();
+    Value thisValue = symbolTable.getThis();
+    if (!(thisValue instanceof ObjectValue)) {
+      throw new NameError("Invalid use of super-keyword");
+    }
+    ObjectValue thisObject = (ObjectValue)thisValue;
     if (thisObject == null || thisObject.getParent() == null) {
       throw new NameError("Invalid use of super-keyword");
     }
@@ -291,8 +299,12 @@ public class Interpreter extends Visitor {
     Value object = visit(node.getFirst());
     for (int i = 1; i < node.size(); i++) {
       AstNode memberAccess = node.get(i);
-      String member = memberAccess.getFirst().value;
-      object = object.getMember(member);
+      String memberName = memberAccess.getFirst().value;
+      Value memberObject = object.getMember(memberName);
+      if (memberObject instanceof ConstMemberValue) {
+        memberObject = ((ConstMemberValue)memberObject).evaluate(this, object);
+      }
+      object = memberObject;
       for (int j = 1; j < memberAccess.size(); j++) {
         ListValue list = (ListValue)visit(memberAccess.get(j));
         object = object.call(this, list.getValues());
