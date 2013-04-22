@@ -78,7 +78,6 @@ public class SymbolTable {
   }
   public void foundUsedConst(SymbolInfo symbol){
     
-    
   }
   
   public void foundGlobalConst(ConstSymbolInfo symbol) throws ScopeError{

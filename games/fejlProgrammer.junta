@@ -1,0 +1,42 @@
+Ethvert program i denne fil, adskilt af en tom linje, bør give en fejl ved scopechecking
+***************************************************************************************
+type C[] extends B[]
+type B[] extends A[]
+type A[] extends C[]
+
+type A[$a, $b, $c]
+type B[] extends A[12, 23]
+
+type A[] extends A[]
+
+type A[] extends B[]
+
+type A[]
+type A[]
+
+type A[]{
+	define fun[$a] = $a
+}
+type B[] extends A[]{
+}
+type C[] extends B[]{
+	define fun[] = 4
+}
+
+type A[]{
+	define abstract funa[$a]
+	define abstract funb[]
+	define abstract func[$g]
+}
+type B[] extends A[]{
+	define fund[$g] = 3
+}
+type C[] extends B[]{
+	define funa[$k] = 29
+	define funb[] = 12
+}
+type D[] extends C[]{
+	define func[] = 12
+}
+
+

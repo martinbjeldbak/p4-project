@@ -154,10 +154,9 @@ public class Interactive {
                 else{
                   System.out.println("Scope checking...");
                   start = new Date();
-                  TypeVisitor typeVisitor = new TypeVisitor();
-                  typeVisitor.visit(ast);
                   ScopeChecker scopeChecker = new ScopeChecker();
                   scopeChecker.visit(ast);
+                  ast.print();
                   time = new Date().getTime() - start.getTime();
                   System.out.println("Scope checking took " + time + " ms");
                   if (line.equals(":i")) {

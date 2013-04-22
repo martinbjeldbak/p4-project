@@ -13,6 +13,9 @@ public class ScopeChecker {
     TypeVisitor typeVisitor = new TypeVisitor();
     typeVisitor.visit(node);
     typeTable = typeVisitor.getTypeTable();
+    TypeTableCleaner ttc = new TypeTableCleaner();
+    typeTable = ttc.clean(typeTable);
+    ttc.markAbstractTypes(typeTable); //any type containing an abstract member is marked as abstract type for use in interpreter
     TypeExtendErrorChecker teec = new TypeExtendErrorChecker();
     teec.check(typeTable);
     TypeTablePrettyPrinter.print(typeTable);
