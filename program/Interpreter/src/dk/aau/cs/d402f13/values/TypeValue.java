@@ -48,6 +48,15 @@ public class TypeValue extends Value {
       this.formalParameters[i] = params.get(i).value;
     }
   }
+
+  public TypeValue(String name, int minArity, boolean varArgs) {
+    this.name = name;
+    formalParameters = new String[minArity];
+    if (varArgs) {
+      varParams = "";
+    }
+    this.callable = new DefaultConstructor(this);
+  }
   
   public TypeValue(String name, AstNode params, String parent, AstNode parenParams) {
     this(name, params);
@@ -62,15 +71,6 @@ public class TypeValue extends Value {
     if (varArgs) {
       varParams = "";
     }
-  }
-  
-  public TypeValue(String name, int minArity, boolean varArgs) {
-    this.name = name;
-    formalParameters = new String[minArity];
-    if (varArgs) {
-      varParams = "";
-    }
-    this.callable = new DefaultConstructor(this);
   }
 
   public boolean isSubtypeOf(TypeValue type) {
