@@ -3,38 +3,32 @@ package dk.aau.cs.d402f13.utilities.types;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Game {
-	private Board board = null; 
-	private List<Player> players = new ArrayList<Player>();
+public abstract class Game {
+	private int currentPlayer = 0;
 	private List<Action> history = new ArrayList<Action>();
 	private String title;
 	
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
+	public Game( String title ){
 		this.title = title;
 	}
-
-	public Board getBoard() {
-		return board;
-	}
 	
-	public void setBoard(Board b) {
-		this.board = b;
-	}
-	
-	public List<Player> getPlayers() {
-		return players; 
-	}
-	
-	public void setplayers(List<Player> players) {
-		this.players = players;
+	public String title() {
+		return title;
 	}
 	
 	public void applyAction( Action action ){
 		history.add( action );
 		action.applyAction( this );
+		
+		//Next player
+		currentPlayer++;
+		if( players().size() >= currentPlayer )
+			currentPlayer = 0;
+	}
+	
+	public abstract Board board();
+	public abstract List<Player> players();
+	public List<Player> turnOrder(){
+		return players();
 	}
 }
