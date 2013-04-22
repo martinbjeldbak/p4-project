@@ -67,10 +67,12 @@ public class CoordValue extends Value {
   /** {@inheritDoc}  */
   @Override
   public Value add(Value other) throws TypeError {
-    if(other instanceof StrValue)
-      return new StrValue(this.toString() + ((StrValue)other).getValue());
-    else if(other instanceof DirValue) {
-      DirValue oDir = (DirValue)other;
+    if(other.is(StrValue.type())) {
+      StrValue oStr = (StrValue)other.as(StrValue.type());
+      return new StrValue(new StringBuilder().append(this.toString()).append(oStr.getValue()).toString());
+    }
+    else if(other.is(DirValue.type())) {
+      DirValue oDir = (DirValue)other.as(DirValue.type());
       return new CoordValue(x + oDir.getX(), y + oDir.getY());
     }
     throw new TypeError("Addition cannot be done on coordinates with " + other);
@@ -79,15 +81,15 @@ public class CoordValue extends Value {
   /** {@inheritDoc}  */
   @Override
   public Value subtract(Value other) throws TypeError {
-    if(other instanceof CoordValue) {
-      CoordValue oCoord = (CoordValue)other;
-      return new CoordValue(x - oCoord.getX(), y - oCoord.getY());
+    if(other.is(CoordValue.type())) {
+      CoordValue oCoord = (CoordValue)other.as(CoordValue.type());
+      return new DirValue(x - oCoord.getX(), y - oCoord.getY());
     }
-    else if(other instanceof DirValue) {
+    else if(other.is(DirValue.type())) {
       DirValue oDir = (DirValue)other;
       return new CoordValue(x - oDir.getX(), y - oDir.getY());
     }
-    throw new TypeError("Cannot subract a " + other + " from a coordinate");
+    throw new TypeError("Cannot subtract a " + other + " from a coordinate");
   }
   
   @Override
