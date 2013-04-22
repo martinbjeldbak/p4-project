@@ -20,7 +20,7 @@ class WhiteSquare extends Square{
 class BlackSquare extends Square{
 	@Override
 	public String getImgPath(){
-		return "img/Black.png";
+		return "img/black.png";
 	}
 }
 
