@@ -4,6 +4,8 @@ import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.Stack;
 
+import dk.aau.cs.d402f13.utilities.errors.NameError;
+import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.values.*;
 
 /**
@@ -37,7 +39,16 @@ public class SymbolTable {
    * @param name the unique string the function was stored with
    * @return     the stored function
    */
-  public Value getConstant(String name) {
+  public Value getConstant(String name) throws StandardError {
+    if (currentScope() != null) {
+      Value thisObject = currentScope().getThis();
+      if (thisObject != null) {
+        try {
+          return thisObject.getMember(name);
+        }
+        catch (NameError e) { }
+      }
+    }
     return constants.get(name);
   }
   
@@ -72,7 +83,7 @@ public class SymbolTable {
     types.put(name, type);
   }
   
-  public ObjectValue getThis() {
+  public Value getThis() {
     if(currentScope() == null) {
       return null;
     }

@@ -51,7 +51,11 @@ public class FunValue extends Value {
   
   public FunValue(AstNode params, AstNode expression, Scope currentScope) {
     this(params, expression);
-    
+    this.currentScope = currentScope;
+  }
+  
+  public FunValue(int minArity, boolean varArgs, Callable callable, Scope currentScope) {
+    this(minArity, varArgs, callable);
     this.currentScope = currentScope;
   }
   

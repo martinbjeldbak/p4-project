@@ -23,7 +23,7 @@ import dk.aau.cs.d402f13.utilities.errors.SyntaxError;
 import dk.aau.cs.d402f13.values.ConstValue;
 import dk.aau.cs.d402f13.values.FunValue;
 import dk.aau.cs.d402f13.values.Value;
-import dk.aau.cs.d402f13.scopechecker.SemanticChecker;
+import dk.aau.cs.d402f13.scopechecker.ScopeChecker;
 import dk.aau.cs.d402f13.scopechecker.TypeVisitor;;
 
 
@@ -154,10 +154,9 @@ public class Interactive {
                 else{
                   System.out.println("Scope checking...");
                   start = new Date();
-                  TypeVisitor typeVisitor = new TypeVisitor();
-                  typeVisitor.visit(ast);
-                  SemanticChecker semanticChecker = new SemanticChecker();
-                  semanticChecker.visit(ast);
+                  ScopeChecker scopeChecker = new ScopeChecker();
+                  scopeChecker.visit(ast);
+                  ast.print();
                   time = new Date().getTime() - start.getTime();
                   System.out.println("Scope checking took " + time + " ms");
                   if (line.equals(":i")) {

@@ -1,26 +1,63 @@
 package dk.aau.cs.d402f13.values;
 
+import java.util.HashMap;
+
+import dk.aau.cs.d402f13.interpreter.ConstantCallable;
 import dk.aau.cs.d402f13.interpreter.Interpreter;
+import dk.aau.cs.d402f13.interpreter.Member;
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.errors.DivideByZeroError;
+import dk.aau.cs.d402f13.utilities.errors.NameError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public abstract class Value {
   
   public abstract TypeValue getType();
-  
+
+  /**
+   * Finds out if the current value is a subtype of the param type.
+   * Returns true if it is, else false.
+   * @param type the superclass type to check against
+   * @return     true if the current type extends the param type
+   */
   public boolean is(TypeValue type) {
     return getType().isSubtypeOf(type);
   }
-  
-  public Value as(TypeValue type) throws StandardError {
+
+  /**
+   * Opposite of {@link #is(TypeValue)} method. Implemented for
+   * readability.
+   * @param type the superclass type to check against
+   * @return     true if the current type is not related to the
+   *             param type
+   */
+  public boolean isNot(TypeValue type) {
+    return !is(type);
+  }
+
+  /**
+   * Attempts to cast the current type to the param type.
+   * @param type the value to be casted to
+   * @return     the casted value
+   * @throws TypeError if casting is not possible
+   */
+  public Value as(TypeValue type) throws TypeError {
     if (getType() == type) {
       return this;
     }
     throw new TypeError("Invalid cast to type " + type);
   }
-  
+
+  /**
+   * Attempts to call the value with the given parameters
+   * @param interpreter      an instance of Interpreter, so evaluation
+   *                         of expressions is possible in the call
+   * @param actualParameters the parameters of the call statement, can
+   *                         have an arbitrary length
+   * @return                 a new Value as a result of the call
+   * @throws StandardError   if the value cannot be called
+   */
   public Value call(Interpreter interpreter, Value ... actualParameters) throws StandardError {
     throw new TypeError("This value does not support being called");
   }
@@ -71,7 +108,8 @@ public abstract class Value {
   public BoolValue greaterThanEq(Value other) throws TypeError {
     throw new TypeError("This value does not support the '>=' operator");
   }
-  
+
+  /** {@inheritDoc} */
   public boolean equals(Object o) {
     if (!(o instanceof Value)) {
       return false;
@@ -165,7 +203,24 @@ public abstract class Value {
   public Value negate() throws TypeError {
     throw new TypeError("This value does not support negation");
   }
-  
+
+  /**
+   * Returns the desired member in the current object.
+   * @param member         the unique identifier given
+   *                       to the member
+   * @return               the member, if it exists
+   * @throws StandardError if the member cannot be found or
+   *                       doesn't exist
+   */
+  public Value getMember(String member) throws StandardError {
+    Value v = getType().getStaticMember(member);
+    if (v != null) {
+      return v;
+    }
+    throw new NameError("Undefined member: " + member);
+  }
+
+  /** {@inheritDoc} */
   @Override
   public String toString() {
     return getType().toString() + "@" + hashCode();

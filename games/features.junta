@@ -73,5 +73,18 @@ type Unsigned[$i] extends Integer[if $i < 0 then -$i else $i]
 type MyListA[... $list] extends Function[#[$offset] => $list[$offset]]
 
 type MyListB[... $list] extends List[$list]
+
+type A[$b] {
+	define abstract aNumber
+	define aFunc[$a] = $a + aNumber
+}
+
+type B[$c] extends A[$c + 1] {
+	define aNumber = aNumber + 2
+    define bVal = super.aNumber + aNumber
+    define mySuperType = typeOf[super]
+}
+
+define main = B[3].mySuperType
                           
 define main = qsort[MyListB[26, 2, 1, -2, 35, 2]]
