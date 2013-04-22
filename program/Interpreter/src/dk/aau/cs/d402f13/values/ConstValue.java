@@ -2,6 +2,7 @@ package dk.aau.cs.d402f13.values;
 
 
 import dk.aau.cs.d402f13.interpreter.Callable;
+import dk.aau.cs.d402f13.interpreter.ConstantCallable;
 import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.Scope;
 import dk.aau.cs.d402f13.interpreter.SymbolTable;
