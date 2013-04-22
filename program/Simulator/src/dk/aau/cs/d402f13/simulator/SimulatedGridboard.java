@@ -15,8 +15,6 @@ public class SimulatedGridboard extends SimulatedBoard {
 	private int offsetX = 0;
 	private int offsetY = 0; 
 	
-	private Square selected;
-	
 	public int getWidth() {
 		return board.getWidth();
 	}
@@ -51,8 +49,13 @@ public class SimulatedGridboard extends SimulatedBoard {
 				int imgMax = Math.max(img.getWidth(), img.getHeight());
 				img.draw( x + ix * size, y + iy * size, (float)size /(float) imgMax );
 				
-				if( s == selected ){
+				if( s == getSelected() ){
 					g.setColor( new Color(255,0,0,127) );
+					g.fillRect(x + ix * size, y + iy * size, size, size);
+				}
+				
+				if( squareIsHinted( s ) ){
+					g.setColor( new Color(0,255,0,127) );
 					g.fillRect(x + ix * size, y + iy * size, size, size);
 				}
 			}
@@ -105,13 +108,5 @@ public class SimulatedGridboard extends SimulatedBoard {
 		
 		System.out.println("Sqaure at " +posX +"x" + posY);
 		return board.getSquareAt(posX, posY);
-	}
-
-	public Square getSelected() {
-		return selected;
-	}
-
-	public void setSelected(Square selected) {
-		this.selected = selected;
 	}
 }
