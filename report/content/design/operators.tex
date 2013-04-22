@@ -90,16 +90,8 @@ It is possible to concatenate strings:
 \begin{dlist}
   \item \operator[String]{+}{String}{String} \\
     Returns the concatenation of two strings.
-  \item \operator[String]{+}{Integer}{String} \\
-   \operator[String]{+}{Boolean}{String} \\
-   \operator[String]{+}{Coordinate}{String} \\
-   \operator[String]{+}{Direction}{String} \\
-   \operator[String]{+}{Identifier}{String} \\
-   \operator[Integer]{+}{String}{String} \\
-   \operator[Boolean]{+}{String}{String} \\
-   \operator[Coordinate]{+}{String}{String} \\
-   \operator[Direction]{+}{String}{String} \\
-   \operator[Identifier]{+}{String}{String} \\
+  \item \operator[String]{+}{\opstar}{String} \\
+   \operator[\opstar]{+}{String}{String} \\
     Returns the concatenation of a string and the string-representation of another type
 \end{dlist}
 
@@ -124,14 +116,22 @@ Some operators are available for list values as well:
 It is possible to manipulate directions and coordinates using the following operator:
 \begin{dlist}
   \item \operator[Direction]{+}{Direction}{Direction} \\
-    Combine two directions.
+    Add a direction (vector) to another direction.
+  \item \operator[Direction]{-}{Direction}{Direction} \\
+    Subtract a direction from another direction.
+  \item \operator[Direction]{+}{Coordinate}{Coordinate} \\
+    Add a coordinate to a direction.
+  \item \operator{-}{Direction}{Direction} \\
+    Negate a direction.
   \item \operator[Coordinate]{-}{Coordinate}{Direction} \\
     Returns the distance between two coordinates as a direction.
   \item \operator[Coordinate]{+}{Direction}{Coordinate} \\
-    Add a direction to a coordinate.
+    Add a direction to a coordinate. 
+  \item \operator[Coordinate]{-}{Direction}{Coordinate} \\
+    Subtract a direction from a coordinate.
 \end{dlist}
-For instance adding the directions \texttt{n} and \texttt{e} produces a direction
-equivalent with the direction \texttt{ne}. More information about the direction-type
-is available in \secref{sec:types}.
+For instance adding the directions \texttt{n} and \texttt{e} produces a
+direction equivalent with the direction \texttt{ne}. Adding a coordinate and direction (and visa versa) gives a coordinate. As an example, $\texttt{A2} \verb!+! \texttt{e}$ gives \texttt{B2}. More information
+about the coordinate and direction types is available in \secref{sec:types}.
 
 

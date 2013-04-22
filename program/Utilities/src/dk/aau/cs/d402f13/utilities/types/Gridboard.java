@@ -1,15 +1,25 @@
 package dk.aau.cs.d402f13.utilities.types;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Gridboard extends Board {
 	
 	int height;
 	int width;
 	
-	public Gridboard( int width, int height ){
+	public Gridboard( int width, int height ) throws CloneNotSupportedException{
 		this.height = height;
 		this.width = width;
-		for( int i=0; i < width * height; i++ ){
-			squares.add( new Square() );
+		
+		List<Square> types = squareTypes();
+		int size = types.size();
+		
+		for( int iy=0; iy < height; iy++ ){
+			for( int ix=0; ix < width; ix++ ){
+				Square copy = types.get( (ix + iy % size ) % size );
+				squares.add( copy.clone() );
+			}
 		}
 	}
 	
@@ -46,6 +56,14 @@ public class Gridboard extends Board {
 	}
 	
 	public Square getSquareAt( int x, int y ){
+		if( x >= width || y >= height || x < 0 || y < 0 )
+			return null;
 		return squares.get( x + y* width);
+	}
+	
+	public List<Square> squareTypes(){
+		List<Square> list = new ArrayList<Square>();
+		list.add( new Square() );
+		return list;
 	}
 }

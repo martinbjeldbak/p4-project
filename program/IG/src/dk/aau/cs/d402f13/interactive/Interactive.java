@@ -20,6 +20,8 @@ import dk.aau.cs.d402f13.utilities.errors.Error;
 import dk.aau.cs.d402f13.utilities.errors.InternalError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.SyntaxError;
+import dk.aau.cs.d402f13.values.ConstValue;
+import dk.aau.cs.d402f13.values.FunValue;
 import dk.aau.cs.d402f13.values.Value;
 import dk.aau.cs.d402f13.scopechecker.ScopeChecker;
 import dk.aau.cs.d402f13.scopechecker.TypeVisitor;;
@@ -165,6 +167,18 @@ public class Interactive {
                     i.visit(ast);
                     time = new Date().getTime() - start.getTime();
                     System.out.println("Interpreting took " + time + " ms");
+                    Value main = i.getSymbolTable().getConstant("main"); 
+                    if (main != null) {
+                      Value v = null;
+                      if (main instanceof ConstValue) {
+                        v = ((ConstValue)main).evaluate(i);
+                      }
+                      else if (main instanceof FunValue) {
+                        v = ((FunValue)main).call(i);
+                      }
+                      if (v != null) 
+                        System.out.println(" = " + v + " (" + v.getClass().getSimpleName() + ")");
+                    }
                   }
                 }
               }

@@ -5,6 +5,16 @@ import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public class StrValue extends Value {
   private final String value;
+  
+  private static TypeValue type = new TypeValue("String", 1, false);
+  
+  public TypeValue getType() {
+    return type;
+  }
+  
+  public static TypeValue type() {
+    return type;
+  }
 
   public StrValue(String value) {
     this.value = value;
@@ -14,6 +24,7 @@ public class StrValue extends Value {
     return this.value;
   }
   
+  /** {@inheritDoc}  */
   @Override
   public BoolValue equalsOp(Value other) {
     if(other instanceof StrValue) {
@@ -23,6 +34,7 @@ public class StrValue extends Value {
     return BoolValue.falseValue();
   }
   
+  /** {@inheritDoc}  */
   @Override
   public Value add(Value other) throws TypeError {
     

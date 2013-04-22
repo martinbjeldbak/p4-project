@@ -333,6 +333,20 @@ public class PrettyPrinter extends Visitor {
   }
 
   @Override
+  protected Object visitAbstractTypeDef(AstNode node) throws StandardError {
+    String code = "type " + visit(node.getFirst()) + visit(node.get(1));
+    if (node.get(2).type == Type.TYPE) {
+      incr();
+      code += " extends " + visit(node.get(2)) + visit(node.get(3));
+      decr();
+    }
+    if (node.getLast().type == Type.TYPE_BODY) {
+      code += " " + visit(node.getLast());
+    }
+    return code + "\n";
+  }
+
+  @Override
   protected Object visitTypeBody(AstNode node) throws StandardError {
     String code = "{\n";
     incr();

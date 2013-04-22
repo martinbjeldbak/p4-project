@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-	
-	Board board = null; 
-	List<Player> players = new ArrayList<Player>();
-	String title;
+	private Board board = null; 
+	private List<Player> players = new ArrayList<Player>();
+	private List<Action> history = new ArrayList<Action>();
+	private String title;
 	
 	public String getTitle() {
 		return title;
@@ -33,4 +33,8 @@ public class Game {
 		this.players = players;
 	}
 	
+	public void applyAction( Action action ){
+		history.add( action );
+		action.applyAction( this );
+	}
 }
