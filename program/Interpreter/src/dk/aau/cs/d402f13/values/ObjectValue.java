@@ -1,8 +1,11 @@
 package dk.aau.cs.d402f13.values;
 
+import java.util.HashMap;
+
 import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.Scope;
 import dk.aau.cs.d402f13.utilities.errors.DivideByZeroError;
+import dk.aau.cs.d402f13.utilities.errors.NameError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
@@ -13,6 +16,8 @@ public class ObjectValue extends Value {
   
   private Value parent;
   
+  private HashMap<String, Value> members = new HashMap<String, Value>();
+  
   public ObjectValue(TypeValue type, Scope scope) {
     this.type = type;
     this.scope = scope;
@@ -21,6 +26,22 @@ public class ObjectValue extends Value {
   public ObjectValue(TypeValue type, Scope scope, Value parent) {
     this(type, scope);
     this.parent = parent;
+  }
+  
+  public void addMember(String member, Value value) {
+    members.put(member, value);
+  }
+  
+  @Override
+  public Value getMember(String member) throws StandardError {
+    Value value = members.get(member);
+    if (value == null) {
+      if (parent != null) {
+        return parent.getMember(member);
+      }
+      throw new NameError("Undefined member: " + member);
+    }
+    return value;
   }
 
   /** {@inheritDoc}  */
