@@ -3,7 +3,6 @@ package dk.aau.cs.d402f13.simulator;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.IOException;
-import java.util.List;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
@@ -11,17 +10,11 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.util.ResourceLoader;
-
-import dk.aau.cs.d402f13.utilities.types.Action;
-import dk.aau.cs.d402f13.utilities.types.MoveAction;
-import dk.aau.cs.d402f13.utilities.types.Piece;
-import dk.aau.cs.d402f13.utilities.types.Square;
 
 public class Simulator extends BasicGame {
 		
@@ -91,26 +84,19 @@ public class Simulator extends BasicGame {
 	
 	@Override
 	public void mousePressed( int button, int x, int y ){
-        if( button == Input.MOUSE_LEFT_BUTTON ){
-        	//Select a square if a piece is on it
-        	game.getBoard().setSelected(null);
-        	game.getBoard().clearHints();
-        	Square s = game.getBoard().findSquare(x, y);
-	        if( s != null ){
-	        	Piece p = game.getGame().getBoard().findPieceOnSquare(s);
-	        	if( p != null ){
-	        		List<Action> actions = p.actions( game.getGame() );
-	        		game.getBoard().setSelected( s );
-	        		
-	        		for( Action a : actions ){
-	        			if( (Object)a instanceof MoveAction ){
-	        				MoveAction ma = (MoveAction)a;
-	        				game.getBoard().addHint( ma.getTo() );
-	        			}
-	        		}
-	        	}
-	        }
-        }
+    	//TODO: only call if we are on the board area
+    	game.getBoard().mouseClicked(button, x, y);
+    }
+	
+	@Override
+	public void mouseDragged(int oldx, int oldy, int newx, int newy){
+		//TODO: only call if we are on the board area
+		game.getBoard().mouseDragged(oldx, oldy, newx, newy);
+	}
+	
+	public void mouseReleased( int button, int x, int y ){
+		//TODO: only call if we are on the board area
+		game.getBoard().mouseReleased(button, x, y);
 	}
 	
 	@Override
