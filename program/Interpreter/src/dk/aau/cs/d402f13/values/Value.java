@@ -13,6 +13,10 @@ public abstract class Value {
   public boolean is(TypeValue type) {
     return getType().isSubtypeOf(type);
   }
+
+  public boolean isNot(TypeValue type) {
+    return !is(type);
+  }
   
   public Value as(TypeValue type) throws TypeError {
     if (getType() == type) {
