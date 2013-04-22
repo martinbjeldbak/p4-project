@@ -26,6 +26,11 @@ public class TypeSymbolInfo extends SymbolInfo{
    this.concreteMembers = new ArrayList<Member>();
    this.abstractMembers = new ArrayList<Member>();
   }
+  
+  public TypeSymbolInfo(AstNode node, String name, int argCount, int line, int offset){
+    this(node, name, line, offset);
+    this.args = argCount;
+  }
 
   public void setParent(TypeSymbolInfo parent){
     this.parent = parent;
