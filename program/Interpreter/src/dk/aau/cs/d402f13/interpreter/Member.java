@@ -9,7 +9,6 @@ public class Member {
   private AstNode params;
   private AstNode expression;
   
-  
   public Member(AstNode definition) {
     expression = definition.getLast();
 

@@ -9,7 +9,7 @@ public class Scope {
   private Scope parent;
   private HashMap<String, Value> variableValues = new HashMap<String, Value>();
   
-  private ObjectValue thisObject;
+  private Value thisObject;
   
   /**
    * Instantiate a new, empty scope.
@@ -18,7 +18,7 @@ public class Scope {
     this.parent = null;
   }
   
-  public Scope(ObjectValue thisObject) {
+  public Scope(Value thisObject) {
     this.thisObject = thisObject;
   }
 
@@ -33,12 +33,12 @@ public class Scope {
     }
   }
   
-  public Scope(Scope parent, ObjectValue thisObject) {
+  public Scope(Scope parent, Value thisObject) {
     this.parent = parent;
     this.thisObject = thisObject;
   }
   
-  public ObjectValue getThis() {
+  public Value getThis() {
     return thisObject;
   }
   
