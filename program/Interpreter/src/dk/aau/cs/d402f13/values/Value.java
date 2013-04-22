@@ -3,6 +3,7 @@ package dk.aau.cs.d402f13.values;
 import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.errors.DivideByZeroError;
+import dk.aau.cs.d402f13.utilities.errors.NameError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
@@ -197,6 +198,18 @@ public abstract class Value {
    */
   public Value negate() throws TypeError {
     throw new TypeError("This value does not support negation");
+  }
+
+  /**
+   * Returns the desired member in the current object.
+   * @param member         the unique identifier given
+   *                       to the member
+   * @return               the member, if it exists
+   * @throws StandardError if the member cannot be found or
+   *                       doesn't exist
+   */
+  public Value getMember(String member) throws StandardError {
+    throw new NameError("Undefined member: " + member);
   }
 
   /** {@inheritDoc} */
