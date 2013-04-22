@@ -119,7 +119,13 @@ class Pawn extends ChessPiece{
 		List<Action> list = new ArrayList<Action>();
 		list.add( relative( g, 0, dir ) );
 		list.add( relative( g, 0, dir*2 ) );
-		return list;
+		
+		//Remove null actions
+		List<Action> cleanList = new ArrayList<Action>();
+		for( Action a: list )
+			if( a != null )
+				cleanList.add( a );
+		return cleanList;
 	}
 }
 
@@ -156,7 +162,13 @@ class Knight extends ChessPiece{
 		list.add( relative( g, -2, 1 ) );
 		list.add( relative( g, 2, -1 ) );
 		list.add( relative( g, -2, -1 ) );
-		return list;
+		
+		//Remove null actions
+		List<Action> cleanList = new ArrayList<Action>();
+		for( Action a: list )
+			if( a != null )
+				cleanList.add( a );
+		return cleanList;
 	}
 }
 
@@ -214,7 +226,13 @@ class King extends ChessPiece{
 		list.add( relative( g, -1, -1 ) );
 		list.add( relative( g, 0, -1 ) );
 		list.add( relative( g, 1, -1 ) );
-		return list;
+		
+		//Remove null actions
+		List<Action> cleanList = new ArrayList<Action>();
+		for( Action a: list )
+			if( a != null )
+				cleanList.add( a );
+		return cleanList;
 	}
 }
 
