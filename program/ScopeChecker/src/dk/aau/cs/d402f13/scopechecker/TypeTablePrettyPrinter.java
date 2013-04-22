@@ -2,11 +2,14 @@ package dk.aau.cs.d402f13.scopechecker;
 
 import java.util.ArrayList;
 
+import dk.aau.cs.d402f13.utilities.scopechecker.TypeSymbolInfo;
+import dk.aau.cs.d402f13.utilities.scopechecker.TypeSymbolInfo.Member;
+
 public class TypeTablePrettyPrinter {
 
  
-    public static void print(ArrayList<TypeInfo> typeTable){
-      for (TypeInfo ci : typeTable){
+    public static void print(ArrayList<TypeSymbolInfo> typeTable){
+      for (TypeSymbolInfo ci : typeTable){
         System.out.print("Type " + ci.name + "[");
         for (String s : ci.constructorArgs){
           System.out.print(s + " "); 
@@ -15,10 +18,10 @@ public class TypeTablePrettyPrinter {
         if (ci.parent != null){
           System.out.print("extends " + ci.parent.name);
           System.out.print("["); 
-          for (String s : ci.superVarArgs){
+          for (String s : ci.parentVarArgs){
             System.out.print(s + " ");
           }
-          System.out.println("] " + ci.superArgs + " args total");
+          System.out.println("] " + ci.parentArgs + " args total");
         }
         System.out.println("  Has abstract members:");
         for (Member m : ci.abstractMembers){

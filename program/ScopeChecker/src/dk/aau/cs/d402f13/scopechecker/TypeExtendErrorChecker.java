@@ -5,18 +5,19 @@ import java.util.HashSet;
 import dk.aau.cs.d402f13.utilities.errors.ScopeError;
 import dk.aau.cs.d402f13.utilities.scopechecker.SymbolInfo;
 import dk.aau.cs.d402f13.utilities.scopechecker.SymbolTable.SymbolType;
+import dk.aau.cs.d402f13.utilities.scopechecker.TypeSymbolInfo;
 
 public class TypeExtendErrorChecker {
-  public void check(ArrayList<TypeInfo> typeTable) throws ScopeError{ //must be invoked after visitor is finish traversing AST
+  public void check(ArrayList<TypeSymbolInfo> typeTable) throws ScopeError{ //the typeTable is obtained from TypeVisitor and contains information about the name of all classes
     //every TypeInfo t only contains the name of its super type in its String t.parentName
     //this name must be looked up in the SymbolTable to update the real reference TypeInfo t.parent
-    for (TypeInfo ti : typeTable){
+    for (TypeSymbolInfo ti : typeTable){
       if (ti.parentName.equals(ti.name)){ //type cannot extend itself
         throw new ScopeError("Type cannot extend itself", new SymbolInfo(SymbolType.TYPE, ti.name, ti.line, ti.offset));
       }
       if (ti.parentName != ""){
       Boolean foundParentType = false;
-      for (TypeInfo ti2 : typeTable){
+      for (TypeSymbolInfo ti2 : typeTable){
         if (ti.parentName.equals(ti2.name)){
           ti.parent = ti2;
           foundParentType = true;
@@ -24,7 +25,7 @@ public class TypeExtendErrorChecker {
         }
       }
       if (!foundParentType)
-        throw new ScopeError("Type extends undefined type", new SymbolInfo(SymbolType.TYPE, ti.name, ti.line, ti.offset));
+        throw new ScopeError("Type extends undefined type", new TypeSymbolInfo(ti.name, true, ti.line, ti.offset));
       }
     }
     checkForCycles(typeTable);

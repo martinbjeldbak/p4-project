@@ -10,80 +10,24 @@ import dk.aau.cs.d402f13.utilities.errors.ScopeError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.scopechecker.SymbolInfo;
 import dk.aau.cs.d402f13.utilities.scopechecker.SymbolTable.SymbolType;
-
-class Member{
-  ArrayList<String> varArgs;
-  String name;
-  public Member(String name){
-    this.name = name;
-    this.varArgs = new ArrayList<String>();
-  }
-  public void AddArg(String varName){
-    this.varArgs.add(varName);
-  }
-}
-
-class TypeInfo
-{
-  int line;
-  int offset;
-  TypeInfo parent;
-  String parentName;
-  String name;
-  ArrayList<String> constructorArgs;
-  ArrayList<String> superVarArgs;   //var args for call to supers constructor
-  int superArgs;                    //number of arguments in call to supers constructor
-  ArrayList<Member> constantMembers;
-  ArrayList<Member> abstractMembers;
-  public TypeInfo(String name, int line, int offset){
-    this.name = name;
-    this.line = line;
-    this.offset = offset;
-    this.parentName = "";
-    constantMembers = new ArrayList<Member>();
-    abstractMembers = new ArrayList<Member>();
-    constructorArgs = new ArrayList<String>();
-    superVarArgs = new ArrayList<String>();
-    superArgs = 0;
-  }
-  public void SetParent(TypeInfo parent){
-    this.parent = parent;
-  }
-  public void SetParentName(String parentName){
-    this.parentName = parentName;
-  }
-  public void AddConstantMember(Member member){
-    constantMembers.add(member);
-  }
-  public void AddAbstractMember(Member member){
-    abstractMembers.add(member);
-  }
-  public void AddConstructorArg(String name){
-    constructorArgs.add(name);
-  }
-  public void AddSuperArg(String name){
-    superVarArgs.add(name);
-  }
-  public void IncrSuperArgCount(){
-    this.superArgs++;
-  }  
-}
+import dk.aau.cs.d402f13.utilities.scopechecker.TypeSymbolInfo;
+import dk.aau.cs.d402f13.utilities.scopechecker.TypeSymbolInfo.Member;
 
 public class TypeVisitor extends DefaultVisitor
 {
-  ArrayList<TypeInfo> typeTable; //all classes found in program are put here as a ref to its ClassInfo object
-  TypeInfo currentType; //the class we are currently inside
+  ArrayList<TypeSymbolInfo> typeTable; //all classes found in program are put here as a ref to its ClassInfo object
+  TypeSymbolInfo currentType; //the class we are currently inside
   public TypeVisitor(){
-    typeTable = new ArrayList<TypeInfo>();
+    typeTable = new ArrayList<TypeSymbolInfo>();
     currentType = null;
   }
-  public ArrayList<TypeInfo> getTypeTable(){
+  public ArrayList<TypeSymbolInfo> getTypeTable(){
     return this.typeTable;
   }
-  public void AddType(TypeInfo ci) throws ScopeError{
-    for (TypeInfo c : this.typeTable){
+  public void AddType(TypeSymbolInfo ci) throws ScopeError{
+    for (TypeSymbolInfo c : this.typeTable){
       if (ci.name == c.name){
-        throw new ScopeError("Type with same name already declared", new SymbolInfo(SymbolType.TYPE, ci.name, ci.line, ci.offset));
+        throw new ScopeError("Type with same name already declared", ci);
       }
     }
     this.typeTable.add(ci);
@@ -96,7 +40,7 @@ public class TypeVisitor extends DefaultVisitor
     Iterator<AstNode> it = node.iterator();
     
     //get class name
-    TypeInfo ci = new TypeInfo(it.next().value, node.line, node.offset );
+    TypeSymbolInfo ci = new TypeSymbolInfo(it.next().value, node.line, node.offset );
     this.AddType(ci); //adds type and checks if another type with same name exists
     
     //get constructor arguments

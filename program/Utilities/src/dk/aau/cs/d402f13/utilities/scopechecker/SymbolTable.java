@@ -3,19 +3,11 @@ import dk.aau.cs.d402f13.utilities.errors.ScopeError;
 import dk.aau.cs.d402f13.utilities.Levenshtein;
 import dk.aau.cs.d402f13.utilities.Tuple;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
 public class SymbolTable {
-  public enum SymbolType {
-    FUNCTION,
-    VARIABLE,
-    TYPE,
-    MEMBER //belongs to a type and is a constant. Can reference a function
-  }
   
-  HashMap<SymbolInfo, Boolean> symbols; //Boolean is flagged if symbol is a declaration
+  HashSet<SymbolInfo> symbols; //Boolean is flagged if symbol is a declaration
   SymbolTable parent; //points to a parent scope or null if global scope
   
   public SymbolTable getParent(){
@@ -23,7 +15,7 @@ public class SymbolTable {
   }
   
   public SymbolTable(){//for instantiating outer scope
-    symbols = new HashMap<SymbolInfo, Boolean>(); //Boolean means declared or undeclared
+    symbols = new HashSet<SymbolInfo>(); //Boolean means declared or undeclared
   }
   
   public SymbolTable(SymbolTable parent){//for instantiating non outer scopes
@@ -39,10 +31,10 @@ public class SymbolTable {
     return this.parent == null ? 0 : this.parent.getNestLevel() + 1; 
   }
   
-  public void checkFunctionErrors() throws ScopeError {
+  public void checkConstErrors() throws ScopeError {
     //this error check is done after closing the global scope
-    for (SymbolInfo s : symbols.keySet()){   //this method is called just before exiting a scope
-      if (s.type == SymbolType.FUNCTION && !symbols.get(s)){ //if any function is marked as undeclared 
+    for (SymbolInfo s : symbols){   //this method is called just before exiting a scope
+      if (s instanceof ConstSymbolInfo && !((ConstSymbolInfo)s).declared){ //if any function is marked as undeclared 
             error(s, "Undeclared");
       }
     }
@@ -57,7 +49,7 @@ public class SymbolTable {
   
   Boolean visibleInScopes(SymbolInfo s){
     //Checks if a symbol is declared in either local or outer scopes
-  if (symbols.containsKey(s)) //true if declared in local scope, false if used in local scope, null if neither
+  if (symbols.contains(s)) //true if declared in local scope, false if used in local scope, null if neither
     return true;
   if (this.parent == null)    //if this symbol table is in outer scope, symbol is not declared
     return false;
@@ -76,35 +68,53 @@ public class SymbolTable {
   }
   
   public void foundDeclVar(SymbolInfo symbol) throws ScopeError{
-    if (this.symbols.containsKey(symbol)){
-      error(symbol, "Double declaration");
-    }
-    else{
-      this.symbols.put(symbol, null); //null, cause not necessary to save if a variable is decl or ref.
-    }
+
   }  
   public void foundUsedVar(SymbolInfo symbol) throws ScopeError{
-    if (!visibleInScopes(symbol)){
-      error(symbol, "Not declared");
+  
+  }
+  public void foundDeclConst(SymbolInfo symbol) throws ScopeError{
+   
+  }
+  public void foundUsedConst(SymbolInfo symbol){
+    
+    
+  }
+  
+  public void foundGlobalConst(ConstSymbolInfo symbol) throws ScopeError{
+   //if a CONSTANT is found which is not inside a type body
+    if (symbol.declared){//if the constant is a declaration
+      if (globalScope().symbols.contains(symbol)){
+        if (globalScope().symbols.contains(symbol) == true){//true means declaration
+          error(symbol, "Double declaration");
+        }
+        else{
+          globalScope().symbols.add(symbol); //overwrites the symbol key to have true value associated -> means declaration 
+        }
+      }
+      else{
+        globalScope().symbols.add(symbol); //overwrites the symbol key to have true value associated -> means declaration 
+      }
+    }
+    else{ //const is a use
+      if (!this.globalScope().symbols.contains(symbol)){    //if function doesn't exist in global scope
+        this.globalScope().symbols.add(symbol);        //insert function as undeclared
+      }
     }
   }
-  public void foundDeclFunc(SymbolInfo symbol) throws ScopeError{
-    if (globalScope().symbols.containsKey(symbol)){
-      if (globalScope().symbols.get(symbol) == true){//true means declaration
+  public void foundVar(VarSymbolInfo symbol) throws ScopeError{
+    if (symbol.declared){   //if var is a declaration
+      if (this.symbols.contains(symbol)){
         error(symbol, "Double declaration");
       }
       else{
-        globalScope().symbols.put(symbol, true); //overwrites the symbol key to have true value associated -> means declaration 
+        this.symbols.add(symbol);
       }
     }
     else{
-      globalScope().symbols.put(symbol, true); //overwrites the symbol key to have true value associated -> means declaration 
-    }
-  }
-  public void foundUsedFunc(SymbolInfo symbol){
-    
-    if (!this.globalScope().symbols.containsKey(symbol)){    //if function doesn't exist in global scope
-      this.globalScope().symbols.put(symbol, false);        //insert function as undeclared
+      if (!visibleInScopes(symbol)){
+        error(symbol, "Not declared");
+      }
     }
   }
   
@@ -117,8 +127,8 @@ public class SymbolTable {
     //searches current scope for best suggestion
     SymbolInfo bestMatch = null;
     int bestDist = 1000; //start with high difference so any match will be better than this
-    for (SymbolInfo s : symbols.keySet()){
-      if (symbols.get(s) && si.type == s.type){
+    for (SymbolInfo s : symbols){
+      if (s.declared && si.getClass() == s.getClass()){
         int dist =  Levenshtein.computeDistance(si.name, s.name);
         if (dist <= maxDis && dist < bestDist){
           bestMatch = s;
@@ -139,9 +149,5 @@ public class SymbolTable {
         return new Tuple<SymbolInfo, Integer>(bestMatch, bestDist);
       }
     }
-    
   }
-  
 }
-  
-  
