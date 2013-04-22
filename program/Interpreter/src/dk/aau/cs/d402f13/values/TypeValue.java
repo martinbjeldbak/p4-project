@@ -1,6 +1,7 @@
 package dk.aau.cs.d402f13.values;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import dk.aau.cs.d402f13.interpreter.Callable;
 import dk.aau.cs.d402f13.interpreter.Interpreter;
@@ -152,6 +153,9 @@ public class TypeValue extends Value {
         ret = new ObjectValue(this, scope, parent.getInstance(interpreter, parentParams));
       }
       ret.setScope(new Scope(scope, ret));
+      for (Entry<String, Member> e : members.entrySet()) {
+        ret.addMember(e.getKey(), e.getValue().getValue(interpreter));
+      }
       interpreter.getSymbolTable().closeScope();
       return ret;
     }
