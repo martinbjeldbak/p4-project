@@ -1,17 +1,26 @@
 package dk.aau.cs.d402f13.values;
 
+import java.util.HashMap;
+
 import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.Scope;
 import dk.aau.cs.d402f13.utilities.errors.DivideByZeroError;
+import dk.aau.cs.d402f13.utilities.errors.InternalError;
+import dk.aau.cs.d402f13.utilities.errors.NameError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
-public class ObjectValue extends Value {
+public class ObjectValue extends Value implements Cloneable {
 
   private TypeValue type;
   private Scope scope;
   
   private Value parent;
+  private Value child;
+  
+  private boolean isSuper = false;
+  
+  private HashMap<String, Value> members = new HashMap<String, Value>();
   
   public ObjectValue(TypeValue type, Scope scope) {
     this.type = type;
@@ -21,12 +30,52 @@ public class ObjectValue extends Value {
   public ObjectValue(TypeValue type, Scope scope, Value parent) {
     this(type, scope);
     this.parent = parent;
+    if (parent instanceof ObjectValue) {
+      ((ObjectValue)parent).child = this;
+    }
+  }
+  
+  public void addMember(String member, Value value) {
+    members.put(member, value);
+  }
+  
+  public Value getObjectMember(String member) throws StandardError {
+    Value value = members.get(member);
+    if (value == null) {
+      if (parent != null) {
+        if (parent instanceof ObjectValue) {
+          return ((ObjectValue)parent).getObjectMember(member);
+        }
+        return parent.getMember(member);
+      }
+      throw new NameError("Undefined member: " + member);
+    }
+    return value;
+  }
+  
+  @Override
+  public Value getMember(String member) throws StandardError {
+    if (!isSuper && child != null) {
+      return child.getMember(member);
+    }
+    return getObjectMember(member);
   }
 
   /** {@inheritDoc}  */
   @Override
   public TypeValue getType() {
     return type;
+  }
+  
+  public Value getAsSuper() throws InternalError {
+    try {
+      ObjectValue clone = (ObjectValue)clone();
+      clone.isSuper = true;
+      return clone;
+    }
+    catch (CloneNotSupportedException e) {
+      throw new InternalError(e);
+    }
   }
   
   public Value getParent() {
@@ -38,12 +87,13 @@ public class ObjectValue extends Value {
     while (obj instanceof ObjectValue && ((ObjectValue)obj).parent != null) {
       obj = ((ObjectValue)obj).parent;
     }
+
     return obj;
   }
   
   /** {@inheritDoc}  */
   @Override
-  public Value as(TypeValue type) throws StandardError {
+  public Value as(TypeValue type) throws TypeError {
     Value obj = this;
     while (obj.getType() != type) {
       if (!(obj instanceof ObjectValue) || ((ObjectValue)obj).parent == null) {
@@ -157,4 +207,7 @@ public class ObjectValue extends Value {
     this.scope = scope;
   }
   
+  public Scope getScope() {
+    return scope;
+  }
 }

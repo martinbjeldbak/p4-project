@@ -34,19 +34,23 @@ public class IntValue extends Value {
   /** {@inheritDoc}  */
   @Override
   public BoolValue lessThan(Value other) throws TypeError {
-    if(other instanceof IntValue) {
-      if(this.value < ((IntValue)other).value)
+    if(other.is(IntValue.type())) {
+      IntValue oInt = (IntValue)other.as(IntValue.type());
+
+      if(this.value < oInt.value)
         return BoolValue.trueValue();
       return BoolValue.falseValue();
     }
-    throw new TypeError("Cannot use '<' on int with " + other);
+    throw new TypeError("Cannot use '<' on integer with " + other);
   }
   
   /** {@inheritDoc}  */
   @Override
   public BoolValue lessThanEq(Value other) throws TypeError {
-    if(other instanceof IntValue) {
-      if(this.value <= ((IntValue)other).value)
+    if(other.is(IntValue.type())) {
+      IntValue oInt = (IntValue)other.as(IntValue.type());
+
+      if(this.value <= oInt.value)
         return BoolValue.trueValue();
       return BoolValue.falseValue();
     }
@@ -56,8 +60,10 @@ public class IntValue extends Value {
   /** {@inheritDoc}  */
   @Override
   public BoolValue greaterThan(Value other) throws TypeError {
-    if(other instanceof IntValue) {
-      if(this.value > ((IntValue)other).value)
+    if(other.is(IntValue.type())) {
+      IntValue oInt = (IntValue)other.as(IntValue.type());
+
+      if(this.value > oInt.value)
         return BoolValue.trueValue();
       return BoolValue.falseValue();
     }
@@ -67,8 +73,10 @@ public class IntValue extends Value {
   /** {@inheritDoc}  */
   @Override
   public BoolValue greaterThanEq(Value other) throws TypeError {
-    if(other instanceof IntValue) {
-      if(this.value >= ((IntValue)other).value)
+    if(other.is(IntValue.type())) {
+      IntValue oInt = (IntValue)other.as(IntValue.type());
+
+      if(this.value >= oInt.value)
         return BoolValue.trueValue();
       return BoolValue.falseValue();
     }
@@ -78,8 +86,14 @@ public class IntValue extends Value {
   /** {@inheritDoc}  */
   @Override
   public BoolValue equalsOp(Value other) {
-    if(other instanceof IntValue) {
-      if(this.value == ((IntValue)other).value)
+    if(other.is(IntValue.type())) {
+      IntValue oInt = null;
+      try {
+        oInt = (IntValue)other.as(IntValue.type());
+      } catch (TypeError typeError) {
+        return BoolValue.falseValue();
+      }
+      if(this.value == oInt.value)
         return BoolValue.trueValue();
     }
     return BoolValue.falseValue();
@@ -88,49 +102,57 @@ public class IntValue extends Value {
   /** {@inheritDoc}  */
   @Override
   public Value add(Value other) throws TypeError {
-    if(other instanceof IntValue)
-      return new IntValue(this.value + ((IntValue)other).getValue());
-    else if(other instanceof StrValue)
-      return new StrValue(value + ((StrValue)other).getValue());
-    throw new TypeError("Addition cannot be done on ints with " + other);
+    if(other.is(IntValue.type())) {
+      IntValue oInt = (IntValue)other.as(IntValue.type());
+      return new IntValue(this.value + oInt.value);
+    }
+    else if(other.is(StrValue.type())) {
+      StrValue oStr = (StrValue)other.as(StrValue.type());
+      return new StrValue(value + oStr.getValue());
+    }
+    throw new TypeError("Addition cannot be done on integers with " + other);
   }
   
   /** {@inheritDoc}  */
   @Override
   public Value subtract(Value other) throws TypeError {
-    if(other instanceof IntValue)
-      return new IntValue(this.value - ((IntValue)other).getValue());
-    throw new TypeError("Subtraction cannot be done on ints with " + other);   
+    if(other.is(IntValue.type())) {
+      IntValue oInt = (IntValue)other.as(IntValue.type());
+      return new IntValue(this.value - oInt.getValue());
+    }
+    throw new TypeError("Subtraction cannot be done on integers with " + other);
   }
   
   /** {@inheritDoc}  */
   @Override
   public Value multiply(Value other) throws TypeError {
-    if(other instanceof IntValue)
-      return new IntValue(this.value * ((IntValue)other).getValue());
-    throw new TypeError("Multiplication cannot be done on ints with " + other);
+    if(other.is(IntValue.type())) {
+      IntValue oInt = (IntValue)other.as(IntValue.type());
+      return new IntValue(this.value * oInt.getValue());
+    }
+    throw new TypeError("Multiplication cannot be done on integers with " + other);
   }
   
   /** {@inheritDoc}  */
   @Override
   public Value divide(Value other) throws TypeError, DivideByZeroError {
-    if(other instanceof IntValue) {
-      IntValue rOperand = (IntValue)other;
-      
-      if(rOperand.getValue() == 0)
-        throw new DivideByZeroError("Division by 0");
-      
-      return new IntValue(this.value / rOperand.getValue());
+    if(other.is(IntValue.type())) {
+      IntValue oInt = (IntValue)other.as(IntValue.type());
+      if(oInt.getValue() == 0)
+        throw new DivideByZeroError("Cannot divide by 0");
+      return new IntValue(this.value / oInt.getValue());
     }
-    throw new TypeError("Division cannot be done on ints with " + other);
+    throw new TypeError("Division cannot be done on integers with " + other);
   }
   
   /** {@inheritDoc}  */
   @Override
   public Value mod(Value other) throws TypeError {
-    if(other instanceof IntValue)
-      return new IntValue(value % ((IntValue)other).getValue());
-    throw new TypeError("Modular arithmetic cannot be done on ints with " + other);
+    if(other.is(IntValue.type())) {
+      IntValue oInt = (IntValue)other.as(IntValue.type());
+      return new IntValue(value % oInt.getValue());
+    }
+    throw new TypeError("Modular arithmetic cannot be done on integers with " + other);
   }
   
   @Override
