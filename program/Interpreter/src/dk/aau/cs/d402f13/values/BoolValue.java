@@ -3,6 +3,8 @@ package dk.aau.cs.d402f13.values;
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
+import static dk.aau.cs.d402f13.values.TypeValue.expect;
+
 public class BoolValue extends Value {
   
   private static BoolValue trueValue = new BoolValue();
@@ -50,9 +52,11 @@ public class BoolValue extends Value {
   /** {@inheritDoc}  */
   @Override
   public Value add(Value other) throws TypeError {
-    if(other instanceof StrValue)
-      return new StrValue(this + ((StrValue)other).getValue());
-    throw new TypeError("Addition cannot be done on booleans with " + other);
+    if(other.is(StrValue.type())) {
+      StrValue str = (StrValue)other.as(StrValue.type());
+      return new StrValue(this.toString() + str.getValue());
+    }
+    throw new TypeError("Addition cannot be done on boolean with " + other);
   }
   
   @Override
@@ -65,9 +69,15 @@ public class BoolValue extends Value {
   /** {@inheritDoc}  */
   @Override
   public BoolValue equalsOp(Value other) {
-    if(other instanceof BoolValue) {
-      if(this == (BoolValue)other)
-        return trueValue;
+    if(other.is(BoolValue.type())) {
+      BoolValue b = null;
+      try {
+        b = (BoolValue)other.as(BoolValue.type());
+      } catch (TypeError typeError) {
+        return falseValue;
+      }
+      if(this == b)
+        return  trueValue;
     }
     return falseValue;
   }
