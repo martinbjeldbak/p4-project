@@ -70,11 +70,17 @@ public class FunValue extends Value {
   }
   
   private boolean inCall = false;
+  
+  public Value callIgnorePrevious(Interpreter interpreter, Value ...actualParameters) throws StandardError {
+    boolean previousInCall = inCall;
+    inCall = false;
+    Value ret = call(interpreter, actualParameters);
+    inCall = previousInCall;
+    return ret;
+  }
 
   @Override
   public Value call(Interpreter interpreter, Value ... actualParameters) throws StandardError {
-    if (inCall) {
-    }
     if (varParams == null) {
       if (actualParameters.length != formalParameters.length) {
         throw new ArgumentError("Invalid number of arguments, expected " + formalParameters.length);
@@ -85,26 +91,41 @@ public class FunValue extends Value {
         throw new ArgumentError("Invalid number of arguments, expected at least " + formalParameters.length);
       }
     }
+    if (inCall) {
+      return new CallValue(interpreter, this, actualParameters);
+    }
+    inCall = true;
     interpreter.getSymbolTable().openScope(new Scope(currentScope));
     Value ret;
     if (callable != null) {
       ret = callable.call(interpreter, actualParameters);
     }
     else {
-      for (int i = 0; i < formalParameters.length; i++) {
-        interpreter.getSymbolTable().addVariable(formalParameters[i], actualParameters[i]);
-      }
-      if (varParams != null) {
-        int numParamsList = actualParameters.length - formalParameters.length;
-        Value[] varParamsList = new Value[numParamsList];
-        for (int i = 0; i < varParamsList.length; i++) {
-          varParamsList[i] = actualParameters[i + formalParameters.length];
+      boolean recursion = false;
+      do {
+        for (int i = 0; i < formalParameters.length; i++) {
+          interpreter.getSymbolTable().addVariable(formalParameters[i], actualParameters[i]);
         }
-        interpreter.getSymbolTable().addVariable(varParams, new ListValue(varParamsList));
-      }
-      ret = interpreter.visit(expression);
+        if (varParams != null) {
+          int numParamsList = actualParameters.length - formalParameters.length;
+          Value[] varParamsList = new Value[numParamsList];
+          for (int i = 0; i < varParamsList.length; i++) {
+            varParamsList[i] = actualParameters[i + formalParameters.length];
+          }
+          interpreter.getSymbolTable().addVariable(varParams, new ListValue(varParamsList));
+        }
+        ret = interpreter.visit(expression);
+        if (ret instanceof CallValue && ((CallValue)ret).getFunction() == this) {
+          recursion = true;
+          actualParameters = ((CallValue)ret).getParameters();
+        }
+        else {
+          recursion = false;
+        }
+      } while (recursion);
     }
     interpreter.getSymbolTable().closeScope();
+    inCall = false;
     return ret;
   }
   
