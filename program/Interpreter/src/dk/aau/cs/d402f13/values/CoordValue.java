@@ -6,7 +6,8 @@ public class CoordValue extends Value {
   private final int x, y;
   
   private static TypeValue type = new TypeValue("Coordinate", 1, false);
-  
+
+  @Override
   public TypeValue getType() {
     return type;
   }

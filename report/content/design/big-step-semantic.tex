@@ -1,0 +1,84 @@
+\section{Big-step semantics}
+There are two kinds of operational semantics. we will only use and describe the
+big-step semantics for \productname{}. The reason for not describing small-step
+semantics is taht we do not find i necessary. The big-step semantics will
+capture the operational semantics of programs written in \productname{}.
+
+We have divided the following subsections into expressions, lists, variable
+lists, and definitions. In each section we describe the construction of the
+big-step semantics by showing the transition rules for each construct.
+
+\subsection{Expressions}
+
+\begin{table}[ht]
+  \begin{center}
+    \begin{tabular*}{\textwidth}{lc}
+      $[\mbox{PLUS}_{\mbox{INT}}]$ & \infrule{env_{V}, sto \vdash E_{1} \ra
+      v_{1} \quad env_{V}, sto \vdash E_{2} \ra
+      v_{2}}{env_{V}, sto \vdash E_{1} + E_{2} \ra v} \\ 
+      & where $v=v_{1}+v_{2}$ \\
+      & \\
+      $[\mbox{PLUS}_{\mbox{STR}}]$ & \infrule{s \vdash E_{1} \ra v_{1} \: s \vdash E_{2} \ra
+      v_{2}}{s \vdash E_{1} + E_{2} \ra v} \\
+      & where $v=v_{1}+v_{2}$ \\
+      & \\
+    \end{tabular*}
+  \end{center}
+\end{table}
+
+
+
+%      $[\mbox{MINUS}]$ & \infrule{s \vdash E_{1} \ra v_{1} \: s \vdash E_{2} \ra
+%      v_{2}}{s \vdash E_{1} - E_{2} \ra v} & where $v=v_{1}-v_{2}$ \\
+ %     $[\mbox{MULTIPLICATION}]$ & \infrule{s \vdash E_{1} \ra v_{1} \: s \vdash E_{2} \ra
+ %     v_{2}}{s \vdash E_{1} * E_{2} \ra v} & where $v=v_{1}*v_{2}$ \\
+ %     $[\mbox{DIVISION}]$ & \infrule{s \vdash E_{1} \ra v_{1} \: s \vdash E_{2} \ra
+ %     v_{2}}{s \vdash E_{1} / E_{2} \ra v} & where $v=v_{1}/v_{2}$ \\
+ %     $[\mbox{MODULO}]$ & \infrule{s \vdash E_{1} \ra v_{1} \: s \vdash E_{2} \ra
+ %     v_{2}}{s \vdash E_{1} \% E_{2} \ra v} & where $ $ \\
+
+\begin{table}[ht]
+  \begin{center}
+    \begin{tabular*}{\textwidth}{lc}
+      $[\mbox{RULE}]$ & \infrule{\lag Something, Something \rag \ra
+      something}{\lag something, something, something \rag \ra something } \\
+    \end{tabular*}
+  \end{center}
+\end{table}
+
+
+\subsection{Lists}
+
+\begin{table}[ht]
+  \begin{center}
+    \begin{tabular*}{\textwidth}{lc}
+      $[\mbox{RULE}]$ & \infrule{\lag Something, Something \rag \ra
+      something}{\lag something, something, something \rag \ra something } \\
+    \end{tabular*}
+  \end{center}
+\end{table}
+
+
+\subsection{Variable lists}
+
+\begin{table}[ht]
+  \begin{center}
+    \begin{tabular*}{\textwidth}{lc}
+      $[\mbox{RULE}]$ & \infrule{\lag Something, Something \rag \ra
+      something}{\lag something, something, something \rag \ra something } \\
+    \end{tabular*}
+  \end{center}
+\end{table}
+
+
+\subsection{Definitions}
+
+\begin{table}[ht]
+  \begin{center}
+    \begin{tabular*}{\textwidth}{lc}
+      $[\mbox{RULE}]$ & \infrule{\lag Something, Something \rag \ra
+      something}{\lag something, something, something \rag \ra something } \\
+    \end{tabular*}
+  \end{center}
+\end{table}
+

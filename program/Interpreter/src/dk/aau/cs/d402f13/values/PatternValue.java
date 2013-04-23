@@ -7,7 +7,8 @@ import dk.aau.cs.d402f13.utilities.errors.TypeError;
 public class PatternValue extends Value {
   
   private static TypeValue type = new TypeValue("Pattern", 1, false);
-  
+
+  @Override
   public TypeValue getType() {
     return type;
   }

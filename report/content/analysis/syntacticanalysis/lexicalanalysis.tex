@@ -1,17 +1,22 @@
 \subsection{Lexical analysis}
 \label{sec:lexicalanalysis}
-Before the syntax analysis can be performed, a scanner has to do a lexical analysis. The scanner takes an input stream of characters and outputs a stream of tokens. \todo{Det her afsnit skal skrive om!}
+Before the syntax analysis can be performed a scanner has to perform a lexical analysis. The scanner's job is basicly to check a given source for lexical errors and translating the input stream of characters from the source code into a stream of tokens which the parser can work with \cite[p. 57]{fischer2009} this is done by identifying every lexeme in the source and attaching a potential token to it. Lexemes are strings of characters described by regular expressions. Typical examples of lexemes in a programming language are: variable names, integer literals, operators and special keywords etc. A variable name lexeme could be defined by the following regular expression: $[a-zA-Z_][a-zA-Z0-9\_]*$. Which means a variable name can start with either an uppercase letter, lowercase letter or underscore followed by zero to many lowercase letters, uppercase letters, numbers or underscores. In \tableref{table:lexandtokens} we can see some example of lexemes and the tokens they have been paired up with. If both \textit{a} and \textit{b} are lexemes describing variable names and \textit{102} and \textit{42} are lexemes describing integer literals, then \textit{a} and \textit{b} or \textit{102} and \textit{42} can typically be used interchangeably and still give a syntatic meaningful program. 
 
-The lowest level syntactic units of a language is called lexemes. A language's formal description does not often include these. They are instead described by a lexical specification, regular expressions i.e., separated from the syntactic specification\cite[p. 135]{sebesta2013}. Typical lexemes for a programming language includes integer literals, operators and special keywords like \textit{if} and \textit{while}. If both \textit{\$a} and \textit{\$b} are lexemes describing a variable and \textit{102} and \textit{42} are lexemes describing an integer, then \textit{\$a} and \textit{\$b} or \textit{102} and \textit{42} can typically be used interchangeably and still give a meaningful program. Therefore the lexemes are grouped into tokens. The name of a variable or the value of an integer is preserved when tokenising. The tokens are an abstraction that makes it easier to analyse if correct syntax of the language. An example of the grouping of lexemes into tokens can be seen by \tableref{table:lexandtokens}. After 
+A scanner is a relatively simple component which can be constructed by writting it by hand or by using a scanner generator tool such as Lex, which generates an executable scanner by feeding it with a set of regular expressions. 
 
-\tab[4cm]{lexandtokens}{1}{Lexemes and their corresponding token group.}
+\tab[10cm]{lexandtokens}{1}{Lexemes and their corresponding token group.}
 		    {               }
-{Lexemes   }{\textbf{Tokens}}{
-\tabrow{\$a}{var(a) 		}
-\tabrow{=  }{assign 		}
-\tabrow{3  }{int(3) 		}
-\tabrow{\$b}{var(b) 		}
-\tabrow{+  }{plus   		}
-\tabrow{4  }{int(4) 		}
-\tabrow{\$a}{var(a) 		}
+{Lexemes   }{\textbf{Tokens}} {
+\tabrow{ x                          }{VAR\_NAME 	  } 
+\tabrow{ random\_var\_name          }{VAR\_NAME 	  }
+\tabrow{ RANdom\_var\_name2         }{VAR\_NAME 	  }
+\tabrow{ 1 						    }{INT\_LITERAL    }
+\tabrow{ 342 					    }{INT\_LITERAL    }
+\tabrow{ 52890 					    }{INT\_LITERAL    }
+\tabrow{ +				 		    }{PLUS\_OPERATOR  }
+\tabrow{ - 					 	    }{MINUS\_OPERATOR }
+\tabrow{ * 					 	    }{MULT\_OPERATOR  }
+\tabrow{ if				 		    }{KEYWORD         }
+\tabrow{ while 				        }{KEYWORD  		  }
+\tabrow{ switch 				    }{KEYWORD  		  }
 }

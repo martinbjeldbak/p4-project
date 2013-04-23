@@ -7,7 +7,8 @@ public class DirValue extends Value {
   private final int y;
   
   private static TypeValue type = new TypeValue("Direction", 1, false);
-  
+
+  @Override
   public TypeValue getType() {
     return type;
   }
