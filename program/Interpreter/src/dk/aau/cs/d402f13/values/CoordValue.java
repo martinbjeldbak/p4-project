@@ -1,13 +1,15 @@
 package dk.aau.cs.d402f13.values;
 
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
+import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public class CoordValue extends Value {
   private final int x, y;
   
   private static TypeValue type = new TypeValue("Coordinate", 1, false);
-  
+
+  @Override
   public TypeValue getType() {
     return type;
   }
@@ -66,21 +68,24 @@ public class CoordValue extends Value {
   
   /** {@inheritDoc}  */
   @Override
-  public Value add(Value other) throws TypeError {
+  public Value add(Value other) throws StandardError {
     if(other.is(StrValue.type())) {
       StrValue oStr = (StrValue)other.as(StrValue.type());
-      return new StrValue(new StringBuilder().append(this.toString()).append(oStr.getValue()).toString());
+      return new StrValue(this.toString() + oStr.getValue());
     }
     else if(other.is(DirValue.type())) {
       DirValue oDir = (DirValue)other.as(DirValue.type());
       return new CoordValue(x + oDir.getX(), y + oDir.getY());
+    }
+    else if(other.is(ListValue.type())) {
+      return ListValue.prepend(this, other);
     }
     throw new TypeError("Addition cannot be done on coordinates with " + other);
   }
   
   /** {@inheritDoc}  */
   @Override
-  public Value subtract(Value other) throws TypeError {
+  public Value subtract(Value other) throws StandardError {
     if(other.is(CoordValue.type())) {
       CoordValue oCoord = (CoordValue)other.as(CoordValue.type());
       return new DirValue(x - oCoord.getX(), y - oCoord.getY());

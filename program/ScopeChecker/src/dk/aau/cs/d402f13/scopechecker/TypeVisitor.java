@@ -1,6 +1,6 @@
 package dk.aau.cs.d402f13.scopechecker;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
@@ -13,30 +13,27 @@ import dk.aau.cs.d402f13.utilities.scopechecker.Member;
 
 public class TypeVisitor extends DefaultVisitor
 {
-  ArrayList<TypeSymbolInfo> typeTable; //all classes found in program are put here as a ref to its ClassInfo object
+  HashMap<String, TypeSymbolInfo> typeTable; //all classes found in program are put here as a ref to its ClassInfo object
   TypeSymbolInfo currentType; //the class we are currently inside
   public TypeVisitor(){
-    typeTable = new ArrayList<TypeSymbolInfo>();
+    typeTable = new HashMap<String, TypeSymbolInfo>();
     currentType = null;
     addStandardEnvironment();
   }
   void addStandardEnvironment(){
-    typeTable.add( new TypeSymbolInfo(null, "Piece", 1, -1, 0 ) );
-    typeTable.add( new TypeSymbolInfo(null, "Player", 0, -1, 0 ) );
-    typeTable.add( new TypeSymbolInfo(null, "Game", 1, -1, 0 ) );
-    typeTable.add( new TypeSymbolInfo(null, "GridBoard", 2, -1, 0 ) );
-    typeTable.add( new TypeSymbolInfo(null, "Square", 0, -1, 0 ) );
+    typeTable.put("Piece", new TypeSymbolInfo(null, "Piece", 1, -1, 0 ) );
+    typeTable.put("Player", new TypeSymbolInfo(null, "Player", 0, -1, 0 ) );
+    typeTable.put("Game", new TypeSymbolInfo(null, "Game", 1, -1, 0 ) );
+    typeTable.put("GridBoard", new TypeSymbolInfo(null, "GridBoard", 2, -1, 0 ) );
+    typeTable.put("Square", new TypeSymbolInfo(null, "Square", 0, -1, 0 ) );
   }
-  public ArrayList<TypeSymbolInfo> getTypeTable(){
+  public HashMap<String, TypeSymbolInfo> getTypeTable(){
     return this.typeTable;
   }
   public void AddType(TypeSymbolInfo ci) throws ScopeError{
-    for (TypeSymbolInfo c : this.typeTable){
-      if (ci.name == c.name){
+   if (this.typeTable.containsKey(ci.name))
         throw new ScopeError("Type with same name already declared", ci);
-      }
-    }
-    this.typeTable.add(ci);
+    this.typeTable.put(ci.name, ci);
   }
 
   @Override
