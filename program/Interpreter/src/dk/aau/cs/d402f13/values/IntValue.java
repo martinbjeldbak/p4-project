@@ -10,7 +10,8 @@ public class IntValue extends Value {
   private final int value;
   
   private static TypeValue type = new TypeValue("Integer", 1, false);
-  
+
+  @Override
   public TypeValue getType() {
     return type;
   }
@@ -110,6 +111,8 @@ public class IntValue extends Value {
       StrValue oStr = (StrValue)other.as(StrValue.type());
       return new StrValue(value + oStr.getValue());
     }
+    else if(other.is(ListValue.type()))
+      return ListValue.prepend(this, other);
     throw new TypeError("Addition cannot be done on integers with " + other);
   }
   
