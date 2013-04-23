@@ -8,82 +8,32 @@ import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.ast.DefaultVisitor;
 import dk.aau.cs.d402f13.utilities.errors.ScopeError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
-import dk.aau.cs.d402f13.utilities.scopechecker.SymbolInfo;
-import dk.aau.cs.d402f13.utilities.scopechecker.SymbolTable.SymbolType;
-
-class Member{
-  ArrayList<String> varArgs;
-  String name;
-  public Member(String name){
-    this.name = name;
-    this.varArgs = new ArrayList<String>();
-  }
-  public void AddArg(String varName){
-    this.varArgs.add(varName);
-  }
-}
-
-class TypeInfo
-{
-  int line;
-  int offset;
-  TypeInfo parent;
-  String parentName;
-  String name;
-  ArrayList<String> constructorArgs;
-  ArrayList<String> superVarArgs;   //var args for call to supers constructor
-  int superArgs;                    //number of arguments in call to supers constructor
-  ArrayList<Member> constantMembers;
-  ArrayList<Member> abstractMembers;
-  public TypeInfo(String name, int line, int offset){
-    this.name = name;
-    this.line = line;
-    this.offset = offset;
-    this.parentName = "";
-    constantMembers = new ArrayList<Member>();
-    abstractMembers = new ArrayList<Member>();
-    constructorArgs = new ArrayList<String>();
-    superVarArgs = new ArrayList<String>();
-    superArgs = 0;
-  }
-  public void SetParent(TypeInfo parent){
-    this.parent = parent;
-  }
-  public void SetParentName(String parentName){
-    this.parentName = parentName;
-  }
-  public void AddConstantMember(Member member){
-    constantMembers.add(member);
-  }
-  public void AddAbstractMember(Member member){
-    abstractMembers.add(member);
-  }
-  public void AddConstructorArg(String name){
-    constructorArgs.add(name);
-  }
-  public void AddSuperArg(String name){
-    superVarArgs.add(name);
-  }
-  public void IncrSuperArgCount(){
-    this.superArgs++;
-  }  
-}
+import dk.aau.cs.d402f13.utilities.scopechecker.TypeSymbolInfo;
+import dk.aau.cs.d402f13.utilities.scopechecker.Member;
 
 public class TypeVisitor extends DefaultVisitor
 {
-  ArrayList<TypeInfo> typeTable; //all classes found in program are put here as a ref to its ClassInfo object
-  TypeInfo currentType; //the class we are currently inside
+  ArrayList<TypeSymbolInfo> typeTable; //all classes found in program are put here as a ref to its ClassInfo object
+  TypeSymbolInfo currentType; //the class we are currently inside
   public TypeVisitor(){
-    typeTable = new ArrayList<TypeInfo>();
+    typeTable = new ArrayList<TypeSymbolInfo>();
     currentType = null;
+    addStandardEnvironment();
   }
-  public ArrayList<TypeInfo> getTypeTable(){
+  void addStandardEnvironment(){
+    typeTable.add( new TypeSymbolInfo(null, "Piece", 1, -1, 0 ) );
+    typeTable.add( new TypeSymbolInfo(null, "Player", 0, -1, 0 ) );
+    typeTable.add( new TypeSymbolInfo(null, "Game", 1, -1, 0 ) );
+    typeTable.add( new TypeSymbolInfo(null, "GridBoard", 2, -1, 0 ) );
+    typeTable.add( new TypeSymbolInfo(null, "Square", 0, -1, 0 ) );
+  }
+  public ArrayList<TypeSymbolInfo> getTypeTable(){
     return this.typeTable;
   }
-  public void AddType(TypeInfo ci) throws ScopeError{
-    for (TypeInfo c : this.typeTable){
+  public void AddType(TypeSymbolInfo ci) throws ScopeError{
+    for (TypeSymbolInfo c : this.typeTable){
       if (ci.name == c.name){
-        throw new ScopeError("Type with same name already declared", new SymbolInfo(SymbolType.TYPE, ci.name, ci.line, ci.offset));
+        throw new ScopeError("Type with same name already declared", ci);
       }
     }
     this.typeTable.add(ci);
@@ -95,14 +45,17 @@ public class TypeVisitor extends DefaultVisitor
     //name cnstr_args  supertype  spr_cnstr_args     body
     Iterator<AstNode> it = node.iterator();
     
-    //get class name
-    TypeInfo ci = new TypeInfo(it.next().value, node.line, node.offset );
+    //get type name
+    TypeSymbolInfo ci = new TypeSymbolInfo(node, it.next().value, node.line, node.offset );
+    //the ASTNode node is saved so the typeDef can be changed to abstractTypeDef if ScopeChecker determines the type is abstract
+    
     this.AddType(ci); //adds type and checks if another type with same name exists
     
     //get constructor arguments
     Iterator<AstNode> varlistIt = it.next().iterator();
     while (varlistIt.hasNext()){
-      ci.AddConstructorArg(varlistIt.next().value);
+      ci.incrArgCount(); //increase number of arguments in constructor
+      varlistIt.next();
     }
     
     if (!it.hasNext()) //having a type body is optional
@@ -111,16 +64,14 @@ public class TypeVisitor extends DefaultVisitor
     AstNode parentOrBody = it.next();
     if (parentOrBody.type == Type.TYPE){
       //get the class it extends
-      ci.SetParentName(parentOrBody.value);
+      ci.setParentName(parentOrBody.value);
       
       //get the parameters to the supertype' constructor call
       //not all these parameters are var's, some could be int. Only save the vars, since we want to check they have been declared somewhere
       Iterator<AstNode> superArglistIt = it.next().iterator();
       while (superArglistIt.hasNext()){
-        ci.IncrSuperArgCount(); //save the number of args used when calling the parent constructor. We later check that this number match the number of args
-        AstNode next = superArglistIt.next();
-        if (next.type == Type.VAR)
-          ci.AddSuperArg(next.value);   //found a variable arg, save it
+        ci.incrSuperArgCount(); //save the number of args used when calling the parent constructor. We later check that this number match the number of args
+        superArglistIt.next();
       }
       
       if (!it.hasNext()) //having a body is optional
@@ -152,9 +103,13 @@ public class TypeVisitor extends DefaultVisitor
     if (it.hasNext()){
       Iterator<AstNode> varListIt = it.next().iterator();
       while (varListIt.hasNext()){
-        member.AddArg(varListIt.next().value); 
+        member.IncrArg(); 
+        varListIt.next();
       }
-      currentType.AddAbstractMember(member);
+      currentType.addAbstractFunction(member);
+    }
+    else{   //if no varlist exists, the definition is an abstract constant
+      currentType.addAbstractConstant(member);
     }
     return null;
   }
@@ -175,12 +130,18 @@ public class TypeVisitor extends DefaultVisitor
     //find name
     Member member = new Member(it.next().value);
     
-    //find varlist, which is the members arguments
-    Iterator<AstNode> varListIt = it.next().iterator();
-    while (varListIt.hasNext()){
-      member.AddArg(varListIt.next().value);
+    //find varlist if any exist, which is the members arguments
+    if (it.hasNext() && it.next().type == Type.VARLIST){
+      Iterator<AstNode> varListIt = it.next().iterator();
+      while (varListIt.hasNext()){
+        member.IncrArg(); 
+        varListIt.next();
+      }
+      currentType.addConcreteFunction(member);
     }
-    currentType.AddConstantMember(member);
+    else{   //if no varlist exists, the definition is an abstract constant
+      currentType.addConcreteConstant(member);
+    }
     
     return null;
   }

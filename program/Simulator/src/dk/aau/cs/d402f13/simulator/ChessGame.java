@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dk.aau.cs.d402f13.utilities.types.Action;
+import dk.aau.cs.d402f13.utilities.types.Board;
 import dk.aau.cs.d402f13.utilities.types.Game;
 import dk.aau.cs.d402f13.utilities.types.Gridboard;
 import dk.aau.cs.d402f13.utilities.types.MoveAction;
 import dk.aau.cs.d402f13.utilities.types.Piece;
+import dk.aau.cs.d402f13.utilities.types.Player;
 import dk.aau.cs.d402f13.utilities.types.Square;
 
 class WhiteSquare extends Square{
@@ -20,7 +22,7 @@ class WhiteSquare extends Square{
 class BlackSquare extends Square{
 	@Override
 	public String getImgPath(){
-		return "img/Black.png";
+		return "img/black.png";
 	}
 }
 
@@ -44,7 +46,8 @@ class ChessBoard extends Gridboard{
 abstract class ChessPiece extends Piece{
 	private boolean color;
 	private String name;
-	public ChessPiece( boolean color, String name ){
+	public ChessPiece( Player owner, boolean color, String name ){
+		super( owner );
 		this.color = color;
 		this.name = name;
 	}
@@ -64,10 +67,10 @@ abstract class ChessPiece extends Piece{
 	
 	protected List<Action> slide( Game g, int dx, int dy ){
 		List<Action> list = new ArrayList<Action>();
-		Gridboard b = (Gridboard)g.getBoard();
+		Gridboard b = (Gridboard)g.board();
 
-		int x = b.squareCoordinateX( getSquare() );
-		int y = b.squareCoordinateY( getSquare() );
+		int x = b.squareCoordinateX( square() );
+		int y = b.squareCoordinateY( square() );
 		do{
 			x += dx;
 			y += dy;
@@ -89,10 +92,10 @@ abstract class ChessPiece extends Piece{
 	}
 	
 	protected Action relative( Game g, int dx, int dy ){
-		Gridboard b = (Gridboard)g.getBoard();
+		Gridboard b = (Gridboard)g.board();
 
-		int x = b.squareCoordinateX( getSquare() ) + dx;
-		int y = b.squareCoordinateY( getSquare() ) + dy;
+		int x = b.squareCoordinateX( square() ) + dx;
+		int y = b.squareCoordinateY( square() ) + dy;
 		
 		Square s = b.getSquareAt( x, y );
 		if( s == null )
@@ -109,8 +112,8 @@ abstract class ChessPiece extends Piece{
 }
 
 class Pawn extends ChessPiece{
-	public Pawn(boolean color ) {
-		super(color, "Pawn");
+	public Pawn( Player owner, boolean color ) {
+		super( owner, color, "Pawn" );
 	}
 	
 	@Override
@@ -119,13 +122,19 @@ class Pawn extends ChessPiece{
 		List<Action> list = new ArrayList<Action>();
 		list.add( relative( g, 0, dir ) );
 		list.add( relative( g, 0, dir*2 ) );
-		return list;
+		
+		//Remove null actions
+		List<Action> cleanList = new ArrayList<Action>();
+		for( Action a: list )
+			if( a != null )
+				cleanList.add( a );
+		return cleanList;
 	}
 }
 
 class Rook extends ChessPiece{
-	public Rook(boolean color ) {
-		super(color, "Rook");
+	public Rook( Player owner, boolean color ) {
+		super( owner, color, "Rook" );
 	}
 	
 	@Override
@@ -141,8 +150,8 @@ class Rook extends ChessPiece{
 }
 
 class Knight extends ChessPiece{
-	public Knight(boolean color ) {
-		super(color, "Knight");
+	public Knight( Player owner, boolean color ) {
+		super( owner, color, "Knight" );
 	}
 	
 	@Override
@@ -156,13 +165,19 @@ class Knight extends ChessPiece{
 		list.add( relative( g, -2, 1 ) );
 		list.add( relative( g, 2, -1 ) );
 		list.add( relative( g, -2, -1 ) );
-		return list;
+		
+		//Remove null actions
+		List<Action> cleanList = new ArrayList<Action>();
+		for( Action a: list )
+			if( a != null )
+				cleanList.add( a );
+		return cleanList;
 	}
 }
 
 class Bishop extends ChessPiece{
-	public Bishop(boolean color ) {
-		super(color, "Bishop");
+	public Bishop( Player owner, boolean color ) {
+		super( owner, color, "Bishop" );
 	}
 	
 	@Override
@@ -177,8 +192,8 @@ class Bishop extends ChessPiece{
 }
 
 class Queen extends ChessPiece{
-	public Queen(boolean color ) {
-		super(color, "King");
+	public Queen( Player owner, boolean color ) {
+		super( owner, color, "King" );
 	}
 	
 	@Override
@@ -197,8 +212,8 @@ class Queen extends ChessPiece{
 }
 
 class King extends ChessPiece{
-	public King(boolean color ) {
-		super(color, "Queen");
+	public King( Player owner, boolean color ) {
+		super( owner, color, "Queen" );
 	}
 	
 	@Override
@@ -214,41 +229,58 @@ class King extends ChessPiece{
 		list.add( relative( g, -1, -1 ) );
 		list.add( relative( g, 0, -1 ) );
 		list.add( relative( g, 1, -1 ) );
-		return list;
+		
+		//Remove null actions
+		List<Action> cleanList = new ArrayList<Action>();
+		for( Action a: list )
+			if( a != null )
+				cleanList.add( a );
+		return cleanList;
 	}
 }
 
 public class ChessGame extends Game {
-	private void addTeam( Gridboard b, boolean color, List<Piece> pieces ){
+	Gridboard b = null;
+	List<Player> players = new ArrayList<Player>();
+	
+	private void addTeam( Gridboard b, Player p, boolean color, List<Piece> pieces ){
 		int front = color ? 1 : 6;
 		int back = color ? 0 : 7;
 		
 		for( int i=0; i<8; i++ )
-			pieces.add( new Pawn( color ).setPosition( b, i, front) );
+			pieces.add( new Pawn( p, color ).setPosition( b, i, front) );
 
-		pieces.add( new Rook( color ).setPosition(b, 0, back ) );
-		pieces.add( new Rook( color ).setPosition(b, 7, back ) );
+		pieces.add( new Rook( p, color ).setPosition(b, 0, back ) );
+		pieces.add( new Rook( p, color ).setPosition(b, 7, back ) );
 		
-		pieces.add( new Knight( color ).setPosition(b, 1, back ) );
-		pieces.add( new Knight( color ).setPosition(b, 6, back ) );
+		pieces.add( new Knight( p, color ).setPosition(b, 1, back ) );
+		pieces.add( new Knight( p, color ).setPosition(b, 6, back ) );
 
-		pieces.add( new Bishop( color ).setPosition(b, 2, back ) );
-		pieces.add( new Bishop( color ).setPosition(b, 5, back ) );
+		pieces.add( new Bishop( p, color ).setPosition(b, 2, back ) );
+		pieces.add( new Bishop( p, color ).setPosition(b, 5, back ) );
 
-		pieces.add( new Queen( color ).setPosition(b, 3, back ) );
-		pieces.add( new King( color ).setPosition(b, 4, back ) );
+		pieces.add( new Queen( p, color ).setPosition(b, 3, back ) );
+		pieces.add( new King( p, color ).setPosition(b, 4, back ) );
 	}
 	
 	public ChessGame() throws CloneNotSupportedException{
-		setTitle( "Chess" );
-		Gridboard b = new ChessBoard();
+		super( "Chess" );
+		b = new ChessBoard();
+
+		players.add( new Player() );
+		players.add( new Player() );
 		
 		List<Piece> pieces = new ArrayList<Piece>();
 
-		addTeam( b, false, pieces );
-		addTeam( b, true, pieces );
+		addTeam( b, players.get(0), false, pieces );
+		addTeam( b, players.get(1), true, pieces );
 		
 		b.setPieces( pieces );
-		setBoard( b );
 	}
+
+	@Override
+	public Board board(){ return b; }
+
+	@Override
+	public List<Player> players(){ return players; }
 }

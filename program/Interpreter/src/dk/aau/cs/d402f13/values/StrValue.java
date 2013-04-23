@@ -7,7 +7,8 @@ public class StrValue extends Value {
   private final String value;
   
   private static TypeValue type = new TypeValue("String", 1, false);
-  
+
+  @Override
   public TypeValue getType() {
     return type;
   }

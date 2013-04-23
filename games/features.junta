@@ -80,11 +80,25 @@ type A[$b] {
 }
 
 type B[$c] extends A[$c + 1] {
-	define aNumber = aNumber + 2
-    define bVal = super.aNumber + aNumber
-    define mySuperType = typeOf[super]
+	define aNumber = 13
 }
 
-define main = B[3].mySuperType
+define main = B[3].aFunc[2]
                           
 define main = qsort[MyListB[26, 2, 1, -2, 35, 2]]
+
+define qsort[$list] =
+  if $list.size <= 1
+    then $list
+    else let $p = $list[0],
+             $rest = $list[1, -1],
+             $lesser = $rest.filter[#[$x] => $x < $p],
+             $greater = $rest.filter[#[$x] => $x >= $p]
+      in qsort[$lesser] + [$p] + qsort[$greater]
+
+define countList[$n] =
+  if $n < 1
+    then []
+    else [$n] + countList[$n - 1]
+
+define main = qsort[countList[100]]

@@ -1,13 +1,31 @@
 \subsection{Context-free grammars}
 \label{sec:context-freegrammars}
-Grammars are defined using Backus-Naur Form (BNF). \todo{Finish\ldots}
+In the previous section we described how to transfrom an input stream of
+characters into an output stream of tokens. In the following section we
+will describe context-free grammars, a component which contains the programming
+languages grammar, that is the set of rules for how its tokens can be
+combined.
 
-BNF contains a set of terminals and a set of non-terminals. The terminals are the tokens from the lexical analysis. The non-terminals all have a set of productions, from which a mix of terminals and non-terminals can be derived from. A start production specifies a single non-terminal, from where all syntactically valid strings that are in the language can be derived from by using the production rules until only a sequence of terminals (the tokens) are left. The syntax analysis takes a sequence of tokens as input and tries to create a set of derivations from the start symbol that creates the given sequence of tokens. If success, the input has been parsed and the parse tree is kept for later analysis. The parse tree is the information concerning how the start symbol was derived into the sequence of tokens, which yields a tree structure. This tree is called an abstract syntax tree.
+A context-free grammar contains a set of terminals, a set of non-terminals, a
+set of productions and a start production. The terminals are the tokens from the
+lexical analysis. The non-terminals all have a sets of productions, from which a
+mix of terminals and non-terminals can be derived from. A production typically
+has the following form:
+
+\begin{ebnf}
+\grule{Nonterminal} {\{Terminal \gor \gcat Nonterminal\}}
+\end{ebnf}
+
+A start production specifies a single non-terminal, from where all syntactically
+valid strings that are in the language can be derived from by using the
+production rules until only a sequence of terminals (the tokens) are left. The
+following is an example of a context-free grammar: 
 
 \begin{ebnf}
 %Expressions
-\grule{program}{\gter{print} \gcat expr}
-\grule{expr}{\gter{(} \gcat term \gcat \gter{)} \gcat operator \gcat \gter{(} \gcat term \gcat \gter{)}}
+\grule{PROGRAM}{\gter{print} \gcat expr}
+\grule{expr}{\gter{(} \gcat term \gcat \gter{)} \gcat operator \gcat \gter{(}
+\gcat term \gcat \gter{)}}
 \grule{operator}{\gter{=}}
 \galt{\gter{>}}
 \galt{\gter{<}}
@@ -15,3 +33,11 @@ BNF contains a set of terminals and a set of non-terminals. The terminals are th
 \galt{expr}
 \grule{number}{\textbf{any number}}
 \end{ebnf}
+
+The syntax analysis takes a sequence of tokens as input and tries to create a
+set of derivations from the start symbol that creates the given sequence of
+tokens. If success, the input has been parsed and the parse tree is kept for
+later analysis. The parse tree is the information concerning how the start
+symbol was derived into the sequence of tokens, which yields a tree structure.
+This tree is called an abstract syntax tree.
+

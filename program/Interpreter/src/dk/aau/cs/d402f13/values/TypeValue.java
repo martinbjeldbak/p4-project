@@ -16,6 +16,7 @@ import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public class TypeValue extends Value {
   private HashMap<String, Member> members = new HashMap<String, Member>();
+  private HashMap<String, Value> staticMembers = new HashMap<String, Value>();
   private String[] formalParameters;
   private String name;
   private String varParams = null;
@@ -26,7 +27,8 @@ public class TypeValue extends Value {
   private Callable callable = null;
   
   private static TypeValue type = new TypeValue("Type", 1, false);
-  
+
+  @Override
   public TypeValue getType() {
     return type;
   }
@@ -59,10 +61,10 @@ public class TypeValue extends Value {
     this.callable = new DefaultConstructor(this);
   }
   
-  public TypeValue(String name, AstNode params, String parent, AstNode parenParams) {
+  public TypeValue(String name, AstNode params, String parent, AstNode parentParams) {
     this(name, params);
     this.parentName = parent;
-    this.parentConstructor = parenParams;
+    this.parentConstructor = parentParams;
   }
   
   public TypeValue(String name, int minArity, boolean varArgs, Callable callable) {
@@ -82,6 +84,15 @@ public class TypeValue extends Value {
       return true;
     }
     return false;
+  }
+  
+  public void ensureSuperType(Interpreter interpreter) throws NameError {
+    if (parent == null && parentName != null) {
+      parent = interpreter.getSymbolTable().getType(parentName);
+      if (parent == null) {
+        throw new NameError("Type extends undefined type: " + parentName);
+      }
+    }
   }
   
   public boolean isSupertypeOf(TypeValue type) {
@@ -108,7 +119,11 @@ public class TypeValue extends Value {
     throw new TypeError("Cannot add " + other + " to a type");
   }
   
-  public void addMember(String name, Member member) {
+  public Member getTypeMember(String name) {
+    return members.get(name);
+  }
+  
+  public void addTypeMember(String name, Member member) {
     members.put(name, member);
   }
   
@@ -146,12 +161,7 @@ public class TypeValue extends Value {
         interpreter.getSymbolTable().addVariable(varParams, new ListValue(varParamsList));
       }
       // Find parent
-      if (parentName != null && parent == null) {
-        parent = interpreter.getSymbolTable().getType(parentName);
-        if (parent == null) {
-          throw new NameError("Type extends undefined type: " + parentName);
-        }
-      }
+      ensureSuperType(interpreter);
       if (parent == null) {
         ret = new ObjectValue(this, scope);
       }
@@ -188,5 +198,13 @@ public class TypeValue extends Value {
       throw new TypeError("Invalid type for argument #" + i + ", expected " + type.toString());
     }
     return parameters[i].as(type);
+  }
+
+  public Value getStaticMember(String member) {
+    return staticMembers.get(member);
+  }
+  
+  public void addStaticMember(String member, Value value) {
+    staticMembers.put(member, value);
   }
 }

@@ -26,7 +26,8 @@ public class ListValue extends Value {
     System.arraycopy(oValues, 0, ret, 1, oValues.length);
     return new ListValue(ret);
   }
-  
+
+  @Override
   public TypeValue getType() {
     return type;
   }
