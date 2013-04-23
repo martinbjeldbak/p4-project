@@ -15,6 +15,17 @@ public class ListValue extends Value {
   private Value[] values = null;
   
   private static TypeValue type = new TypeValue("List", 1, false);
+
+  public static ListValue prepend(Value val, Value list) throws TypeError {
+    if(list.isNot(ListValue.type()))
+      throw new TypeError("The supplied value needs to be a list");
+
+    Value[] oValues = ((ListValue)list.as(ListValue.type())).getValues();
+    Value[] ret = new Value[oValues.length + 1];
+    ret[0] = val;
+    System.arraycopy(oValues, 0, ret, 1, oValues.length);
+    return new ListValue(ret);
+  }
   
   public TypeValue getType() {
     return type;
@@ -30,6 +41,10 @@ public class ListValue extends Value {
   
   public Value[] getValues() {
     return values;
+  }
+
+  public int getLength() {
+    return values.length;
   }
   
   @Override

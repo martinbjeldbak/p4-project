@@ -36,4 +36,11 @@ public class AbstractTypeValue extends TypeValue {
       throws StandardError {
     throw new TypeError("Unable to construct abstract type " + toString());
   }
+
+  @Override
+  public Value add(Value other) throws TypeError {
+    if(other.is(ListValue.type()))
+      return ListValue.prepend(this, other);
+    throw new TypeError("Cannot add " + other + " to an abstract type");
+  }
 }
