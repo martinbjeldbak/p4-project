@@ -10,7 +10,8 @@ public class IntValue extends Value {
   private final int value;
   
   private static TypeValue type = new TypeValue("Integer", 1, false);
-  
+
+  @Override
   public TypeValue getType() {
     return type;
   }

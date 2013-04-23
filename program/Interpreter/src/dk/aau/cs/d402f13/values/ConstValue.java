@@ -13,7 +13,8 @@ import dk.aau.cs.d402f13.utilities.errors.StandardError;
 
 public class ConstValue extends Value {
   private AstNode expression = null;
-  
+
+  @Override
   public TypeValue getType() {
     return null;
   }

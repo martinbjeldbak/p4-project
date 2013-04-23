@@ -16,7 +16,8 @@ public class ConstMemberValue extends Value {
   private int minArity;
   private boolean varArgs;
   private Callable function;
-  
+
+  @Override
   public TypeValue getType() {
     return null;
   }
