@@ -74,7 +74,7 @@ public class DirValue extends Value {
   
   /** {@inheritDoc}  */
   @Override
-  public BoolValue equalsOp(Value other) {
+  public BoolValue equalsOp(Value other) throws StandardError {
     if(other.is(DirValue.type())) {
       DirValue oDir = null;
       try {
@@ -91,7 +91,7 @@ public class DirValue extends Value {
 
   /** {@inheritDoc}  */
   @Override
-  public Value add(Value other) throws TypeError {
+  public Value add(Value other) throws StandardError {
     if(other.is(DirValue.type())) {
       DirValue oDir = (DirValue)other.as(DirValue.type());
       return new DirValue((x + oDir.getX()), y + (oDir.getY()));
@@ -109,7 +109,7 @@ public class DirValue extends Value {
   
   /** {@inheritDoc}  */
   @Override
-  public Value subtract(Value other) throws TypeError {
+  public Value subtract(Value other) throws StandardError {
     if(other.is(DirValue.type())) {
       DirValue oDir = (DirValue)other.as(DirValue.type());
       return new DirValue(x - oDir.getX(), y - oDir.getY());

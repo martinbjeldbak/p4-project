@@ -60,8 +60,12 @@ public class FunValue extends Value {
     this.currentScope = currentScope;
   }
   
+  private boolean inCall = false;
+  
   @Override
   public Value call(Interpreter interpreter, Value ... actualParameters) throws StandardError {
+    if (inCall) {
+    }
     if (varParams == null) {
       if (actualParameters.length != formalParameters.length) {
         throw new ArgumentError("Invalid number of arguments, expected " + formalParameters.length);

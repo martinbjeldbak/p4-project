@@ -34,7 +34,7 @@ public class ListValue extends Value {
   }
   
   @Override
-  public BoolValue equalsOp(Value other) {
+  public BoolValue equalsOp(Value other) throws StandardError {
     if(other.isNot(ListValue.type())) {
       return BoolValue.falseValue();
     }
@@ -71,7 +71,7 @@ public class ListValue extends Value {
 
   /** {@inheritDoc}  */
   @Override
-  public Value add(Value other) throws TypeError {
+  public Value add(Value other) throws StandardError {
     if(other.is(ListValue.type())) {
       Value[] oValues = ((ListValue)other.as(ListValue.type())).getValues();
       Value[] ret = new Value[values.length + oValues.length];
@@ -91,7 +91,7 @@ public class ListValue extends Value {
   
   /** {@inheritDoc}  */
   @Override
-  public Value subtract(Value other) throws TypeError {
+  public Value subtract(Value other) throws StandardError {
     if(other.is(ListValue.type())) {
       Value[] oValues = ((ListValue)other.as(ListValue.type())).getValues();
       List<Value> oValueList = Arrays.asList(oValues);

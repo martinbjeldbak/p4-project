@@ -97,8 +97,8 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitPattern(AstNode node) throws StandardError {
-      for(AstNode child : node) {
-        visit(child);
+    for(AstNode child : node) {
+      visit(child);
     }
     return null;
   }
