@@ -16,6 +16,17 @@ public class ListValue extends Value {
   
   private static TypeValue type = new TypeValue("List", 1, false);
 
+  public static ListValue prepend(Value val, Value list) throws TypeError {
+    if(list.isNot(ListValue.type()))
+      throw new TypeError("The supplied value needs to be a list");
+
+    Value[] oValues = ((ListValue)list.as(ListValue.type())).getValues();
+    Value[] ret = new Value[oValues.length + 1];
+    ret[0] = val;
+    System.arraycopy(oValues, 0, ret, 1, oValues.length);
+    return new ListValue(ret);
+  }
+
   @Override
   public TypeValue getType() {
     return type;
@@ -31,6 +42,10 @@ public class ListValue extends Value {
   
   public Value[] getValues() {
     return values;
+  }
+
+  public int getLength() {
+    return values.length;
   }
   
   @Override
@@ -88,8 +103,13 @@ public class ListValue extends Value {
 
     return new ListValue(ret);
   }
-  
-  /** {@inheritDoc}  */
+
+  /**
+   * Removes all occurences of the supplied parameter in the current list
+   * @param other the RHS of the subtraction operator
+   * @return      a new list with all occurrences of the parameter removed
+   * @throws TypeError
+   */
   @Override
   public Value subtract(Value other) throws TypeError {
     if(other.is(ListValue.type())) {
@@ -97,30 +117,29 @@ public class ListValue extends Value {
       List<Value> oValueList = Arrays.asList(oValues);
       List<Value> valueList = Arrays.asList(values);
 
-      for(Value val : oValueList) {
-        if(valueList.contains(val)) {
-          try {
-            valueList.remove(val);
-          }
-          catch(UnsupportedOperationException uoe) {
-            valueList = new ArrayList<Value>(valueList);
-            valueList.remove(val);
-          }
-        }
+      try {
+      valueList.removeAll(oValueList);
       }
+      catch(UnsupportedOperationException uoe) {
+        valueList = new ArrayList<Value>(valueList);
+        valueList.removeAll(oValueList);
+      }
+
       Value[] resultArray = new Value[valueList.size()];
       return new ListValue(valueList.toArray(resultArray));
     }
     // Else remove the single element
     List<Value> valueList = Arrays.asList(values);
 
-    if(valueList.contains(other)) {
-      try {
+    for(Value val : valueList) {
+      if(val.equals(other)) {
+        try {
         valueList.remove(other);
-      }
-      catch(UnsupportedOperationException uoe) {
-        valueList = new ArrayList<Value>(valueList);
-        valueList.remove(other);
+        }
+        catch(UnsupportedOperationException uoe) {
+          valueList = new ArrayList<Value>(valueList);
+          valueList.remove(other);
+        }
       }
     }
 
