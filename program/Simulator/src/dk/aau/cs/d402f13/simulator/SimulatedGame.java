@@ -26,7 +26,7 @@ public class SimulatedGame {
 	
 	
 	public String getTitle() {
-		return game.getTitle();
+		return game.title();
 	}
 	
 	public SimulatedGridboard getBoard(){
@@ -35,7 +35,7 @@ public class SimulatedGame {
 	
 	public SimulatedGame (Game g){
 		game = g;
-		Object obj = g.getBoard();
+		Object obj = g.board();
 		if( obj instanceof Gridboard )
 			board = new SimulatedGridboard( this, (Gridboard)obj );
 		else

@@ -53,7 +53,7 @@ public abstract class SimulatedBoard {
         	
 		    	//Select a square if a piece is on it
 		        if( s != null ){
-		        	Piece p = game.getGame().getBoard().findPieceOnSquare(s);
+		        	Piece p = game.getGame().board().findPieceOnSquare(s);
 		        	if( p != null ){
 		        		List<Action> actions = p.actions( game.getGame() );
 		        		selected = s;
@@ -93,7 +93,7 @@ public abstract class SimulatedBoard {
 				Square end = findSquare( dragStartX + dragOffsetX, dragStartY + dragOffsetY );
 				if( squareIsHinted( end ) && end != selected ){
 					//end == selected is handled in mousePressed!
-					Action act = findMoveAction( dragged.getSquare(), end );
+					Action act = findMoveAction( dragged.square(), end );
 					game.getGame().applyAction( act );
 					
 			    	selected = null;
@@ -114,7 +114,7 @@ public abstract class SimulatedBoard {
 	}
 	
 	private Action findMoveAction( Square start, Square end ){
-		Piece p = game.getGame().getBoard().findPieceOnSquare( start );
+		Piece p = game.getGame().board().findPieceOnSquare( start );
 		if( p == null ){
 			System.out.println("Couldn't find piece!!!");
 			return null;
