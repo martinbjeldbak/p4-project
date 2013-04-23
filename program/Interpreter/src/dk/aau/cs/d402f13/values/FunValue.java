@@ -18,7 +18,8 @@ public class FunValue extends Value {
   private Scope currentScope = null;
   
   private static TypeValue type = new TypeValue("Function", 1, false);
-  
+
+  @Override
   public TypeValue getType() {
     return type;
   }
