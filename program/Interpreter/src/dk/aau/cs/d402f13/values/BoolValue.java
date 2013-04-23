@@ -13,7 +13,8 @@ public class BoolValue extends Value {
   private static BoolValue falseValue = new BoolValue();
   
   private static TypeValue type = new TypeValue("Boolean", 1, false);
-  
+
+  @Override
   public TypeValue getType() {
     return type;
   }

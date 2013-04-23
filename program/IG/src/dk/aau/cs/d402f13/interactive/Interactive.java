@@ -168,12 +168,16 @@ public class Interactive {
                     Value main = i.getSymbolTable().getConstant("main"); 
                     if (main != null) {
                       Value v = null;
+                      System.out.println("Evaluating main...");
+                      start = new Date();
                       if (main instanceof ConstValue) {
                         v = ((ConstValue)main).evaluate(i);
                       }
                       else if (main instanceof FunValue) {
                         v = ((FunValue)main).call(i);
                       }
+                      time = new Date().getTime() - start.getTime();
+                      System.out.println("Evaluating main took " + time + " ms");
                       if (v != null) 
                         System.out.println(" = " + v + " (" + v.getClass().getSimpleName() + ")");
                     }
