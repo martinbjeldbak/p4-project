@@ -1,6 +1,7 @@
 package dk.aau.cs.d402f13.values;
 
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
+import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public class CoordValue extends Value {
@@ -67,7 +68,7 @@ public class CoordValue extends Value {
   
   /** {@inheritDoc}  */
   @Override
-  public Value add(Value other) throws TypeError {
+  public Value add(Value other) throws StandardError {
     if(other.is(StrValue.type())) {
       StrValue oStr = (StrValue)other.as(StrValue.type());
       return new StrValue(new StringBuilder().append(this.toString()).append(oStr.getValue()).toString());
@@ -81,7 +82,7 @@ public class CoordValue extends Value {
   
   /** {@inheritDoc}  */
   @Override
-  public Value subtract(Value other) throws TypeError {
+  public Value subtract(Value other) throws StandardError {
     if(other.is(CoordValue.type())) {
       CoordValue oCoord = (CoordValue)other.as(CoordValue.type());
       return new DirValue(x - oCoord.getX(), y - oCoord.getY());

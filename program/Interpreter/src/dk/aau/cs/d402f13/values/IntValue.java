@@ -4,6 +4,7 @@ import javax.swing.text.StyledEditorKit.BoldAction;
 
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.errors.DivideByZeroError;
+import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public class IntValue extends Value {
@@ -34,7 +35,7 @@ public class IntValue extends Value {
   
   /** {@inheritDoc}  */
   @Override
-  public BoolValue lessThan(Value other) throws TypeError {
+  public BoolValue lessThan(Value other) throws StandardError {
     if(other.is(IntValue.type())) {
       IntValue oInt = (IntValue)other.as(IntValue.type());
 
@@ -47,7 +48,7 @@ public class IntValue extends Value {
   
   /** {@inheritDoc}  */
   @Override
-  public BoolValue lessThanEq(Value other) throws TypeError {
+  public BoolValue lessThanEq(Value other) throws StandardError {
     if(other.is(IntValue.type())) {
       IntValue oInt = (IntValue)other.as(IntValue.type());
 
@@ -60,7 +61,7 @@ public class IntValue extends Value {
   
   /** {@inheritDoc}  */
   @Override
-  public BoolValue greaterThan(Value other) throws TypeError {
+  public BoolValue greaterThan(Value other) throws StandardError {
     if(other.is(IntValue.type())) {
       IntValue oInt = (IntValue)other.as(IntValue.type());
 
@@ -73,7 +74,7 @@ public class IntValue extends Value {
   
   /** {@inheritDoc}  */
   @Override
-  public BoolValue greaterThanEq(Value other) throws TypeError {
+  public BoolValue greaterThanEq(Value other) throws StandardError {
     if(other.is(IntValue.type())) {
       IntValue oInt = (IntValue)other.as(IntValue.type());
 
@@ -86,7 +87,7 @@ public class IntValue extends Value {
   
   /** {@inheritDoc}  */
   @Override
-  public BoolValue equalsOp(Value other) {
+  public BoolValue equalsOp(Value other) throws StandardError {
     if(other.is(IntValue.type())) {
       IntValue oInt = null;
       try {
@@ -102,7 +103,7 @@ public class IntValue extends Value {
   
   /** {@inheritDoc}  */
   @Override
-  public Value add(Value other) throws TypeError {
+  public Value add(Value other) throws StandardError {
     if(other.is(IntValue.type())) {
       IntValue oInt = (IntValue)other.as(IntValue.type());
       return new IntValue(this.value + oInt.value);
@@ -116,7 +117,7 @@ public class IntValue extends Value {
   
   /** {@inheritDoc}  */
   @Override
-  public Value subtract(Value other) throws TypeError {
+  public Value subtract(Value other) throws StandardError {
     if(other.is(IntValue.type())) {
       IntValue oInt = (IntValue)other.as(IntValue.type());
       return new IntValue(this.value - oInt.getValue());
@@ -126,7 +127,7 @@ public class IntValue extends Value {
   
   /** {@inheritDoc}  */
   @Override
-  public Value multiply(Value other) throws TypeError {
+  public Value multiply(Value other) throws StandardError {
     if(other.is(IntValue.type())) {
       IntValue oInt = (IntValue)other.as(IntValue.type());
       return new IntValue(this.value * oInt.getValue());
@@ -136,7 +137,7 @@ public class IntValue extends Value {
   
   /** {@inheritDoc}  */
   @Override
-  public Value divide(Value other) throws TypeError, DivideByZeroError {
+  public Value divide(Value other) throws StandardError {
     if(other.is(IntValue.type())) {
       IntValue oInt = (IntValue)other.as(IntValue.type());
       if(oInt.getValue() == 0)
@@ -148,7 +149,7 @@ public class IntValue extends Value {
   
   /** {@inheritDoc}  */
   @Override
-  public Value mod(Value other) throws TypeError {
+  public Value mod(Value other) throws StandardError {
     if(other.is(IntValue.type())) {
       IntValue oInt = (IntValue)other.as(IntValue.type());
       return new IntValue(value % oInt.getValue());
@@ -158,7 +159,7 @@ public class IntValue extends Value {
   
   @Override
   /** {@inheritDoc}  */
-  public Value negate() throws TypeError {
+  public Value negate() throws StandardError {
     return new IntValue(-this.value);
   }
   
