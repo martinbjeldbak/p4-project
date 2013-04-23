@@ -29,10 +29,10 @@ public class SimulatedGridboard extends SimulatedBoard {
 	}
 
 	private int pieceXCoordiate( Piece p ){
-		return board.squareCoordinateX( p.getSquare() );
+		return board.squareCoordinateX( p.square() );
 	}
 	private int pieceYCoordiate( Piece p ){
-		return board.squareCoordinateY( p.getSquare() );
+		return board.squareCoordinateY( p.square() );
 	}
 	
 	private Square hoversOn(){
