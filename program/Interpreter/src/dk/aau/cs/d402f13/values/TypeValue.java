@@ -27,7 +27,8 @@ public class TypeValue extends Value {
   private Callable callable = null;
   
   private static TypeValue type = new TypeValue("Type", 1, false);
-  
+
+  @Override
   public TypeValue getType() {
     return type;
   }
@@ -60,10 +61,10 @@ public class TypeValue extends Value {
     this.callable = new DefaultConstructor(this);
   }
   
-  public TypeValue(String name, AstNode params, String parent, AstNode parenParams) {
+  public TypeValue(String name, AstNode params, String parent, AstNode parentParams) {
     this(name, params);
     this.parentName = parent;
-    this.parentConstructor = parenParams;
+    this.parentConstructor = parentParams;
   }
   
   public TypeValue(String name, int minArity, boolean varArgs, Callable callable) {
