@@ -60,17 +60,21 @@ public class FunValue extends Value {
     this(minArity, varArgs, callable);
     this.currentScope = currentScope;
   }
-
+  
   @Override
-  public Value add(Value other) throws TypeError {
+  public Value add(Value other) throws StandardError {
     if(other.is(ListValue.type())) {
       ListValue.prepend(this, other);
     }
     throw new TypeError("Cannot add " + other + " to a function");
   }
+  
+  private boolean inCall = false;
 
   @Override
   public Value call(Interpreter interpreter, Value ... actualParameters) throws StandardError {
+    if (inCall) {
+    }
     if (varParams == null) {
       if (actualParameters.length != formalParameters.length) {
         throw new ArgumentError("Invalid number of arguments, expected " + formalParameters.length);
