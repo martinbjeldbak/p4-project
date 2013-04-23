@@ -2,20 +2,22 @@ package dk.aau.cs.d402f13.scopechecker;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 import dk.aau.cs.d402f13.utilities.errors.ScopeError;
 import dk.aau.cs.d402f13.utilities.scopechecker.Member;
 import dk.aau.cs.d402f13.utilities.scopechecker.TypeSymbolInfo;
 
 public class TypeTableCleaner {
-  public ArrayList<TypeSymbolInfo> clean(ArrayList<TypeSymbolInfo> typeTable) throws ScopeError{
+  public ArrayList<TypeSymbolInfo> clean(HashMap<String, TypeSymbolInfo> typeTable) throws ScopeError{
    addParentReferences(typeTable);          //adds references to a types parent, since only the name is kept at the moment
-   typeTable = topologicalSort(typeTable);  //topological sort, so super type always appear before children, used for member propagation
+   ArrayList<TypeSymbolInfo> topSorted;
+   topSorted = topologicalSort(typeTable);  //checks for extend cycles, so super type always appear before children, used for member propagation
    propagateMembers(typeTable);             //if a type's has a member, this member shall also be available in the derived types
-   return typeTable;
+   return topSorted;
   }
-  void propagateMembers(ArrayList<TypeSymbolInfo> typeTable) throws ScopeError{
-    for (TypeSymbolInfo tsi : typeTable){
+  void propagateMembers(HashMap<String, TypeSymbolInfo> typeTable) throws ScopeError{
+    for (TypeSymbolInfo tsi : typeTable.values()){
        if (tsi.parent != null){
          propagateAbstractFunctions(tsi); //if parent has an abstract member, give it to this type as well + check for errors
          propagateConcreteFunctions(tsi); //if parent has an concrete member, give it to this type as well + check for errors
@@ -87,13 +89,13 @@ public class TypeTableCleaner {
       tsi.addConcreteConstant(pm); //propagate the parents constant to this type
     }
   }
-  ArrayList<TypeSymbolInfo> topologicalSort(ArrayList<TypeSymbolInfo> typeTable) throws ScopeError{
+  ArrayList<TypeSymbolInfo> topologicalSort(HashMap<String, TypeSymbolInfo> typeTable) throws ScopeError{
     ArrayList<TypeSymbolInfo> sorted = new ArrayList<TypeSymbolInfo>();
-    for (TypeSymbolInfo tsi : typeTable){
+    for (TypeSymbolInfo tsi : typeTable.values()){
     if (tsi.parent != null)
       tsi.parent.children++;
     }
-    for (TypeSymbolInfo tsi: typeTable){
+    for (TypeSymbolInfo tsi: typeTable.values()){
       while (tsi.children == 0){
         sorted.add(tsi);
         tsi.children = -1; //make sure this type is only added once
@@ -107,24 +109,32 @@ public class TypeTableCleaner {
       }
     }
     Collections.reverse(sorted); //reverse list so we get super classes first
+    if (sorted.size() != typeTable.size()){
+      for (TypeSymbolInfo sti : typeTable.values()){
+        Boolean found = false;
+        for (TypeSymbolInfo sortedSti : sorted){
+          if (sti == sortedSti){
+            found = true;
+            break;
+          }
+        }
+        if (!found)
+          throw new ScopeError("Extend cycle found in type " + sti.name, sti );
+      }
+    }
     return sorted;
   }
-  void addParentReferences(ArrayList<TypeSymbolInfo> typeTable) throws ScopeError{
+ 
+  void addParentReferences(HashMap<String, TypeSymbolInfo> typeTable) throws ScopeError{
     //this name must be looked up in the SymbolTable to update the real reference TypeInfo t.parent
-    for (TypeSymbolInfo tsi : typeTable){
+    for (TypeSymbolInfo tsi : typeTable.values()){
       if (tsi.parentName.equals(tsi.name)){ //type cannot extend itself
         throw new ScopeError("Type cannot extend itself", tsi);
       }
       if (tsi.parentName != ""){
-      Boolean foundParentType = false;
-      for (TypeSymbolInfo ti2 : typeTable){
-        if (tsi.parentName.equals(ti2.name)){
-          tsi.parent = ti2;
-          foundParentType = true;
-          break;
-        }
-      }
-      if (!foundParentType)
+      if (typeTable.containsKey(tsi.parentName))
+        tsi.parent = typeTable.get(tsi.parentName);
+      else
         throw new ScopeError("Type extends undefined type", tsi);
       }
     }
