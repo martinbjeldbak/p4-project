@@ -9,6 +9,7 @@ import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.errors.ArgumentError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public class FunValue extends Value {
   private String[] formalParameters;
@@ -18,7 +19,8 @@ public class FunValue extends Value {
   private Scope currentScope = null;
   
   private static TypeValue type = new TypeValue("Function", 1, false);
-  
+
+  @Override
   public TypeValue getType() {
     return type;
   }
@@ -48,7 +50,7 @@ public class FunValue extends Value {
       varParams = "";
     }
   }
-  
+
   public FunValue(AstNode params, AstNode expression, Scope currentScope) {
     this(params, expression);
     this.currentScope = currentScope;
@@ -60,7 +62,19 @@ public class FunValue extends Value {
   }
   
   @Override
+  public Value add(Value other) throws StandardError {
+    if(other.is(ListValue.type())) {
+      ListValue.prepend(this, other);
+    }
+    throw new TypeError("Cannot add " + other + " to a function");
+  }
+  
+  private boolean inCall = false;
+
+  @Override
   public Value call(Interpreter interpreter, Value ... actualParameters) throws StandardError {
+    if (inCall) {
+    }
     if (varParams == null) {
       if (actualParameters.length != formalParameters.length) {
         throw new ArgumentError("Invalid number of arguments, expected " + formalParameters.length);

@@ -24,7 +24,7 @@ import dk.aau.cs.d402f13.values.ConstValue;
 import dk.aau.cs.d402f13.values.FunValue;
 import dk.aau.cs.d402f13.values.Value;
 import dk.aau.cs.d402f13.scopechecker.ScopeChecker;
-import dk.aau.cs.d402f13.scopechecker.TypeVisitor;;
+import dk.aau.cs.d402f13.scopechecker.TypeVisitor;
 
 
 public class Interactive {
@@ -168,12 +168,16 @@ public class Interactive {
                     Value main = i.getSymbolTable().getConstant("main"); 
                     if (main != null) {
                       Value v = null;
+                      System.out.println("Evaluating main...");
+                      start = new Date();
                       if (main instanceof ConstValue) {
                         v = ((ConstValue)main).evaluate(i);
                       }
                       else if (main instanceof FunValue) {
                         v = ((FunValue)main).call(i);
                       }
+                      time = new Date().getTime() - start.getTime();
+                      System.out.println("Evaluating main took " + time + " ms");
                       if (v != null) 
                         System.out.println(" = " + v + " (" + v.getClass().getSimpleName() + ")");
                     }
@@ -206,5 +210,4 @@ public class Interactive {
       }
     }
   }
-
 }

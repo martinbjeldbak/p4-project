@@ -27,7 +27,8 @@ public class TypeValue extends Value {
   private Callable callable = null;
   
   private static TypeValue type = new TypeValue("Type", 1, false);
-  
+
+  @Override
   public TypeValue getType() {
     return type;
   }
@@ -60,10 +61,10 @@ public class TypeValue extends Value {
     this.callable = new DefaultConstructor(this);
   }
   
-  public TypeValue(String name, AstNode params, String parent, AstNode parenParams) {
+  public TypeValue(String name, AstNode params, String parent, AstNode parentParams) {
     this(name, params);
     this.parentName = parent;
-    this.parentConstructor = parenParams;
+    this.parentConstructor = parentParams;
   }
   
   public TypeValue(String name, int minArity, boolean varArgs, Callable callable) {
@@ -109,6 +110,13 @@ public class TypeValue extends Value {
   @Override
   public String toString() {
     return name;
+  }
+
+  @Override
+  public Value add(Value other) throws StandardError {
+    if(other.is(ListValue.type()))
+      return ListValue.prepend(this, other);
+    throw new TypeError("Cannot add " + other + " to a type");
   }
   
   public Member getTypeMember(String name) {
@@ -171,21 +179,21 @@ public class TypeValue extends Value {
       return ret;
     }
   }
-  
+
   @Override
   public Value call(Interpreter interpreter, Value... actualParameters)
       throws StandardError {
     return getInstance(interpreter, actualParameters);
   }
 
-  public static Value expect(Value parameter, TypeValue type) throws TypeError {
+  public static Value expect(Value parameter, TypeValue type) throws StandardError {
     if (!parameter.is(type)) {
       throw new TypeError("Invalid type for value, expected " + type.toString());
     }
     return parameter.as(type);
   }
 
-  public static Value expect(Value[] parameters, int i, TypeValue type) throws TypeError {
+  public static Value expect(Value[] parameters, int i, TypeValue type) throws StandardError {
     if (!parameters[i].is(type)) {
       throw new TypeError("Invalid type for argument #" + i + ", expected " + type.toString());
     }

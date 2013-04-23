@@ -1,13 +1,15 @@
 package dk.aau.cs.d402f13.values;
 
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
+import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public class StrValue extends Value {
   private final String value;
   
   private static TypeValue type = new TypeValue("String", 1, false);
-  
+
+  @Override
   public TypeValue getType() {
     return type;
   }
@@ -26,7 +28,7 @@ public class StrValue extends Value {
   
   /** {@inheritDoc}  */
   @Override
-  public BoolValue equalsOp(Value other) {
+  public BoolValue equalsOp(Value other) throws StandardError {
     if(other.is(StrValue.type())) {
       try {
         StrValue oStr = (StrValue)other.as(StrValue.type());
@@ -42,7 +44,7 @@ public class StrValue extends Value {
   
   /** {@inheritDoc}  */
   @Override
-  public Value add(Value other) throws TypeError {
+  public Value add(Value other) throws StandardError {
     if(other.is(StrValue.type()))
       return new StrValue(this.value + other.as(StrValue.type()).toString());
     else if(other.is(IntValue.type()))
@@ -53,6 +55,8 @@ public class StrValue extends Value {
       return new StrValue(this.value + other.as(CoordValue.type()).toString());
     else if(other.is(DirValue.type()))
       return new StrValue(this.value + other.as(DirValue.type()).toString());
+    else if(other.is(ListValue.type()))
+      return ListValue.prepend(this, other);
     throw new TypeError("Cannot concatenate a " + other + " to a string");
   }
   
