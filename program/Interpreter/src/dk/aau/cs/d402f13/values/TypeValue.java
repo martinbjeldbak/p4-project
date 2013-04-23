@@ -111,6 +111,13 @@ public class TypeValue extends Value {
   public String toString() {
     return name;
   }
+
+  @Override
+  public Value add(Value other) throws TypeError {
+    if(other.is(ListValue.type()))
+      return ListValue.prepend(this, other);
+    throw new TypeError("Cannot add " + other + " to a type");
+  }
   
   public Member getTypeMember(String name) {
     return members.get(name);
@@ -172,7 +179,7 @@ public class TypeValue extends Value {
       return ret;
     }
   }
-  
+
   @Override
   public Value call(Interpreter interpreter, Value... actualParameters)
       throws StandardError {

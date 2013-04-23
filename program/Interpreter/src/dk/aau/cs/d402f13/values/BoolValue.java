@@ -59,6 +59,8 @@ public class BoolValue extends Value {
       StrValue str = (StrValue)other.as(StrValue.type());
       return new StrValue(this.toString() + str.getValue());
     }
+    else if(other.is(ListValue.type()))
+      return ListValue.prepend(this, other);
     throw new TypeError("Addition cannot be done on boolean with " + other);
   }
   
