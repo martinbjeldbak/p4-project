@@ -14,6 +14,7 @@ import dk.aau.cs.d402f13.interpreter.SortComparator;
 import dk.aau.cs.d402f13.interpreter.SymbolTable;
 import dk.aau.cs.d402f13.utilities.errors.ArgumentError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.values.ActionValue;
 import dk.aau.cs.d402f13.values.BoolValue;
 import dk.aau.cs.d402f13.values.ConstMemberValue;
 import dk.aau.cs.d402f13.values.ConstValue;
@@ -164,6 +165,11 @@ public class StandardEnvironment extends SymbolTable {
         return a.isSupertypeOf(b) ? BoolValue.trueValue() : BoolValue.falseValue();
       }
     }));
+    
+    ////////////////////////////////////
+    // type: Action
+    ////////////////////////////////////
+    addType("Action", ActionValue.type());
     
     ////////////////////////////////////
     // Global functions

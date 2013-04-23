@@ -15,7 +15,8 @@ public class ListValue extends Value {
   private Value[] values = null;
   
   private static TypeValue type = new TypeValue("List", 1, false);
-  
+
+  @Override
   public TypeValue getType() {
     return type;
   }
