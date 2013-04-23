@@ -44,22 +44,22 @@ public abstract class SimulatedBoard {
 	    		List<Action> acts = new ArrayList<Action>();
 	    		if( selected == s ){
 	    			for( Action a : actions )
-	    				if( ActionHelper.isDropAction( a, s ) )
+	    				if( ActionHelper.isDropAction( a, s ) != null )
 	    					acts.add( a );
 	    		}
 	    		else{
 	    			for( Action a : actions ){
 	    				//Find actions when destination was selected
 	    				Piece p = game.getGame().board().findPieceOnSquare(s);
-    					if( ActionHelper.isMoveAction( a, selected ) ){
-    						if( ActionHelper.isMoveAction( a, p ) )
+    					if( ActionHelper.isMoveAction( a, selected ) != null ){
+    						if( ActionHelper.isMoveAction( a, p ) != null )
 	    						acts.add( a );
     					}
     					
     					//Find actions when the piece was selected
     					p = game.getGame().board().findPieceOnSquare(selected);
-    					if( ActionHelper.isMoveAction( a, s ) ){
-    						if( ActionHelper.isMoveAction( a, p ) )
+    					if( ActionHelper.isMoveAction( a, s ) != null ){
+    						if( ActionHelper.isMoveAction( a, p ) != null )
 	    						acts.add( a );
     					}
 	    			}
@@ -76,9 +76,9 @@ public abstract class SimulatedBoard {
 		        	Piece p = game.getGame().board().findPieceOnSquare(s);
 		        	if( p != null ){
 		        		for( Action a : actions ){
-		        			if( ActionHelper.isMoveAction( a, p ) )
-		        				hintSquares.add( ((MoveAction)a).getTo() );
-		        				//TODO: this wouldn't work for sequences!!
+		        			MoveAction ma = ActionHelper.isMoveAction( a, p ); 
+		        			if( ma != null )
+		        				hintSquares.add( ma.getTo() );
 		        		}
 		        		
 		        		//Start drag if actions found
@@ -94,11 +94,12 @@ public abstract class SimulatedBoard {
 		        	
 		        	//Add related squares
 		        	for( Action a : actions ){
-		        		if( ActionHelper.isMoveAction( a, s ) ){
-		        			hintSquares.add( ((MoveAction)a).getPiece().square() );
+		        		MoveAction ma = ActionHelper.isMoveAction( a, s ); 
+		        		if( ma != null ){
+		        			hintSquares.add( ma.getPiece().square() );
 		        			//TODO: this wouldn't work for sequences!!
 		        		}
-		        		if( ActionHelper.isDropAction( a, s ) )
+		        		if( ActionHelper.isDropAction( a, s ) != null )
 		        			hintSquares.add( s );
 		        	}
 		        	
@@ -126,8 +127,8 @@ public abstract class SimulatedBoard {
 					//end == selected is handled in mousePressed!
 					List<Action> actions = new ArrayList<Action>();
 					for( Action a : game.getGame().actions() )
-						if( ActionHelper.isMoveAction( a, end ) )
-							if( ActionHelper.isMoveAction( a, dragged ) )
+						if( ActionHelper.isMoveAction( a, end ) != null )
+							if( ActionHelper.isMoveAction( a, dragged ) != null )
 								actions.add( a );
 					executeActions( actions );
 					
