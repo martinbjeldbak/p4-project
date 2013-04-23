@@ -16,7 +16,7 @@ public class ListValue extends Value {
   
   private static TypeValue type = new TypeValue("List", 1, false);
 
-  public static ListValue prepend(Value val, Value list) throws TypeError {
+  public static ListValue prepend(Value val, Value list) throws StandardError {
     if(list.isNot(ListValue.type()))
       throw new TypeError("The supplied value needs to be a list");
 
@@ -49,7 +49,7 @@ public class ListValue extends Value {
   }
   
   @Override
-  public BoolValue equalsOp(Value other) {
+  public BoolValue equalsOp(Value other) throws StandardError {
     if(other.isNot(ListValue.type())) {
       return BoolValue.falseValue();
     }
@@ -86,7 +86,7 @@ public class ListValue extends Value {
 
   /** {@inheritDoc}  */
   @Override
-  public Value add(Value other) throws TypeError {
+  public Value add(Value other) throws StandardError {
     if(other.is(ListValue.type())) {
       Value[] oValues = ((ListValue)other.as(ListValue.type())).getValues();
       Value[] ret = new Value[values.length + oValues.length];
@@ -111,7 +111,7 @@ public class ListValue extends Value {
    * @throws TypeError
    */
   @Override
-  public Value subtract(Value other) throws TypeError {
+  public Value subtract(Value other) throws StandardError {
     if(other.is(ListValue.type())) {
       Value[] oValues = ((ListValue)other.as(ListValue.type())).getValues();
       List<Value> oValueList = Arrays.asList(oValues);
