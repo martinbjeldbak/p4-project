@@ -1,6 +1,5 @@
 package dk.aau.cs.d402f13.values;
 
-import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
@@ -74,7 +73,7 @@ public class DirValue extends Value {
   
   /** {@inheritDoc}  */
   @Override
-  public BoolValue equalsOp(Value other) {
+  public BoolValue equalsOp(Value other) throws StandardError {
     if(other.is(DirValue.type())) {
       DirValue oDir = null;
       try {
@@ -91,7 +90,7 @@ public class DirValue extends Value {
 
   /** {@inheritDoc}  */
   @Override
-  public Value add(Value other) throws TypeError {
+  public Value add(Value other) throws StandardError {
     if(other.is(DirValue.type())) {
       DirValue oDir = (DirValue)other.as(DirValue.type());
       return new DirValue((x + oDir.getX()), y + (oDir.getY()));
@@ -99,6 +98,9 @@ public class DirValue extends Value {
     else if(other.is(CoordValue.type())) {
       CoordValue oCoord = (CoordValue)other.as(CoordValue.type());
       return new CoordValue(x + oCoord.getX(), y + oCoord.getY());
+    }
+    else if(other.is(ListValue.type())) {
+      return ListValue.prepend(this, other);
     }
     else if(other.is(StrValue.type())) {
       StrValue oStr = (StrValue)other.as(StrValue.type());
@@ -109,7 +111,7 @@ public class DirValue extends Value {
   
   /** {@inheritDoc}  */
   @Override
-  public Value subtract(Value other) throws TypeError {
+  public Value subtract(Value other) throws StandardError {
     if(other.is(DirValue.type())) {
       DirValue oDir = (DirValue)other.as(DirValue.type());
       return new DirValue(x - oDir.getX(), y - oDir.getY());
