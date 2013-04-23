@@ -33,4 +33,19 @@ public abstract class Game {
 	}
 	
 	public Player currentPlayer(){ return players().get(currentPlayer); }
+	public List<Action> history(){ return history; }
+	
+	
+	public List<Action> actions(){
+		List<Action> acts = new ArrayList<Action>();
+		
+		for( Piece p : board().getPieces() ){
+			if( p.player() == currentPlayer() )
+				acts.addAll( p.actions(this) );
+		}
+		
+		//TODO: add actions by player
+		
+		return acts;
+	}
 }

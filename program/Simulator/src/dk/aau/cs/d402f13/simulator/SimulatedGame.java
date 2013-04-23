@@ -17,13 +17,15 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.util.ResourceLoader;
 
+import dk.aau.cs.d402f13.utilities.types.Action;
 import dk.aau.cs.d402f13.utilities.types.Game;
 import dk.aau.cs.d402f13.utilities.types.Gridboard;
 
 public class SimulatedGame extends BasicGame {
 	//Drawing stuff
 	Hashtable<String,Image> imgCache = new Hashtable<String,Image>();
-	TrueTypeFont gtwFont = null;
+	TrueTypeFont gtwFontSmall = null;
+	TrueTypeFont gtwFontBig = null;
 	
 	//Game mechanics stuff
 	SimulatedGridboard board = null;
@@ -71,15 +73,28 @@ public class SimulatedGame extends BasicGame {
 		} catch (FontFormatException | IOException e) {
 			load = new Font( "Times New Roman", Font.PLAIN, 20 ); 
 		}
-		gtwFont = new TrueTypeFont( load.deriveFont( 36f ), false );
+		gtwFontSmall = new TrueTypeFont( load.deriveFont( 18f ), false );
+		gtwFontBig = new TrueTypeFont( load.deriveFont( 36f ), false );
 	}
 	
 	private void renderSidebar( Graphics g, int x, int y, int width, int height ){
 		g.setColor(Color.black);
-		g.setFont(gtwFont);
+		g.setFont(gtwFontBig);
 		
 		//Do stuff here, for now, just display the title...
 		g.drawString( game.title(), x, y );
+
+		g.setFont(gtwFontSmall);
+		int position = game.players().indexOf( game.currentPlayer() );
+		g.drawString( "Player " + Integer.toString( position + 1 ), x, y + 36 );
+		
+		
+		int historyStart = y + 36;
+		for( Action a : game.history() ){
+			historyStart += 16;
+			
+			g.drawString( "move", x, historyStart );
+		}
 	}
 	
 	@Override
