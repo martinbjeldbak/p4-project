@@ -1,7 +1,5 @@
 package dk.aau.cs.d402f13.values;
 
-import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
-import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public class DirValue extends Value {
@@ -9,7 +7,8 @@ public class DirValue extends Value {
   private final int y;
   
   private static TypeValue type = new TypeValue("Direction", 1, false);
-  
+
+  @Override
   public TypeValue getType() {
     return type;
   }
@@ -98,6 +97,9 @@ public class DirValue extends Value {
     else if(other.is(CoordValue.type())) {
       CoordValue oCoord = (CoordValue)other.as(CoordValue.type());
       return new CoordValue(x + oCoord.getX(), y + oCoord.getY());
+    }
+    else if(other.is(ListValue.type())) {
+      return ListValue.prepend(this, other);
     }
     else if(other.is(StrValue.type())) {
       StrValue oStr = (StrValue)other.as(StrValue.type());

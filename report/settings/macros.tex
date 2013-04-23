@@ -21,6 +21,16 @@
 
 \newcommand{\codesample}[1]{\input{codesamples/#1}}
 
+
+%big-step-semantic
+\newcommand{\infrule}[2]
+           {\parbox{4.5cm}{$$ \frac{#1}{#2}\hspace{.5cm}$$}}
+	
+\newcommand{\ra}{\rightarrow}
+\newcommand{\lag}{\langle}
+\newcommand{\rag}{\rangle}
+
+
 %itemize
 \newenvironment{dlist}{
 \begin{itemize}[noitemsep]
@@ -79,11 +89,7 @@
 \newcommand{\gcat}{ \: }
 
 %rules for formation rules
-\newcommand{\frule}[2]{$#1$ & $\texttt{::=}$ & $#2$ \\}
-\newcommand{\falt}[1]{& | & $#1$ \\}
 \newcommand{\for}{ \: | \: }
-\newcommand{\fter}[1]{\texttt{#1}}
-\newcommand{\fcat}{ \: }
 
 % Table
 \newcommand{\tab}[8][\textwidth]{
