@@ -1,5 +1,5 @@
 \subsection{LL-parsers and LR-parsers}
-
+\label{subsec:llparsersandlrparsers}
 As mentioned earlier the LL-parsers derives from the top-down parsing approach. This means the LL-parses attempts to parse a string by starting at the start symbol of a grammar and through a series of leftmost derivations matching the input string. On the opposite the LR-parsers derives from the bottom-up parsing approach. Here the LR-parsers attempts to parse by starting with the input string and through a series of reductions tries to get back to the start symbol. The LL-parsers has two actions: predict and match. The predict action is used when the parser is trying to guess the next production to apply in order to get closer to the input string. While the match action eats the next unconsumed input symbol if it corresponds to the leftmost predicted terminal. These two actions are continuously called until the entire input string has been eaten and thereby has been matched. An example of a LL(1) parser in action can be seen in table \ref{table:LL1}. In the example the parser is based on the simple grammar in table 
 
 \begin{centering}
