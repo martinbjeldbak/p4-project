@@ -22,7 +22,7 @@ public abstract class Game {
 		
 		//Next player
 		currentPlayer++;
-		if( players().size() >= currentPlayer )
+		if( players().size() <= currentPlayer )
 			currentPlayer = 0;
 	}
 	
@@ -31,4 +31,6 @@ public abstract class Game {
 	public List<Player> turnOrder(){
 		return players();
 	}
+	
+	public Player currentPlayer(){ return players().get(currentPlayer); }
 }
