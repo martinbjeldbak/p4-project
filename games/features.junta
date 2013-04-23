@@ -101,4 +101,22 @@ define countList[$n] =
     then []
     else [$n] + countList[$n - 1]
 
-define main = qsort[countList[100]]
+do
+  $recursion = false
+  if $n < 1
+    then $r = $r + []
+    else $r = $r + [$n]
+         $recursion = true
+         $n = $n - 1
+while $recursion
+
+type MyList[... $l] extends List[$l] {
+  define size[] = 2
+}
+
+define uselessTailRecA[$n] =
+  if $n == 0
+    then 0
+    else uselessTailRecA[$n - 1]
+
+define main = uselessTailRecA[1000000]
