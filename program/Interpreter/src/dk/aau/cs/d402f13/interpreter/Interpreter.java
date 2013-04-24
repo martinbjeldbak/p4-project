@@ -1,6 +1,5 @@
 package dk.aau.cs.d402f13.interpreter;
 
-import dk.aau.cs.d402f13.interpreter.stdenv.StandardEnvironment;
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
@@ -104,40 +103,49 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitPattern(AstNode node) throws StandardError {
-    for(AstNode child : node) {
-      visit(child);
+    Value[] values = new Value[node.size()];
+
+    for(int i = 0; i < node.size(); i++) {
+      values[i] = visit(node.get(i));
     }
-    return null;
+    return new PatternValue(values);
   }
 
   @Override
   protected Value visitPatternKeyword(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    throw new InternalError("Invalid visit");
   }
 
   @Override
   protected Value visitPatternMultiplier(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    Value v = visit(node.getFirst());
+
+    return new PatMultValue(v, node.value);
   }
 
   @Override
   protected Value visitPatternNot(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    throw new InternalError("Invalid visit");
   }
 
   @Override
   protected Value visitPatternOperator(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    Value v = visit(node.getFirst());
+
+    switch(node.value) {
+      case "+":
+        return new PatternPlusValue(v);
+      case "*":
+        return new PatMultValue(v);
+      case "?":
+        return new PatternOptValue(v);
+    }
+    throw new TypeError("Not a pattern");
   }
 
   @Override
   protected Value visitPatternOr(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    throw new InternalError("Invalid visit");
   }
 
   @Override
