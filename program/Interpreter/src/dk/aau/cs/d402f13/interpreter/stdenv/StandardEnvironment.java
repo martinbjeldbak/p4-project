@@ -52,6 +52,16 @@ public class StandardEnvironment extends SymbolTable {
     ////////////////////////////////////
     addType("Function", FunValue.type());
     
+    FunValue.type().addStaticMember("call", new ConstMemberValue(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters)
+          throws StandardError {
+        FunValue o = (FunValue)interpreter.getSymbolTable().getThis();
+        ListValue a = (ListValue)TypeValue.expect(actualParameters, 0, ListValue.type());
+        return o.call(interpreter, a.getValues());
+      }
+    }));
+    
     ////////////////////////////////////
     // type: Integer
     ////////////////////////////////////
