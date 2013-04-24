@@ -133,11 +133,10 @@ public class SimulatedGame extends BasicGame {
 		g.drawString( "Player " + Integer.toString( position + 1 ), x, y + 36 );
 		
 		
-		int historyStart = y + 36;
+		int historyStart = y + gtwFontBig.getLineHeight();
 		for( Action a : game.history() ){
-			historyStart += 16;
-			
-			g.drawString( "move", x, historyStart );
+			historyStart += gtwFontSmall.getLineHeight();
+			g.drawString( ActionHelper.humanReadable( game, a ), x, historyStart );
 		}
 	}
 	
