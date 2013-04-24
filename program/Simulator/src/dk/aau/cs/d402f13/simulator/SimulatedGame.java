@@ -43,6 +43,23 @@ public class SimulatedGame extends BasicGame {
 		}
 	}
 	
+	public Image getImageScaled( String path, float scale ) throws SlickException{
+		Image unscaled = getImage( path );
+
+		int width = (int)(unscaled.getWidth() * scale);
+		int height = (int)(unscaled.getHeight() * scale);
+		
+		String scaledName = path + ":" + width + "x" + height;
+		if( imgCache.containsKey( scaledName ) )
+			return imgCache.get( scaledName );
+		else{
+			Image scaled = unscaled.getScaledCopy( width, height );
+			System.out.println( "Scaled image: " + scaledName );
+			imgCache.put( scaledName, scaled );
+			return scaled;
+		}
+	}
+	
 	public SimulatedGridboard getBoard(){
 		return board;
 	}

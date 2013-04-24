@@ -57,7 +57,8 @@ public class SimulatedGridboard extends SimulatedBoard {
 				//Draw background for square
 				Image img = game.getImage( s.getImgPath() );
 				int imgMax = Math.max(img.getWidth(), img.getHeight());
-				img.draw( posX, posY, (float)size /(float) imgMax );
+				img = game.getImageScaled( s.getImgPath(), (float)size /(float) imgMax );
+				img.draw( posX, posY );
 				
 				if( s == selected ){
 					g.setColor( new Color(0,0,127,63) );
@@ -90,8 +91,10 @@ public class SimulatedGridboard extends SimulatedBoard {
 
 		int imgYOffset = (int) ((imgMax - img.getHeight() ) * scale / 2);
 		int imgXOffset = (int) ((imgMax - img.getWidth() ) * scale / 2);
+		
+		img = game.getImageScaled( p.getImgPath(), scale );
 
-		img.draw( x * size + imgXOffset + offsetX + borderSize, y * size + imgYOffset + offsetY + borderSize, scale);
+		img.draw( x * size + imgXOffset + offsetX + borderSize, y * size + imgYOffset + offsetY + borderSize );
 		
 	}
 	
