@@ -224,6 +224,7 @@ public class TypeValue extends Value {
       }
       ret.setScope(new Scope(scope, ret));
       interpreter.getSymbolTable().openScope(ret.getScope());
+      // Initialize members
       for (Entry<String, Member> e : members.entrySet()) {
         ret.addMember(e.getKey(), e.getValue().getValue(interpreter));
       }
