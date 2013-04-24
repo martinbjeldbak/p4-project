@@ -1,11 +1,14 @@
 package dk.aau.cs.d402f13.values;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
 import dk.aau.cs.d402f13.interpreter.Callable;
+import dk.aau.cs.d402f13.interpreter.ConstantCallable;
 import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.Member;
+import dk.aau.cs.d402f13.interpreter.ParentCallable;
 import dk.aau.cs.d402f13.interpreter.Scope;
 import dk.aau.cs.d402f13.interpreter.stdenv.constructors.DefaultConstructor;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
@@ -25,6 +28,8 @@ public class TypeValue extends Value {
   private AstNode parentConstructor;
   
   private Callable callable = null;
+  
+  private ParentCallable parentCallable = null;
   
   private static TypeValue type = new TypeValue("Type", 1, false);
 
@@ -75,6 +80,22 @@ public class TypeValue extends Value {
       varParams = "";
     }
   }
+  
+  public TypeValue(String name, boolean varArgs, String ... params) {
+    this.name = name;
+    formalParameters = params;
+    if (varArgs) {
+      varParams = params[params.length - 1];
+      formalParameters = Arrays.copyOf(formalParameters, formalParameters.length - 1);
+    }
+  }
+
+  public TypeValue(String name, TypeValue parent, ParentCallable callable,
+      boolean varArgs, String ... params) {
+    this(name, varArgs, params);
+    this.parent = parent;
+    this.parentCallable = callable;
+  }
 
   public boolean isSubtypeOf(TypeValue type) {
     if (type == this) {
@@ -85,7 +106,7 @@ public class TypeValue extends Value {
     }
     return false;
   }
-  
+
   public void ensureSuperType(Interpreter interpreter) throws NameError {
     if (parent == null && parentName != null) {
       parent = interpreter.getSymbolTable().getType(parentName);
@@ -109,7 +130,36 @@ public class TypeValue extends Value {
   
   @Override
   public String toString() {
-    return name;
+    String s = name + "[";
+    if (formalParameters.length > 0) {
+      if (formalParameters[0] == null) {
+        s += "$arg";
+      }
+      else {
+        s += "$" + formalParameters[0];
+      }
+    }
+    for (int i = 1; i < formalParameters.length; i++) {
+      if (formalParameters[i] == null) {
+        s += ", $arg";
+      }
+      else {
+        s += ", $" + formalParameters[i];
+      }
+    }
+    if (varParams != null) {
+      if (formalParameters.length > 0) {
+        s += ", ";
+      }
+      s += "... $";
+      if (varParams.equals("")) {
+        s += "args";
+      }
+      else {
+        s += varParams;
+      }
+    }
+    return s + "]";
   }
 
   @Override
@@ -162,7 +212,10 @@ public class TypeValue extends Value {
       }
       // Find parent
       ensureSuperType(interpreter);
-      if (parent == null) {
+      if (parentCallable != null) {
+        ret = new ObjectValue(this, scope, parentCallable.call(interpreter));
+      }
+      else if (parent == null) {
         ret = new ObjectValue(this, scope);
       }
       else {
@@ -206,5 +259,9 @@ public class TypeValue extends Value {
   
   public void addStaticMember(String member, Value value) {
     staticMembers.put(member, value);
+  }
+
+  public String getName() {
+    return name;
   }
 }

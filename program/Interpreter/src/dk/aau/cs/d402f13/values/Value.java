@@ -229,7 +229,7 @@ public abstract class Value {
   @Override
   public String toString() {
     try {
-      return getType().toString() + "@" + hashCode();
+      return getType().getName() + "@" + hashCode();
     }
     catch (StandardError e) {
       return "unknown@" + hashCode();
