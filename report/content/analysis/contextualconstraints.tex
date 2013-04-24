@@ -1,11 +1,26 @@
 \section{Contextual constraints}
-\todo{This is just pasted in, make it fit}
-Not all characteristics of programming languages are easy to describe with a BNF and some even cannot be described using a BNF. If a programming language allows a floating-point value to be assigned to an integer variable but not the opposite, this \textit{can} be expressed with a BNF but if all such rules should be specified in the BNF, it would increase the size of it remarkably. With increased size, the formal description gets more clumsy to look at and also increases the risk that an error is contained in the BNF.
-The rule that all variables must be declared before being used is impossible to express in a BNF. That would require the BNF to remember things, particularly those variables it had seen before, which it cannot. The problem of remembering things also shows up when we start to concern about scope rules. Typically, a variable declared in one scope cannot be used outside that scope. The BNF cannot describe such problems that we describe as static semantics rules. It is named static because the analysis required to check the specifications can be done at compile-time rather than runtime\cite[p. 153]{sebesta2013}.
-In this semantic analysis phase, the compiler can check for type rules by starting to decorate the parse tree from the syntactic analysis with types. If the non-terminal \textit{expr} derives the terminal sequence \textit{int} \textit{plus} \textit{int} \textit{semicolon}, it can be decorated with the \textit{int}-type, and the analysis can proceed further up the tree and check that the type of the \textit{expr(int)} is legal. If the \textit{expr(int)} is derived from a \textit{expr} $\rightarrow$ \textit{expr(int)} +  \textit{expr(bool)} production, the static semantic rules must determine if the programs semantic is wrong or it the boolean value can be converted to the integer values zero or one.
+\label{sec:contextualconstraints}
+
+Context-free grammars cannot describe syntax which can only be syntactically
+correct given a specific context (hence the name of these grammars). This means
+that there are constraints which a given context-free grammar cannot describe.
+
+These contextual constraints are i.e.\cite[pg. 39]{plpp}:
+
+\begin{dlist}
+\item Declaration before use
+\item Scope rules
+\item Type correspondence
+\item Overriding methods
+\end{dlist}
+
+In the following subsections we eplain why these cannot be described by using a
+context-free grammar.
 
 % Scope and their importance
-% Semantics at compiletime
-\input{content/analysis/contextualconstraints/scope}
+% Semantics at compile-time
+\input{content/analysis/contextualconstraints/declarationbeforeuse}
+\input{content/analysis/contextualconstraints/scoperules}
 \input{content/analysis/contextualconstraints/typesystem}
+\input{content/analysis/contextualconstraints/overridingmethods}
 \input{content/analysis/contextualconstraints/summary}
