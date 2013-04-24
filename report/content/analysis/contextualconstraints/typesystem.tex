@@ -1,3 +1,14 @@
 \subsection{Type system}
 
+%In this semantic analysis phase, the compiler can check for type rules by
+%starting to decorate the parse tree from the syntactic analysis with types. If
+%the non-terminal \textit{expr} derives the terminal sequence \textit{int}
+%\textit{plus} \textit{int} \textit{semicolon}, it can be decorated with the
+%\textit{int}-type, and the analysis can proceed further up the tree and check
+%that the type of the \textit{expr(int)} is legal. If the \textit{expr(int)} is
+%derived from a \textit{expr} $\rightarrow$ \textit{expr(int)} +
+%\textit{expr(bool)} production, the static semantic rules must determine if the
+%programs semantic is wrong or it the boolean value can be converted to the
+%integer values zero or one.
+
 
