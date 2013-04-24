@@ -1,6 +1,7 @@
 package dk.aau.cs.d402f13.interpreter;
 
 import dk.aau.cs.d402f13.interpreter.stdenv.StandardEnvironment;
+import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.ast.Visitor;
@@ -9,9 +10,15 @@ import dk.aau.cs.d402f13.utilities.errors.InternalError;
 import dk.aau.cs.d402f13.values.*;
 
 public class Interpreter extends Visitor {
-  private SymbolTable symbolTable = new StandardEnvironment();
+  private SymbolTable symbolTable;
+
+  
+  public Interpreter(SymbolTable symbolTable) throws StandardError {
+    this.symbolTable = symbolTable;
+  }
 
   public Interpreter() throws StandardError {
+    this(new GameEnvironment());
   }
   
   public SymbolTable getSymbolTable() {
