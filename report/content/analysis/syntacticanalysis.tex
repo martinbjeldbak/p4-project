@@ -1,12 +1,13 @@
 \section{Syntactic analysis}
 
+
 In this section we describe and analyse the phase where a compiler performs
 syntatic analysis. The syntatic analysis is performed by the algorithm called a
 parser. A parser checks whether or not the source code of a
 given program is set up syntactically correct according to the programming
 language it is written in. All programming languages have rules for how its
-tokens can be combined (we will describe these in \secref{sec:lexicalanalysis}).
-A common way to describe these rules is by usinf formal language-generation
+tokens can be combined (tokens are described in \secref{sec:lexicalanalysis}).
+A common way to describe these rules is by using formal language-generation
 mechanisms called grammars or context-free grammars. 
 
 Context-free grammers are described in \secref{sec:context-freegrammars}.
@@ -20,6 +21,7 @@ comparing them. Furthermore, we look at different methods for making parsers,
 more specifically we analyse the pros and cons against writing the parser by
 hand vs. using parser generating tools to generate a parser, which is presented 
 in \secref{subsec:constructingaparser}.
+
 
 \input{content/analysis/syntacticanalysis/lexicalanalysis}
 \input{content/analysis/syntacticanalysis/context-freegrammars}
