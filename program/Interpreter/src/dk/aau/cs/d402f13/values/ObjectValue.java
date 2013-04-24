@@ -67,6 +67,18 @@ public class ObjectValue extends Value implements Cloneable {
     return type;
   }
   
+  public ObjectValue redefine(String name, Value value) throws InternalError {
+    try {
+      ObjectValue clone = (ObjectValue)clone();
+      clone.members = (HashMap<String, Value>)members.clone();
+      clone.addMember(name, value);
+      return clone;
+    }
+    catch (CloneNotSupportedException e) {
+      throw new InternalError(e);
+    }
+  }
+  
   public Value getAsSuper() throws InternalError {
     try {
       ObjectValue clone = (ObjectValue)clone();

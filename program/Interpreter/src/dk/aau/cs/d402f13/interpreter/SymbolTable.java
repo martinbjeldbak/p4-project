@@ -83,6 +83,10 @@ public class SymbolTable {
     types.put(name, type);
   }
   
+  public void addType(TypeValue type) {
+    addType(type.getName(), type);
+  }
+  
   public Value getThis() {
     if(currentScope() == null) {
       return null;
