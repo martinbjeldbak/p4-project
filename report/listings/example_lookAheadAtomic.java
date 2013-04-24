@@ -9,8 +9,8 @@
     return lambdaExpression();
   }
   {...}
-  else if (lookAheadAtomic() || lookAhead(Token.Type.NOT_OPERATOR)) {
-    return operation();
+  else if (lookAheadAtomic() || lookAhead(Token.Type.OP_MINUS)) {
+    return loSequence();
   }
   {...}
 }
