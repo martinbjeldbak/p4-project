@@ -23,6 +23,10 @@ public class SimulatedGridboard extends SimulatedBoard {
 		return board.getHeight();
 	}
 	
+	private int invertY( int y ){
+		return getHeight() - y - 1;
+	}
+	
 	public SimulatedGridboard( SimulatedGame game, Gridboard b ) {
 		super( game );
 		board = b;
@@ -40,7 +44,7 @@ public class SimulatedGridboard extends SimulatedBoard {
 			return null;
 
 		int x = pieceXCoordiate( dragged ) * size + offsetX + dragOffsetX + size / 2;
-		int y = pieceYCoordiate( dragged ) * size + offsetY + dragOffsetY + size / 2;
+		int y = invertY(pieceYCoordiate( dragged )) * size + offsetY + dragOffsetY + size / 2;
 		return findSquare( x, y );
 	}
 
@@ -52,7 +56,7 @@ public class SimulatedGridboard extends SimulatedBoard {
 			for( int ix=0; ix<width; ix++ ){
 				Square s = board.getSquareAt( ix, iy );
 				int posX = x + ix * size;
-				int posY = y + iy * size;
+				int posY = y + invertY(iy) * size;
 				
 				//Draw background for square
 				Image img = game.getImage( s.getImgPath() );
@@ -94,7 +98,7 @@ public class SimulatedGridboard extends SimulatedBoard {
 		
 		img = game.getImageScaled( p.getImgPath(), scale );
 
-		img.draw( x * size + imgXOffset + offsetX + borderSize, y * size + imgYOffset + offsetY + borderSize );
+		img.draw( x * size + imgXOffset + offsetX + borderSize, invertY(y) * size + imgYOffset + offsetY + borderSize );
 		
 	}
 	
@@ -139,7 +143,7 @@ public class SimulatedGridboard extends SimulatedBoard {
 	public Square findSquare(int x, int y) {
 		int posX = (x - offsetX) / size;
 		int posY = (y - offsetY) / size;
-		return board.getSquareAt(posX, posY);
+		return board.getSquareAt(posX, invertY(posY));
 	}
 	
 	@Override
