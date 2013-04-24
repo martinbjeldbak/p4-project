@@ -38,7 +38,7 @@ public class AbstractTypeValue extends TypeValue {
   }
 
   @Override
-  public Value add(Value other) throws TypeError {
+  public Value add(Value other) throws StandardError {
     if(other.is(ListValue.type()))
       return ListValue.prepend(this, other);
     throw new TypeError("Cannot add " + other + " to an abstract type");

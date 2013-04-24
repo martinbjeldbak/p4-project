@@ -1,23 +1,27 @@
 \section{Syntactic analysis}
 
-In the following section we describe and analyse the syntatic analysis phase of
-compilers. The syntatic analysis is performed by the component or algorithm
-called a parser. A parser checks whether or not the source code of a given
-application is set up syntactically correct according to the programming
-language it is written in. All programming languages have rules for how it's
-tokens can be combined (tokens will be described in \secref{sec:lexicalanalysis}).
-A common way to describe these rules is by a formal language-generation
-mechanism called grammars or context-free grammars. Context-free grammers are
-described in this section in \secref{sec:context-freegrammars}. There exists two
-main approaches to performing syntatic analysis, one is top-down parsing from
-which the family of LL(k) parsers derives from (the k defines the number of
-lookahead tokens). The other is bottom-up parsing from which the family of LR(k)
-parser derives from. In \secref{subsec:llparsersandlrparsers} we analyse how the
-LL-parsers and LR-parsers work and we look at the advantages and the
-disadvantages of each by comparing them. Furthermore, we look at different
-methods for making parsers, more specifically we analyse the pros and cons
-against writing the parser by hand versus using parser generator tools to
-generate it, which is in \secref{subsec:constructingaparser}.
+
+In this section we describe and analyse the phase where a compiler performs
+syntatic analysis. The syntatic analysis is performed by the algorithm called a
+parser. A parser checks whether or not the source code of a
+given program is set up syntactically correct according to the programming
+language it is written in. All programming languages have rules for how its
+tokens can be combined (tokens are described in \secref{sec:lexicalanalysis}).
+A common way to describe these rules is by using formal language-generation
+mechanisms called grammars or context-free grammars. 
+
+Context-free grammers are described in \secref{sec:context-freegrammars}.
+There exists two main approaches to perform syntatic analysis, one is
+top-down parsing from which the family of LL(k) parsers derive (the k
+defines the number of tokens needed as look ahead). The other is bottom-up 
+parsing from which the family of LR(k) parser derive.  In
+\secref{subsec:llparsersandlrparsers} we analyse how the LL- and
+LR-parsers work and we look at the advantages and disadvantages of each by
+comparing them. Furthermore, we look at different methods for making parsers,
+more specifically we analyse the pros and cons against writing the parser by
+hand vs. using parser generating tools to generate a parser, which is presented 
+in \secref{subsec:constructingaparser}.
+
 
 \input{content/analysis/syntacticanalysis/lexicalanalysis}
 \input{content/analysis/syntacticanalysis/context-freegrammars}

@@ -13,7 +13,7 @@ import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public abstract class Value {
   
-  public abstract TypeValue getType();
+  public abstract TypeValue getType() throws StandardError;
 
   /**
    * Finds out if the current value is a subtype of the param type.
@@ -21,7 +21,7 @@ public abstract class Value {
    * @param type the superclass type to check against
    * @return     true if the current type extends the param type
    */
-  public boolean is(TypeValue type) {
+  public boolean is(TypeValue type) throws StandardError {
     return getType().isSubtypeOf(type);
   }
 
@@ -32,7 +32,7 @@ public abstract class Value {
    * @return     true if the current type is not related to the
    *             param type
    */
-  public boolean isNot(TypeValue type) {
+  public boolean isNot(TypeValue type) throws StandardError {
     return !is(type);
   }
 
@@ -42,7 +42,7 @@ public abstract class Value {
    * @return     the casted value
    * @throws TypeError if casting is not possible
    */
-  public Value as(TypeValue type) throws TypeError {
+  public Value as(TypeValue type) throws StandardError {
     if (getType() == type) {
       return this;
     }
@@ -69,7 +69,7 @@ public abstract class Value {
    * @return      true if current object has a value less than other
    * @throws TypeError if the types do not support the operation
    */
-  public BoolValue lessThan(Value other) throws TypeError {
+  public BoolValue lessThan(Value other) throws StandardError {
     throw new TypeError("This value does not support the '<' operator");
   }
   
@@ -81,7 +81,7 @@ public abstract class Value {
    *              else false
    * @throws TypeError if the argument does not support the operation
    */
-  public BoolValue lessThanEq(Value other) throws TypeError {
+  public BoolValue lessThanEq(Value other) throws StandardError {
     throw new TypeError("This value does not support the '<=' operator");
   }
   
@@ -93,7 +93,7 @@ public abstract class Value {
    *               false
    * @throws TypeError if the argument does not support the operation
    */
-  public BoolValue greaterThan(Value other) throws TypeError {
+  public BoolValue greaterThan(Value other) throws StandardError {
     throw new TypeError("This value does not support the '>' operator");
   }
 
@@ -105,7 +105,7 @@ public abstract class Value {
    *              else false
    * @throws TypeError if the argument does not support the operation
    */
-  public BoolValue greaterThanEq(Value other) throws TypeError {
+  public BoolValue greaterThanEq(Value other) throws StandardError {
     throw new TypeError("This value does not support the '>=' operator");
   }
 
@@ -118,7 +118,12 @@ public abstract class Value {
       return true;
     }
     Value v = (Value)o;
-    return v.equalsOp(this) == BoolValue.trueValue();
+    try {
+      return v.equalsOp(this) == BoolValue.trueValue();
+    }
+    catch (StandardError e) {
+      return false;
+    }
   }
   
   /**
@@ -126,7 +131,7 @@ public abstract class Value {
    * @param other the value to be compared with
    * @return a true BoolValue if the values are equal
    */
-  public BoolValue equalsOp(Value other) {
+  public BoolValue equalsOp(Value other) throws StandardError {
     if (this == other) {
       return BoolValue.trueValue();
     }
@@ -138,7 +143,7 @@ public abstract class Value {
    * @param other the value to be compared with
    * @return a true BoolValue if the values are not equal
    */
-  public final BoolValue notEqual(Value other) {
+  public final BoolValue notEqual(Value other) throws StandardError {
     if(this.equalsOp(other) == BoolValue.falseValue())
       return BoolValue.trueValue();
     return BoolValue.falseValue();
@@ -150,7 +155,7 @@ public abstract class Value {
    * @return      a new value as a result of the addition operation
    * @throws TypeError if the types don't match
    */
-  public Value add(Value other) throws TypeError {
+  public Value add(Value other) throws StandardError {
     throw new TypeError("This value does not support the '+' operator");
   }
 
@@ -160,7 +165,7 @@ public abstract class Value {
    * @return      a new value as a result of the subtraction operation
    * @throws TypeError if the types don't match
    */
-  public Value subtract(Value other) throws TypeError {
+  public Value subtract(Value other) throws StandardError {
     throw new TypeError("This value does not support subtraction");
   }
   
@@ -170,7 +175,7 @@ public abstract class Value {
    * @return      a new value as a result of the multiplication operation
    * @throws TypeError if the types don't match
    */
-  public Value multiply(Value other) throws TypeError {
+  public Value multiply(Value other) throws StandardError {
     throw new TypeError("This value does not support multiplication");
   }
   
@@ -181,7 +186,7 @@ public abstract class Value {
    * @throws TypeError if the types don't match
    * @throws DivideByZeroError if dividing by zero happens at any point
    */
-  public Value divide(Value other) throws TypeError, DivideByZeroError {
+  public Value divide(Value other) throws StandardError {
     throw new TypeError("This value does not support division");
   }
   
@@ -191,7 +196,7 @@ public abstract class Value {
    * @return      a new value as a result of the modulo operation
    * @throws TypeError if the types aren't compatible
    */
-  public Value mod(Value other) throws TypeError {
+  public Value mod(Value other) throws StandardError {
     throw new TypeError("This value does not support modulo");
   }
   
@@ -200,7 +205,7 @@ public abstract class Value {
    * @return a new value as result of the negation
    * @throws TypeError
    */
-  public Value negate() throws TypeError {
+  public Value negate() throws StandardError {
     throw new TypeError("This value does not support negation");
   }
 
@@ -223,6 +228,11 @@ public abstract class Value {
   /** {@inheritDoc} */
   @Override
   public String toString() {
-    return getType().toString() + "@" + hashCode();
+    try {
+      return getType().toString() + "@" + hashCode();
+    }
+    catch (StandardError e) {
+      return "unknown@" + hashCode();
+    }
   }
 }

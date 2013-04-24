@@ -113,7 +113,7 @@ public class TypeValue extends Value {
   }
 
   @Override
-  public Value add(Value other) throws TypeError {
+  public Value add(Value other) throws StandardError {
     if(other.is(ListValue.type()))
       return ListValue.prepend(this, other);
     throw new TypeError("Cannot add " + other + " to a type");
@@ -186,14 +186,14 @@ public class TypeValue extends Value {
     return getInstance(interpreter, actualParameters);
   }
 
-  public static Value expect(Value parameter, TypeValue type) throws TypeError {
+  public static Value expect(Value parameter, TypeValue type) throws StandardError {
     if (!parameter.is(type)) {
       throw new TypeError("Invalid type for value, expected " + type.toString());
     }
     return parameter.as(type);
   }
 
-  public static Value expect(Value[] parameters, int i, TypeValue type) throws TypeError {
+  public static Value expect(Value[] parameters, int i, TypeValue type) throws StandardError {
     if (!parameters[i].is(type)) {
       throw new TypeError("Invalid type for argument #" + i + ", expected " + type.toString());
     }
