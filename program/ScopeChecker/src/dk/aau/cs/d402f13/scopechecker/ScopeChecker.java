@@ -34,9 +34,13 @@ public class ScopeChecker {
     TypeSuperCallChecker teec = new TypeSuperCallChecker();
     teec.check(typeList);
     
+    //Check that every variable, constant and function used are declared in correct scopes
+    UsesAreDeclaredVisitor uadv = new UsesAreDeclaredVisitor(typeHashMap);
+    uadv.visit(node);
+    
     //Check that members are accessed correct. E.g. in:  $a.b.g.k  member b, g and k must exist in some type
-    TypeMemberAccessVisitor tmav = new TypeMemberAccessVisitor();
-    tmav.setTypeTable(typeHashMap);
+    //TypeMemberAccessVisitor tmav = new TypeMemberAccessVisitor();
+    //tmav.setTypeTable(typeHashMap);
     //tmav.visit(node); not tested yet
     
     //TypeTablePrettyPrinter.print(typeTable);
