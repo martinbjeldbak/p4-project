@@ -21,8 +21,13 @@ public class IntValue extends Value {
     return type;
   }
 
-  public IntValue(String value) {
+  public IntValue(String value) throws StandardError {
+    try {
       this.value = Integer.parseInt(value);
+    }
+    catch (NumberFormatException e) {
+      throw new TypeError("Integer is too big");
+    }
   }
   
   public IntValue(int value) {
