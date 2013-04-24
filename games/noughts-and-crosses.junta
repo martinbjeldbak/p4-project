@@ -4,7 +4,7 @@ type NacGame[] extends Game["Noughts and Crosses"] {
 }
 type NacPlayer[$pieceType] extends Player[] {
   define winCondition[$gameState] =
-    $gameState.board.findSquares[
+    $gameState.findSquares[
       /friend (n friend n) | (e friend e) |
 		(nw friend nw) | (ne friend ne ) friend/].size != 0
   define tieCondition[$gameState] =

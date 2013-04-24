@@ -4,6 +4,7 @@ import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.ParentCallable;
 import dk.aau.cs.d402f13.interpreter.stdenv.StandardEnvironment;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.values.AbstractTypeValue;
 import dk.aau.cs.d402f13.values.TypeValue;
 import dk.aau.cs.d402f13.values.Value;
 
@@ -12,11 +13,11 @@ public class GameEnvironment extends StandardEnvironment {
   public GameEnvironment() {
     super();
     
-    final TypeValue game = new TypeValue("Game", false, "title");
+    final TypeValue game = new AbstractTypeValue("Game", false, "title");
     addType(game);
     
     
-    final TypeValue board = new TypeValue("Board", false);
+    final TypeValue board = new AbstractTypeValue("Board", false);
     addType(board);
     
     
