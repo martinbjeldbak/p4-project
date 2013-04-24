@@ -20,7 +20,7 @@ public class TypeSymbolInfo extends SymbolInfo{
  
   
   public TypeSymbolInfo(AstNode node, String name, int line, int offset) {
-   super(name, true, line, offset);
+   super(name, line, offset);
    this.node = node;
    this.children = 0;
    this.parentName = "";
