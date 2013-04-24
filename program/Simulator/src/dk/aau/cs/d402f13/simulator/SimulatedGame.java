@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.List;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
@@ -77,6 +78,32 @@ public class SimulatedGame extends BasicGame {
 		gtwFontBig = new TrueTypeFont( load.deriveFont( 36f ), false );
 	}
 	
+	private void renderMessage( Graphics g, int x, int y, int width, int height, String title, String message ) throws SlickException{
+		Image paper = getImage( "img/message.png" );
+
+		int posX = ( (width - x) - paper.getWidth() ) / 2 + x;
+		int posY = ( (height - y) - paper.getHeight() ) / 2 + y;
+		
+		g.drawImage( paper, posX, posY );
+		
+		posX += 18;
+		posY += 18;
+		width = 292;
+		height = 266;
+
+		//Draw title
+		int nextLine = TextHelper.drawCenteredText( g, gtwFontBig, title, posX, posY, width );
+		
+
+		g.setFont( gtwFontSmall );
+		List<String> lines = TextHelper.wrapText( gtwFontSmall, message, width );
+		for( String line : lines ){
+			g.drawString( line, posX, nextLine );
+			nextLine += gtwFontSmall.getLineHeight();
+		}
+		
+	}
+	
 	private void renderSidebar( Graphics g, int x, int y, int width, int height ){
 		g.setColor(Color.black);
 		g.setFont(gtwFontBig);
@@ -125,6 +152,9 @@ public class SimulatedGame extends BasicGame {
 		if( game != null && board != null ){
 			board.drawBoard( g, displayWidth - side.getWidth(), displayHeight );
 		}
+		
+	//	String text = "A long message to test line breaks and stuff and break everything Elias made... ajwdf sfd aa jfklsda kfladsj";
+	//	renderMessage( g, 0,0, displayWidth - side.getWidth(), displayHeight, "Title", text );
 	}
 
 	@Override
