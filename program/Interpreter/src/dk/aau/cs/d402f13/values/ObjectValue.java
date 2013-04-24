@@ -67,6 +67,18 @@ public class ObjectValue extends Value implements Cloneable {
     return type;
   }
   
+  public ObjectValue redefine(String name, Value value) throws InternalError {
+    try {
+      ObjectValue clone = (ObjectValue)clone();
+      clone.members = (HashMap<String, Value>)members.clone();
+      clone.addMember(name, value);
+      return clone;
+    }
+    catch (CloneNotSupportedException e) {
+      throw new InternalError(e);
+    }
+  }
+  
   public Value getAsSuper() throws InternalError {
     try {
       ObjectValue clone = (ObjectValue)clone();
@@ -93,7 +105,7 @@ public class ObjectValue extends Value implements Cloneable {
   
   /** {@inheritDoc}  */
   @Override
-  public Value as(TypeValue type) throws TypeError {
+  public Value as(TypeValue type) throws StandardError {
     Value obj = this;
     while (obj.getType() != type) {
       if (!(obj instanceof ObjectValue) || ((ObjectValue)obj).parent == null) {
@@ -115,7 +127,7 @@ public class ObjectValue extends Value implements Cloneable {
   
   /** {@inheritDoc}  */
   @Override
-  public BoolValue lessThan(Value other) throws TypeError {
+  public BoolValue lessThan(Value other) throws StandardError {
     if (parent != null) {
       return getRoot().lessThan(other);
     }
@@ -124,7 +136,7 @@ public class ObjectValue extends Value implements Cloneable {
   
   /** {@inheritDoc}  */
   @Override
-  public BoolValue lessThanEq(Value other) throws TypeError {
+  public BoolValue lessThanEq(Value other) throws StandardError {
     if (parent != null) {
       return getRoot().lessThanEq(other);
     }
@@ -133,7 +145,7 @@ public class ObjectValue extends Value implements Cloneable {
   
   /** {@inheritDoc}  */
   @Override
-  public BoolValue greaterThan(Value other) throws TypeError {
+  public BoolValue greaterThan(Value other) throws StandardError {
     if (parent != null) {
       return getRoot().greaterThan(other);
     }
@@ -142,7 +154,7 @@ public class ObjectValue extends Value implements Cloneable {
 
   /** {@inheritDoc}  */
   @Override
-  public BoolValue greaterThanEq(Value other) throws TypeError {
+  public BoolValue greaterThanEq(Value other) throws StandardError {
     if (parent != null) {
       return getRoot().greaterThanEq(other);
     }
@@ -151,7 +163,7 @@ public class ObjectValue extends Value implements Cloneable {
   
   /** {@inheritDoc}  */
   @Override
-  public Value add(Value other) throws TypeError {
+  public Value add(Value other) throws StandardError {
     if (parent != null) {
       return getRoot().add(other);
     }
@@ -160,7 +172,7 @@ public class ObjectValue extends Value implements Cloneable {
 
   /** {@inheritDoc}  */
   @Override
-  public Value subtract(Value other) throws TypeError {
+  public Value subtract(Value other) throws StandardError {
     if (parent != null) {
       return getRoot().subtract(other);
     }
@@ -169,7 +181,7 @@ public class ObjectValue extends Value implements Cloneable {
   
   /** {@inheritDoc}  */
   @Override
-  public Value multiply(Value other) throws TypeError {
+  public Value multiply(Value other) throws StandardError {
     if (parent != null) {
       return getRoot().multiply(other);
     }
@@ -178,7 +190,7 @@ public class ObjectValue extends Value implements Cloneable {
   
   /** {@inheritDoc}  */
   @Override
-  public Value divide(Value other) throws TypeError, DivideByZeroError {
+  public Value divide(Value other) throws StandardError {
     if (parent != null) {
       return getRoot().divide(other);
     }
@@ -187,7 +199,7 @@ public class ObjectValue extends Value implements Cloneable {
   
   /** {@inheritDoc}  */
   @Override
-  public Value mod(Value other) throws TypeError {
+  public Value mod(Value other) throws StandardError {
     if (parent != null) {
       return getRoot().mod(other);
     }
@@ -196,7 +208,7 @@ public class ObjectValue extends Value implements Cloneable {
   
   /** {@inheritDoc}  */
   @Override
-  public Value negate() throws TypeError {
+  public Value negate() throws StandardError {
     if (parent != null) {
       return getRoot().negate();
     }

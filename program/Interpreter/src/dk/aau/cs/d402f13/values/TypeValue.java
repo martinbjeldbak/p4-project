@@ -1,11 +1,14 @@
 package dk.aau.cs.d402f13.values;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
 import dk.aau.cs.d402f13.interpreter.Callable;
+import dk.aau.cs.d402f13.interpreter.ConstantCallable;
 import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.Member;
+import dk.aau.cs.d402f13.interpreter.ParentCallable;
 import dk.aau.cs.d402f13.interpreter.Scope;
 import dk.aau.cs.d402f13.interpreter.stdenv.constructors.DefaultConstructor;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
@@ -25,6 +28,8 @@ public class TypeValue extends Value {
   private AstNode parentConstructor;
   
   private Callable callable = null;
+  
+  private ParentCallable parentCallable = null;
   
   private static TypeValue type = new TypeValue("Type", 1, false);
 
@@ -75,6 +80,22 @@ public class TypeValue extends Value {
       varParams = "";
     }
   }
+  
+  public TypeValue(String name, boolean varArgs, String ... params) {
+    this.name = name;
+    formalParameters = params;
+    if (varArgs) {
+      varParams = params[params.length - 1];
+      formalParameters = Arrays.copyOf(formalParameters, formalParameters.length - 1);
+    }
+  }
+
+  public TypeValue(String name, TypeValue parent, ParentCallable callable,
+      boolean varArgs, String ... params) {
+    this(name, varArgs, params);
+    this.parent = parent;
+    this.parentCallable = callable;
+  }
 
   public boolean isSubtypeOf(TypeValue type) {
     if (type == this) {
@@ -85,7 +106,7 @@ public class TypeValue extends Value {
     }
     return false;
   }
-  
+
   public void ensureSuperType(Interpreter interpreter) throws NameError {
     if (parent == null && parentName != null) {
       parent = interpreter.getSymbolTable().getType(parentName);
@@ -109,11 +130,40 @@ public class TypeValue extends Value {
   
   @Override
   public String toString() {
-    return name;
+    String s = name + "[";
+    if (formalParameters.length > 0) {
+      if (formalParameters[0] == null) {
+        s += "$arg";
+      }
+      else {
+        s += "$" + formalParameters[0];
+      }
+    }
+    for (int i = 1; i < formalParameters.length; i++) {
+      if (formalParameters[i] == null) {
+        s += ", $arg";
+      }
+      else {
+        s += ", $" + formalParameters[i];
+      }
+    }
+    if (varParams != null) {
+      if (formalParameters.length > 0) {
+        s += ", ";
+      }
+      s += "... $";
+      if (varParams.equals("")) {
+        s += "args";
+      }
+      else {
+        s += varParams;
+      }
+    }
+    return s + "]";
   }
 
   @Override
-  public Value add(Value other) throws TypeError {
+  public Value add(Value other) throws StandardError {
     if(other.is(ListValue.type()))
       return ListValue.prepend(this, other);
     throw new TypeError("Cannot add " + other + " to a type");
@@ -162,7 +212,10 @@ public class TypeValue extends Value {
       }
       // Find parent
       ensureSuperType(interpreter);
-      if (parent == null) {
+      if (parentCallable != null) {
+        ret = new ObjectValue(this, scope, parentCallable.call(interpreter));
+      }
+      else if (parent == null) {
         ret = new ObjectValue(this, scope);
       }
       else {
@@ -171,6 +224,7 @@ public class TypeValue extends Value {
       }
       ret.setScope(new Scope(scope, ret));
       interpreter.getSymbolTable().openScope(ret.getScope());
+      // Initialize members
       for (Entry<String, Member> e : members.entrySet()) {
         ret.addMember(e.getKey(), e.getValue().getValue(interpreter));
       }
@@ -186,14 +240,14 @@ public class TypeValue extends Value {
     return getInstance(interpreter, actualParameters);
   }
 
-  public static Value expect(Value parameter, TypeValue type) throws TypeError {
+  public static Value expect(Value parameter, TypeValue type) throws StandardError {
     if (!parameter.is(type)) {
       throw new TypeError("Invalid type for value, expected " + type.toString());
     }
     return parameter.as(type);
   }
 
-  public static Value expect(Value[] parameters, int i, TypeValue type) throws TypeError {
+  public static Value expect(Value[] parameters, int i, TypeValue type) throws StandardError {
     if (!parameters[i].is(type)) {
       throw new TypeError("Invalid type for argument #" + i + ", expected " + type.toString());
     }
@@ -206,5 +260,9 @@ public class TypeValue extends Value {
   
   public void addStaticMember(String member, Value value) {
     staticMembers.put(member, value);
+  }
+
+  public String getName() {
+    return name;
   }
 }

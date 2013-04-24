@@ -87,18 +87,36 @@ define main = B[3].aFunc[2]
                           
 define main = qsort[MyListB[26, 2, 1, -2, 35, 2]]
 
-define qsort[$list] =
+define qsort[$list, $f] =
   if $list.size <= 1
     then $list
     else let $p = $list[0],
              $rest = $list[1, -1],
-             $lesser = $rest.filter[#[$x] => $x < $p],
-             $greater = $rest.filter[#[$x] => $x >= $p]
-      in qsort[$lesser] + [$p] + qsort[$greater]
+             $lesser = $rest.filter[#[$x] => $f[$x, $p] < 0],
+             $greater = $rest.filter[#[$x] => $f[$x, $p] >= 0]
+      in qsort[$lesser, $f] + [$p] + qsort[$greater, $f]
 
 define countList[$n] =
   if $n < 1
     then []
     else [$n] + countList[$n - 1]
 
-define main = qsort[countList[100]]
+type MyList[... $l] extends List[$l] {
+  define size[] = 2
+}
+
+define uselessTailRecA[$n] =
+  if $n == 0
+    then 0
+    else uselessTailRecA[$n - 1]
+
+define main = uselessTailRecA[1000000]
+
+
+// Getters and setters??
+type Test[$a, $b] {
+  define a = $a
+  define setA[$a] = Test[$a, $b]
+  define b = $b
+  define setB[$b] = Test[$a, $b]
+}

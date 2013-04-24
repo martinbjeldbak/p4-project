@@ -23,6 +23,7 @@ import dk.aau.cs.d402f13.values.DirValue;
 import dk.aau.cs.d402f13.values.FunValue;
 import dk.aau.cs.d402f13.values.IntValue;
 import dk.aau.cs.d402f13.values.ListValue;
+import dk.aau.cs.d402f13.values.ObjectValue;
 import dk.aau.cs.d402f13.values.PatternValue;
 import dk.aau.cs.d402f13.values.StrValue;
 import dk.aau.cs.d402f13.values.TypeValue;
@@ -31,36 +32,47 @@ import dk.aau.cs.d402f13.values.Value;
 public class StandardEnvironment extends SymbolTable {
 
   public StandardEnvironment() {
-    
+    super();
+
     ////////////////////////////////////
     // type: Boolean
     ////////////////////////////////////
-    addType("Boolean", BoolValue.type());
+    addType(BoolValue.type());
     
     ////////////////////////////////////
     // type: Coordinate
     ////////////////////////////////////
-    addType("Coordinate", CoordValue.type());
+    addType(CoordValue.type());
     
     ////////////////////////////////////
     // type: Direction
     ////////////////////////////////////
-    addType("Direction", DirValue.type());
+    addType(DirValue.type());
     
     ////////////////////////////////////
     // type: Function
     ////////////////////////////////////
-    addType("Function", FunValue.type());
+    addType(FunValue.type());
+    
+    FunValue.type().addStaticMember("call", new ConstMemberValue(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters)
+          throws StandardError {
+        FunValue o = (FunValue)interpreter.getSymbolTable().getThis();
+        ListValue a = (ListValue)TypeValue.expect(actualParameters, 0, ListValue.type());
+        return o.call(interpreter, a.getValues());
+      }
+    }));
     
     ////////////////////////////////////
     // type: Integer
     ////////////////////////////////////
-    addType("Integer", IntValue.type());
+    addType(IntValue.type());
     
     ////////////////////////////////////
     // type: List
     ////////////////////////////////////
-    addType("List", ListValue.type());
+    addType(ListValue.type());
     
     ListValue.type().addStaticMember("size", new ConstMemberValue(new ConstantCallable() {
       @Override
@@ -124,12 +136,12 @@ public class StandardEnvironment extends SymbolTable {
     ////////////////////////////////////
     // type: Pattern
     ////////////////////////////////////
-    addType("Pattern", PatternValue.type());
+    addType(PatternValue.type());
     
     ////////////////////////////////////
     // type: String
     ////////////////////////////////////
-    addType("String", StrValue.type());
+    addType(StrValue.type());
     
     StrValue.type().addStaticMember("size", new ConstMemberValue(new ConstantCallable() {
       @Override
@@ -142,7 +154,7 @@ public class StandardEnvironment extends SymbolTable {
     ////////////////////////////////////
     // type: Type
     ////////////////////////////////////
-    addType("Type", TypeValue.type());
+    addType(TypeValue.type());
     
     TypeValue.type().addStaticMember("isSubtypeOf", new ConstMemberValue(1, false, new Callable() {
       @Override
@@ -169,7 +181,7 @@ public class StandardEnvironment extends SymbolTable {
     ////////////////////////////////////
     // type: Action
     ////////////////////////////////////
-    addType("Action", ActionValue.type());
+    addType(ActionValue.type());
     
     ////////////////////////////////////
     // Global functions
@@ -205,6 +217,23 @@ public class StandardEnvironment extends SymbolTable {
           }
           Value[] resultArray = new Value[result.size()];
           return new ListValue(result.toArray(resultArray));
+        }
+      }
+    ));
+
+    addConstant("redefine", new FunValue(
+      3, false,
+      new Callable() {
+        @Override
+        public Value call(Interpreter interpreter, Value... actualParameters)
+            throws StandardError {
+          if (!(actualParameters[0] instanceof ObjectValue)) {
+            throw new ArgumentError("Invalid object for redefinittion");
+          }
+          ObjectValue object = (ObjectValue)actualParameters[0];
+          StrValue s = (StrValue)TypeValue.expect(actualParameters, 1, StrValue.type());
+          Value value = actualParameters[2];
+          return object.redefine(s.getValue(), value);
         }
       }
     ));
