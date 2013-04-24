@@ -1,6 +1,6 @@
 \subsection{Context-free grammars}
 \label{sec:context-freegrammars}
-In the previous section we described how to transfrom an input stream of
+In the previous section we described how the scanner transforms an input stream of
 characters into an output stream of tokens. In the following section we
 will describe context-free grammars, a component which contains the programming
 languages grammar, that is the set of rules for how its tokens can be
@@ -23,7 +23,7 @@ following is an example of a context-free grammar:
 
 \begin{ebnf}
 %Expressions
-\grule{PROGRAM}{\gter{print} \gcat expr}
+\grule{program}{\gter{print} \gcat expr}
 \grule{expr}{\gter{(} \gcat term \gcat \gter{)} \gcat operator \gcat \gter{(}
 \gcat term \gcat \gter{)}}
 \grule{operator}{\gter{=}}
