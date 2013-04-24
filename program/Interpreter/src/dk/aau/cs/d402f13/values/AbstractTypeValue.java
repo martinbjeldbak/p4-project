@@ -6,6 +6,7 @@ import dk.aau.cs.d402f13.interpreter.AbstractMember;
 import dk.aau.cs.d402f13.interpreter.Callable;
 import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.Member;
+import dk.aau.cs.d402f13.interpreter.ParentCallable;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
@@ -25,6 +26,19 @@ public class AbstractTypeValue extends TypeValue {
   public AbstractTypeValue(String name, int minArity, boolean varArgs,
       Callable callable) {
     super(name, minArity, varArgs, callable);
+  }
+
+  public AbstractTypeValue(String name, boolean varArgs, String... params) {
+    super(name, varArgs, params);
+  }
+
+  public AbstractTypeValue(String name, int minArity, boolean varArgs) {
+    super(name, minArity, varArgs);
+  }
+
+  public AbstractTypeValue(String name, TypeValue parent,
+      ParentCallable callable, boolean varArgs, String... params) {
+    super(name, parent, callable, varArgs, params);
   }
 
   public void addAbstractMember(String name, AbstractMember member) {
