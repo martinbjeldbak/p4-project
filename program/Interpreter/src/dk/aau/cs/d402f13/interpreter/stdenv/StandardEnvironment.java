@@ -23,6 +23,7 @@ import dk.aau.cs.d402f13.values.DirValue;
 import dk.aau.cs.d402f13.values.FunValue;
 import dk.aau.cs.d402f13.values.IntValue;
 import dk.aau.cs.d402f13.values.ListValue;
+import dk.aau.cs.d402f13.values.ObjectValue;
 import dk.aau.cs.d402f13.values.PatternValue;
 import dk.aau.cs.d402f13.values.StrValue;
 import dk.aau.cs.d402f13.values.TypeValue;
@@ -216,6 +217,23 @@ public class StandardEnvironment extends SymbolTable {
           }
           Value[] resultArray = new Value[result.size()];
           return new ListValue(result.toArray(resultArray));
+        }
+      }
+    ));
+
+    addConstant("redefine", new FunValue(
+      3, false,
+      new Callable() {
+        @Override
+        public Value call(Interpreter interpreter, Value... actualParameters)
+            throws StandardError {
+          if (!(actualParameters[0] instanceof ObjectValue)) {
+            throw new ArgumentError("Invalid object for redefinittion");
+          }
+          ObjectValue object = (ObjectValue)actualParameters[0];
+          StrValue s = (StrValue)TypeValue.expect(actualParameters, 1, StrValue.type());
+          Value value = actualParameters[2];
+          return object.redefine(s.getValue(), value);
         }
       }
     ));
