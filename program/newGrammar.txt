@@ -13,13 +13,16 @@ type_def          -> "type" type varlist ["extends" type list] [type_body]
 type_body         -> "{" {member_def} "}"
 member_def        -> abstract_def
                    | constant_def
+                   | data_def
 abstract_def      -> "define" "abstract" constant [varlist]
+data_def          -> "data" variable "=" expression
 varlist           -> "[" [variable { "," variable} ["," vars] | vars] "]"
 vars              -> "..." variable
 
 // EXPRESSIONS
 
 expression        -> assignment
+                   | set_expr
                    | if_expr
                    | lambda_expr
                    | "not" expression
@@ -47,6 +50,7 @@ atomic            -> "(" expression ")"
                    | type
                    | constant
 assignment        -> "let" variable "=" expression {"," variable "=" expression} "in" expression
+set_expr          -> "set" variable "=" expression {"," variable "=" expression}
 if_expr           -> "if" expression "then" expression "else" expression
 lambda_expr       -> "#" varlist "=>" expression
 list              -> "[" [expression {"," expression}] "]"
