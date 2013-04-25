@@ -4,15 +4,13 @@ public class SymbolInfo{
   public String name;
   public int line;
   public int offset;
-  public boolean declared;
   
-  public SymbolInfo(String name, boolean declared, int line, int offset){
+  public SymbolInfo(String name, int line, int offset){
     this.name = name;
-    this.declared = declared;
     this.line = line;
     this.offset = offset;
   }
-  
+
   public int getLine(){
     return this.line;
   }
