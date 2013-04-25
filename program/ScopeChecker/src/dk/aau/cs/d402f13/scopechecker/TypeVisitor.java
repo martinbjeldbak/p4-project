@@ -13,11 +13,14 @@ import dk.aau.cs.d402f13.utilities.scopechecker.Member;
 
 public class TypeVisitor extends DefaultVisitor
 {
-  HashMap<String, TypeSymbolInfo> typeTable; //all classes found in program are put here as a ref to its ClassInfo object
-  TypeSymbolInfo currentType; //the class we are currently inside
+  HashMap<String, TypeSymbolInfo> typeTable;    //all classes found in program are put here as a ref to its ClassInfo object
+  TypeSymbolInfo currentType;                   //the class we are currently inside
+  TypeSymbolInfo globalType;                    //the globalType is only used by the scopechecker to contain global constants and functinos
   public TypeVisitor(){
-    typeTable = new HashMap<String, TypeSymbolInfo>();
-    currentType = null;
+    this.typeTable = new HashMap<String, TypeSymbolInfo>();
+    this.globalType = new TypeSymbolInfo(null, "#GLOBAL", -1, 0);
+    this.typeTable.put("#GLOBAL", this.globalType);
+    this.currentType = globalType;
     addStandardEnvironment();
   }
   void addStandardEnvironment(){
@@ -81,7 +84,7 @@ public class TypeVisitor extends DefaultVisitor
     //visit body, which adds the class members
     visit(parentOrBody);
     
-    currentType = null; //we are exiting this type now
+    currentType = globalType; //after exiting type, set type to global type
 
     return null;
   }
@@ -89,12 +92,12 @@ public class TypeVisitor extends DefaultVisitor
   @Override
   protected Object visitAbstractDef(AstNode node) throws StandardError{
     //CONSTANT [VARLIST]
-    if (currentType == null) throw new StandardError("Abstract definition outside class");  
+    if (currentType == globalType) throw new StandardError("Abstract definition outside type");  
     //this constantDefinition is inside a type
     Iterator<AstNode> it = node.iterator();
 
     //find name
-    Member member = new Member(it.next().value);
+    Member member = new Member(it.next().value, this.currentType);
     
     //find varlist if any exist, which is the members arguments
     if (it.hasNext()){
@@ -114,32 +117,23 @@ public class TypeVisitor extends DefaultVisitor
   
   @Override
   protected Object visitConstantDef(AstNode node) throws StandardError{
-    //COSTANT VARLIST
-    
-    if (currentType == null){ //if a definition outside a type
-      this.visitChildren(node);
-      return null;
-    }
+    //CONSTANT [VARLIST] EXPRESSION
     
     //this constantDefinition is inside a type
     Iterator<AstNode> it = node.iterator();
 
     //find name
-    Member member = new Member(it.next().value);
+    String name = it.next().value;
     
-    //find varlist if any exist, which is the members arguments
-    if (it.hasNext() && it.next().type == Type.VARLIST){
-      Iterator<AstNode> varListIt = it.next().iterator();
-      while (varListIt.hasNext()){
-        member.IncrArg(); 
-        varListIt.next();
-      }
-      currentType.addConcreteFunction(member);
+    AstNode temp = it.next();
+    if (temp.type == Type.VARLIST){  //if VARLIST exists, it is arguments for the function
+      //CONSTANT VARLIST EXPRESSION
+      currentType.addConcreteFunction(new Member(name, temp.size(), this.currentType));
     }
-    else{   //if no varlist exists, the definition is an abstract constant
-      currentType.addConcreteConstant(member);
-    }
-    
+    else{                            //VARLIST does not exist, so this is a constant
+      //CONSTANT EXPRESSION
+      currentType.addConcreteConstant(new Member(name, this.currentType));
+    }  
     return null;
   }
         

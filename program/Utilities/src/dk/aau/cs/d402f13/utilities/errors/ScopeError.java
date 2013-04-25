@@ -7,7 +7,7 @@ public class ScopeError extends StandardError {
 
   SymbolInfo symbol;
   public ScopeError(String msg, SymbolInfo si) {
-    super(msg);
+    super(si.name + " - " + msg);    
     this.symbol = si;
   }
   
