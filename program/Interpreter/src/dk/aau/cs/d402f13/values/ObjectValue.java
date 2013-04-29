@@ -21,6 +21,7 @@ public class ObjectValue extends Value implements Cloneable {
   private boolean isSuper = false;
   
   private HashMap<String, Value> members = new HashMap<String, Value>();
+  private HashMap<String, Value> attributes = new HashMap<String, Value>();
   
   public ObjectValue(TypeValue type, Scope scope) {
     this.type = type;
@@ -39,6 +40,10 @@ public class ObjectValue extends Value implements Cloneable {
     members.put(member, value);
   }
   
+  public void addAttribute(String attribute, Value value) {
+    attributes.put(attribute, value);
+  }
+  
   public Value getObjectMember(String member) throws StandardError {
     Value value = members.get(member);
     if (value == null) {
@@ -50,6 +55,13 @@ public class ObjectValue extends Value implements Cloneable {
       }
       throw new NameError("Undefined member: " + member);
     }
+    if (value == null) {
+      return value;
+    }
+    if (value instanceof ConstValue) {
+      value = ((ConstValue)value).evaluate();
+      members.put(member, value);
+    }
     return value;
   }
   
@@ -60,23 +72,54 @@ public class ObjectValue extends Value implements Cloneable {
     }
     return getObjectMember(member);
   }
+  
+  public Value getAttribute(String attribute) throws StandardError {
+    Value value = attributes.get(attribute);
+    if (value == null) {
+      return value;
+    }
+    if (value instanceof ConstValue) {
+      value = ((ConstValue)value).evaluate();
+      attributes.put(attribute, value);
+    }
+    return value;
+  }
+  
+  private ObjectValue clone = null;
+  
+  public void beginClone() throws InternalError {
+    try {
+      clone = (ObjectValue)clone();
+      clone.attributes = (HashMap<String, Value>)attributes.clone();
+    }
+    catch (CloneNotSupportedException e) {
+      throw new InternalError(e);
+    }
+  }
+  
+  public ObjectValue setAttribute(String attribute, Value value) throws StandardError {
+    if (attributes.get(attribute) == null) {
+      throw new NameError("Undefined attribute: $" + attribute);
+    }
+    if (clone == null) {
+      beginClone();
+      clone.addAttribute(attribute, value);
+      return endClone();
+    }
+    clone.addAttribute(attribute, value);
+    return null;
+  }
+  
+  public ObjectValue endClone() {
+    ObjectValue r = clone;
+    clone = null;
+    return r;
+  }
 
   /** {@inheritDoc}  */
   @Override
   public TypeValue getType() {
     return type;
-  }
-  
-  public ObjectValue redefine(String name, Value value) throws InternalError {
-    try {
-      ObjectValue clone = (ObjectValue)clone();
-      clone.members = (HashMap<String, Value>)members.clone();
-      clone.addMember(name, value);
-      return clone;
-    }
-    catch (CloneNotSupportedException e) {
-      throw new InternalError(e);
-    }
   }
   
   public Value getAsSuper() throws InternalError {
