@@ -122,7 +122,7 @@ public class Interpreter extends Visitor {
   protected Value visitPatternMultiplier(AstNode node) throws StandardError {
     Value v = visit(node.getFirst());
 
-    return new PatMultValue(v, node.value);
+    return new PatternMultValue(v, node.value);
   }
 
   @Override
@@ -134,11 +134,13 @@ public class Interpreter extends Visitor {
   protected Value visitPatternOperator(AstNode node) throws StandardError {
     Value v = visit(node.getFirst());
 
+
+
     switch(node.value) {
       case "+":
         return new PatternPlusValue(v);
       case "*":
-        return new PatMultValue(v);
+        return new PatternMultValue(v);
       case "?":
         return new PatternOptValue(v);
     }
