@@ -220,23 +220,6 @@ public class StandardEnvironment extends SymbolTable {
         }
       }
     ));
-
-    addConstant("redefine", new FunValue(
-      3, false,
-      new Callable() {
-        @Override
-        public Value call(Interpreter interpreter, Value... actualParameters)
-            throws StandardError {
-          if (!(actualParameters[0] instanceof ObjectValue)) {
-            throw new ArgumentError("Invalid object for redefinittion");
-          }
-          ObjectValue object = (ObjectValue)actualParameters[0];
-          StrValue s = (StrValue)TypeValue.expect(actualParameters, 1, StrValue.type());
-          Value value = actualParameters[2];
-          return object.redefine(s.getValue(), value);
-        }
-      }
-    ));
   }
 
 }
