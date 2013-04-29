@@ -467,4 +467,16 @@ public class PrettyPrinter extends Visitor {
     return code;
   }
 
+  @Override
+  protected Object visitDataDef(AstNode node) throws StandardError {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  protected Object visitSetExpr(AstNode node) throws StandardError {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
 }
