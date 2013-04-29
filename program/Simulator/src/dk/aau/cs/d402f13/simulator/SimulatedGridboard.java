@@ -39,6 +39,10 @@ public class SimulatedGridboard extends SimulatedBoard {
 		return board.squareCoordinateY( p.square() );
 	}
 	
+	/**
+	 * Finds the square the dragged piece currently hovers on.
+	 * @return The square found
+	 */
 	private Square hoversOn(){
 		if( dragged == null )
 			return null;
@@ -48,6 +52,16 @@ public class SimulatedGridboard extends SimulatedBoard {
 		return findSquare( x, y );
 	}
 
+	/**
+	 * Draw the board with hints and hover selections
+	 * @param g Graphics to draw with
+	 * @param x Left side
+	 * @param y Top side
+	 * @param size Size of a Square in pixels
+	 * @param width Available width
+	 * @param height Available height
+	 * @throws SlickException
+	 */
 	private void renderBoard( Graphics g, int x, int y, int size, int width, int height) throws SlickException{
 		Square hover = hoversOn();
 		
@@ -86,6 +100,17 @@ public class SimulatedGridboard extends SimulatedBoard {
 		}
 	}
 	
+	/**
+	 * Draw a Piece using board coordinates
+	 * @param g Graphics to draw with
+	 * @param p Piece to draw
+	 * @param x Horizontal board coordinate
+	 * @param y Vertical board coordinate
+	 * @param size Square size
+	 * @param offsetX Horizontal offset of board
+	 * @param offsetY Vertical offset of board
+	 * @throws SlickException
+	 */
 	private void renderPiece( Graphics g, Piece p, int x, int y, int size, int offsetX, int offsetY) throws SlickException{
 		Image img = game.getImage( p.getImgPath() );
 		int imgMax = Math.max( img.getHeight(), img.getWidth() );
@@ -102,7 +127,13 @@ public class SimulatedGridboard extends SimulatedBoard {
 		
 	}
 	
-	
+	/**
+	 * Renders a board with pieces 
+	 * @param g Graphics to render with
+	 * @param width Available width
+	 * @param height Available height
+	 * @throws SlickException
+	 */
 	public void drawBoard( Graphics g, int width, int height ) throws SlickException{
 		int numSquaresX = board.getWidth();
 		int numSquaresY = board.getHeight();
