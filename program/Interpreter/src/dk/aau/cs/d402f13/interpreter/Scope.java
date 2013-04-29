@@ -2,6 +2,7 @@ package dk.aau.cs.d402f13.interpreter;
 
 import java.util.HashMap;
 
+import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.values.*;
 
 public class Scope {
@@ -57,11 +58,17 @@ public class Scope {
    * null if none exist.
    * @param var the identifying string that the value was stored with
    * @return The stored Value
+   * @throws StandardError 
    */
-  public Value getVariable(String var) {
+  public Value getVariable(String var) throws StandardError {
     Value v = variableValues.get(var);
-    if (v == null && parent != null) {
-      return parent.getVariable(var);
+    if (v == null) {
+      if (parent != null) {
+        return parent.getVariable(var);
+      }
+      else if (thisObject != null && thisObject instanceof ObjectValue){
+        return ((ObjectValue)thisObject).getAttribute(var);
+      }
     }
     return v;
   }
