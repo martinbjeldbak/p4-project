@@ -123,10 +123,8 @@ public abstract class SimulatedBoard {
 		        	//Add related squares
 		        	for( Action a : actions ){
 		        		MoveAction ma = ActionHelper.isMoveAction( a, s ); 
-		        		if( ma != null ){
+		        		if( ma != null )
 		        			hintSquares.add( ma.getPiece().square() );
-		        			//TODO: this wouldn't work for sequences!!
-		        		}
 		        		if( ActionHelper.isDropAction( a, s ) != null )
 		        			hintSquares.add( s );
 		        	}
@@ -162,7 +160,6 @@ public abstract class SimulatedBoard {
 	public void mouseReleased( int button, int x, int y ){
 		if( button == Input.MOUSE_LEFT_BUTTON ){
 			if( dragged != null ){
-				//TODO: check position and act
 				Square end = findSquare( dragStartX + dragOffsetX, dragStartY + dragOffsetY );
 				if( squareIsHinted( end ) && end != selected ){
 					//end == selected is handled in mousePressed!
