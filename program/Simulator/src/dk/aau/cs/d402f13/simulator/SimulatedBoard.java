@@ -3,7 +3,11 @@ package dk.aau.cs.d402f13.simulator;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.SlickException;
 
 import dk.aau.cs.d402f13.utilities.types.Action;
 import dk.aau.cs.d402f13.utilities.types.MoveAction;
@@ -43,6 +47,16 @@ public abstract class SimulatedBoard {
 	 * @return The Square on the specified position, or null if none
 	 */
 	public abstract Square findSquare(int x, int y);
+	
+	/**
+	 * Finds the square the dragged piece currently hovers on.
+	 * @return The square found
+	 */
+	protected Square hoversOn(){
+		if( dragged == null )
+			return null;
+		return findSquare( dragStartX + dragOffsetX, dragStartY + dragOffsetY );
+	}
 
 	/**
 	 * Check if a Square is contained in the List of hints
@@ -209,4 +223,70 @@ public abstract class SimulatedBoard {
 	 */
 	protected abstract void alignDrag();
 	
+
+	
+	/**
+	 * Draw a Piece using board coordinates
+	 * @param g Graphics to draw with
+	 * @param p Piece to draw
+	 * @param x Horizontal board coordinate
+	 * @param y Vertical board coordinate
+	 * @param size Square size
+	 * @param offsetX Horizontal offset of board
+	 * @param offsetY Vertical offset of board
+	 * @throws SlickException
+	 */
+	protected void renderPiece( Graphics g, Piece p, int x, int y, int size, int offsetX, int offsetY) throws SlickException{
+		Image img = game.getImage( p.getImgPath() );
+		int imgMax = Math.max( img.getHeight(), img.getWidth() );
+		
+		int borderSize = (int) (size * 0.05);
+		float scale = (size - borderSize * 2) / (float)imgMax;
+
+		int imgYOffset = (int) ((imgMax - img.getHeight() ) * scale / 2);
+		int imgXOffset = (int) ((imgMax - img.getWidth() ) * scale / 2);
+		
+		img = game.getImageScaled( p.getImgPath(), scale );
+
+		img.draw( x + imgXOffset + offsetX + borderSize, y + imgYOffset + offsetY + borderSize );
+		
+	}
+	
+	/**
+	 * Draw a Square
+	 * @param g Graphics to draw with
+	 * @param s Square to draw
+	 * @param posX Horizontal position in pixels
+	 * @param posY Vertical position in pixels
+	 * @param size Size of Square
+	 * @throws SlickException
+	 */
+	protected void renderSquare( Graphics g, Square s, int posX, int posY, int size ) throws SlickException{
+		Square hover = hoversOn();
+		
+		//Draw background for square
+		Image img = game.getImage( s.getImgPath() );
+		int imgMax = Math.max(img.getWidth(), img.getHeight());
+		img = game.getImageScaled( s.getImgPath(), (float)size /(float) imgMax );
+		img.draw( posX, posY );
+		
+		if( s == selected ){
+			g.setColor( new Color(0,0,127,63) );
+			g.fillRect( posX, posY, size, size);
+		}
+		
+		if( squareIsHinted( s ) ){
+			if( s == hover )
+				g.setColor( new Color(0,255,0,191) );
+			else
+				g.setColor( new Color(0,255,0,63) );
+			g.fillRect( posX, posY, size, size);
+		}
+		else{
+			if( s == hover ){
+				g.setColor( new Color(255,0,0,127) );
+				g.fillRect( posX, posY, size, size );
+			}
+		}
+	}
 }
