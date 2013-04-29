@@ -1,15 +1,11 @@
 package dk.aau.cs.d402f13.values;
 
-import dk.aau.cs.d402f13.utilities.ast.AstNode;
-import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public class PatternValue extends Value {
   private Value[] values = null;
   private static TypeValue type = new TypeValue("Pattern", 1, false);
-
-
 
   @Override
   public TypeValue getType() {

@@ -107,12 +107,14 @@ public class Interpreter extends Visitor {
 
     for(int i = 0; i < node.size(); i++) {
       values[i] = visit(node.get(i));
+      System.out.println(visit(node.get(i)).getClass());
     }
     return new PatternValue(values);
   }
 
   @Override
   protected Value visitPatternKeyword(AstNode node) throws StandardError {
+    // friend, foe
     throw new InternalError("Invalid visit");
   }
 
@@ -140,7 +142,7 @@ public class Interpreter extends Visitor {
       case "?":
         return new PatternOptValue(v);
     }
-    throw new TypeError("Not a pattern");
+    throw new TypeError("Not a pattern operator");
   }
 
   @Override
@@ -472,6 +474,16 @@ public class Interpreter extends Visitor {
       }
     }
     return v;
+  }
+
+  @Override
+  protected Value visitDataDef(AstNode node) throws StandardError {
+    return null;
+  }
+
+  @Override
+  protected Value visitSetExpr(AstNode node) throws StandardError {
+    return null;
   }
 
 }
