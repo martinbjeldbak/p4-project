@@ -178,7 +178,8 @@ public class TypeValue extends Value {
     members.put(name, member);
   }
   
-  public void addAttribute(String value, Member member) {
+  public void addAttribute(String name, Member member) {
+    System.out.println("add: " + name);
     attributes.put(name, member);
   }
   
@@ -235,6 +236,7 @@ public class TypeValue extends Value {
       }
       // Initialize attributes
       for (Entry<String, Member> e : attributes.entrySet()) {
+        System.out.println("eval: " + e.getValue());
         ret.addAttribute(e.getKey(), e.getValue().getValue(interpreter));
       }
       interpreter.getSymbolTable().closeScope();
