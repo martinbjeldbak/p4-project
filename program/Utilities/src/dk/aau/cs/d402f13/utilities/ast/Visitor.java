@@ -79,6 +79,10 @@ public abstract class Visitor {
   protected abstract Object visitAsSequence(AstNode node) throws StandardError;
 //  case MD_SEQUENCE:
   protected abstract Object visitMdSequence(AstNode node) throws StandardError;
+//  case DATA_DEF:
+  protected abstract Object visitDataDef(AstNode node) throws StandardError;
+//  case SET_EXPR:
+  protected abstract Object visitSetExpr(AstNode node) throws StandardError;
   
   
   public Object visit(AstNode node) throws StandardError {
@@ -159,6 +163,10 @@ public abstract class Visitor {
           return visitMdSequence(node);
         case NOT_OPERATOR:
           return visitNotOperator(node);
+        case DATA_DEF:
+          return visitDataDef(node);
+        case SET_EXPR:
+          return visitSetExpr(node);
         default:
           throw new StandardError("Unidentified node type: " + node.type);
       }
