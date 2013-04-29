@@ -14,17 +14,18 @@ public class AstNode implements Iterable<AstNode> {
     CONSTANT, TYPE, VAR,
     //Program structure
     PROGRAM, CONSTANT_DEF, TYPE_DEF, ABSTRACT_TYPE_DEF, TYPE_BODY,  ABSTRACT_DEF, 
-    VARLIST, VARS, 
+    VARLIST, VARS, DATA_DEF, 
     //Expressions
     ASSIGNMENT, IF_EXPR, LAMBDA_EXPR, LIST, 
     ELEMENT, MEMBER_ACCESS, CALL_SEQUENCE,
+    SET_EXPR,  
     //Patterns
     PATTERN, PATTERN_OR, PATTERN_MULTIPLIER, PATTERN_NOT,
     // OPERATIONS
     NEGATION, LO_SEQUENCE, EQ_SEQUENCE, CM_SEQUENCE, AS_SEQUENCE,
     MD_SEQUENCE,
     // Special
-    NOT_OPERATOR,  
+    NOT_OPERATOR, 
   }
   
   public Type type;
