@@ -231,4 +231,16 @@ public abstract class DefaultVisitor extends Visitor {
     visitChildren(node);
     return null;
   }
+  
+  @Override
+  protected Object visitDataDef(AstNode node) throws StandardError {
+    visitChildren(node);
+    return null;
+  }
+  
+  @Override
+  protected Object visitSetExpr(AstNode node) throws StandardError {
+    visitChildren(node);
+    return null;
+  }
 }
