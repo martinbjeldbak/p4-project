@@ -10,6 +10,13 @@ import dk.aau.cs.d402f13.utilities.types.MoveAction;
 import dk.aau.cs.d402f13.utilities.types.Piece;
 import dk.aau.cs.d402f13.utilities.types.Square;
 
+/**
+ * SimulatedBoard represents and visualizes the game board and its pieces.
+ * It makes it possible move pieces by either D&D, or clicking on two squares 
+ * in succession.
+ * @author Spiller
+ *
+ */
 public abstract class SimulatedBoard {
 	protected SimulatedGame game;
 	
@@ -21,16 +28,37 @@ public abstract class SimulatedBoard {
 	protected int dragOffsetX = 0;
 	protected int dragOffsetY = 0;
 
-	public SimulatedBoard(SimulatedGame game) {
+	/**
+	 * Constructs a SimulatedBoard
+	 * @param game SimulatedGame to visualize
+	 */
+	public SimulatedBoard( SimulatedGame game ){
 		this.game = game;
 	}
 	
+	/**
+	 * Find the Square at the current position in graphic coordinates.
+	 * @param x Horizontal absolute coordinate
+	 * @param y Vertical absolute coordinate
+	 * @return The Square on the specified position, or null if none
+	 */
 	public abstract Square findSquare(int x, int y);
 
+	/**
+	 * Check if a Square is contained in the List of hints
+	 * @param s The Square to find
+	 * @return True if the square is hinted
+	 */
 	public boolean squareIsHinted( Square s ){
 		return hintSquares.indexOf( s ) != -1;
 	}
 	
+	/**
+	 * Handles mouse button clicks for a Simulated board
+	 * @param button The mouse button pressed
+	 * @param x Horizontal position of the click
+	 * @param y Vertical position of the click
+	 */
 	public void mouseClicked( int button, int x, int y ){
         if( button == Input.MOUSE_LEFT_BUTTON ){
 	    	Square s = findSquare(x, y);
@@ -111,13 +139,26 @@ public abstract class SimulatedBoard {
         }
 	}
 	
-	public void mouseDragged(int oldx, int oldy, int newx, int newy){
+	/**
+	 * Handles mouse dragging
+	 * @param oldx Previous horizontal position of mouse pointer
+	 * @param oldy Previous vertical position of mouse pointer
+	 * @param newx New horizontal position of mouse pointer
+	 * @param newy New vertical position of mouse pointer
+	 */
+	public void mouseDragged( int oldx, int oldy, int newx, int newy ){
 		if( dragged != null ){
 			dragOffsetX += newx - oldx;
 			dragOffsetY += newy - oldy;
 		}
 	}
 	
+	/**
+	 * Handles mouse button release
+	 * @param button Button which was released
+	 * @param x Horizontal position of mouse pointer
+	 * @param y Vertical position of mouse pointer
+	 */
 	public void mouseReleased( int button, int x, int y ){
 		if( button == Input.MOUSE_LEFT_BUTTON ){
 			if( dragged != null ){
@@ -141,6 +182,11 @@ public abstract class SimulatedBoard {
 		dragged = null;
 	}
 	
+	/**
+	 * Apply an action to the Game, prompt the user to select one if
+	 * ambitious.
+	 * @param actions
+	 */
 	private void executeActions( List<Action> actions ){
 		//Check how many actions are found
 		if( actions.size() > 1 ){
@@ -159,6 +205,11 @@ public abstract class SimulatedBoard {
     	hintSquares.clear();
 	}
 	
+	/**
+	 * When starting a drag, align the cursor to the center of the piece,
+	 * in order to make it drop on the Square which is centered below the
+	 * piece, and not at the position at cursor is at.
+	 */
 	protected abstract void alignDrag();
 	
 }
