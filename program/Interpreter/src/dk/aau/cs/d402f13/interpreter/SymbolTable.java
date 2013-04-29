@@ -66,8 +66,9 @@ public class SymbolTable {
    * null if nothing is found.
    * @param variable the string identifier the variable was stored with
    * @return         the stored Value
+   * @throws StandardError 
    */
-  public Value getVariable(String variable) {
+  public Value getVariable(String variable) throws StandardError {
     if(currentScope() == null) {
       return null;
     }

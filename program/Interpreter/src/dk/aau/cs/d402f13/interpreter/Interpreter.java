@@ -205,7 +205,7 @@ public class Interpreter extends Visitor {
   protected Value visitConstant(AstNode node) throws StandardError {
     Value v = symbolTable.getConstant(node.value);
     if (v instanceof ConstValue) {
-      v = ((ConstValue)v).evaluate(this);
+      v = ((ConstValue)v).evaluate();
       symbolTable.addConstant(node.value, v);
     }
     if (v == null) {
@@ -295,7 +295,7 @@ public class Interpreter extends Visitor {
   @Override
   protected Value visitConstantDef(AstNode node) throws StandardError {
     if (node.size() < 3) {
-      symbolTable.addConstant(node.getFirst().value, new ConstValue(node.getLast()));
+      symbolTable.addConstant(node.getFirst().value, new ConstValue(node.getLast(), this));
     }
     else
       symbolTable.addConstant(node.getFirst().value, new FunValue(node.get(1), node.get(2)));

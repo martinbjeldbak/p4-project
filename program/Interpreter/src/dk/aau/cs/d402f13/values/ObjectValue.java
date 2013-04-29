@@ -55,6 +55,13 @@ public class ObjectValue extends Value implements Cloneable {
       }
       throw new NameError("Undefined member: " + member);
     }
+    if (value == null) {
+      return value;
+    }
+    if (value instanceof ConstValue) {
+      value = ((ConstValue)value).evaluate();
+      members.put(member, value);
+    }
     return value;
   }
   
@@ -66,8 +73,16 @@ public class ObjectValue extends Value implements Cloneable {
     return getObjectMember(member);
   }
   
-  public Value getAttribute(String attribute) {
-    return attributes.get(attribute);
+  public Value getAttribute(String attribute) throws StandardError {
+    Value value = attributes.get(attribute);
+    if (value == null) {
+      return value;
+    }
+    if (value instanceof ConstValue) {
+      value = ((ConstValue)value).evaluate();
+      attributes.put(attribute, value);
+    }
+    return value;
   }
   
   private ObjectValue clone = null;
