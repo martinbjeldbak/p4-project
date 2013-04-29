@@ -19,6 +19,7 @@ import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public class TypeValue extends Value {
   private HashMap<String, Member> members = new HashMap<String, Member>();
+  private HashMap<String, Member> attributes = new HashMap<String, Member>();
   private HashMap<String, Value> staticMembers = new HashMap<String, Value>();
   private String[] formalParameters;
   private String name;
@@ -177,6 +178,10 @@ public class TypeValue extends Value {
     members.put(name, member);
   }
   
+  public void addAttribute(String value, Member member) {
+    attributes.put(name, member);
+  }
+  
   public Value getInstance(Interpreter interpreter, Value... actualParameters) throws StandardError {
     if (varParams == null) {
       if (actualParameters.length != formalParameters.length) {
@@ -227,6 +232,10 @@ public class TypeValue extends Value {
       // Initialize members
       for (Entry<String, Member> e : members.entrySet()) {
         ret.addMember(e.getKey(), e.getValue().getValue(interpreter));
+      }
+      // Initialize attributes
+      for (Entry<String, Member> e : attributes.entrySet()) {
+        ret.addAttribute(e.getKey(), e.getValue().getValue(interpreter));
       }
       interpreter.getSymbolTable().closeScope();
       interpreter.getSymbolTable().closeScope();

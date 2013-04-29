@@ -231,10 +231,14 @@ public class Interpreter extends Visitor {
     else {
       type = new TypeValue(name, node.get(1));
     }
-    
     if (node.getLast().type == AstNode.Type.TYPE_BODY) {
       for (AstNode defNode : node.getLast()) {
-        type.addTypeMember(defNode.getFirst().value, new Member(defNode));
+        if (defNode.type == Type.DATA_DEF) {
+          type.addAttribute(defNode.getFirst().value, new Member(defNode));
+        }
+        else {
+          type.addTypeMember(defNode.getFirst().value, new Member(defNode));
+        }
       }
     }
     symbolTable.addType(name, type);
@@ -261,7 +265,10 @@ public class Interpreter extends Visitor {
     
     if (node.getLast().type == AstNode.Type.TYPE_BODY) {
       for (AstNode defNode : node.getLast()) {
-        if (defNode.type == Type.ABSTRACT_DEF) {
+        if (defNode.type == Type.DATA_DEF) {
+          type.addAttribute(defNode.getFirst().value, new Member(defNode));
+        }
+        else if (defNode.type == Type.ABSTRACT_DEF) {
           type.addAbstractMember(defNode.getFirst().value, new AbstractMember(defNode));
         }
         else {
@@ -472,6 +479,36 @@ public class Interpreter extends Visitor {
       }
     }
     return v;
+  }
+
+  @Override
+  protected Object visitDataDef(AstNode node) throws StandardError {
+    throw new InternalError("Invalid visit");
+  }
+
+  @Override
+  protected Object visitSetExpr(AstNode node) throws StandardError {
+    String attribute = node.getFirst().value;
+    Value value = visit(node.get(1));
+    Value thisObject = symbolTable.getThis();
+    if (thisObject == null || !(thisObject instanceof ObjectValue)) {
+      /** @TODO a more appropriate error here */
+      throw new StandardError("Use of set outside of type");
+    }
+    ObjectValue object = (ObjectValue)thisObject;
+    if (node.size() == 2) {
+      return object.setAttribute(attribute, value);
+    }
+    else {
+      object.beginClone();
+      object.setAttribute(attribute, value);
+      for (int i = 2; i < node.size(); i++) {
+        attribute = node.get(i).getFirst().value;
+        value = visit(node.get(i).getLast());
+        object.setAttribute(attribute, value);
+      }
+      return object.endClone();
+    }
   }
 
 }
