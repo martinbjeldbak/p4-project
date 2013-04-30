@@ -19,7 +19,7 @@ public class ObjectValue extends Value implements Cloneable {
   private Interpreter interpreter;
   
   private Value parent;
-  private Value child;
+  private ObjectValue child;
   
   private boolean isSuper = false;
   
@@ -77,20 +77,61 @@ public class ObjectValue extends Value implements Cloneable {
     return value;
   }
   
-  private ObjectValue clone = null;
-  
-  public void beginClone() throws InternalError {
+  private ObjectValue cloneParentTree() throws InternalError {
     try {
-      clone = (ObjectValue)clone();
-      clone.attributes = (HashMap<String, Value>)attributes.clone();
-      clone.scope = new Scope(scope.getParent(), clone);
+      ObjectValue c = (ObjectValue)clone();
+      c.scope = new Scope(scope.getParent(), c);
+      if (c.parent != null) {
+        if (c.parent instanceof ObjectValue) {
+          c.parent = ((ObjectValue)c.parent).cloneParentTree();
+          ((ObjectValue)c.parent).child = c;
+        }
+      }
+      return c;
     }
     catch (CloneNotSupportedException e) {
       throw new InternalError(e);
     }
   }
   
-  public ObjectValue setAttribute(String attribute, Value value) throws StandardError {
+  private ObjectValue cloneChildTree() throws InternalError {
+    try {
+      ObjectValue c = (ObjectValue)clone();
+      c.scope = new Scope(scope.getParent(), c);
+      if (c.child != null) {
+        c.child = c.child.getClone();
+        c.child.parent = c;
+      }
+      return c;
+    }
+    catch (CloneNotSupportedException e) {
+      throw new InternalError(e);
+    }
+  }
+  
+  @Override
+  public ObjectValue getClone() throws InternalError {
+    ObjectValue c = cloneChildTree();
+    if (c.parent != null && c.parent instanceof ObjectValue) {
+      c.parent = ((ObjectValue)c.parent).cloneParentTree();
+      ((ObjectValue)c.parent).child = c;
+    }
+    return c;
+  }
+  
+  private ObjectValue clone = null;
+  private ObjectValue cloneReturn = null;
+  
+  public void beginClone() throws InternalError {
+    clone = (ObjectValue)getClone();
+    clone.attributes = (HashMap<String, Value>)attributes.clone();
+    cloneReturn = clone;
+    while (cloneReturn.child != null) {
+      cloneReturn = cloneReturn.child;
+    }
+  }
+  
+  public Value setAttribute(String attribute, Value value) throws StandardError {
     if (attributes.get(attribute) == null) {
       throw new NameError("Undefined attribute: $" + attribute);
     }
@@ -103,10 +144,9 @@ public class ObjectValue extends Value implements Cloneable {
     return null;
   }
   
-  public ObjectValue endClone() {
-    ObjectValue r = clone;
+  public Value endClone() {
     clone = null;
-    return r;
+    return cloneReturn;
   }
 
   /** {@inheritDoc}  */

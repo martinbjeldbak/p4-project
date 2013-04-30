@@ -1,11 +1,11 @@
-\section{Contextual constraints}
+\section{Contextual constraints for CFGs}
 \label{sec:contextualconstraints}
 
-Context-free grammars cannot describe syntax which can only be syntactically
+Context-free grammars (CFGs) cannot describe syntax which can only be syntactically
 correct given a specific context (hence the name of these grammars). This means
-that there are constraints which a given context-free grammar cannot describe.
+that there are constraints which a given CFG cannot describe.
 
-These contextual constraints are i.e.\cite[pg. 39]{plpp}:
+These contextual constraints are i.e.\cite[p. 39]{plpp}:
 
 \begin{dlist}
 \item Declaration before use
@@ -15,12 +15,65 @@ These contextual constraints are i.e.\cite[pg. 39]{plpp}:
 \end{dlist}
 
 In the following subsections we eplain why these cannot be described by using a
-context-free grammar.
+CFG.
 
 % Scope and their importance
 % Semantics at compile-time
-\input{content/analysis/contextualconstraints/declarationbeforeuse}
-\input{content/analysis/contextualconstraints/scoperules}
-\input{content/analysis/contextualconstraints/typesystem}
-\input{content/analysis/contextualconstraints/overridingmethods}
-\input{content/analysis/contextualconstraints/summary}
+
+\subsection{The issue of remembering things}
+
+%declaration before use
+The rule that variables must be declared before they can be used is impossible to
+express with CFGs. It would require that the CFG was able remember things, particularly
+those variables that have been declared, which it cannot. 
+
+%scope rules
+The problem of remembering things also shows up when working with scope rules. 
+Typically, a variable declared in one scope cannot be used outside
+that scope. The CFG cannot describe such scope rules that we describe as static
+semantics rules. It is named static because the analysis required to check the
+specifications can be done at compile-time rather than run-time.
+\cite[p. 153]{sebesta2013}
+
+%type and overriding methods
+The same issue is present when working with type systems and the possibility of
+overriding methods in a programming language. The CFG must remember names of the
+variables and which type they have to be able to compare and devise a conclusion
+if a specific type is correct in the given context. Furthermore, the possibility
+of overriding methods is not possible because the CFG must remember method
+names, formal parameters, and return value to be able to formulate a
+production to make it possible to override methods, which is not possible. 
+
+\subsection{Solutions to this problem}
+So, the big issue for the CFG is to remember stuff. Are there any grammers that solve this
+issue? Yes there is. There exist different kinds of grammars which are able to
+describe the semantics of a given language instead of just focusing on the
+syntax. Grammars that can describe semantics are specified under a class of
+grammars called contextual grammars.
+\cite{plpp}
+An example of such a grammar is an attribute grammar which actually
+``decorates'' a context-free grammar with those attributes we are interested
+in.
+\cite{attrgrammar}
+
+Contextual grammars can take the form of:
+
+\[
+  uAv \rightarrow uwv
+\]
+
+where $u$ and $v$ is the context which $A$ is in at this transition.
+The issue with contextual grammars is that they are difficult to write,
+process, and the biggest issue is that there are no automated
+generators for efficient generation of translation.
+\cite{attrgrammar}
+
+\subsection{Summary for contextual constraints}
+The big issue is that the CFG cannot remember what it has met in the past and
+which context a given production must be in to be true. This makes is impossible 
+to declare rules as declaration before use, scope rules, type rules, etc.
+
+There exist contextual grammars that can describe a language given a specific
+context. The biggest issue with these grammars is that it is not possible to
+automatically generate efficient translators.
+
