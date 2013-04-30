@@ -1,11 +1,12 @@
 package dk.aau.cs.d402f13.values;
 
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
-public class PatMultValue extends  Value {
+public class PatternMultValue extends PatternValue {
   private static TypeValue type = new TypeValue("Pattern Multiplier", 1, false);
   private Value value;
-  private final int times;
+  private int times;
 
   @Override
   public TypeValue getType() throws StandardError {
@@ -17,14 +18,23 @@ public class PatMultValue extends  Value {
   }
 
   // For the '*' operator (0-*)
-  public PatMultValue(Value value) {
+
+  /**
+   * Creates a new pattern multiplication value from the input value
+   * @param value
+   * @throws StandardError
+   */
+  public PatternMultValue(Value value) throws StandardError {
+    if(isNotPatTypeCompatible(value))
+      throw new TypeError("The supplied value (" + value + ") cannot be used in pattern zero-to-many");
+
     this.value = value;
     this.times = 0;
   }
 
   // If the amount of times to be repeated is fixed. I.e. /(e)2/
-  public PatMultValue(Value value, String times) {
-    this.value = value;
+  public PatternMultValue(Value value, String times) throws StandardError {
+    this(value);
     this.times = Integer.parseInt(times);
   }
 
