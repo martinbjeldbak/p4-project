@@ -32,7 +32,7 @@ public class TypeTableCleaner {
       for (Member m : tsi.concreteFunctions){
         if (m.name.equals(pm.name)){
          if (pm.args != m.args){
-          throw new ScopeError("Number of arguments does not match overloaded abstract function " + m.name, tsi);
+          throw new ScopeError("Number of arguments for abstract function " + m.name + " in type " + tsi.name + " does not match overloaded constant in parent type " + tsi.parent.name, m.line, m.offset);
         }
          else{
            overridden = true;
@@ -49,7 +49,7 @@ public class TypeTableCleaner {
       for (Member m : tsi.concreteFunctions){
         if (m.name.equals(pm.name)){
          if (pm.args != m.args){
-          throw new ScopeError("Number of arguments does not match overloaded concrete function " + m.name, tsi);
+          throw new ScopeError("Number of arguments for function " + m.name + " in type " + tsi.name + " does not match overloaded constant in parent type " + tsi.parent.name, m.line, m.offset);
         }
          else{
            overridden = true;
@@ -78,7 +78,7 @@ public class TypeTableCleaner {
       for (Member m : tsi.concreteConstants){
         if (m.name.equals(pm.name)){
          if (pm.args != m.args){
-          throw new ScopeError("Number of arguments does not match overloaded constant " + m.name, tsi);
+          throw new ScopeError("Number of arguments for constant " + m.name + " in type " + tsi.name + " does not match overloaded constant in parent type " + tsi.parent.name, m.line, m.offset);
         }
          else{
            overridden = true;
@@ -119,7 +119,7 @@ public class TypeTableCleaner {
           }
         }
         if (!found)
-          throw new ScopeError("Extend cycle found in type " + sti.name, sti );
+          throw new ScopeError("Extend cycle found in type " + sti.name, sti.line, sti.offset );
       }
     }
     return sorted;
@@ -129,13 +129,13 @@ public class TypeTableCleaner {
     //this name must be looked up in the SymbolTable to update the real reference TypeInfo t.parent
     for (TypeSymbolInfo tsi : typeTable.values()){
       if (tsi.parentName.equals(tsi.name)){ //type cannot extend itself
-        throw new ScopeError("Type cannot extend itself", tsi);
+        throw new ScopeError("Type " + tsi.name + " cannot extend itself", tsi.line, tsi.offset);
       }
       if (tsi.parentName != ""){
       if (typeTable.containsKey(tsi.parentName))
         tsi.parent = typeTable.get(tsi.parentName);
       else
-        throw new ScopeError("Type extends undefined type", tsi);
+        throw new ScopeError("Type " + tsi.name + " extends undefined type " + tsi.parentName, tsi.line, tsi.offset);
       }
     }
   }

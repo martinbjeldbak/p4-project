@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.List;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
@@ -31,6 +32,13 @@ public class SimulatedGame extends BasicGame {
 	SimulatedGridboard board = null;
 	Game game;
 	
+	/**
+	 * Loads an Image from path, however caches the Image so repeated calls only
+	 * loads the image once.
+	 * @param path The file address of the Image
+	 * @return The loaded Image
+	 * @throws SlickException
+	 */
 	public Image getImage( String path ) throws SlickException{
 		if( imgCache.containsKey(path) ){
 			return imgCache.get( path );
@@ -39,6 +47,32 @@ public class SimulatedGame extends BasicGame {
 			Image img = new Image( path );
 			imgCache.put(path, img);
 			return img;
+		}
+		//TODO: check if Image could not be loaded and recast exception
+		//TODO: default Images?
+	}
+	
+	/**
+	 * Caches a scaled version of the Image returned by getImage()
+	 * @param path The file address of the Image
+	 * @param scale The wanted scale of the Image
+	 * @return The scaled Image
+	 * @throws SlickException
+	 */
+	public Image getImageScaled( String path, float scale ) throws SlickException{
+		Image unscaled = getImage( path );
+
+		int width = (int)(unscaled.getWidth() * scale);
+		int height = (int)(unscaled.getHeight() * scale);
+		
+		String scaledName = path + ":" + width + "x" + height;
+		if( imgCache.containsKey( scaledName ) )
+			return imgCache.get( scaledName );
+		else{
+			Image scaled = unscaled.getScaledCopy( width, height );
+			System.out.println( "Scaled image: " + scaledName );
+			imgCache.put( scaledName, scaled );
+			return scaled;
 		}
 	}
 	
@@ -77,6 +111,32 @@ public class SimulatedGame extends BasicGame {
 		gtwFontBig = new TrueTypeFont( load.deriveFont( 36f ), false );
 	}
 	
+	private void renderMessage( Graphics g, int x, int y, int width, int height, String title, String message ) throws SlickException{
+		Image paper = getImage( "img/message.png" );
+
+		int posX = ( (width - x) - paper.getWidth() ) / 2 + x;
+		int posY = ( (height - y) - paper.getHeight() ) / 2 + y;
+		
+		g.drawImage( paper, posX, posY );
+		
+		posX += 18;
+		posY += 18;
+		width = 292;
+		height = 266;
+
+		//Draw title
+		int nextLine = TextHelper.drawCenteredText( g, gtwFontBig, title, posX, posY, width );
+		
+
+		g.setFont( gtwFontSmall );
+		List<String> lines = TextHelper.wrapText( gtwFontSmall, message, width );
+		for( String line : lines ){
+			g.drawString( line, posX, nextLine );
+			nextLine += gtwFontSmall.getLineHeight();
+		}
+		
+	}
+	
 	private void renderSidebar( Graphics g, int x, int y, int width, int height ){
 		g.setColor(Color.black);
 		g.setFont(gtwFontBig);
@@ -89,11 +149,10 @@ public class SimulatedGame extends BasicGame {
 		g.drawString( "Player " + Integer.toString( position + 1 ), x, y + 36 );
 		
 		
-		int historyStart = y + 36;
+		int historyStart = y + gtwFontBig.getLineHeight();
 		for( Action a : game.history() ){
-			historyStart += 16;
-			
-			g.drawString( "move", x, historyStart );
+			historyStart += gtwFontSmall.getLineHeight();
+			g.drawString( ActionHelper.humanReadable( game, a ), x, historyStart );
 		}
 	}
 	
@@ -125,6 +184,9 @@ public class SimulatedGame extends BasicGame {
 		if( game != null && board != null ){
 			board.drawBoard( g, displayWidth - side.getWidth(), displayHeight );
 		}
+		
+	//	String text = "A long message to test line breaks and stuff and break everything Elias made... ajwdf sfd aa jfklsda kfladsj";
+	//	renderMessage( g, 0,0, displayWidth - side.getWidth(), displayHeight, "Title", text );
 	}
 
 	@Override

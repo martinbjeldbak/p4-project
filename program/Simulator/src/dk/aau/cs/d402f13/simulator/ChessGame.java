@@ -36,8 +36,8 @@ class ChessBoard extends Gridboard{
 	@Override
 	public List<Square> squareTypes(){
 		List<Square> list = new ArrayList<Square>();
-		list.add( new WhiteSquare() );
 		list.add( new BlackSquare() );
+		list.add( new WhiteSquare() );
 		return list;
 	}
 	
@@ -118,7 +118,7 @@ class Pawn extends ChessPiece{
 	
 	@Override
 	public List<Action> actions( Game g ){
-		int dir = getColor() ? 1 : -1;
+		int dir = getColor() ? -1 : 1;
 		List<Action> list = new ArrayList<Action>();
 		list.add( relative( g, 0, dir ) );
 		list.add( relative( g, 0, dir*2 ) );
@@ -244,8 +244,8 @@ public class ChessGame extends Game {
 	List<Player> players = new ArrayList<Player>();
 	
 	private void addTeam( Gridboard b, Player p, boolean color, List<Piece> pieces ){
-		int front = color ? 1 : 6;
-		int back = color ? 0 : 7;
+		int front = color ? 6 : 1;
+		int back = color ? 7 : 0;
 		
 		for( int i=0; i<8; i++ )
 			pieces.add( new Pawn( p, color ).setPosition( b, i, front) );

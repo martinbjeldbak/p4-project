@@ -229,6 +229,9 @@ public abstract class Value {
   @Override
   public String toString() {
     try {
+      if (getType() == null) {
+        return "unknown@" + hashCode();
+      }
       return getType().getName() + "@" + hashCode();
     }
     catch (StandardError e) {

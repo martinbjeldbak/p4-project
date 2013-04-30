@@ -23,6 +23,7 @@ import dk.aau.cs.d402f13.values.DirValue;
 import dk.aau.cs.d402f13.values.FunValue;
 import dk.aau.cs.d402f13.values.IntValue;
 import dk.aau.cs.d402f13.values.ListValue;
+import dk.aau.cs.d402f13.values.ObjectValue;
 import dk.aau.cs.d402f13.values.PatternValue;
 import dk.aau.cs.d402f13.values.StrValue;
 import dk.aau.cs.d402f13.values.TypeValue;
