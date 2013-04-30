@@ -3,6 +3,7 @@ package dk.aau.cs.d402f13.interpreter;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.values.ConstMemberValue;
+import dk.aau.cs.d402f13.values.ConstValue;
 import dk.aau.cs.d402f13.values.FunValue;
 import dk.aau.cs.d402f13.values.Value;
 
@@ -24,13 +25,20 @@ public class Member {
     this.constValue = constValue;
   }
   
-  public Value getValue(Interpreter interpreter) throws StandardError {
+  public Value getValue(Interpreter interpreter, Scope scope) throws StandardError {
     if (constValue != null) {
-      return constValue.evaluate(interpreter, interpreter.getSymbolTable().getThis());
+      return constValue.evaluate(interpreter, scope.getThis());
     }
     if (params == null) {
-      return interpreter.visit(expression);
+      interpreter.getSymbolTable().openScope(scope);
+      Value ret = interpreter.visit(expression);
+      interpreter.getSymbolTable().closeScope();
+      return ret;
     }
-    return new FunValue(params, expression, interpreter.getSymbolTable().currentScope());
+    return new FunValue(params, expression, scope);
+  }
+  
+  public Value getValue(Interpreter interpreter) throws StandardError {
+    return getValue(interpreter, interpreter.getSymbolTable().currentScope());
   }
 }

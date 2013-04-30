@@ -3,6 +3,7 @@ package dk.aau.cs.d402f13.values;
 import java.util.HashMap;
 
 import dk.aau.cs.d402f13.interpreter.Interpreter;
+import dk.aau.cs.d402f13.interpreter.Member;
 import dk.aau.cs.d402f13.interpreter.Scope;
 import dk.aau.cs.d402f13.utilities.errors.DivideByZeroError;
 import dk.aau.cs.d402f13.utilities.errors.InternalError;
@@ -15,42 +16,45 @@ public class ObjectValue extends Value implements Cloneable {
   private TypeValue type;
   private Scope scope;
   
+  private Interpreter interpreter;
+  
   private Value parent;
   private Value child;
   
   private boolean isSuper = false;
   
-  private HashMap<String, Value> members = new HashMap<String, Value>();
+  private HashMap<String, Value> attributes = new HashMap<String, Value>();
   
-  public ObjectValue(TypeValue type, Scope scope) {
+  public ObjectValue(Interpreter interpreter, TypeValue type, Scope scope) {
+    this.interpreter = interpreter;
     this.type = type;
     this.scope = scope;
   }
   
-  public ObjectValue(TypeValue type, Scope scope, Value parent) {
-    this(type, scope);
+  public ObjectValue(Interpreter interpreter, TypeValue type, Scope scope, Value parent) {
+    this(interpreter, type, scope);
     this.parent = parent;
     if (parent instanceof ObjectValue) {
       ((ObjectValue)parent).child = this;
     }
   }
   
-  public void addMember(String member, Value value) {
-    members.put(member, value);
+  public void addAttribute(String attribute, Value value) {
+    attributes.put(attribute, value);
   }
   
-  public Value getObjectMember(String member) throws StandardError {
-    Value value = members.get(member);
-    if (value == null) {
+  public Value getObjectMember(String name) throws StandardError {
+    Member member = getType().getTypeMember(name);
+    if (member == null) {
       if (parent != null) {
         if (parent instanceof ObjectValue) {
-          return ((ObjectValue)parent).getObjectMember(member);
+          return ((ObjectValue)parent).getObjectMember(name);
         }
-        return parent.getMember(member);
+        return parent.getMember(name);
       }
-      throw new NameError("Undefined member: " + member);
+      throw new NameError("Undefined member: " + name);
     }
-    return value;
+    return member.getValue(interpreter, scope);
   }
   
   @Override
@@ -60,23 +64,55 @@ public class ObjectValue extends Value implements Cloneable {
     }
     return getObjectMember(member);
   }
+  
+  public Value getAttribute(String attribute) throws StandardError {
+    Value value = attributes.get(attribute);
+    if (value == null) {
+      return value;
+    }
+    if (value instanceof ConstValue) {
+      value = ((ConstValue)value).evaluate();
+      attributes.put(attribute, value);
+    }
+    return value;
+  }
+  
+  private ObjectValue clone = null;
+  
+  public void beginClone() throws InternalError {
+    try {
+      clone = (ObjectValue)clone();
+      clone.attributes = (HashMap<String, Value>)attributes.clone();
+      clone.scope = new Scope(scope.getParent(), clone);
+    }
+    catch (CloneNotSupportedException e) {
+      throw new InternalError(e);
+    }
+  }
+  
+  public ObjectValue setAttribute(String attribute, Value value) throws StandardError {
+    if (attributes.get(attribute) == null) {
+      throw new NameError("Undefined attribute: $" + attribute);
+    }
+    if (clone == null) {
+      beginClone();
+      clone.addAttribute(attribute, value);
+      return endClone();
+    }
+    clone.addAttribute(attribute, value);
+    return null;
+  }
+  
+  public ObjectValue endClone() {
+    ObjectValue r = clone;
+    clone = null;
+    return r;
+  }
 
   /** {@inheritDoc}  */
   @Override
   public TypeValue getType() {
     return type;
-  }
-  
-  public ObjectValue redefine(String name, Value value) throws InternalError {
-    try {
-      ObjectValue clone = (ObjectValue)clone();
-      clone.members = (HashMap<String, Value>)members.clone();
-      clone.addMember(name, value);
-      return clone;
-    }
-    catch (CloneNotSupportedException e) {
-      throw new InternalError(e);
-    }
   }
   
   public Value getAsSuper() throws InternalError {

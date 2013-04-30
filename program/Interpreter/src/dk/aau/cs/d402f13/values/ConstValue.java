@@ -14,18 +14,34 @@ import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public class ConstValue extends Value {
   private AstNode expression = null;
+  private Interpreter interpreter = null;
+  private Scope scope;
 
   @Override
   public TypeValue getType() {
     return null;
   }
 
-  public ConstValue(AstNode expression) {
+  public ConstValue(AstNode expression, Interpreter interpreter) {
     this.expression = expression;
+    this.interpreter = interpreter;
+  }
+  
+  public ConstValue(AstNode expression, Interpreter interpreter, Scope scope) {
+    this.expression = expression;
+    this.interpreter = interpreter;
+    this.scope = scope;
   }
 
-  public Value evaluate(Interpreter interpreter) throws StandardError {
-    return interpreter.visit(expression);
+  public Value evaluate() throws StandardError {
+    if (scope != null) {
+      interpreter.getSymbolTable().openScope(scope);
+    }
+    Value v = interpreter.visit(expression);
+    if (scope != null) {
+      interpreter.getSymbolTable().closeScope();
+    }
+    return v;
   }
 
   @Override
