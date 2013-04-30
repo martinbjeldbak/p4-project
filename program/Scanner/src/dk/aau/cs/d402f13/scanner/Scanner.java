@@ -29,7 +29,7 @@ public class Scanner {
     pop();
     pop(); // Double-pop! (To get info into currentChar and nextChar)
   }
-
+  
   public char current() {
     return (char) currentChar;
   }
@@ -37,7 +37,8 @@ public class Scanner {
   public char peek() {
     return (char) nextChar;
   }
-
+  
+  
   public char pop() {
     currentChar = nextChar;
     try {
@@ -70,42 +71,82 @@ public class Scanner {
     return token(type, "");
   }
 
+  /**
+   * Is used to check if current() is a linebreak. The scan()-method
+   * uses the method to check if it should return a eol-token 
+   * @return true if linebreak, else false
+   */
   public boolean isEol() {
     return current() == '\n';
   }
 
+  /**
+   * Checks if currentChar is EOF
+   * @return true if currenChar is EOF. Otherwise false
+   */
   public boolean isEof() {
     return currentChar < 0;
   }
-
+ 
+  /**
+   * Checks for whitespace. 
+   * @return true if it is whitespace. Otherwise false
+   */
   public boolean isWhitespace() {
     return whitespace.indexOf(current()) != -1;
   }
 
+  
+  /**
+   * Checks if current() is a digit
+   * @returns true if current is a digit. Otherwise false
+   */
   public boolean isDigit() {
     char c = current();
     return c >= '0' && c <= '9';
   }
 
+  /**
+   * Checks if current() is an operator "!&*+-=><?%(){}#[]/|,."
+   * @returns true if it is an operator. Otherwise false
+   */
   public boolean isOperator() {
     return operators.indexOf(current()) != -1;
   }
-
+  
+  /**
+   * Checks if current() is an uppercase letter
+   * @returns true if it is. Otherwise false
+   */
   public boolean isUppercase() {
     char c = current();
     return c >= 'A' && c <= 'Z';
   }
-
+  
+  /**
+   * Checks if current() is a lowercase letter
+   * @returns true if it is. Otherwise false
+   */
   public boolean isLowercase() {
     char c = current();
     return c >= 'a' && c <= 'z';
   }
-
+  
+  /**
+   * Checks if current() is a letter
+   * @returns true if it is. Otherwise false
+   */
   public boolean isAnycase() {
     char c = current();
     return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
   }
 
+  
+  /**
+   * Is called from the Scan()-method. Tries to match the current str to a keyword
+   * @returns the token that match the current string str.
+   * @throws ScannerError the length of the string is less than 1.
+   */
   public Token scanKeyword() throws ScannerError {
     String str = "";
     while(isAnycase()) {
@@ -171,6 +212,12 @@ public class Scanner {
     }
   }
 
+  /**
+   * Is called from the Scan()-method. Tries to assign the token t to a type-token or a coordinat-token.
+   * @returns a type-token if t consists of letters or a coordinat-token if t consists of letters
+   * followed by digits.
+   * @throws ScannerError if t consists of lowercase letters followed by digits.
+   */
   public Token scanUppercase() throws ScannerError {
     // Can be Type or Coordinate, e.g. Int or A3
     Token t = token(Type.TYPE);
@@ -197,7 +244,12 @@ public class Scanner {
     return t;
 
   }
-
+  
+  /**
+   * Is called from the scan()-method. Tries to assign the token t to a variable-token
+   * @return a variable-token if t consists of a $ followed by a number of anycase letters. 
+   * @throws ScannerError if the length of t is less than 0.
+   */
   public Token scanVar() throws ScannerError {
     // called when token starts with $
     Token t = token(Type.VAR);
@@ -211,7 +263,13 @@ public class Scanner {
     }
     return t;
   }
-
+  
+  
+  /**
+   * Is called from the scan()-method. Tries to match the String str to a operator token.
+   * @returns the operator token that matches str
+   * @throws ScannerError if the str doesn't match a valid operator
+   */
   public Token scanOperator() throws ScannerError {
     String str = "";
     char c = current();
@@ -322,6 +380,10 @@ public class Scanner {
     }
   }
 
+  /**
+   * Is called from the scan()-method. Tries to assign the token t to an Int literal token
+   * @returns an int literal token if t consists of only digits.
+   */
   public Token scanNumeric() {
     Token t = token(Type.LIT_INT);
     while (isDigit()) {
@@ -330,7 +392,13 @@ public class Scanner {
     }
     return t;
   }
-
+  
+  
+  /**
+   * Is called from the scan()-method. Tries to assign the token t to a String literal token
+   * @returns a String literal token if t consists of a '"'  followed by anything, and ending with a '"' 
+   * @throws ScannerError if t doesn't end with a '"'
+   */
   public Token scanString() throws ScannerError {
     Token t = token(Type.LIT_STRING);
     pop();
@@ -350,6 +418,12 @@ public class Scanner {
     return t;
   }
 
+  /**
+   * The main scan()-method, which picks the appropriate sub scan-method, depending on which
+   * symbol is currently looked at. Is called in the main()-method.
+   * @returns the appropriate sub scan-method 
+   * @throws ScannerError if the current symbol isn't a valid one
+   */
   public Token scan() throws ScannerError {
     while (isWhitespace()) {
       pop();
