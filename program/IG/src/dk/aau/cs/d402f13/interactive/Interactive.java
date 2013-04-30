@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.LinkedList;
 
 import dk.aau.cs.d402f13.interpreter.Interpreter;
+import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
 import dk.aau.cs.d402f13.parser.Parser;
 import dk.aau.cs.d402f13.scanner.Scanner;
 import dk.aau.cs.d402f13.utilities.PrettyPrinter;
@@ -22,6 +23,7 @@ import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.SyntaxError;
 import dk.aau.cs.d402f13.values.ConstValue;
 import dk.aau.cs.d402f13.values.FunValue;
+import dk.aau.cs.d402f13.values.TypeValue;
 import dk.aau.cs.d402f13.values.Value;
 import dk.aau.cs.d402f13.scopechecker.ScopeChecker;
 import dk.aau.cs.d402f13.scopechecker.TypeVisitor;
@@ -164,11 +166,16 @@ public class Interactive {
                   if (line.equals(":i") || line.equals(":nk")) {
                     System.out.println("Interpreting...");
                     start = new Date();
-                    Interpreter i = new Interpreter();
+                    GameEnvironment env = new GameEnvironment();
+                    Interpreter i = new Interpreter(env);
                     i.visit(ast);
                     time = new Date().getTime() - start.getTime();
                     System.out.println("Interpreting took " + time + " ms");
-                    Value main = i.getSymbolTable().getConstant("main"); 
+                    TypeValue game = env.findGameType();
+                    if (game != null) {
+                      System.out.println("Found game: " + game.getName());
+                    }
+                    Value main = env.getConstant("main"); 
                     if (main != null) {
                       Value v = null;
                       System.out.println("Evaluating main...");

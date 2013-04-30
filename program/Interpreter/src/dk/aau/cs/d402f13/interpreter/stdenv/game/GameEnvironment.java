@@ -1,5 +1,7 @@
 package dk.aau.cs.d402f13.interpreter.stdenv.game;
 
+import java.util.Map.Entry;
+
 import dk.aau.cs.d402f13.interpreter.AbstractMember;
 import dk.aau.cs.d402f13.interpreter.Callable;
 import dk.aau.cs.d402f13.interpreter.ConstantCallable;
@@ -16,10 +18,11 @@ import dk.aau.cs.d402f13.values.Value;
 
 public class GameEnvironment extends StandardEnvironment {
 
+  private final AbstractTypeValue game = new AbstractTypeValue("Game", false, "title");
+  
   public GameEnvironment() {
     super();
     
-    final AbstractTypeValue game = new AbstractTypeValue("Game", false, "title");
     addType(game);
     
     game.addAbstractMember("players", new AbstractMember());
@@ -87,6 +90,15 @@ public class GameEnvironment extends StandardEnvironment {
     
     final TypeValue square = new TypeValue("Square", false);
     addType(square);
+  }
+  
+  public TypeValue findGameType() {
+    for (Entry<String, TypeValue> e : types.entrySet()) {
+      if (e.getValue().isSubtypeOf(game) && !(e.getValue() instanceof AbstractTypeValue)) {
+        return e.getValue();
+      }
+    }
+    return null;
   }
 
 }
