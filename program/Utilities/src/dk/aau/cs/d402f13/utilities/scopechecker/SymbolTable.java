@@ -54,12 +54,12 @@ public class SymbolTable {
   public void foundUsedVar(VarSymbolInfo symbol) throws ScopeError{
     //any variable used must have been declared prior to its use
     if (!visibleInScopes(symbol))    
-      throw new ScopeError("Used but not declared", symbol);
+      throw new ScopeError("Variable " + symbol.name + " used but not declared", symbol.line, symbol.offset);
   }
   
   public void foundDeclVar(VarSymbolInfo symbol) throws ScopeError{
     if (this.symbols.contains(symbol)){
-      throw new ScopeError("Double declaration", symbol);
+      throw new ScopeError("Variable " + symbol.name + " is already declared", symbol.line, symbol.offset);
     }
     else{
       this.symbols.add(symbol);
