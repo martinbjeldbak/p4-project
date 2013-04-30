@@ -8,6 +8,7 @@ public class PatternOptValue extends PatternValue {
   private Value value;
 
   @Override
+  /** {@inheritDoc} */
   public TypeValue getType() throws StandardError {
     return type;
   }
