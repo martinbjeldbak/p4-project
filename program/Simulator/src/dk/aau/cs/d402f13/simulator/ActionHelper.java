@@ -14,6 +14,12 @@ import dk.aau.cs.d402f13.utilities.types.Square;
 
 public class ActionHelper {
 
+	/**
+	 * Checks if an Action contains a AddAction
+	 * @param a The Action to check
+	 * @param s The Square the Action must Add to
+	 * @return The actual Action which contains the matching AddAction
+	 */
 	static public AddAction isDropAction( Action a, Square s ){
 		if( (Object)a instanceof AddAction ){
 			//Check if piece match
@@ -32,6 +38,12 @@ public class ActionHelper {
 			return null;
 	}
 	
+	/**
+	 * Checks if an Action contains a MoveAction
+	 * @param a The Action to check
+	 * @param p The piece the MoveAction affects
+	 * @return The actual Action which contains the matching MoveAction
+	 */
 	static public MoveAction isMoveAction( Action a, Piece p ){
 		if( (Object)a instanceof MoveAction ){
 			//Check if piece match
@@ -50,6 +62,12 @@ public class ActionHelper {
 			return null;
 	}
 	
+	/**
+	 * Checks if an Action contains a MoveAction
+	 * @param a The Action to check
+	 * @param s The Square the Action must Move to
+	 * @return The actual Action which contains the matching MoveAction
+	 */
 	static public MoveAction isMoveAction( Action a, Square s ){
 		if( (Object)a instanceof MoveAction ){
 			//Check if squares match
@@ -68,6 +86,10 @@ public class ActionHelper {
 			return null;
 	}
 	
+	/**
+	 * Print information about an Action to System.out
+	 * @param a The Action to print
+	 */
 	static public void debugAction( Action a ){
 		do{
 			if( (Object)a instanceof MoveAction ){
@@ -83,6 +105,12 @@ public class ActionHelper {
 		System.out.print( "\n" );
 	}
 	
+	/**
+	 * Create a human readable textual representation of an Action
+	 * @param g The Game the Action affects
+	 * @param a The Action to describe
+	 * @return The human readable textual representation
+	 */
 	static public String humanReadable( Game g, Action a ){
 		List<MoveAction> moves = new ArrayList<MoveAction>();
 		List<AddAction> adds = new ArrayList<AddAction>();
@@ -138,7 +166,12 @@ public class ActionHelper {
 		return text.trim();
 	}
 	
-	
+	/**
+	 * A human readable textual representation of a Squares position
+	 * @param g The Game the Square is a part of
+	 * @param s The Square to describe
+	 * @return The textual representation
+	 */
 	static private String squarePosition( Game g, Square s ){
 		if( (Object)g.board() instanceof Gridboard ){
 			Gridboard b = (Gridboard)g.board();
