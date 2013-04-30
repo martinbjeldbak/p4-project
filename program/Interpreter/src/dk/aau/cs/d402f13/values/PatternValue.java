@@ -87,6 +87,8 @@ public class PatternValue extends Value {
       return true;
     else if(v.is(PatternKeyValue.type()))
       return true;
+    else if(v.is(PatternOrValue.type()))
+      return true;
     return false;
   }
 
