@@ -1,9 +1,10 @@
 package dk.aau.cs.d402f13.values;
 
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
-public class PatternPlusValue extends Value {
-  private static TypeValue type = new TypeValue("Pattern Optional", 1, false);
+public class PatternPlusValue extends PatternValue {
+  private static TypeValue type = new TypeValue("Pattern Plus", 1, false);
   private Value value;
 
   @Override
@@ -11,8 +12,15 @@ public class PatternPlusValue extends Value {
     return type;
   }
 
-  public PatternPlusValue(Value pattern) {
-    this.value = pattern;
+  public static TypeValue type() {
+    return type;
+  }
+
+  public PatternPlusValue(Value value) throws StandardError {
+    if(isNotPatTypeCompatible(value))
+      throw new TypeError("The supplied value (" + value + ") cannot be used in pattern one-to-many");
+
+    this.value = value;
   }
 
   @Override
