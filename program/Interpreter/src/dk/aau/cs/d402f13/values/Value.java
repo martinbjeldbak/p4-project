@@ -7,11 +7,12 @@ import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.Member;
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.errors.DivideByZeroError;
+import dk.aau.cs.d402f13.utilities.errors.InternalError;
 import dk.aau.cs.d402f13.utilities.errors.NameError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
-public abstract class Value {
+public abstract class Value implements Cloneable {
   
   public abstract TypeValue getType() throws StandardError;
 
@@ -229,10 +230,22 @@ public abstract class Value {
   @Override
   public String toString() {
     try {
+      if (getType() == null) {
+        return "unknown@" + hashCode();
+      }
       return getType().getName() + "@" + hashCode();
     }
     catch (StandardError e) {
       return "unknown@" + hashCode();
+    }
+  }
+  
+  public Value getClone() throws InternalError {
+    try {
+      return (Value)clone();
+    }
+    catch (CloneNotSupportedException e) {
+      throw new InternalError(e);
     }
   }
 }

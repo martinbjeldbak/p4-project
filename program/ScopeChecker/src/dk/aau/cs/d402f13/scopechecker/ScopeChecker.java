@@ -10,9 +10,9 @@ import dk.aau.cs.d402f13.utilities.scopechecker.TypeSymbolInfo;
 public class ScopeChecker {
   HashMap<String, TypeSymbolInfo> typeHashMap = new HashMap<String, TypeSymbolInfo>();
   ArrayList<TypeSymbolInfo> typeList = new ArrayList<TypeSymbolInfo>();
-  //The HashMap and ArraList contains the same elements
+  //The HashMap and ArrayList contains the same elements
   //Some times it is nice to have a hashmap for quick lookup on type names
-  //In other situations it is nice to have types in a list, for topological sorting e.g.
+  //In other situations it is nice to have types in a list, for topological sorting and iteration.
   
   public void visit(AstNode node) throws StandardError{
     //Find types, their members, constructor and super constructor call
@@ -43,6 +43,6 @@ public class ScopeChecker {
     //tmav.setTypeTable(typeHashMap);
     //tmav.visit(node); not tested yet
     
-    //TypeTablePrettyPrinter.print(typeTable);
+    TypeTablePrettyPrinter.print(typeList);
   }
 }

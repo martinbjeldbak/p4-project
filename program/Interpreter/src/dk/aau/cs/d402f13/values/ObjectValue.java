@@ -3,6 +3,7 @@ package dk.aau.cs.d402f13.values;
 import java.util.HashMap;
 
 import dk.aau.cs.d402f13.interpreter.Interpreter;
+import dk.aau.cs.d402f13.interpreter.Member;
 import dk.aau.cs.d402f13.interpreter.Scope;
 import dk.aau.cs.d402f13.utilities.errors.DivideByZeroError;
 import dk.aau.cs.d402f13.utilities.errors.InternalError;
@@ -15,54 +16,45 @@ public class ObjectValue extends Value implements Cloneable {
   private TypeValue type;
   private Scope scope;
   
+  private Interpreter interpreter;
+  
   private Value parent;
-  private Value child;
+  private ObjectValue child;
   
   private boolean isSuper = false;
   
-  private HashMap<String, Value> members = new HashMap<String, Value>();
   private HashMap<String, Value> attributes = new HashMap<String, Value>();
   
-  public ObjectValue(TypeValue type, Scope scope) {
+  public ObjectValue(Interpreter interpreter, TypeValue type, Scope scope) {
+    this.interpreter = interpreter;
     this.type = type;
     this.scope = scope;
   }
   
-  public ObjectValue(TypeValue type, Scope scope, Value parent) {
-    this(type, scope);
+  public ObjectValue(Interpreter interpreter, TypeValue type, Scope scope, Value parent) {
+    this(interpreter, type, scope);
     this.parent = parent;
     if (parent instanceof ObjectValue) {
       ((ObjectValue)parent).child = this;
     }
   }
   
-  public void addMember(String member, Value value) {
-    members.put(member, value);
-  }
-  
   public void addAttribute(String attribute, Value value) {
     attributes.put(attribute, value);
   }
   
-  public Value getObjectMember(String member) throws StandardError {
-    Value value = members.get(member);
-    if (value == null) {
+  public Value getObjectMember(String name) throws StandardError {
+    Member member = getType().getTypeMember(name);
+    if (member == null) {
       if (parent != null) {
         if (parent instanceof ObjectValue) {
-          return ((ObjectValue)parent).getObjectMember(member);
+          return ((ObjectValue)parent).getObjectMember(name);
         }
-        return parent.getMember(member);
+        return parent.getMember(name);
       }
-      throw new NameError("Undefined member: " + member);
+      throw new NameError("Undefined member: " + name);
     }
-    if (value == null) {
-      return value;
-    }
-    if (value instanceof ConstValue) {
-      value = ((ConstValue)value).evaluate();
-      members.put(member, value);
-    }
-    return value;
+    return member.getValue(interpreter, scope);
   }
   
   @Override
@@ -85,19 +77,35 @@ public class ObjectValue extends Value implements Cloneable {
     return value;
   }
   
-  private ObjectValue clone = null;
-  
-  public void beginClone() throws InternalError {
+  @Override
+  public ObjectValue getClone() throws InternalError {
     try {
-      clone = (ObjectValue)clone();
-      clone.attributes = (HashMap<String, Value>)attributes.clone();
+      ObjectValue c = (ObjectValue)clone();
+      c.scope = new Scope(scope.getParent(), c);
+      if (c.child != null) {
+        c.child = c.child.getClone();
+        c.child.parent = c;
+      }
+      return c;
     }
     catch (CloneNotSupportedException e) {
       throw new InternalError(e);
     }
   }
   
-  public ObjectValue setAttribute(String attribute, Value value) throws StandardError {
+  private ObjectValue clone = null;
+  private ObjectValue cloneReturn = null;
+  
+  public void beginClone() throws InternalError {
+    clone = (ObjectValue)getClone();
+    clone.attributes = (HashMap<String, Value>)attributes.clone();
+    cloneReturn = clone;
+    while (cloneReturn.child != null) {
+      cloneReturn = cloneReturn.child;
+    }
+  }
+  
+  public Value setAttribute(String attribute, Value value) throws StandardError {
     if (attributes.get(attribute) == null) {
       throw new NameError("Undefined attribute: $" + attribute);
     }
@@ -110,10 +118,9 @@ public class ObjectValue extends Value implements Cloneable {
     return null;
   }
   
-  public ObjectValue endClone() {
-    ObjectValue r = clone;
+  public Value endClone() {
     clone = null;
-    return r;
+    return cloneReturn;
   }
 
   /** {@inheritDoc}  */
