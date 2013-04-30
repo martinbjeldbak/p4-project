@@ -77,8 +77,24 @@ public class ObjectValue extends Value implements Cloneable {
     return value;
   }
   
-  @Override
-  public ObjectValue getClone() throws InternalError {
+  private ObjectValue cloneParentTree() throws InternalError {
+    try {
+      ObjectValue c = (ObjectValue)clone();
+      c.scope = new Scope(scope.getParent(), c);
+      if (c.parent != null) {
+        if (c.parent instanceof ObjectValue) {
+          c.parent = ((ObjectValue)c.parent).cloneParentTree();
+          ((ObjectValue)c.parent).child = c;
+        }
+      }
+      return c;
+    }
+    catch (CloneNotSupportedException e) {
+      throw new InternalError(e);
+    }
+  }
+  
+  private ObjectValue cloneChildTree() throws InternalError {
     try {
       ObjectValue c = (ObjectValue)clone();
       c.scope = new Scope(scope.getParent(), c);
@@ -91,6 +107,16 @@ public class ObjectValue extends Value implements Cloneable {
     catch (CloneNotSupportedException e) {
       throw new InternalError(e);
     }
+  }
+  
+  @Override
+  public ObjectValue getClone() throws InternalError {
+    ObjectValue c = cloneChildTree();
+    if (c.parent != null && c.parent instanceof ObjectValue) {
+      c.parent = ((ObjectValue)c.parent).cloneParentTree();
+      ((ObjectValue)c.parent).child = c;
+    }
+    return c;
   }
   
   private ObjectValue clone = null;
