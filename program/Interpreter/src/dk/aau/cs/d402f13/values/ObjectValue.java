@@ -54,7 +54,7 @@ public class ObjectValue extends Value implements Cloneable {
       }
       throw new NameError("Undefined member: " + name);
     }
-    return member;
+    return new Member(member, scope);
   }
   
   @Override
