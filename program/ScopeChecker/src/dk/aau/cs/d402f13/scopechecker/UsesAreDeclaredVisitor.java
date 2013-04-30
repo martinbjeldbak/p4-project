@@ -182,8 +182,8 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
       openScope();                  //open scope for the arguments if they exist
       varDeclaringMode = true;      //the vars in the arguments are declarations
       visit(tempNode);              //visit VARLIST (arguments)
-      visit(it.next());             //visit EXPRESSION
       varDeclaringMode = false;
+      visit(it.next());             //visit EXPRESSION
       closeScope();
     }
     else{
