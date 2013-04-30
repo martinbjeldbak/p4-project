@@ -1,25 +1,21 @@
 package dk.aau.cs.d402f13.utilities.errors;
 
-import dk.aau.cs.d402f13.utilities.scopechecker.SymbolInfo;
-
 @SuppressWarnings("serial")
 public class ScopeError extends StandardError {
 
-  SymbolInfo symbol;
-  public ScopeError(String msg, SymbolInfo si) {
-    super(si.name + " - " + msg);    
-    this.symbol = si;
+  int line, offset;
+  public ScopeError(String msg, int line, int offset) {
+    super(msg);   
+    this.line = line;
+    this.offset = offset;
   }
   
+  
   public int getColumn() {
-    if (this.symbol == null)
-      return -1;
-    return this.symbol.getOffset();
+  return offset;
   }
   
   public int getLine() {
-    if (this.symbol == null)
-      return -1;
-    return this.symbol.getLine();
+    return line;
   }
 }
