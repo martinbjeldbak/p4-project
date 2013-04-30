@@ -61,7 +61,7 @@ public class TypeMemberAccessVisitor extends DefaultVisitor
     visit(kind);
     return null;
   }
-  void checkExistence(String memberName) throws ScopeError{
+  void checkExistence(String memberName, int line, int offset) throws ScopeError{
     if (this.isFunction){   //function
       if (this.thisMode){
         if (findFunctionInThis(memberName))
@@ -86,11 +86,11 @@ public class TypeMemberAccessVisitor extends DefaultVisitor
       else if (findConstantAnywhere(memberName))
         return;
     }
-    throw new ScopeError("Could not find member " + memberName + " used in type " + this.currentType.name, this.currentType);
+    throw new ScopeError("Could not find member " + memberName + " used in type " + this.currentType.name, line, offset);
   }
   protected Object visitConstant(AstNode node) throws ScopeError{
     if (!isMemberAccess) return null;
-    checkExistence(node.value);  //check that the member exists in this, super or any type
+    checkExistence(node.value, node.line, node.offset);  //check that the member exists in this, super or any type
     superMode = false;
     thisMode = false;
     return null;

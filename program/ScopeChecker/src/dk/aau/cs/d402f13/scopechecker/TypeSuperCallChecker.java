@@ -1,7 +1,6 @@
 package dk.aau.cs.d402f13.scopechecker;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import dk.aau.cs.d402f13.utilities.errors.ScopeError;
 import dk.aau.cs.d402f13.utilities.scopechecker.TypeSymbolInfo;
 
@@ -16,7 +15,7 @@ public class TypeSuperCallChecker {
     for (TypeSymbolInfo tsi : typeTable){
       if (tsi.parent != null){
         if (tsi.parentCallArgs != tsi.parent.args){
-          throw new ScopeError("Number of arguments does not match for call to parent type", tsi);
+          throw new ScopeError("Number of arguments does not match for call to parent type " + tsi.parent.name + " in type " + tsi.name + ". Expected " + tsi.parent.args + ", received " + tsi.parentCallArgs+".", tsi.line, tsi.offset);
         }
       }
     }

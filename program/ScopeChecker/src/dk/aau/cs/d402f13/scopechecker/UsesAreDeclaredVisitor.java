@@ -41,8 +41,6 @@ public class UsesAreDeclaredVisitor extends DefaultVisitor {
    if (this.currentST.getParent() == null)    //if exiting global scope,
     currentST = currentST.getParent();
   }
-
-
   
 @Override
 protected Object visitAssignment(AstNode node) throws StandardError {
@@ -90,34 +88,88 @@ protected Object visitLambdaExpr(AstNode node) throws StandardError {
 }
 
 @Override
-protected Object visitAbstractTypeDef(AstNode node) throws StandardError {
-  Iterator<AstNode> it = node.iterator();
-
-  String name = it.next().value;        //do NOT visit this CONSTANT, since it will be treated as a use
-  TypeSymbolInfo oldType = this.currentType;
-  this.currentType = this.typeTable.get(name);
+protected Object visitTypeBody(AstNode node) throws StandardError {
+  //When visiting a type's body, the data members must be added to the symbol table, 
+  //so functions and constants in the type body can use these data members 
+  openScope(); //open new scope, so constructor args can be hided
   
-  while(it.hasNext())
-    visit(it.next());
-    
-  this.currentType = oldType;
+  for (Member m : this.currentType.dataMembers)
+    this.currentST.foundDeclVar(new VarSymbolInfo(m.name, m.line, m.offset));
+  
+  //visit the content of the type body
+  visitChildren(node);
+  
+  closeScope();
   return null;
 }
 
 @Override
+protected Object visitSetExpr(AstNode node) throws StandardError {
+  //SET_EXPR = VAR EXPR
+  Iterator<AstNode> it = node.iterator();
+  
+  //find data member name
+  String name = it.next().value;
+  
+  //check that data member exists in the current type
+  if (!this.currentType.dataMembers.contains(new Member(name)))
+    throw new ScopeError("Data member " + name + " not defined in current type " + this.currentType.name, node.line, node.offset);
+  
+  return null; 
+}
+
+@Override
+protected Object visitAbstractTypeDef(AstNode node) throws StandardError {
+  //It doesn't matter if the type is abstract or not in the semantic checks performed
+  //Only the interpreter uses that info
+  return visitTypeDef(node);
+}
+
+@Override
 protected Object visitTypeDef(AstNode node) throws StandardError{
+  //TYPE  VARLIST       [TYPE         LIST]      [TYPE_BODY]
+  //name cnstr_args  supertype  spr_cnstr_args     body
+  
+  openScope(); //the constructor, members ... are local to a type, so open a scope
   Iterator<AstNode> it = node.iterator();
 
-  String name = it.next().value;          //do NOT visit this CONSTANT, since it will be treated as a use
+  //Extract the type name from TYPE
+  String name = it.next().value;
+          //VARLIST [TYPE LIST] [TYPE_BODY]
+  
   TypeSymbolInfo oldType = this.currentType;
-  this.currentType = this.typeTable.get(name);
+  this.currentType = this.typeTable.get(name);  //lookup the type name to find type reference
   
-  while(it.hasNext())
-    visit(it.next());
+  varDeclaringMode = true;  //The constructor args are declarations
+  visit(it.next());         //visit VARLIST (constructor args)
+  varDeclaringMode = false;
   
-  this.currentType = oldType;
+          //[TYPE LIST] [TYPE_BODY]
+  
+  if (it.hasNext()){
+          //TYPE LIST [TYPE_BODY] or TYPE_BODY
+    AstNode temp = it.next();
+    if (temp.type == Type.TYPE){
+          //TYPE LIST [TYPE_BODY]
+      visit(it.next());     //visit TYPE
+      visit(it.next());     //visit LIST
+          // [TYPE_BODY]
+    }
+          //TYPE_BODY or [TYPE_BODY]
+    if (it.hasNext())   //a new scope is opened in the visitTypeBody method
+      visit(it.next());
+    }
+  
+  //set currentType back to old type (#GLOBAL type), 
+  //so global functions and constants can be declared to that type.
+  this.currentType = oldType; 
+  
+  closeScope();
   return null;
-}
+  }
+  
+  
+ 
 
   @Override
   protected Object visitConstantDef(AstNode node) throws StandardError {
@@ -148,6 +200,24 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
   @Override
   protected Object visitConstant(AstNode node) throws StandardError{
     foundUsedConst(node.value, node.line, node.offset); 
+    return null;
+  }
+  
+  @Override
+  protected Object visitProgram(AstNode node) throws StandardError{
+    openScope();
+    visitChildren(node);
+    closeScope();
+    return null;
+  }
+  
+  @Override
+  protected Object visitDataDef(AstNode node) throws StandardError{
+    //DATA_DEF = VAR EXPRESSION
+    Iterator<AstNode> it = node.iterator();
+    it.next(); //skip VAR, which is saved in currentType.dataMembers (TypeVisitor did this)
+    //visit EXPRESSION
+    visit(it.next());
     return null;
   }
   
@@ -207,7 +277,7 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
       }
     }
     //if not found, throw exception
-    throw new ScopeError("Used but not declared", new ConstSymbolInfo(name, line, offset));
+    throw new ScopeError("Constant " + name + " used but not declared", line, offset);
   }
   public void foundUsedFunc(String name, int argNum,int line, int offset) throws ScopeError{
     if (this.memberAccessType == MemberAccessType.THISSUPERGLOBAL ||
@@ -219,7 +289,7 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
           if (m.args == argNum)
             return;
           else
-            throw new ScopeError("Number of arguments does not match, expected " + m.args + " got " + argNum, new FuncSymbolInfo(name, line, offset));
+            throw new ScopeError("Number of arguments in call to function " + name + " does not match, expected " + m.args + " received " + argNum, line, offset);
         }
       }
    }
@@ -231,7 +301,7 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
           if (m.args == argNum)
             return;
           else
-            throw new ScopeError("Number of arguments does not match, expected " + m.args + " got " + argNum,new FuncSymbolInfo(name, line, offset));
+            throw new ScopeError("Number of arguments in call to function " + name + " does not match, expected " + m.args + " received " + argNum, line, offset);
         }
       }
     }
@@ -244,11 +314,11 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
            if (m.args == argNum)
              return;
            else
-             throw new ScopeError("Number of arguments does not match, expected " + m.args + " got " + argNum,new FuncSymbolInfo(name, line, offset));
+             throw new ScopeError("Number of arguments in call to function " + name + " does not match, expected " + m.args + " received " + argNum, line, offset);
          }
       }
     }
     //if not found, throw exception
-    throw new ScopeError("Used but not declared", new FuncSymbolInfo(name, line, offset));
+    throw new ScopeError("Function " + name + " is used but not declared", line, offset);
   }
 }
