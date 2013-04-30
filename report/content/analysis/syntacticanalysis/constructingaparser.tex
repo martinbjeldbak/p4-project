@@ -45,17 +45,11 @@ for that specific grammar. This can be a bit different from software to software
 using the Extended Backus Naur Form (EBNF). A context-free grammar is on EBNF if it
 satifies a certain set of rules and contains some special abilities. We will not describe
 these here, but for further information we refer to \cite[152]{fischer2009}. The outputted parser will be
-produced in the language specified by the generator. We take a look at two different parser
-generator tools, namely SableCC and JavaCC.
-
-SableCC is a bottom-up parser generator that generates LALR(1) parsers. This
+produced in the language specified by the generator. An example of a parser generator is the SableCC parser, 
+which is a bottom-up parser generator that generates LALR(1) parsers. This
 generator runs on the Java-platform and produces object-oriented code with
 clearly seperated machine-generated code and handwritten code. This contributes
 to the simplification and ease of maintaining the code.\cite[pp. 11]{sableccdoc}
-
-JavaCC is a top-down parser generator that generates LL(k) parsers. As the name
-of the parser generator suggests, it produces the output code in Java source
-code.\cite{wiki-javacc}
 
 What differences are there between a handwritten and a generated parser? We need
 a grammar in both methods so what is the advantages of a generated parser? First

@@ -13,6 +13,14 @@ import dk.aau.cs.d402f13.utilities.scopechecker.Member;
 
 public class TypeVisitor extends DefaultVisitor
 {
+  /* This visitor creates a hashmap String -> TypeSymbolInfo
+   * of all types defined in the program. For each type, the TypeSymbolInfo
+   * contains the number og args for the construcer og super constructor call,
+   * a list of its abstract constants, abstract functions, concrete constants,
+   * concrete functions and data members. A type's super type is also found.
+   */
+  
+  
   HashMap<String, TypeSymbolInfo> typeTable;    //all classes found in program are put here as a ref to its ClassInfo object
   TypeSymbolInfo currentType;                   //the class we are currently inside
   TypeSymbolInfo globalType;                    //the globalType is only used by the scopechecker to contain global constants and functinos
@@ -35,7 +43,7 @@ public class TypeVisitor extends DefaultVisitor
   }
   public void AddType(TypeSymbolInfo ci) throws ScopeError{
    if (this.typeTable.containsKey(ci.name))
-        throw new ScopeError("Type with same name already declared", ci);
+        throw new ScopeError("Type with same name as type " + ci.name + " already declared", ci.line, ci.offset);
     this.typeTable.put(ci.name, ci);
   }
 
@@ -97,7 +105,7 @@ public class TypeVisitor extends DefaultVisitor
     Iterator<AstNode> it = node.iterator();
 
     //find name
-    Member member = new Member(it.next().value, this.currentType);
+    Member member = new Member(it.next().value, this.currentType, node.line, node.offset);
     
     //find varlist if any exist, which is the members arguments
     if (it.hasNext()){
@@ -128,14 +136,27 @@ public class TypeVisitor extends DefaultVisitor
     AstNode temp = it.next();
     if (temp.type == Type.VARLIST){  //if VARLIST exists, it is arguments for the function
       //CONSTANT VARLIST EXPRESSION
-      currentType.addConcreteFunction(new Member(name, temp.size(), this.currentType));
+      currentType.addConcreteFunction(new Member(name, temp.size(), this.currentType, node.line, node.offset));
     }
     else{                            //VARLIST does not exist, so this is a constant
       //CONSTANT EXPRESSION
-      currentType.addConcreteConstant(new Member(name, this.currentType));
+      currentType.addConcreteConstant(new Member(name, this.currentType, node.line, node.offset));
     }  
     return null;
   }
-        
+  
+
+  @Override
+  protected Object visitDataDef(AstNode node) throws StandardError{
+    /* DATA_DEF = VAR EXPRESSION
+    *  Add the variable name to the data members of the type
+    *  The UsesAreDeclaredVisitor will check that tje data member accessed
+    *  by a getter or setter actually exists
+    */
+    String varName = node.iterator().next().value;
+    this.currentType.addDataMember(new Member(varName, node.line, node.offset));
+        return null;
+  }
+  
 }
 
