@@ -120,3 +120,21 @@ type Test[$a, $b] {
   define b = $b
   define setB[$b] = Test[$a, $b]
 }
+
+type A[] {
+  data $a = 2
+  data $b = 3
+  define next = set $a = $a + 1
+  define getA[] = $a
+}
+
+type B[] extends A[] {
+  data $c = 10
+  define ass[$d] = set $c = $d
+  define mySuper = super
+  define getB[] = getA[] + $c
+}
+
+define main = let $b = B[] in
+[$b.next.next.getB[], $b.getB[], $b.next.ass[3].next.getB[]]
+
