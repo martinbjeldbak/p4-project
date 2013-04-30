@@ -1,70 +1,22 @@
 \section{Static semantics}
-The \classref{ScopeChecker} is a visitor class that checks the static semantic rules of \productname{} at compile-time. It checks that any referenced variable or function is declared in a visible scope (local or outer scopes). When we want to refer to both types and functions the term identifier will be used in this section. 
+The \classref{ScopeChecker} is a class that uses a number of other classes to check the static semantic rules of \productname{} at compile-time. This section is aimed to explain how these static semantic checks are performed by the \classref{ScopeChecker} in simple steps. The different checks it does is as follows:
+\begin{itemize}
+\item A type cannot extend itself
+\item A type cannot extend a type that is not defined except if it is in the standard environment
+\item A type cannot extend a type if it causes an extend cycle
+\item When a type extends another type, it must call the constructor of the extended type with the right number of arguments
+\item If a type contains at least one abstract member, its AstNode's type (TypeDef) must be changed to AbstractTypeDef
+\item  
+\end{itemize}
 
-The \classref{ScopeChecker} also checks that no duplicate declarations exist in the same scope. A variable can however be declared with the same name as a variable in an outer scope, in which case the new declaration hides the one in the outer scope. 
+\subsection{Type table and hash map}
 
-If an identifier is found to be undeclared, the \classref{ScopeChecker} will search for an identifier with a similar name in all visible scopes and suggest the use of that identifier in the outputted error message, e.g: 
+\subsection{TypeVisitor}
 
-\begin{quote}
-Syntax error: Function 'IsSometing' undeclared, did you mean 'IsSomething'? at line 8, offset 19''.
-\end{quote}
+\subsection{TypeTableCleaner}
+%topological sort types
+%mark abstract types
 
-\subsection{The symbol table}
-When traversing the AST, a symbol table is used to store the identifiers. 
-The symbol table uses the Java \classref{HashMap} to store KeyValue-pairs of  \classref{SymbolInfo}'s paired with a \typeref{Boolean}. 
-The \classref{SymbolInfo} contains an \typeref{Integer} \varref{name}, \typeref{SymbolType} \varref{type}, \typeref{Integer} \varref{line}, and \typeref{Integer} \varref{offset}. 
-The \typeref{SymbolType} \varref{type} is an enumeration that indicates whether the symbol is a variable or a function. 
-To use the built-in \classref{HashMap}-class in Java efficiently, the \classref{SymbolType} overrides the \methodref{getHasCode()} and \methodref{equals(\classref{Object} \varref{object})} method. 
-The hash code generation and equality check is only based on the symbol's \varref{name} and \varref{type}. 
-This means that two functions or variables with the same name but found on different lines or offsets are considered equal, which is indeed the intention for a static semantic check.
-
-\subsection{Opening a new scope}
-When a \productname{}-construct is met that requires a new scope to be opened, e.g. the \emph{let-in}-block, this is implemented by instantiating a new symbol table which references the previous active symbol table as its \classref{SymbolTable} \varref{parent}. The current active symbol table is referenced by \classref{SymbolTable} \varref{currentST} in \classref{ScopeChecker}. This approach simplifies the searching of all scopes that encapsulates the current scope for a declaration of an identifier by recursively searching the references of the parent symbol table. Determining whether an identifier is a new declaration or an old declaration which is being referenced at that specific point in the code will be explained in \secref{sec:deccontext}.
-
-\subsection{Closing a scope}
-\label{sec:closescope}
-Before the scope is closed it is checked that every variable reference can be bound to a declaration in a visible scope.
-This check can be performed because every variable must be declared before it can be used. 
-However, a function can reference another function that is not yet declared. 
-All functions are declared in the beginning of \productname{} source code.
-Since a new function creates a new scope and a function can reference another function which has not yet been declared even after the end of the calling function, the same scope check cannot be applied for functions.
-
-Consider the following \productname{} code example:
-
-\codesample{calltolaterdefinedfunction.junta}
-
-Function $a$ references function $b$ which has not yet been declared before it is referenced. 
-This is legal in \productname{}.
-Function $b$ evaluates to $5$. 
-According to the static semantics, a new scope is opened when analysing function $a$. 
-In the scope of function $a$ the \classref{ScopeChecker} meets a reference to the function $b$.
-When the function body of $a$ has ended and the specific scope closes it cannot yet be confirmed if the function $b$ has been declared since it is first declared on the next line.
-This problem is solved by using another approach for functions than for variables. 
-When exiting a scope every function reference which is in the current symbol table is transferred to the parent symbol table. There is one special case where the closed symbol table is the global scope (the outmost scope). 
-When closing the global scope it is checked that all function references have a declaration.
-This approach to scope checking of function declarations can only be used because \productname{} does not allow nested functions.
-
-Finally, when a scope is closed the \varref{currentST} will be updated to reference the current symbol table's parent, namely \varref{currentST}.\methodref{getParent()}.
-This means that the traversal of the AST actually implements a stack of symbol tables that expands and detracts in regard to the nesting of its location in the AST.
-
-\subsection{Predefined functions}
-When the \classref{ASTNode} \varref{PROGRAM} is visited the global scope is opened and the default functions contained in \productname{}, such as \methodref{findSquares[]}, \methodref{union[]}, etc., are placed in this scope. 
-The children of the \classref{ASTNode} are then visited which contain the entire program. 
-Thereby, after the call to \methodref{visitChildren()} the scope is closed, which causes the check for any references to undeclared functions to be performed (this is described in \secref{sec:closescope}).
-
-\subsection{Declaration contexts}
-\label{sec:deccontext}
-The visitor pattern makes it convenient to find the identifiers contained in a \productname{} program. Any reference to a function is handled by overwriting the \methodref{visitFunction()} provided by the \classref{Visitor}. Likewise, a function declaration is handled by overriding the \methodref{visitFuncDef()}.
-
-\todo{rewrite}
-
-Any variable, whether it is a declaration or a reference to a declaration, is handled by the \methodref{visitVar} method. 
-Since it is unknown if the variable name contained in the node is a declaration or a reference to a declaration, a global variable \typeref{Boolean} \varref{varDeclarationMode} is set to \typeref{true} when visiting an \classref{ASTNode} that causes all children \typeref{VAR}-\classref{ASTNode}s to be declarations, or \typeref{false} otherwise. 
-E.g. when meeting a function call the \varref{varDeclarationMode} is set to \typeref{false} before visiting the actual parameters of the function call but visiting the formal parameters of a function definition.  
-
-
-\subsection{ScopeError exception}
-When an error is found during the static semantics check an exception is thrown. The exception contains information about the identifier causing a problem and its line and offset, which will help the programmer to identify the errors location. 
-All enclosing symbol tables are recursively searched for an identifier similar to the one causing the error, which will be suggested in the error message. 
-This similarity check is performed using a Levenshtein algorithm and allowing a maximum distance of two. 
-This allows up to two misplaced characters, for instance a missed keystroke or two swapped characters.
+\subsection{UsesAreDeclaredVisitor}
+%symbol table
+%opening scope
