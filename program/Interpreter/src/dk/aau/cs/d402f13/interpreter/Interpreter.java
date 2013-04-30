@@ -153,6 +153,7 @@ public class Interpreter extends Visitor {
     for(AstNode child : node) {
       visit(child);
     }
+    symbolTable.finalizeTypes(this);
     return null;
   }
 
