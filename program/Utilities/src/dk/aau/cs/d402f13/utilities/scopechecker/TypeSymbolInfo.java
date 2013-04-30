@@ -15,12 +15,13 @@ public class TypeSymbolInfo extends SymbolInfo{
   public ArrayList<Member> concreteConstants;   //constant with impl
   public ArrayList<Member> abstractFunctions;   //functions with no impl
   public ArrayList<Member> concreteFunctions;   //functions with impl
+  public ArrayList<Member> dataMembers;         //data members
 
   public int children; //number of children extending this type in a direct link
  
   
   public TypeSymbolInfo(AstNode node, String name, int line, int offset) {
-   super(name, true, line, offset);
+   super(name, line, offset);
    this.node = node;
    this.children = 0;
    this.parentName = "";
@@ -28,8 +29,9 @@ public class TypeSymbolInfo extends SymbolInfo{
    this.args = 0; //constructor args
    this.abstractConstants = new ArrayList<Member>();
    this.concreteConstants = new ArrayList<Member>();
-   this.abstractFunctions = new ArrayList<Member>(); 
+   this.abstractFunctions = new ArrayList<Member>();
    this.concreteFunctions = new ArrayList<Member>();
+   this.dataMembers = new ArrayList<Member>();
   }
   
   public TypeSymbolInfo(AstNode node, String name, int argCount, int line, int offset){
@@ -44,16 +46,19 @@ public class TypeSymbolInfo extends SymbolInfo{
     this.parentName = parentName;
   }
   public void addConcreteFunction(Member member){
-    concreteFunctions.add(member);
+    this.concreteFunctions.add(member);
   }
   public void addAbstractFunction(Member member){
-    abstractFunctions.add(member);
+    this.abstractFunctions.add(member);
   }
   public void addConcreteConstant(Member member){
-    concreteConstants.add(member);
+    this.concreteConstants.add(member);
   }
   public void addAbstractConstant(Member member){
-    abstractConstants.add(member);
+    this.abstractConstants.add(member);
+  }
+  public void addDataMember(Member member){
+    this.dataMembers.add(member);
   }
   public void incrArgCount(){
     this.args++;

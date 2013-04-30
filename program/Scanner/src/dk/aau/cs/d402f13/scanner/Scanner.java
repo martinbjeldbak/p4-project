@@ -167,6 +167,10 @@ public class Scanner {
         return token(Type.KEY_EXTENDS, str);    
       case "type":
         return token(Type.KEY_TYPE, str);
+      case "set":
+        return token(Type.KEY_SET, str);
+      case "data":
+        return token(Type.KEY_DATA, str);
         
       // Pattern keywords
       case "foe":

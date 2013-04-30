@@ -1,6 +1,5 @@
 package dk.aau.cs.d402f13.interpreter;
 
-import dk.aau.cs.d402f13.interpreter.stdenv.StandardEnvironment;
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
@@ -104,40 +103,51 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitPattern(AstNode node) throws StandardError {
-    for(AstNode child : node) {
-      visit(child);
+    Value[] values = new Value[node.size()];
+
+    for(int i = 0; i < node.size(); i++) {
+      values[i] = visit(node.get(i));
+      System.out.println(visit(node.get(i)).getClass());
     }
-    return null;
+    return new PatternValue(values);
   }
 
   @Override
   protected Value visitPatternKeyword(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    // friend, foe
+    throw new InternalError("Invalid visit");
   }
 
   @Override
   protected Value visitPatternMultiplier(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    Value v = visit(node.getFirst());
+
+    return new PatMultValue(v, node.value);
   }
 
   @Override
   protected Value visitPatternNot(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    throw new InternalError("Invalid visit");
   }
 
   @Override
   protected Value visitPatternOperator(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    Value v = visit(node.getFirst());
+
+    switch(node.value) {
+      case "+":
+        return new PatternPlusValue(v);
+      case "*":
+        return new PatMultValue(v);
+      case "?":
+        return new PatternOptValue(v);
+    }
+    throw new TypeError("Not a pattern operator");
   }
 
   @Override
   protected Value visitPatternOr(AstNode node) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    throw new InternalError("Invalid visit");
   }
 
   @Override
@@ -195,7 +205,7 @@ public class Interpreter extends Visitor {
   protected Value visitConstant(AstNode node) throws StandardError {
     Value v = symbolTable.getConstant(node.value);
     if (v instanceof ConstValue) {
-      v = ((ConstValue)v).evaluate(this);
+      v = ((ConstValue)v).evaluate();
       symbolTable.addConstant(node.value, v);
     }
     if (v == null) {
@@ -223,10 +233,14 @@ public class Interpreter extends Visitor {
     else {
       type = new TypeValue(name, node.get(1));
     }
-    
     if (node.getLast().type == AstNode.Type.TYPE_BODY) {
       for (AstNode defNode : node.getLast()) {
-        type.addTypeMember(defNode.getFirst().value, new Member(defNode));
+        if (defNode.type == Type.DATA_DEF) {
+          type.addAttribute(defNode.getFirst().value, new Member(defNode));
+        }
+        else {
+          type.addTypeMember(defNode.getFirst().value, new Member(defNode));
+        }
       }
     }
     symbolTable.addType(name, type);
@@ -253,7 +267,10 @@ public class Interpreter extends Visitor {
     
     if (node.getLast().type == AstNode.Type.TYPE_BODY) {
       for (AstNode defNode : node.getLast()) {
-        if (defNode.type == Type.ABSTRACT_DEF) {
+        if (defNode.type == Type.DATA_DEF) {
+          type.addAttribute(defNode.getFirst().value, new Member(defNode));
+        }
+        else if (defNode.type == Type.ABSTRACT_DEF) {
           type.addAbstractMember(defNode.getFirst().value, new AbstractMember(defNode));
         }
         else {
@@ -278,7 +295,7 @@ public class Interpreter extends Visitor {
   @Override
   protected Value visitConstantDef(AstNode node) throws StandardError {
     if (node.size() < 3) {
-      symbolTable.addConstant(node.getFirst().value, new ConstValue(node.getLast()));
+      symbolTable.addConstant(node.getFirst().value, new ConstValue(node.getLast(), this));
     }
     else
       symbolTable.addConstant(node.getFirst().value, new FunValue(node.get(1), node.get(2)));
@@ -464,6 +481,36 @@ public class Interpreter extends Visitor {
       }
     }
     return v;
+  }
+
+  @Override
+  protected Object visitDataDef(AstNode node) throws StandardError {
+    throw new InternalError("Invalid visit");
+  }
+
+  @Override
+  protected Object visitSetExpr(AstNode node) throws StandardError {
+    String attribute = node.getFirst().value;
+    Value value = visit(node.get(1));
+    Value thisObject = symbolTable.getThis();
+    if (thisObject == null || !(thisObject instanceof ObjectValue)) {
+      /** @TODO a more appropriate error here */
+      throw new StandardError("Use of set outside of type");
+    }
+    ObjectValue object = (ObjectValue)thisObject;
+    if (node.size() == 2) {
+      return object.setAttribute(attribute, value);
+    }
+    else {
+      object.beginClone();
+      object.setAttribute(attribute, value);
+      for (int i = 2; i < node.size(); i++) {
+        attribute = node.get(i).getFirst().value;
+        value = visit(node.get(i).getLast());
+        object.setAttribute(attribute, value);
+      }
+      return object.endClone();
+    }
   }
 
 }

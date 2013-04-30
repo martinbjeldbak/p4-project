@@ -39,6 +39,12 @@ public class TypeTablePrettyPrinter {
           System.out.println("    " + m.name);
           
         } 
+        
+        System.out.println("  Has data members:");
+        for (Member m : ci.dataMembers){
+          System.out.println("    " + m.name);
+          
+        } 
       }
     }
 }

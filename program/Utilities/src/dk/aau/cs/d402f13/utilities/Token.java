@@ -4,7 +4,8 @@ public class Token {
   public enum Type {
     // Keywords
     KEY_THIS, KEY_SUPER, KEY_DEFINE, KEY_ABSTRACT, KEY_EXTENDS, KEY_TYPE,
-    KEY_PATTERN,  // (friend, foe, ...)
+    KEY_PATTERN, // (friend, foe, ...)
+    KEY_SET, KEY_DATA,
     
     // Operators
     OP_OR, OP_AND, OP_EQUALS, OP_NOT_EQUALS, OP_NOT, OP_LESS_THAN, OP_GREATER_THAN,
@@ -33,7 +34,7 @@ public class Token {
     OP_PATTERN_OR, // "|" 
     
     // EOF
-    EOF;
+    EOF,
   }
 
   public String value;
