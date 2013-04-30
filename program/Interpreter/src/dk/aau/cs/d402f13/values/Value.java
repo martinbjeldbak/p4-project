@@ -12,7 +12,15 @@ import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public abstract class Value {
-  
+
+  /**
+   * Returns the type of the Value. All sub-classes need
+   * to overrride this.
+   * @return                a TypeValue describing the
+   *                        abstract type
+   * @throws StandardError  if the value doesn't have
+   *                        a type
+   */
   public abstract TypeValue getType() throws StandardError;
 
   /**
