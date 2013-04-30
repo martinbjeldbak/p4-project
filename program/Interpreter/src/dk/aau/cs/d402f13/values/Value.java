@@ -1,6 +1,7 @@
 package dk.aau.cs.d402f13.values;
 
 import dk.aau.cs.d402f13.interpreter.Interpreter;
+import dk.aau.cs.d402f13.interpreter.Member;
 import dk.aau.cs.d402f13.utilities.errors.*;
 import dk.aau.cs.d402f13.utilities.errors.InternalError;
 
@@ -220,10 +221,10 @@ public abstract class Value implements Cloneable {
    * @throws StandardError if the member cannot be found or
    *                       doesn't exist
    */
-  public Value getMember(String member) throws StandardError {
-    Value v = getType().getStaticMember(member);
-    if (v != null) {
-      return v;
+  public Member getMember(String member) throws StandardError {
+    Member m = getType().getTypeMember(member);
+    if (m != null) {
+      return m;
     }
     throw new NameError("Undefined member: " + member);
   }

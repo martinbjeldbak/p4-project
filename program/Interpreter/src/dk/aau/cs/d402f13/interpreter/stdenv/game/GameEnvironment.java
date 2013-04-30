@@ -10,7 +10,6 @@ import dk.aau.cs.d402f13.interpreter.stdenv.StandardEnvironment;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.values.AbstractTypeValue;
 import dk.aau.cs.d402f13.values.BoolValue;
-import dk.aau.cs.d402f13.values.ConstMemberValue;
 import dk.aau.cs.d402f13.values.ListValue;
 import dk.aau.cs.d402f13.values.TypeValue;
 import dk.aau.cs.d402f13.values.Value;
@@ -25,6 +24,12 @@ public class GameEnvironment extends StandardEnvironment {
     
     game.addAbstractMember("players", new AbstractMember());
     game.addAbstractMember("board", new AbstractMember());
+    game.addTypeMember("title", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return interpreter.getSymbolTable().getVariable("title");
+      }
+    }));
     
     
     final TypeValue board = new TypeValue("Board", false);
@@ -44,40 +49,40 @@ public class GameEnvironment extends StandardEnvironment {
     final TypeValue piece = new TypeValue("Piece", false, "owner");
     addType(piece);
     
-    piece.addTypeMember("player", new Member(new ConstMemberValue(new ConstantCallable() {
+    piece.addTypeMember("player", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
         return interpreter.getSymbolTable().getVariable("owner");
       }
-    })));
+    }));
     
     
     final TypeValue player = new TypeValue("Player", false);
     addType(player);
     
-    player.addTypeMember("winCondition", new Member(new ConstMemberValue(1, false, new Callable() {
+    player.addTypeMember("winCondition", new Member(1, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters)
           throws StandardError {
         return BoolValue.falseValue();
       }
-    })));
+    }));
     
-    player.addTypeMember("tieCondition", new Member(new ConstMemberValue(1, false, new Callable() {
+    player.addTypeMember("tieCondition", new Member(1, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters)
           throws StandardError {
         return BoolValue.falseValue();
       }
-    })));
+    }));
     
-    player.addTypeMember("actions", new Member(new ConstMemberValue(1, false, new Callable() {
+    player.addTypeMember("actions", new Member(1, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters)
           throws StandardError {
         return new ListValue();
       }
-    })));
+    }));
     
     
     final TypeValue square = new TypeValue("Square", false);

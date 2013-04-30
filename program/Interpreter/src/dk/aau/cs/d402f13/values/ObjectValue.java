@@ -43,7 +43,7 @@ public class ObjectValue extends Value implements Cloneable {
     attributes.put(attribute, value);
   }
   
-  public Value getObjectMember(String name) throws StandardError {
+  public Member getObjectMember(String name) throws StandardError {
     Member member = getType().getTypeMember(name);
     if (member == null) {
       if (parent != null) {
@@ -54,11 +54,11 @@ public class ObjectValue extends Value implements Cloneable {
       }
       throw new NameError("Undefined member: " + name);
     }
-    return member.getValue(interpreter, scope);
+    return member;
   }
   
   @Override
-  public Value getMember(String member) throws StandardError {
+  public Member getMember(String member) throws StandardError {
     if (!isSuper && child != null) {
       return child.getMember(member);
     }

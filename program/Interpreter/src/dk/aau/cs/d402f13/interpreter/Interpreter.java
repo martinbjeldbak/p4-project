@@ -202,9 +202,15 @@ public class Interpreter extends Visitor {
   @Override
   protected Value visitConstant(AstNode node) throws StandardError {
     Value v = symbolTable.getConstant(node.value);
+    if (v == null) {
+      throw new NameError("Undefined constant: " + node.value);
+    }
     if (v instanceof ConstValue) {
       v = ((ConstValue)v).evaluate();
       symbolTable.addConstant(node.value, v);
+    }
+    else if (v instanceof MemberValue) {
+      v = ((MemberValue)v).getValue(this);
     }
     if (v == null) {
       throw new NameError("Undefined constant: " + node.value);
@@ -322,10 +328,7 @@ public class Interpreter extends Visitor {
     for (int i = 1; i < node.size(); i++) {
       AstNode memberAccess = node.get(i);
       String memberName = memberAccess.getFirst().value;
-      Value memberObject = object.getMember(memberName);
-      if (memberObject instanceof ConstMemberValue) {
-        memberObject = ((ConstMemberValue)memberObject).evaluate(this, object);
-      }
+      Value memberObject = object.getMember(memberName).getValue(this, object);
       object = memberObject;
       for (int j = 1; j < memberAccess.size(); j++) {
         ListValue list = (ListValue)visit(memberAccess.get(j));
