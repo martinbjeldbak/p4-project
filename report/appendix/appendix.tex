@@ -1,1 +1,324 @@
 \chapter{Appendix}
+
+\section{Abstract Node Types}
+
+In \secref{sec:ant} we saw some examples of how 
+
+\subsubsection{Definition}
+Programmers have the opportunity of defining constants and types in their
+programs.  The parser knows that the following piece of code is a constant when
+it meets the keyword \gter{define}, and that the following piece of code is a
+type when it meets the keyword \gter{type}. These two types of definitions will
+be illustrated with their productions in the following two subsections. The 
+production for a defintion is as follows:
+
+\begin{ebnf}
+\grule{definition}{constant\_def}
+\galt{type\_def}
+\end{ebnf}
+
+We do not present a figure to illustrate the AST for this production. The
+production says that a defintion can either be a defintion of a constant or of a
+type. But the program node says that it is possible to have multiple
+definitions, so in fact the definitions of constants and types can be
+interleaved.
+
+\subsubsection{Constant definition}
+The first type of definition is that of a constant. The production for a
+this definition is as follows:
+
+\begin{ebnf}
+\grule{constant\_def}{\gter{define} \gcat constant \gcat \gopt{varlist} \gcat \gter{=} \gcat \gcat expression}
+\end{ebnf}
+
+Every definition of this type begins with the \gter{define} keyword. The next
+token must be a constant and this constant can be followed by a list of
+variables, which is optional. Then an expression is assigned to the constant.
+
+\input{content/implementation/abstractnodetypes/constdef}
+
+Figure \ref{ast:constdef} illustrates the ANT for the constant definition. In
+the grammar presented above the production also consists of a keyword and an
+assignment symbol. These are not shown in the ANT because they are not part 
+of an AST (but they are part of a parse tree). The optional node is illustrated 
+with a dashed edge from the parent.
+
+\subsubsection{Type definition}
+
+The second type of definition is that of a type. The following production
+specifies this:
+
+\begin{ebnf}
+\grule{type\_def}{\gter{type} \gcat type \gcat varlist \gcat \gopt{\gter{extends} \gcat type \gcat list} \gopt{type\_body}}
+\end{ebnf}
+
+\todo{fix concatenation}
+
+The parser knows that the following is a type definition by reading the
+\gter{type} keyword. The production says that a type definition can inheret from
+another type by the use of the \gter{extends} keyword. Furthermore, it is
+possible to have a type body which is explained further in the following
+section.
+
+\input{content/implementation/abstractnodetypes/typedef}
+
+Figure \ref{ast:typedef} illustrates the ANT of the type
+definition. This ANT consists of a type followed by a variable
+list. After the variable list there are two optional choices. The first choice
+is to inheret from a super type, and this is done by declaring the type of the super
+type followed by a declaration of a list. The list following the super type is
+not optional. We have illustrated this by adding a ``\textbf{Extends}'' node as
+optional folllowed by the two child nodes which are not optional any more if the
+extends keyword is present. Our implementation of these child nodes is not
+implemented with an extra node as we illustrate in \figref{ast:typedef}, but it 
+is simply defined in the code that if the
+keyword is present then the next input must be a type followed by a list.
+The second choice is to include a type body. These two choices are independent
+of each other.
+
+\subsubsection{Type body and member definition}
+
+In this subsection we have coupled two productions because they are intertwined
+and we have chosen not to visualise the ANT of the member definition because it
+is simply a root with one child. The production of a type definition and the
+definition of a member is as follows:
+
+\begin{ebnf}
+\grule{type\_body}{\gter{\{} \gcat \grep{member\_def} \gcat \gter{\}}}
+\grule{member\_def}{abstract\_def}
+\galt{constant\_def}
+\end{ebnf}
+
+The type body begins with a left brace and ends with a right brace which
+encapsulates the entire code of the type body. Within these braces it is
+possible to have zero, one, or more member definitions. The code which consists
+of a member definition can be either an abstract definition or a constant
+definition. As it was in the program production, it is also possible to
+interleave the two definitions in this production.
+
+\input{content/implementation/abstractnodetypes/typebody}
+
+Figure \ref{ast:typebody} illustrates the ANT of the type body. It consists of a
+root and zero, one, or more member definitions.
+
+A description of the constant definition was presented earlier in this section
+and the description of the abstract definition will follow this subsection.
+
+\subsubsection{Abstract definition}
+The definition of an abstract constant is similar to the definition of a
+``regular'' constant. There are two differences. The first difference is that
+following the \gter{define} keyword another keyword must appear, namely the
+\gter{abstract} keyword. The second difference is that there is no expression
+assigned at the end of the production, thus being abstract. The following
+production presents the production from the grammar:
+
+\begin{ebnf}
+\grule{abstract\_def}{\gter{define} \gcat \gter{abstract} \gcat constant \gcat \gopt{varlist}}
+\end{ebnf}
+
+Figure \ref{ast:abstrdef} illustrates the ANT of this production.
+
+\input{content/implementation/abstractnodetypes/abstrdef}
+
+In \figref{ast:abstrdef} the only noticeable difference between the constant and 
+a definition is that there is no expression as the last child.  This is due to
+that the ANTs do not have keywords and such as child nodes.
+
+
+\subsubsection{Variable list and variable arguments}
+Within this section we have couple two productions because they are intertwined. 
+The productions are presented in the following grammar:
+
+\begin{ebnf}
+\grule{varlist}{\gter{[} \gcat \gopt{variable \gcat \grep{\gter{,} \gcat variable} \gcat \gopt{\gter{,} \gcat vars} \gor vars} \gcat \gter{]}}
+\grule{vars}{\gter{...} \gcat variable}
+\end{ebnf}
+
+The production specifies that a variable list begins with an occurence of a left
+bracket and ends with an occurence of a right bracket. Everything between these
+two brackets are optional, which means that a variable list can be empty.
+
+The last part of the production is a bit hard to read, but it says that if the
+list begins with one or more variables separated by commas then these variables
+can be followed by a final comma and the variable argument (vars) which is a
+list of parameters. If there are no variables then the last variable argument
+can be included. So, the production consists of two parts - one part containing
+zero, one, or more variables possibly followed by an occurence of variable
+argument or just a single variable argument.
+
+\input{content/implementation/abstractnodetypes/variablelist}
+
+Figure \ref{ast:variablelist} illustrates this by having a root and three
+children with dashed lines from the root. But this is actually a bit misleading
+because of the optional parameters in the specification of the production. The
+production specifies that if the programmer does not want the list to be empty
+then at least one occurence of a variable must be present or a single variable
+argument. After the first variable it is possible to have zero, one, or more
+variables following the first one and another optional variable argument. The
+easiest way to illustrate this is as it has been done in
+\figref{ast:variablelist}.
+
+This concludes the subsections presenting the structure of programs.
+
+\subsubsection{Element}
+
+The following grammar presents the production for an element:
+
+\begin{ebnf}
+\grule{element}{call\_sequence \gcat \grep{member\_access}}
+\end{ebnf}
+
+An element begins with a call sequence followed by zero, one, or more member
+access. This is illustrated differently in the ANT in \figref{ast:element}.
+
+\input{content/implementation/abstractnodetypes/element}
+
+Figure \ref{ast:element} illustrates that the ANT for an element expression will
+only be constructed if there is at least one occurence of member access,
+otherwise it will fall through to call sequence and the element node will not be
+construted. As mentioned earlier in the section explaining operations in
+\productname{}, this is done to avoid long paths in the AST with single child
+nodes.
+
+\subsubsection{Member access}
+
+The member access begins with the \gter{.} symbol followed by a constant and
+zero, one, or more lists. This is presented in the following production:
+
+\begin{ebnf}
+\grule{member\_access}{\gter{.} \gcat constant \gcat \grep{list}}
+\end{ebnf}
+
+Figure \ref{ast:memberaccess} illustrates the abstract node type for this
+production. It corresponds exactly to the production.
+
+\input{content/implementation/abstractnodetypes/memberaccess}
+
+\subsubsection{Call sequence}
+
+A call sequence consists of an atomic value, which can be many expressions,
+followed by zero, one, or more lists. The following production presents this:
+
+\begin{ebnf}
+\grule{call\_sequence}{atomic \gcat \grep{list}}
+\end{ebnf}
+
+We have illustrated the ANT in \figref{ast:callsequence}. It does not correspond
+exactly to the production specified above.
+
+\input{content/implementation/abstractnodetypes/callsequence}
+
+
+Once again, \figref{ast:callsequence} illustrates that this ANT must consist of
+at least one list following the atomic value if it is to be constructed.
+Otherwise, it will fall through and only construct an atomic node. This is due
+to the same reason as earlier, to avoid single-child nodes.
+
+\subsubsection{If expression}
+The if expression is specified in the following production:
+
+\begin{ebnf}
+\grule{if\_expr}{\gter{if} \gcat expression \gcat \gter{then} \gcat expression \gcat \gter{else} \gcat expression}
+\end{ebnf}
+
+An if expression begins with the keyword $\gter{if}$ and ends with the keyword
+$\gter{else}$ followed by an expression. In between the beginning and the end the
+keyword, $\gter{then}$ appears as a must in the if expression. It is for instance not
+possible to omit the $\gter{else}$ statement. The ANT for this production is
+illustrated in \figref{ast:ifexpr} and consists of a root with three children
+which are expressions. The children are connected to the root with solid lines
+which means they cannot be omitted.
+
+\input{content/implementation/abstractnodetypes/ifexpr}
+
+\subsubsection{Lambda expression}
+
+The lambda expression is specified in the following production:
+
+\begin{ebnf}
+\grule{lambda\_expr}{\gter{\#} \gcat varlist \gcat \gter{=>} \gcat expression}
+\end{ebnf}
+
+Any lambda expression begins with the $\gter{\#}$ symbol which makes it clear for the
+parser that this is a lambda expression. A lambda expression consists of a
+variable list and an expression seperated by the $\gter{=>}$ symbol.
+
+\input{content/implementation/abstractnodetypes/lambda}
+
+Figure \ref{ast:lambdaexpr} illustrates the ANT for this expression. Because a
+lambda expression is an expression it is possible to have lambda expressions
+inside other lambda expressions, so it is possible to nest these expressions.
+
+\subsubsection{List}
+
+We also have an ANT for lists. Any list can be empty
+just like a variable list but instead of containing variables a list contains
+expressions. It can consist of either zero, one, or more expressions. The
+specification for the abstract node type is specified in the following
+production:
+
+\begin{ebnf}
+\grule{list}{\gter{[} \gcat \gopt{expression \gcat \grep{\gter{,} \gcat expression}} \gcat \gter{]}}
+\end{ebnf}
+
+A list begins and ends like a variable list with brackets with optional
+expressions as the elements of the list. The ANT for this production is illustrated
+in \figref{ast:list}.
+
+\input{content/implementation/abstractnodetypes/list}
+
+The ANT in \figref{ast:list} illustrates that a list can contain zero, one, or
+more expressions.
+
+\subsubsection{Not-operator}
+
+We have implemented a not-operator that has to do with expressions. The programming
+language also conists of a not-operator which has to do with patterns. These
+opreators are not the same. The operator mentioned here cannot be used with
+patterns. 
+
+This operator is not illustrated because it just derives an expression. So, it 
+has one root and one child.
+
+\subsection{Patterns}
+
+The following sections are concerned with patterns and operators. A pattern
+consists of a single pattern expression followed by zero, one, or more pattern
+expressions.  This is specified in the following production:
+
+\begin{ebnf}
+\grule{pattern}{pattern\_expr \gcat \grep{pattern\_expr}}
+\end{ebnf}
+
+This production is very straightforward, a pattern must contain of at least one
+pattern expression. The ANT for this production is illustrated in
+\figref{ast:pattern}. This ANT has one solid line to the first pattern
+expression followed by two dashed lines to two other pattern expressions
+illustrating that these can occur zero, one, or more times.
+
+\input{content/implementation/abstractnodetypes/pattern}
+
+\subsubsection{Pattern operators}
+
+\productname{} consists of three different pattern operators. We have an
+or-operator, a multiplier-operator, and a not-operator.
+
+The or-operator derives a pattern value followed by a pattern expression that
+both can be many different things. This is why they are written in an italic
+font. This is illustrated in \figref{ast:pattern-or}.
+
+\input{content/implementation/abstractnodetypes/pattern-or}
+
+The multiplier-operator derives a single child namely a pattern value. This is
+not illustrated because it is just a root with one child.
+
+The not-operator also derives a single child namely a pattern check. This is not
+illustrated because it is just a root with a single child.
+
+A ``pattern value'' and a ``pattern check'' can derive different things and
+would be illustrated with italic font.
+
+This concludes the description of our implementation of the different ANTs which 
+are reflected in the productions of the grammar presented in
+\secref{sec:grammar}.
+
