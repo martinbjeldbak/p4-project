@@ -8,6 +8,16 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.TrueTypeFont;
 
 public class TextHelper {
+	/**
+	 * Draw a String centered
+	 * @param g Graphics to draw with
+	 * @param font Font to draw the text
+	 * @param text The text to center
+	 * @param x Left-most position  
+	 * @param y Vertical position of the text
+	 * @param width The available horizontal space to center on
+	 * @return The vertical position right below the drawn text
+	 */
 	static public int drawCenteredText(
 			Graphics g, TrueTypeFont font, String text, int x, int y, int width ){
 
@@ -22,6 +32,14 @@ public class TextHelper {
 		return font.getLineHeight() + y;
 	}
 	
+	/**
+	 * Wrap a long String into smaller Strings, so that each one does not
+	 * exceed a specified width. Breaks the String on spaces.
+	 * @param font The font which specifies the width of the glyphs
+	 * @param text The String to wrap
+	 * @param width The available width
+	 * @return A List containing each line
+	 */
 	static public List<String> wrapText( TrueTypeFont font, String text, int width ){
 		text = text.trim();
 		

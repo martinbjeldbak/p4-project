@@ -16,7 +16,6 @@ import dk.aau.cs.d402f13.utilities.errors.SyntaxError;
 
 /**
  * @author d402f13
- * 
  */
 public class Parser {
   private LinkedList<Token> tokens;
@@ -24,9 +23,10 @@ public class Parser {
   private Token nextToken;
 
   /**
-   * @param takes a linked list of tokens as parameters
-   * @return returns an AST with program as the root.
-   * @throws SyntaxError
+   * Begins parsing source code with program as its root.
+   * @param tokens a linked list of tokens.
+   * @return an AST with program as the root.
+   * @throws SyntaxError if the current token was not expected.
    */
   public AstNode parse(LinkedList<Token> tokens) throws SyntaxError {
     this.tokens = tokens;
@@ -37,10 +37,10 @@ public class Parser {
   }
 
   /**
-   * @param takes
-   *          a linked list of tokens as parameters
-   * @return returns an AST with expression as the root.
-   * @throws SyntaxError
+   * Begins parsing source code with expression as its root.
+   * @param tokens a linked list of tokens.
+   * @return an AST with expression as the root.
+   * @throws SyntaxError if the current token was not expected.
    */
   public AstNode parseAsExpression(LinkedList<Token> tokens) throws SyntaxError {
     this.tokens = tokens;
@@ -51,10 +51,10 @@ public class Parser {
   }
 
   /**
-   * @param takes
-   *          a linked list of tokens as parameters
-   * @return returns an AST with definition as the root.
-   * @throws SyntaxError
+   * Begins parsing source code with definition as its root.
+   * @param tokens a linked list of tokens.
+   * @return an AST with defintion as the root.
+   * @throws SyntaxError if the current token was not expected.
    */
   public AstNode parseAsDefinition(LinkedList<Token> tokens) throws SyntaxError {
     this.tokens = tokens;
@@ -65,10 +65,11 @@ public class Parser {
   }
 
   /**
-   * @param takes
-   *          a token as a parameter
-   * @return pops the next token, if that token matches the token recieved as
-   *         input and returns true. Otherwise false.
+   * Looks one token ahead and checks if this token is as expected. If so it pops
+   * the token and returns true. Else false. There is no need for the expect() method
+   * because this method pops the next token automatically.
+   * @param type the next expected token.
+   * @return true if the next token is as expected, else false.
    */
   private boolean accept(Token.Type type) {
     if (lookAhead(type)) {
@@ -78,27 +79,15 @@ public class Parser {
     return false;
   }
 
-//  /**
-//   * @param takes
-//   *          a token and a value as a parameter
-//   * @return pops the next token, if that token and value match the token and
-//   *         value recieved as input and returns true. Otherwise false.
-//   */
-//  private boolean accept(Token.Type type, String value) {
-//    if (lookAhead(type, value)) {
-//      currentToken = pop();
-//      return true;
-//    }
-//    return false;
-//  }
-
   /**
-   * @param takes
-   *          a string as input
-   * @return returns a string with a description of what has happened. The
-   *         parser has received something unexpected and therefore a syntax
-   *         error will be thrown. The string received as input will be
-   *         concatenated with the original error message and return.
+   * A method for throwing SyntaxErrors. Takes a string as parameter and 
+   * possibly a description of the current or next token and returns a 
+   * descriptive error regarding the syntax.
+   * @param expected a string with information about the syntactic error.  
+   *        The parser has received something unexpected and therefore a syntax
+   *        error will be thrown. The string received as input will be
+   *        concatenated with the original error message and returned.
+   * @return new SyntaxError with a description of what has happened.
    */
   private SyntaxError unexpectedError(String expected) {
     if (nextToken == null) {
@@ -114,9 +103,12 @@ public class Parser {
   }
 
   /**
-   * @param type
-   * @return
-   * @throws SyntaxError
+   * Uses the accept() method to look one token ahead and check if the next 
+   * token is as expected. If so, it returns the a new currentToken, else a 
+   * SyntaxError is thrown.
+   * @param type the next expected token.
+   * @return new currentToken if the next token is as expected.
+   * @throws SyntaxError if the next token is not as ecxpected.
    */
   private Token expect(Token.Type type) throws SyntaxError {
     if (accept(type)) {
@@ -126,9 +118,12 @@ public class Parser {
   }
 
   /**
-   * @param type
-   * @param value
-   * @return
+   * Creates a new node of type AstNode to be combined with the rest of the 
+   * nodes of the AST.
+   * @param type the node type.
+   * @param value the given node type's value.
+   * @return new AstNode with type and value of the given node type. Placement is also given
+   * with information about which line and offset the token is at in the source code.
    */
   private AstNode astNode(Type type, String value) {
     if (currentToken != null) {
@@ -141,7 +136,8 @@ public class Parser {
   }
 
   /**
-   * @return
+   * Pops the next token. Refreshes the new nextToken.
+   * @return next which was the next token.
    */
   private Token pop() {
     Token next = nextToken;
@@ -152,25 +148,20 @@ public class Parser {
 
   // DIFFERENT LOOKAHEAD METHODS
   /**
-   * @param type
-   * @return
+   * Looks ahead in the list of tokens to determine if the given type
+   * matces the type of the next token.  
+   * @param type the type which we want to determine is a match with the
+   * type of the next token.
+   * @return true if the nextToken is not null and if the types match. 
+   * Else false.
    */
   private boolean lookAhead(Token.Type type) {
     return nextToken != null && nextToken.type == type;
   }
 
-//  /**
-//   * @param type
-//   * @param value
-//   * @return
-//   */
-//  private boolean lookAhead(Token.Type type, String value) {
-//    return lookAhead(type) && nextToken.value.equals(value);
-//  }
-
   /**
-   * @return returns true if the next token is one of the four literals.
-   *         Otherwise false.
+   * Checks if the next token is a literal value.
+   * @return true if the next token is one of the four literals. Otherwise false.
    */
   private boolean lookAheadLiteral() {
     return lookAhead(Token.Type.LIT_INT) || lookAhead(Token.Type.LIT_DIR)
@@ -178,7 +169,8 @@ public class Parser {
   }
 
   /**
-   * @return
+   * Checks if the next token is an atomic value.
+   * @return true if the next token is an atomic value. Otherwise false.
    */
   private boolean lookAheadAtomic() {
     return lookAhead(Token.Type.LPAREN) || lookAhead(Token.Type.VAR)
@@ -189,14 +181,16 @@ public class Parser {
   }
 
   /**
-   * @return
+   * Checks if the next token is an operation.
+   * @return true if the next token is part of an operation. Otherwise false.
    */
   private boolean lookAheadOperation() {
     return lookAhead(Token.Type.OP_MINUS) || lookAheadAtomic();
   }
 
   /**
-   * @return returns true of the next topen is an expression. Otherwise false.
+   * Checks if the next token is an expression.
+   * @return true of the next token is an expression. Otherwise false.
    */
   private boolean lookAheadExpression() {
     return lookAhead(Token.Type.LET) || lookAhead(Token.Type.KEY_SET) 
@@ -206,15 +200,18 @@ public class Parser {
   }
 
   /**
-   * @return
+   * Checks if the next token is a pattern.
+   * @return true of the next token is a pattern. Otherwise false.
    */
   private boolean lookAheadPatternCheck() {
-    return lookAhead(Token.Type.KEY_PATTERN) || lookAhead(Token.Type.KEY_THIS)
+    return lookAhead(Token.Type.KEY_PATTERN) 
+        || lookAhead(Token.Type.KEY_THIS)
         || lookAhead(Token.Type.TYPE);
   }
 
   /**
-   * @return
+   * Checks if the next token is a pattern value.
+   * @return true of the next token is a pattern value. Otherwise false.
    */
   private boolean lookAheadPatternValue() {
     return lookAhead(Token.Type.LIT_DIR) || lookAhead(Token.Type.VAR)
@@ -224,8 +221,9 @@ public class Parser {
 
   // PROGRAM STRUCTURE
   /**
-   * @return returns an abstract syntax tree
-   * @throws SyntaxError
+   * Creates a node of the type program.
+   * @return root which is the root of an AST.
+   * @throws SyntaxError if a given token was not expected.
    */
   private AstNode program() throws SyntaxError {
     AstNode root = astNode(Type.PROGRAM, "");
@@ -238,6 +236,12 @@ public class Parser {
     return root;
   }
   
+  /**
+   * Does not create a node for the type definition. It passes control to either
+   * constantDef() or typeDef() where more specific nodes will be created.
+   * @return a node for either a constant or type definition of an AST.
+   * @throws SyntaxError if a given token was not expected.
+   */
   private AstNode definition() throws SyntaxError {
     if (accept(Token.Type.KEY_DEFINE)) {
       return constantDef();
@@ -251,8 +255,9 @@ public class Parser {
   }
 
   /**
-   * @return
-   * @throws SyntaxError
+   * Creates a node of the type constant definition.
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
    */
   private AstNode constantDef() throws SyntaxError {
     AstNode node = astNode(Type.CONSTANT_DEF, "");
@@ -266,10 +271,15 @@ public class Parser {
     return node;
   }
 
+  /**
+   * Creates a node of the type abstract definition.
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
+   */
   private AstNode abstractDef() throws SyntaxError {
     AstNode node = astNode(Type.ABSTRACT_DEF, "");
     expect(Token.Type.KEY_ABSTRACT);
-    expect(Token.Type.CONSTANT); //constant eller function?
+    expect(Token.Type.CONSTANT);
     node.addChild(astNode(Type.CONSTANT, currentToken.value));
     if (lookAhead(Token.Type.LBRACKET)) {
       node.addChild(varList());
@@ -277,6 +287,11 @@ public class Parser {
     return node;
   }
   
+  /**
+   * Creates a node of the type data definition.
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
+   */
   private AstNode dataDef() throws SyntaxError {
     AstNode node = astNode(Type.DATA_DEF, "");
     expect(Token.Type.KEY_DATA);
@@ -288,8 +303,9 @@ public class Parser {
   }
 
   /**
-   * @return
-   * @throws SyntaxError
+   * Creates a node of the type type definition.
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
    */
   private AstNode typeDef() throws SyntaxError {
     AstNode node = astNode(Type.TYPE_DEF, "");
@@ -308,6 +324,11 @@ public class Parser {
     return node;
   }
 
+  /**
+   * Creates a node of the type type body.
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
+   */
   private AstNode typeBody() throws SyntaxError {
     AstNode typeBody = astNode(Type.TYPE_BODY, "");
     expect(Token.Type.LBRACE);
@@ -330,8 +351,9 @@ public class Parser {
   }
   
   /**
-   * @return
-   * @throws SyntaxError
+   * Creates a node of the type variable list.
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
    */
   private AstNode varList() throws SyntaxError {
     AstNode node = astNode(Type.VARLIST, "");
@@ -355,8 +377,9 @@ public class Parser {
   }
 
   /**
-   * @return
-   * @throws SyntaxError
+   * Creates a node of the type vars.
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
    */
   private AstNode vars() throws SyntaxError {
     AstNode node = astNode(Type.VARS, "");
@@ -368,8 +391,11 @@ public class Parser {
 
   // EXPRESSIONS
   /**
-   * @return
-   * @throws SyntaxError
+   * Does not create a node for the type expression. It passes 
+   * control to one of the types an expression can be. Within 
+   * these methods a more specific node will be created.
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
    */
   private AstNode expression() throws SyntaxError {
     if (lookAhead(Token.Type.LET)) {
@@ -396,7 +422,13 @@ public class Parser {
       throw unexpectedError("an expression");
     }
   }
-  
+
+  /**
+   * Either creates a node for a logical operation or falls 
+   * through to the next sequence.
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
+   */
   private AstNode loSequence() throws SyntaxError {
     AstNode next = eqSequence();
     if (accept(Token.Type.OP_AND) || accept(Token.Type.OP_OR)) {
@@ -415,6 +447,12 @@ public class Parser {
     return next;
   }
   
+  /**
+   * Either creates a node for a equality operation or falls 
+   * through to the next sequence.
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
+   */
   private AstNode eqSequence() throws SyntaxError {
     AstNode next = cmSequence();
     if (accept(Token.Type.OP_EQUALS) || accept(Token.Type.OP_NOT_EQUALS)
@@ -435,6 +473,12 @@ public class Parser {
     return next;
   }
   
+  /**
+   * Either creates a node for a comparison operation or falls 
+   * through to the next sequence.
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
+   */
   private AstNode cmSequence() throws SyntaxError {
     AstNode next = asSequence();
     if (accept(Token.Type.OP_LESS_THAN) || accept(Token.Type.OP_LESS_OR_EQUALS)
@@ -455,6 +499,12 @@ public class Parser {
     return next;
   }
   
+  /**
+   * Either creates a node for an addition/subtraction operation or falls 
+   * through to the next sequence.
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
+   */
   private AstNode asSequence() throws SyntaxError {
     AstNode next = mdSequence();
     if (accept(Token.Type.OP_PLUS) || accept(Token.Type.OP_MINUS)) {
@@ -473,6 +523,12 @@ public class Parser {
     return next;
   }
   
+  /**
+   * Either creates a node for a multiplication/division/modulo operation 
+   * or falls through to the next sequence.
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
+   */
   private AstNode mdSequence() throws SyntaxError {
     AstNode next = negation();
     if (accept(Token.Type.OP_MULT) || accept(Token.Type.OP_DIV)
@@ -493,6 +549,12 @@ public class Parser {
     return next;
   }
   
+  /**
+   * Either creates a node of the type negation or returns a node
+   * for an element type.
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
+   */
   private AstNode negation() throws SyntaxError {
     AstNode negation = null;
     if (accept(Token.Type.OP_MINUS)) { // "-"?
@@ -504,8 +566,11 @@ public class Parser {
   }
 
   /**
-   * @return
-   * @throws SyntaxError
+   * Creates a node for a call sequence. If there is a dot operator
+   * then a new node is created where the original node is attached to as 
+   * a child to the new node.
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
    */
   private AstNode element() throws SyntaxError {
     AstNode next = callSequence();
@@ -521,6 +586,13 @@ public class Parser {
     return next;
   }
 
+  /**
+   * Creates a node for atomic. If there is a left bracket
+   * then a new node is created where the original node is attached to as 
+   * a child to the new node.
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
+   */
   private AstNode callSequence() throws SyntaxError {
     AstNode next = atomic();
     if (lookAhead(Token.Type.LBRACKET)) {
@@ -535,6 +607,11 @@ public class Parser {
     return next;
   }
 
+  /**
+   * Creates a node for member access with optional child as a node of type list.
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
+   */
   private AstNode memberAccess() throws SyntaxError {
     AstNode node = astNode(Type.MEMBER_ACCESS, "");
     expect(Token.Type.OP_DOT);
@@ -546,6 +623,12 @@ public class Parser {
     return node;
   }
 
+  /**
+   * Creates a node for an atomic value. Depending on which token is the next
+   * in the list, the method creates a node specifically for it. 
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
+   */
   private AstNode atomic() throws SyntaxError {
     AstNode node = null;
     if(accept(Token.Type.LPAREN)){
@@ -607,8 +690,9 @@ public class Parser {
   }
 
   /**
-   * @return
-   * @throws SyntaxError
+   * Creates a node for an assignment. 
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
    */
   private AstNode assignment() throws SyntaxError {
     AstNode node = astNode(Type.ASSIGNMENT, "");
@@ -631,8 +715,9 @@ public class Parser {
   }
 
   /**
-   * @return
-   * @throws SyntaxError
+   * Creates a node for the set expression. 
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
    */
   private AstNode setExpression() throws SyntaxError {
     AstNode node = astNode(Type.SET_EXPR, "");
@@ -653,8 +738,9 @@ public class Parser {
   }
 
   /**
-   * @return
-   * @throws SyntaxError
+   * Creates a node for the if expression. 
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
    */
   private AstNode ifExpression() throws SyntaxError {
     AstNode node = astNode(Type.IF_EXPR, "");
@@ -668,8 +754,9 @@ public class Parser {
   }
 
   /**
-   * @return
-   * @throws SyntaxError
+   * Creates a node for the lambda expression. 
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
    */
   private AstNode lambdaExpression() throws SyntaxError {
     AstNode node = astNode(Type.LAMBDA_EXPR, "");
@@ -681,8 +768,9 @@ public class Parser {
   }
 
   /**
-   * @return
-   * @throws SyntaxError
+   * Creates a node for the list expression. 
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
    */
   private AstNode list() throws SyntaxError {
     AstNode node = astNode(Type.LIST, "");
@@ -697,10 +785,12 @@ public class Parser {
 
     return node;
   }
-
+  
+  //PATTERNS
   /**
-   * @return
-   * @throws SyntaxError
+   * Creates a node for a pattern. 
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
    */
   private AstNode pattern() throws SyntaxError {
     AstNode node = astNode(Type.PATTERN, "");
@@ -713,8 +803,9 @@ public class Parser {
   }
 
   /**
-   * @return
-   * @throws SyntaxError
+   * Creates a node for a pattern expression. 
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
    */
   private AstNode patternExpression() throws SyntaxError {
     AstNode subject = patternValue();
@@ -734,8 +825,9 @@ public class Parser {
   }
 
   /**
-   * @return
-   * @throws SyntaxError
+   * Creates a node for the pattern value. 
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
    */
   private AstNode patternValue() throws SyntaxError {
     AstNode node = null;
@@ -769,8 +861,9 @@ public class Parser {
   }
 
   /**
-   * @return
-   * @throws SyntaxError
+   * Creates a node for the pattern check. 
+   * @return node of an AST.
+   * @throws SyntaxError if a given token was not expected.
    */
   private AstNode patternCheck() throws SyntaxError {
     AstNode node = null;

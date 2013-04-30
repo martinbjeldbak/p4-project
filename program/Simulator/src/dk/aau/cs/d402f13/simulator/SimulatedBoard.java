@@ -3,13 +3,24 @@ package dk.aau.cs.d402f13.simulator;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.SlickException;
 
 import dk.aau.cs.d402f13.utilities.types.Action;
 import dk.aau.cs.d402f13.utilities.types.MoveAction;
 import dk.aau.cs.d402f13.utilities.types.Piece;
 import dk.aau.cs.d402f13.utilities.types.Square;
 
+/**
+ * SimulatedBoard represents and visualizes the game board and its pieces.
+ * It makes it possible move pieces by either D&D, or clicking on two squares 
+ * in succession.
+ * @author Spiller
+ *
+ */
 public abstract class SimulatedBoard {
 	protected SimulatedGame game;
 	
@@ -21,16 +32,47 @@ public abstract class SimulatedBoard {
 	protected int dragOffsetX = 0;
 	protected int dragOffsetY = 0;
 
-	public SimulatedBoard(SimulatedGame game) {
+	/**
+	 * Constructs a SimulatedBoard
+	 * @param game SimulatedGame to visualize
+	 */
+	public SimulatedBoard( SimulatedGame game ){
 		this.game = game;
 	}
 	
+	/**
+	 * Find the Square at the current position in graphic coordinates.
+	 * @param x Horizontal absolute coordinate
+	 * @param y Vertical absolute coordinate
+	 * @return The Square on the specified position, or null if none
+	 */
 	public abstract Square findSquare(int x, int y);
+	
+	/**
+	 * Finds the square the dragged piece currently hovers on.
+	 * @return The square found
+	 */
+	protected Square hoversOn(){
+		if( dragged == null )
+			return null;
+		return findSquare( dragStartX + dragOffsetX, dragStartY + dragOffsetY );
+	}
 
+	/**
+	 * Check if a Square is contained in the List of hints
+	 * @param s The Square to find
+	 * @return True if the square is hinted
+	 */
 	public boolean squareIsHinted( Square s ){
 		return hintSquares.indexOf( s ) != -1;
 	}
 	
+	/**
+	 * Handles mouse button clicks for a Simulated board
+	 * @param button The mouse button pressed
+	 * @param x Horizontal position of the click
+	 * @param y Vertical position of the click
+	 */
 	public void mouseClicked( int button, int x, int y ){
         if( button == Input.MOUSE_LEFT_BUTTON ){
 	    	Square s = findSquare(x, y);
@@ -95,10 +137,8 @@ public abstract class SimulatedBoard {
 		        	//Add related squares
 		        	for( Action a : actions ){
 		        		MoveAction ma = ActionHelper.isMoveAction( a, s ); 
-		        		if( ma != null ){
+		        		if( ma != null )
 		        			hintSquares.add( ma.getPiece().square() );
-		        			//TODO: this wouldn't work for sequences!!
-		        		}
 		        		if( ActionHelper.isDropAction( a, s ) != null )
 		        			hintSquares.add( s );
 		        	}
@@ -111,17 +151,29 @@ public abstract class SimulatedBoard {
         }
 	}
 	
-	public void mouseDragged(int oldx, int oldy, int newx, int newy){
+	/**
+	 * Handles mouse dragging
+	 * @param oldx Previous horizontal position of mouse pointer
+	 * @param oldy Previous vertical position of mouse pointer
+	 * @param newx New horizontal position of mouse pointer
+	 * @param newy New vertical position of mouse pointer
+	 */
+	public void mouseDragged( int oldx, int oldy, int newx, int newy ){
 		if( dragged != null ){
 			dragOffsetX += newx - oldx;
 			dragOffsetY += newy - oldy;
 		}
 	}
 	
+	/**
+	 * Handles mouse button release
+	 * @param button Button which was released
+	 * @param x Horizontal position of mouse pointer
+	 * @param y Vertical position of mouse pointer
+	 */
 	public void mouseReleased( int button, int x, int y ){
 		if( button == Input.MOUSE_LEFT_BUTTON ){
 			if( dragged != null ){
-				//TODO: check position and act
 				Square end = findSquare( dragStartX + dragOffsetX, dragStartY + dragOffsetY );
 				if( squareIsHinted( end ) && end != selected ){
 					//end == selected is handled in mousePressed!
@@ -141,6 +193,11 @@ public abstract class SimulatedBoard {
 		dragged = null;
 	}
 	
+	/**
+	 * Apply an action to the Game, prompt the user to select one if
+	 * ambitious.
+	 * @param actions
+	 */
 	private void executeActions( List<Action> actions ){
 		//Check how many actions are found
 		if( actions.size() > 1 ){
@@ -159,6 +216,77 @@ public abstract class SimulatedBoard {
     	hintSquares.clear();
 	}
 	
+	/**
+	 * When starting a drag, align the cursor to the center of the piece,
+	 * in order to make it drop on the Square which is centered below the
+	 * piece, and not at the position at cursor is at.
+	 */
 	protected abstract void alignDrag();
 	
+
+	
+	/**
+	 * Draw a Piece using board coordinates
+	 * @param g Graphics to draw with
+	 * @param p Piece to draw
+	 * @param x Horizontal board coordinate
+	 * @param y Vertical board coordinate
+	 * @param size Square size
+	 * @param offsetX Horizontal offset of board
+	 * @param offsetY Vertical offset of board
+	 * @throws SlickException
+	 */
+	protected void renderPiece( Graphics g, Piece p, int x, int y, int size, int offsetX, int offsetY) throws SlickException{
+		Image img = game.getImage( p.getImgPath() );
+		int imgMax = Math.max( img.getHeight(), img.getWidth() );
+		
+		int borderSize = (int) (size * 0.05);
+		float scale = (size - borderSize * 2) / (float)imgMax;
+
+		int imgYOffset = (int) ((imgMax - img.getHeight() ) * scale / 2);
+		int imgXOffset = (int) ((imgMax - img.getWidth() ) * scale / 2);
+		
+		img = game.getImageScaled( p.getImgPath(), scale );
+
+		img.draw( x + imgXOffset + offsetX + borderSize, y + imgYOffset + offsetY + borderSize );
+		
+	}
+	
+	/**
+	 * Draw a Square
+	 * @param g Graphics to draw with
+	 * @param s Square to draw
+	 * @param posX Horizontal position in pixels
+	 * @param posY Vertical position in pixels
+	 * @param size Size of Square
+	 * @throws SlickException
+	 */
+	protected void renderSquare( Graphics g, Square s, int posX, int posY, int size ) throws SlickException{
+		Square hover = hoversOn();
+		
+		//Draw background for square
+		Image img = game.getImage( s.getImgPath() );
+		int imgMax = Math.max(img.getWidth(), img.getHeight());
+		img = game.getImageScaled( s.getImgPath(), (float)size /(float) imgMax );
+		img.draw( posX, posY );
+		
+		if( s == selected ){
+			g.setColor( new Color(0,0,127,63) );
+			g.fillRect( posX, posY, size, size);
+		}
+		
+		if( squareIsHinted( s ) ){
+			if( s == hover )
+				g.setColor( new Color(0,255,0,191) );
+			else
+				g.setColor( new Color(0,255,0,63) );
+			g.fillRect( posX, posY, size, size);
+		}
+		else{
+			if( s == hover ){
+				g.setColor( new Color(255,0,0,127) );
+				g.fillRect( posX, posY, size, size );
+			}
+		}
+	}
 }
