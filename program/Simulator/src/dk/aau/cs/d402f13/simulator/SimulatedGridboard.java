@@ -2,7 +2,6 @@ package dk.aau.cs.d402f13.simulator;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import dk.aau.cs.d402f13.utilities.types.Gridboard;
@@ -15,16 +14,8 @@ public class SimulatedGridboard extends SimulatedBoard {
 	private int offsetX = 0;
 	private int offsetY = 0; 
 	
-	public int getWidth() {
-		return board.getWidth();
-	}
-	
-	public int getHeight() {
-		return board.getHeight();
-	}
-	
 	private int invertY( int y ){
-		return getHeight() - y - 1;
+		return board.getHeight() - y - 1;
 	}
 	
 	public SimulatedGridboard( SimulatedGame game, Gridboard b ) {
@@ -39,70 +30,30 @@ public class SimulatedGridboard extends SimulatedBoard {
 		return board.squareCoordinateY( p.square() );
 	}
 	
-	private Square hoversOn(){
-		if( dragged == null )
-			return null;
-
-		int x = pieceXCoordiate( dragged ) * size + offsetX + dragOffsetX + size / 2;
-		int y = invertY(pieceYCoordiate( dragged )) * size + offsetY + dragOffsetY + size / 2;
-		return findSquare( x, y );
-	}
-
-	private void renderBoard( Graphics g, int x, int y, int size, int width, int height) throws SlickException{
-		Square hover = hoversOn();
-		
-		//Draw squares
-		for( int iy=0; iy<height; iy++ ){
-			for( int ix=0; ix<width; ix++ ){
-				Square s = board.getSquareAt( ix, iy );
-				int posX = x + ix * size;
-				int posY = y + invertY(iy) * size;
-				
-				//Draw background for square
-				Image img = game.getImage( s.getImgPath() );
-				int imgMax = Math.max(img.getWidth(), img.getHeight());
-				img = game.getImageScaled( s.getImgPath(), (float)size /(float) imgMax );
-				img.draw( posX, posY );
-				
-				if( s == selected ){
-					g.setColor( new Color(0,0,127,63) );
-					g.fillRect( posX, posY, size, size);
-				}
-				
-				if( squareIsHinted( s ) ){
-					if( s == hover )
-						g.setColor( new Color(0,255,0,191) );
-					else
-						g.setColor( new Color(0,255,0,63) );
-					g.fillRect( posX, posY, size, size);
-				}
-				else{
-					if( s == hover ){
-						g.setColor( new Color(255,0,0,127) );
-						g.fillRect( posX, posY, size, size );
-					}
-				}
-			}
-		}
+	/**
+	 * Draws a Piece using GridBoard coordinates
+	 * @param g Graphics to draw with
+	 * @param p Piece to draw
+	 * @param x Horizontal GridBoard position
+	 * @param y Vertical GridBoard position
+	 * @param size Size of a Square
+	 * @param offsetX Horizontal offset of Board
+	 * @param offsetY Vertical offset of Board
+	 * @throws SlickException
+	 */
+	protected void renderPieceLocal( Graphics g, Piece p
+			,	int x, int y, int size, int offsetX, int offsetY
+			) throws SlickException{
+		renderPiece( g, p, x * size, invertY(y) * size, size, offsetX, offsetY );
 	}
 	
-	private void renderPiece( Graphics g, Piece p, int x, int y, int size, int offsetX, int offsetY) throws SlickException{
-		Image img = game.getImage( p.getImgPath() );
-		int imgMax = Math.max( img.getHeight(), img.getWidth() );
-		
-		int borderSize = (int) (size * 0.05);
-		float scale = (size - borderSize * 2) / (float)imgMax;
-
-		int imgYOffset = (int) ((imgMax - img.getHeight() ) * scale / 2);
-		int imgXOffset = (int) ((imgMax - img.getWidth() ) * scale / 2);
-		
-		img = game.getImageScaled( p.getImgPath(), scale );
-
-		img.draw( x * size + imgXOffset + offsetX + borderSize, invertY(y) * size + imgYOffset + offsetY + borderSize );
-		
-	}
-	
-	
+	/**
+	 * Renders a board with pieces 
+	 * @param g Graphics to render with
+	 * @param width Available width
+	 * @param height Available height
+	 * @throws SlickException
+	 */
 	public void drawBoard( Graphics g, int width, int height ) throws SlickException{
 		int numSquaresX = board.getWidth();
 		int numSquaresY = board.getHeight();
@@ -119,19 +70,27 @@ public class SimulatedGridboard extends SimulatedBoard {
 		
 		g.setColor(Color.gray);
 		g.fillRect(offsetX - borderWidth, offsetY - borderHeight, size * numSquaresX + borderWidth * 2, size * numSquaresY + borderHeight * 2);
-		renderBoard(g, offsetX, offsetY, size, numSquaresX, numSquaresY);
 		
+		//Draw squares
+		for( int iy=0; iy<numSquaresY; iy++ )
+			for( int ix=0; ix<numSquaresX; ix++ ){
+				int posX = offsetX + ix * size;
+				int posY = offsetY + invertY(iy) * size;
+				renderSquare( g, board.getSquareAt( ix, iy ), posX, posY, size );
+			}
+		
+		//Draw pieces
 		for( Piece piece : board.getPieces() )
 			if( piece != dragged )
-				renderPiece( g, piece
+				renderPieceLocal( g, piece
 						,	pieceXCoordiate( piece )
 						,	pieceYCoordiate( piece )
 						,	size, offsetX, offsetY
 					);
 		
+		//Draw dragged
 		if( dragged != null ){
-			//renderDragged( g, dragged );
-			renderPiece( g, dragged
+			renderPieceLocal( g, dragged
 					,	pieceXCoordiate( dragged )
 					,	pieceYCoordiate( dragged )
 					,	size, offsetX + dragOffsetX, offsetY + dragOffsetY
