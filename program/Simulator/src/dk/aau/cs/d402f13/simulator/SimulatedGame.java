@@ -32,6 +32,13 @@ public class SimulatedGame extends BasicGame {
 	SimulatedGridboard board = null;
 	Game game;
 	
+	/**
+	 * Loads an Image from path, however caches the Image so repeated calls only
+	 * loads the image once.
+	 * @param path The file address of the Image
+	 * @return The loaded Image
+	 * @throws SlickException
+	 */
 	public Image getImage( String path ) throws SlickException{
 		if( imgCache.containsKey(path) ){
 			return imgCache.get( path );
@@ -41,8 +48,17 @@ public class SimulatedGame extends BasicGame {
 			imgCache.put(path, img);
 			return img;
 		}
+		//TODO: check if Image could not be loaded and recast exception
+		//TODO: default Images?
 	}
 	
+	/**
+	 * Caches a scaled version of the Image returned by getImage()
+	 * @param path The file address of the Image
+	 * @param scale The wanted scale of the Image
+	 * @return The scaled Image
+	 * @throws SlickException
+	 */
 	public Image getImageScaled( String path, float scale ) throws SlickException{
 		Image unscaled = getImage( path );
 

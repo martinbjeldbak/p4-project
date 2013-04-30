@@ -105,6 +105,7 @@ public class Interactive {
         case ":o":
         case ":p":
         case ":i":
+        case ":nk":
         case ":k":
           try {
             ByteArrayInputStream bais = new ByteArrayInputStream(
@@ -152,13 +153,15 @@ public class Interactive {
                   System.out.println(code);
                 }
                 else{
-                  System.out.println("Scope checking...");
-                  start = new Date();
-                  ScopeChecker scopeChecker = new ScopeChecker();
-                  scopeChecker.visit(ast);
-                  time = new Date().getTime() - start.getTime();
-                  System.out.println("Scope checking took " + time + " ms");
-                  if (line.equals(":i")) {
+                  if (!line.equals(":nk")) {
+                    System.out.println("Scope checking...");
+                    start = new Date();
+                    ScopeChecker scopeChecker = new ScopeChecker();
+                    scopeChecker.visit(ast);
+                    time = new Date().getTime() - start.getTime();
+                    System.out.println("Scope checking took " + time + " ms");
+                  }
+                  if (line.equals(":i") || line.equals(":nk")) {
                     System.out.println("Interpreting...");
                     start = new Date();
                     Interpreter i = new Interpreter();
@@ -171,7 +174,7 @@ public class Interactive {
                       System.out.println("Evaluating main...");
                       start = new Date();
                       if (main instanceof ConstValue) {
-                        v = ((ConstValue)main).evaluate(i);
+                        v = ((ConstValue)main).evaluate();
                       }
                       else if (main instanceof FunValue) {
                         v = ((FunValue)main).call(i);
