@@ -17,6 +17,9 @@ public class Member {
   private boolean varArgs;
   private Callable function;
   
+  private Member member;
+  private Scope scope;
+  
   public Member(AstNode definition) {
     expression = definition.getLast();
 
@@ -35,7 +38,15 @@ public class Member {
     this.function = function;
   }
   
+  public Member(Member member, Scope scope) {
+    this.member = member;
+    this.scope = scope;
+  }
+  
   public Value getValue(Interpreter interpreter, Scope scope) throws StandardError {
+    if (member != null) {
+      return member.getValue(interpreter, this.scope);
+    }
     if (constant != null) {
       interpreter.getSymbolTable().openScope(scope);
       Value ret = constant.call(interpreter, scope.getThis());
@@ -55,10 +66,16 @@ public class Member {
   }
   
   public Value getValue(Interpreter interpreter) throws StandardError {
+    if (member != null) {
+      return member.getValue(interpreter, this.scope);
+    }
     return getValue(interpreter, interpreter.getSymbolTable().currentScope());
   }
   
   public Value getValue(Interpreter interpreter, Value value) throws StandardError {
+    if (member != null) {
+      return member.getValue(interpreter, this.scope);
+    }
     if (value instanceof ObjectValue) {
       return getValue(interpreter, ((ObjectValue)value).getScope());
     }
