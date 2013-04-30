@@ -1,4 +1,5 @@
 package dk.aau.cs.d402f13.scopechecker;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -223,18 +224,30 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
   
   @Override
   protected Object visitCallSequence(AstNode node) throws StandardError {
-    //CALL_SEQUENCE = CONSTANT [LIST]
+    //CALL_SEQUENCE = CONSTANT [LIST] | TYPE LIST
     Iterator<AstNode> it = node.iterator();
-    AstNode constant = it.next();
-    String constName = constant.value;    //CONSTANT
+    AstNode temp = it.next();
+    String name = temp.value;        //CONSTANT | TYPE
+    //Remaining: [LIST]
     int argNum = 0;
-    if (it.hasNext()){                    //then it is a function call
-    AstNode tempNode = it.next();         //LIST - the arguments
-    argNum = tempNode.size();             //number of arguments
-                                          //variables that are arguments in a function call are uses
-    visit(tempNode);                      //visit LIST
+    if (it.hasNext()){                  //then it is a function call
+    AstNode list = it.next();           //LIST - the arguments
+    argNum = list.size();               //number of arguments
+                                        //variables that are arguments in a function call are uses
+    visit(list);                        //visit LIST
     }
-    foundUsedFunc(constName, argNum, node.line, node.offset);
+    if (temp.type == Type.CONSTANT){
+      //A CONSTANT can be a constant or a function call. Check if a function or constant exists
+      Member find = new Member(name);
+      if (this.currentType.concreteConstants.contains(find) || 
+          this.currentType.abstractConstants.contains(find))
+        foundUsedConst(name, node.line, node.offset);  //check that function exists
+      else
+        foundUsedFunc(name, argNum, node.line, node.offset);
+    }
+    else {
+      foundUsedType(name, argNum, node.line, node.offset);  //check that type exists
+    }
     return null;
   }
 
@@ -248,13 +261,27 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
     }
     return null;
   }
-  
+  public void foundUsedType(String name, int argNum, int line, int offset) throws ScopeError{
+    //When a type is used, ensure that the type exists and constructor arg count matches
+    TypeSymbolInfo tsi = this.typeTable.get(name);
+    if (tsi == null){
+     throw new ScopeError("Type " + name + " is used but not declared", line, offset);
+    }
+    else if (tsi.args != argNum){
+      throw new ScopeError("Number of constructor arguments for type " + name + " mismatches. Received " + argNum + ", expected " + tsi.args, line, offset);
+    }
+  }
   public void foundUsedConst(String name, int line, int offset) throws ScopeError{
+    ArrayList<Member> concrAndAbstr = new ArrayList<Member>();
+    //Concatenate concrete and abstract constants
+    concrAndAbstr.addAll(this.currentType.concreteConstants);
+    concrAndAbstr.addAll(this.currentType.abstractConstants);
+
     if (this.memberAccessType == MemberAccessType.THISSUPERGLOBAL ||
         this.memberAccessType == MemberAccessType.THIS)
     {
       //return if found in current type
-     for (Member m : this.currentType.concreteConstants){
+     for (Member m : concrAndAbstr){
        if (m.name.equals(name) && m.declaredInType == this.currentType)
          return;
      }
@@ -266,12 +293,13 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
         if (m.name.equals(name))
           return;
       }
+      //global scope cannot contain abstract constants
     }
     if (this.memberAccessType == MemberAccessType.THISSUPERGLOBAL ||
         this.memberAccessType == MemberAccessType.SUPER)
     {
       //return if found in super type
-      for (Member m : this.currentType.concreteConstants){
+      for (Member m : concrAndAbstr){
         if (m.name.equals(name) && m.declaredInType != this.currentType)
           return;
       }
@@ -280,11 +308,16 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
     throw new ScopeError("Constant " + name + " used but not declared", line, offset);
   }
   public void foundUsedFunc(String name, int argNum,int line, int offset) throws ScopeError{
+    ArrayList<Member> concrAndAbstr = new ArrayList<Member>();
+    //Concatenate concrete and abstract constants
+    concrAndAbstr.addAll(this.currentType.concreteConstants);
+    concrAndAbstr.addAll(this.currentType.abstractConstants);
+    
     if (this.memberAccessType == MemberAccessType.THISSUPERGLOBAL ||
         this.memberAccessType == MemberAccessType.THIS)
     {
       //return if found in current type
-      for (Member m : (this.currentType.concreteFunctions)){
+      for (Member m : concrAndAbstr){
         if (m.name.equals(name) && m.declaredInType == this.currentType){
           if (m.args == argNum)
             return;
@@ -309,7 +342,7 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
         this.memberAccessType == MemberAccessType.SUPER)
     {
       //return if found in super type
-     for (Member m : this.currentType.concreteFunctions){
+     for (Member m : concrAndAbstr){
          if (m.name.equals(name)){
            if (m.args == argNum)
              return;
