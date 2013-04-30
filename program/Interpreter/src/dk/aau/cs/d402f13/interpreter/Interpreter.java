@@ -84,10 +84,8 @@ public class Interpreter extends Visitor {
   protected Value visitList(AstNode node) throws StandardError {
     Value[] values = new Value[node.size()];
     
-    for(int i = 0; i < node.size(); i++) {
+    for(int i = 0; i < node.size(); i++)
       values[i] = visit(node.get(i));
-    }
-    
     return new ListValue(values);
   }
 
@@ -95,9 +93,8 @@ public class Interpreter extends Visitor {
   protected Value visitNotOperator(AstNode node) throws StandardError {
     Value v = visit(node.getFirst());
     
-    if(v instanceof BoolValue) {
+    if(v instanceof BoolValue)
       return ((BoolValue)v).not();
-    }
     throw new TypeError("Cannot use 'not' operator on " + v);
   }
 
@@ -105,29 +102,26 @@ public class Interpreter extends Visitor {
   protected Value visitPattern(AstNode node) throws StandardError {
     Value[] values = new Value[node.size()];
 
-    for(int i = 0; i < node.size(); i++) {
+    for(int i = 0; i < node.size(); i++)
       values[i] = visit(node.get(i));
-      System.out.println(visit(node.get(i)).getClass());
-    }
     return new PatternValue(values);
   }
 
   @Override
   protected Value visitPatternKeyword(AstNode node) throws StandardError {
-    // friend, foe
-    throw new InternalError("Invalid visit");
+    return new PatternKeyValue(node.value);
   }
 
   @Override
   protected Value visitPatternMultiplier(AstNode node) throws StandardError {
     Value v = visit(node.getFirst());
-
-    return new PatMultValue(v, node.value);
+    return new PatternMultValue(v, node.value);
   }
 
   @Override
   protected Value visitPatternNot(AstNode node) throws StandardError {
-    throw new InternalError("Invalid visit");
+    Value v = visit(node.getFirst());
+    return new PatternNotValue(v);
   }
 
   @Override
@@ -138,16 +132,20 @@ public class Interpreter extends Visitor {
       case "+":
         return new PatternPlusValue(v);
       case "*":
-        return new PatMultValue(v);
+        return new PatternMultValue(v);
       case "?":
         return new PatternOptValue(v);
+      default:
+        throw new TypeError("Not a pattern operator");
     }
-    throw new TypeError("Not a pattern operator");
   }
 
   @Override
   protected Value visitPatternOr(AstNode node) throws StandardError {
-    throw new InternalError("Invalid visit");
+    Value left = visit(node.getFirst());
+    Value right = visit(node.get(1));
+
+    return new PatternOrValue(left, right);
   }
 
   @Override
@@ -204,9 +202,15 @@ public class Interpreter extends Visitor {
   @Override
   protected Value visitConstant(AstNode node) throws StandardError {
     Value v = symbolTable.getConstant(node.value);
+    if (v == null) {
+      throw new NameError("Undefined constant: " + node.value);
+    }
     if (v instanceof ConstValue) {
       v = ((ConstValue)v).evaluate();
       symbolTable.addConstant(node.value, v);
+    }
+    else if (v instanceof MemberValue) {
+      v = ((MemberValue)v).getValue(this);
     }
     if (v == null) {
       throw new NameError("Undefined constant: " + node.value);
@@ -324,10 +328,7 @@ public class Interpreter extends Visitor {
     for (int i = 1; i < node.size(); i++) {
       AstNode memberAccess = node.get(i);
       String memberName = memberAccess.getFirst().value;
-      Value memberObject = object.getMember(memberName);
-      if (memberObject instanceof ConstMemberValue) {
-        memberObject = ((ConstMemberValue)memberObject).evaluate(this, object);
-      }
+      Value memberObject = object.getMember(memberName).getValue(this, object);
       object = memberObject;
       for (int j = 1; j < memberAccess.size(); j++) {
         ListValue list = (ListValue)visit(memberAccess.get(j));
