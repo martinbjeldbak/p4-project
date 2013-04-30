@@ -84,10 +84,8 @@ public class Interpreter extends Visitor {
   protected Value visitList(AstNode node) throws StandardError {
     Value[] values = new Value[node.size()];
     
-    for(int i = 0; i < node.size(); i++) {
+    for(int i = 0; i < node.size(); i++)
       values[i] = visit(node.get(i));
-    }
-    
     return new ListValue(values);
   }
 
@@ -95,9 +93,8 @@ public class Interpreter extends Visitor {
   protected Value visitNotOperator(AstNode node) throws StandardError {
     Value v = visit(node.getFirst());
     
-    if(v instanceof BoolValue) {
+    if(v instanceof BoolValue)
       return ((BoolValue)v).not();
-    }
     throw new TypeError("Cannot use 'not' operator on " + v);
   }
 
@@ -145,7 +142,10 @@ public class Interpreter extends Visitor {
 
   @Override
   protected Value visitPatternOr(AstNode node) throws StandardError {
-    throw new InternalError("Invalid visit");
+    Value left = visit(node.getFirst());
+    Value right = visit(node.get(1));
+
+    return new PatternOrValue(left, right);
   }
 
   @Override
