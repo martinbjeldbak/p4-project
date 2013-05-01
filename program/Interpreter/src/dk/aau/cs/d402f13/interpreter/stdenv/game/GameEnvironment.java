@@ -51,7 +51,7 @@ public class GameEnvironment extends StandardEnvironment {
     game.addAttribute("currentPlayer", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        return new IntValue(1);
+        return new IntValue(0);
       }
     }));
     game.addTypeMember("currentPlayer", new Member(new ConstantCallable() {
@@ -61,7 +61,7 @@ public class GameEnvironment extends StandardEnvironment {
             ((ObjectValue)object).getAttribute("currentPlayer"),
             IntValue.type())).getValue();
         Value[] players = ((ListValue)TypeValue.expect(
-            object.getMember("players").getValue(interpreter),
+            object.getMember("turnOrder"),
             ListValue.type()
         )).getValues();
         if (players.length < 1) {
@@ -77,7 +77,7 @@ public class GameEnvironment extends StandardEnvironment {
     game.addTypeMember("turnOrder", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        return object.getMember("players").getValue(interpreter);
+        return object.getMember("players");
       }
     }));
     game.addTypeMember("title", new Member(new ConstantCallable() {
@@ -115,7 +115,7 @@ public class GameEnvironment extends StandardEnvironment {
     board.addTypeMember("emptySquares", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        return object.getMember("squares").getValue(interpreter);
+        return object.getMember("squares");
       }
     }));
     
@@ -136,7 +136,7 @@ public class GameEnvironment extends StandardEnvironment {
             IntValue.type()
         )).getValue(); 
         Value[] types = ((ListValue)TypeValue.expect(
-            object.getMember("squareTypes").getValue(interpreter),
+            object.getMember("squareTypes"),
             ListValue.type()
         )).getValues();
         if (types.length < 1) {

@@ -221,10 +221,10 @@ public abstract class Value implements Cloneable {
    * @throws StandardError if the member cannot be found or
    *                       doesn't exist
    */
-  public Member getMember(String member) throws StandardError {
+  public Value getMember(String member) throws StandardError {
     Member m = getType().getTypeMember(member);
     if (m != null) {
-      return m;
+      return new MemberValue(m);
     }
     throw new NameError("Undefined member: " + member);
   }
