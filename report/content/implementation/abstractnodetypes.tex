@@ -9,8 +9,11 @@ AST. Each node type corresponds to a production in the grammar. These ANTs can
 then be combined to form the AST when some piece of code has been parsed.
 
 Firstly, the section begins with a description of how an AST differs from a parse tree 
-to make this clear to the reader.
+to make this clear to the reader. Then we present a few examples of our abstract
+node types. We do not present all the ANTs in this section because they are very
+similar to each other. The rest of the ANTs are in \apref{ap:ant}.
 
+\subsection{Difference between an AST and a parse tree}
 When a piece of code is parsed by a parser that understands the specific programming 
 language, the output of the parser will be an AST which consists of the abstract node 
 types of each program part. The difference between an AST and a parse tree is that a 
@@ -18,32 +21,14 @@ parse tree contains every detail of the input code. A parse tree includes for in
 the parentheses and keywords where an AST does not contain anything other than the 
 abstract node types.\cite{parsevsast}
 
-Now, the section is divided into three subsections. First we present the actual
-parts of a program structure. Then we present which expressions the language
-consists of. Finally, we present the different patterns.
-
-\subsection{Program structure}
-The following subsections present the structure of programs. The sections are 
-structured as follows:
-
-\begin{dlist}
-  \item Program
-  \item Definition
-  \item Constant definition
-  \item Type definition
-  \item Type body and member definition
-  \item Abstract definition
-  \item Variable list
-\end{dlist}
-
-\subsubsection{Program}
-Every program written in \productname{} begins with an abstract node type which 
+\subsection{The ANT for program}
+Every program written in \productname{} begins with an ANT which 
 we call ``program'' that consists of either zero, one, or more definitions. The 
-production for this rule is as follows:
+production for this rule was presented in \secref{sec:grammar}.
 
-\begin{ebnf}
-\grule{program}{\grep{definition}}
-\end{ebnf}
+%\begin{ebnf}
+%\grule{program}{\grep{definition}}
+%\end{ebnf}
 
 It is from this production each and every program is derived from. The ANT for 
 this production is illustrated in \figref{ast:program}.
@@ -60,41 +45,23 @@ have more of these nodes following each other.
 
 This means that a program is legal if it does not contain anything at all.
 
-\subsection{Expressions}
-The following nine subsections present the different expressions in
-\productname{}. The sections are structured as follows:
-
-\begin{dlist}
-  \item Operations with precedence and negation
-  \item Element
-  \item Member access
-  \item Call sequence
-  \item Assignment
-  \item If expression
-  \item Lambda expression
-  \item List
-  \item No-operator
-\end{dlist}
-
-\subsubsection{Operations with precedence and negation}
+\subsection{ANT for operations with precedence and negation}
 In this section we introduce the five different groupings of operations such as
 logical operators, equality operators, etc., and finally we present the
 production called negation. We illustrate the five groupings of operators but we
 have omitted the negation node, because it is merely a root with one child. The
-following grammar presents the productions for the different operations:
+grammar for this expression was presented in \secref{sec:grammar}.
 
-\begin{ebnf}
-\grule{lo\_sequence}{eq\_sequence \gcat \grep{\ggrp{\gter{and} \gor \gter{or}} \gcat eq\_sequence}}
-\grule{eq\_sequence}{cm\_sequence \gcat \grep{\ggrp{\gter{==} \gor \gter{!=}} \gcat cm\_sequence}}
-\grule{cm\_sequence}{as\_sequence \gcat \grep{\ggrp{\gter{<} \gor \gter{>} \gor \gter{<=} \gor \gter{>=}} \gcat as\_sequence}}
-\grule{as\_sequence}{md\_sequence \gcat \grep{\ggrp{\gter{+} \gor \gter{-}} \gcat md\_sequence}}
-\grule{md\_sequence}{negation \gcat \grep{\ggrp{\gter{*} \gor \gter{/} \gor{\%}} \gcat negation}}
-\end{ebnf}
+%\begin{ebnf}
+%\grule{lo\_sequence}{eq\_sequence \gcat \grep{\ggrp{\gter{and} \gor \gter{or}} \gcat eq\_sequence}}
+%\grule{eq\_sequence}{cm\_sequence \gcat \grep{\ggrp{\gter{==} \gor \gter{!=}} \gcat cm\_sequence}}
+%\grule{cm\_sequence}{as\_sequence \gcat \grep{\ggrp{\gter{<} \gor \gter{>} \gor \gter{<=} \gor \gter{>=}} \gcat as\_sequence}}
+%\grule{as\_sequence}{md\_sequence \gcat \grep{\ggrp{\gter{+} \gor \gter{-}} \gcat md\_sequence}}
+%\grule{md\_sequence}{negation \gcat \grep{\ggrp{\gter{*} \gor \gter{/} \gor{\%}} \gcat negation}}
+%\end{ebnf}
 
-The meaning of these different groupings of operators have been described in
-\secref{sec:grammar}. To refresh the readers memory, the sequences are
-intentionally placed in this specific order to ensure the correct precedence for
-these operators.
+To refresh the readers memory, the sequences are intentionally placed in this
+specific order to ensure the correct precedence for these operators.
 
 Since the productions look a lot like each other we will only illustrate an
 abstract ANT which shows how we have implemented the different operations.
@@ -129,23 +96,24 @@ and more compact AST.
 The grammar specified earlier in this section presented that the last operation
 ($md\_sequence$) consists of negations and the choice to add an operator between
 negations. The negation production can be an element or begin with the \gter{-}
-symbol followed by another negation.
-The following productions present the grammar for the negation expression:
+symbol followed by another negation. The production for a negation was presented
+in \secref{sec:grammar}.
 
-\begin{ebnf}
-\grule{negation}{element}
-\galt{\gter{-} \gcat negation}
-\end{ebnf}
+%\begin{ebnf}
+%\grule{negation}{element}
+%\galt{\gter{-} \gcat negation}
+%\end{ebnf}
 
-This production is not illustrated with any ANT.
+This production is not illustrated with any ANT because it is simply one root
+with one child.
 
-\subsubsection{Assignment}
-The following grammar rule specifies the production of an assignment in
-\productname{}:
+\subsection{ANT for assignment}
+The production for the assignment expression was presented in
+\secref{sec:grammar}.
 
-\begin{ebnf}
-\grule{assignment}{\gter{let} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression} \gcat \gter{in} \gcat expression}
-\end{ebnf}
+%\begin{ebnf}
+%\grule{assignment}{\gter{let} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression} \gcat \gter{in} \gcat expression}
+%\end{ebnf}
 
 The production specifies that any assignment must begin with the keyword
 \gter{let} and end with the keyword \gter{in} followed by an expression. In
@@ -165,6 +133,8 @@ another assignment. So, this means that it is possible to have assignments
 nested within each other. 
 
 We have chosen to implement the comma separated nodes as new assignment nodes
-which has two nodes that are not optioanl. These nested assignments are
+which has two nodes that are not optional. These nested assignments are
 connected to the parent with dashed edges which mean that they are optional and
 it is possible to have zero, one, or more of these following each other.
+
+The rest of the ANTs are very uniform and they can be found in \apref{ap:ant}.

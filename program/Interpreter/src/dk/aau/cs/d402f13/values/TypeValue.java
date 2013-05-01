@@ -202,7 +202,7 @@ public class TypeValue extends Value {
     }
     else {
       ObjectValue ret;
-      // Initialize object attributes
+      // Initialize constructor arguments
       for (int i = 0; i < formalParameters.length; i++) {
         interpreter.getSymbolTable().addVariable(formalParameters[i], actualParameters[i]);
       }
@@ -230,7 +230,7 @@ public class TypeValue extends Value {
       interpreter.getSymbolTable().openScope(ret.getScope());
       // Initialize attributes
       for (Entry<String, Member> e : attributes.entrySet()) {
-        ret.addAttribute(e.getKey(), e.getValue().getValue(interpreter, ret.getScope()));
+        ret.addAttribute(e.getKey(), new MemberValue(e.getValue()));
       }
       interpreter.getSymbolTable().closeScope();
       interpreter.getSymbolTable().closeScope();
@@ -249,6 +249,17 @@ public class TypeValue extends Value {
       throw new TypeError("Invalid type for value, expected " + type.toString());
     }
     return parameter.as(type);
+  }
+
+  public static Value[] expect(TypeValue type, Value ... parameters) throws StandardError {
+    Value[] casted = new Value[parameters.length];
+    for (int i = 0; i < parameters.length; i++) {
+      if (!parameters[i].is(type)) {
+        throw new TypeError("Invalid type for value, expected " + type.toString());
+      }
+      casted[i] = parameters[i].as(type); 
+    }
+    return casted;
   }
 
   public static Value expect(Value[] parameters, int i, TypeValue type) throws StandardError {
