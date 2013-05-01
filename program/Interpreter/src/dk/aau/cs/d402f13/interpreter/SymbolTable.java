@@ -45,7 +45,7 @@ public class SymbolTable {
       Value thisObject = currentScope().getThis();
       if (thisObject != null) {
         try {
-          return new MemberValue(thisObject.getMember(name));
+          return thisObject.getMember(name);
         }
         catch (NameError e) { }
       }
