@@ -153,34 +153,77 @@ nodes.
 
 \subsection{SableCC}
 We have also implemented a scanner and parser using a
-compiler/interpreter generator known as SableCC\cite{sableccdoc}. As
-described in \secref{subsec:generatedparsers}, it is an automated
-scanner and LALR($1$) parser generator written in Java, with support for
-making compilers and interpreters. We have implemented a subset of an
-early version of \productname{} in SableCC to evaluate the capabilities
-of such a tool.
+compiler/interpreter generator, or a compiler compiler
+known as SableCC\cite{sableccdoc}. As described in
+\secref{subsec:generatedparsers}, it is an automated scanner and
+LALR($1$) parser generator written in Java, with support for making
+compilers and interpreters. We have implemented a subset of an early
+version of \productname{} in SableCC to evaluate the capabilities of
+such a tool.
 
 \subsubsection{Choice of SableCC}
-We chose SableCC among other tools such as ANTLR\cite{antlr} and JavaCC\cite{javacc}, because SableCC's parser uses LALR($1$), whereas ANTLR and JavaCC use simpler LL($k$) parsing, which our handwritten parser already implementes. Therefore we felt LALR($1$) parsing to be more interesting 
-% Written in Java, which is desired and would work with the rest of the project
-% -LALR(1) parser, as opposed to a few other tools, which ``only'' use LR. We are not interested in using those, because our hand-written parser is already LR
-% Follows the visitor pattern with abstract syntax trees
-% Action code is separated from grammar specifications.
+We chose SableCC instead of various other tools such as ANTLR\cite{antlr}
+and JavaCC\cite{javacc}, because SableCC's parser generates a LALR($1$)
+parser, whereas ANTLR and JavaCC create simpler LL($k$) parsers, which
+our implementation already takes advantage of. Therefore, we felt LALR($1$)
+parsing to be more interesting, since it also supports more powerful
+grammars (such as left-recursion).
 
-%From our experience:
+SableCC outputs an abstract syntax node type for each alternation in every rule in the grammar specifications file. Then it's possible to iterate over these nodes via extending the visitor pattern SableCC also supplies, generating code or directly interpreting a syntactically correct program. This is all done in classes separate from the grammar specifications, which is also desirable and different from ANTLR and JavaCC, where action code is injected directly in the specification. This is all done in Java, which is also desirable, since it would work well with the rest of the project (also written in Java).
+
+\subsubsection{Experience with SableCC}
+Our experience with the tool has been rather cumbersome, in that it took quite a while to read the documentation before and during writing the specifications, as it ``simply'' isn't just copy/pasting EBNF grammar into a file. An example of the if-expression rule is seen here
+
+\begin{lstlisting}[caption=Part of the grammar specifications file of SableCC with focus on if-expressions.]
+Tokens
+  else          = 'else';
+  then          = 'then';
+  if            = 'if';
+
+Productions
+   expression   = {elopexp} element operator expression
+                | {assign} assignment
+                | {if} if_expr
+                | {lambda} lambda_expr
+                | {el} element list?
+                | {not} not expression;
+   if_expr = if [left]:expression then [mid]:expression else [right]:expression;
+\end{lstlisting}
+
 % Pros
-%  - Fast to create scanners and parsers
-%  - Easier to maintain, simply update the specifications file
-%  - Grants the ability to have powerful grammer, given that it's a LALR parser, even though our grammar is designed for LL
-%  - Clear and clean separation between automated code and user code
+This example brings out the strengths of SableCC, as it looks very
+similar to the EBNF for if-expressions, with a few additions. As
+long as you know the special syntax and how helpers, tokens, and
+productions, it is possible to create scanners and parsers relatively
+quick. This was not our case, as no one had experience with any form
+of compiler-compiler. Given that it generates a LALR parser, it
+grants the ability to have more powerful grammar than what we had
+designed. Lastly, the fact that there's a clear and clean separation
+between automated, generated code and user code makes the grammar and
+compilation/interpretation parts easier to maintain. When adding new
+features to the language, you simply have to update the specifications
+file and generate a new scanner/parser combination.
+
 % Cons
-%  - Took way too long to figure out how it works, relatively poor documentation
-%  - Generates thousands of lines of code, even for our relatively simple grammar
-%  - Less control and customizability, compared to writing our own from scratch
+Even though SableCC looks like a prime candidate to continue
+interpretation with, we chose not to use the tool. This is because it
+took an unreasonable amount of time to figure out how to precisely
+define the grammar to keep it from being ambiguous. And with poor
+documentation, it only took longer. Also, it offers less control and
+customizability, compared to writing our own from scratch. As an
+example, the tool offers an application-specific interface to walking
+the AST nodes with the visitor pattern, requiring knowledge of how
+SableCC implements it. SableCC also generates thousands of lines of
+code, even for our simple grammar, which seems superfluous compared to
+the handwritten code consisting of 10\% the amount of lines.
 %  - Don't learn as much about different parser techniques
 %  - Old project, not as active anymore
 
-
-We chose not to continue using SableCC due to the weight of cons against pros, and the fact that during the time spent working on implementing SableCC was also spent making the handwritten scanner and parsers.
-% Why we haven't used it
-% - Took way too long to get to work
+% WHAT TO CALL THIS SUBSUBSECTION?
+\subsubsection{Discussion}
+We chose not to continue using SableCC due to the weight of cons
+against pros, and the fact that the time spent working on implementing
+SableCC was also spent making the handwritten scanner and parsers work
+to exactly the way we want them to. It might not be as efficient a
+solution, but since efficiency isn't rated as important for our project,
+the extra time spent scanning and parsing can be excused.
