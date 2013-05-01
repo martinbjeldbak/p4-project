@@ -53,14 +53,14 @@ public class Member {
       interpreter.getSymbolTable().closeScope();
       return ret;
     }
+    if (function != null) {
+      return new FunValue(minArity, varArgs, function, scope);
+    }
     if (params == null) {
       interpreter.getSymbolTable().openScope(scope);
       Value ret = interpreter.visit(expression);
       interpreter.getSymbolTable().closeScope();
       return ret;
-    }
-    if (function != null) {
-      return new FunValue(minArity, varArgs, function, scope);
     }
     return new FunValue(params, expression, scope);
   }
