@@ -11,8 +11,10 @@ import dk.aau.cs.d402f13.interpreter.ParentCallable;
 import dk.aau.cs.d402f13.interpreter.stdenv.StandardEnvironment;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
+import dk.aau.cs.d402f13.utilities.errors.ArgumentError;
 import dk.aau.cs.d402f13.values.AbstractTypeValue;
 import dk.aau.cs.d402f13.values.BoolValue;
+import dk.aau.cs.d402f13.values.CoordValue;
 import dk.aau.cs.d402f13.values.IntValue;
 import dk.aau.cs.d402f13.values.ListValue;
 import dk.aau.cs.d402f13.values.ObjectValue;
@@ -46,6 +48,32 @@ public class GameEnvironment extends StandardEnvironment {
     
     game.addAbstractMember("players", new AbstractMember());
     game.addAbstractMember("board", new AbstractMember());
+    game.addAttribute("currentPlayer", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return new IntValue(1);
+      }
+    }));
+    game.addTypeMember("currentPlayer", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        int i = ((IntValue)TypeValue.expect(
+            ((ObjectValue)object).getAttribute("currentPlayer"),
+            IntValue.type())).getValue();
+        Value[] players = ((ListValue)TypeValue.expect(
+            object.getMember("players").getValue(interpreter),
+            ListValue.type()
+        )).getValues();
+        if (players.length < 1) {
+          throw new TypeError("Invalid length of players-list");
+        }
+        TypeValue.expect(player, players);
+        if (i >= players.length || i < 0) {
+          throw new ArgumentError("Invalid player index:  + i");
+        }
+        return players[i];
+      }
+    }));
     game.addTypeMember("turnOrder", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
@@ -151,6 +179,50 @@ public class GameEnvironment extends StandardEnvironment {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
         return interpreter.getSymbolTable().getVariable("owner");
+      }
+    }));
+    piece.addAttribute("position", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return new CoordValue(1, 1);
+      }
+    }));
+    piece.addTypeMember("position", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return ((ObjectValue)object).getAttribute("position");
+      }
+    }));
+    piece.addAttribute("onBoard", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return BoolValue.falseValue();
+      }
+    }));
+    piece.addTypeMember("onBoard", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return ((ObjectValue)object).getAttribute("onBoard");
+      }
+    }));
+    piece.addTypeMember("move", new Member(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
+        TypeValue.expect(actualParameters, 0, CoordValue.type());
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        object.beginClone();
+        object.setAttribute("position", actualParameters[0]);
+        object.setAttribute("onBoard", BoolValue.trueValue());
+        return object.endClone();
+      }
+    }));
+    piece.addTypeMember("remove", new Member(0, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        object.beginClone();
+        object.setAttribute("onBoard", BoolValue.falseValue());
+        return object.endClone();
       }
     }));
     
