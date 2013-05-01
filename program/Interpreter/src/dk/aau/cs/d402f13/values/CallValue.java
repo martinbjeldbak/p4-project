@@ -45,7 +45,7 @@ public class CallValue extends Value implements Cloneable {
   }
   
   @Override
-  public Member getMember(String member) throws StandardError {
+  public Value getMember(String member) throws StandardError {
     evaluate();
     return value.getMember(member);
   }

@@ -24,6 +24,7 @@ public class ObjectValue extends Value implements Cloneable {
   private boolean isSuper = false;
   
   private HashMap<String, Value> attributes = new HashMap<String, Value>();
+  private HashMap<String, Value> memberCache = new HashMap<String, Value>();
   
   public ObjectValue(Interpreter interpreter, TypeValue type, Scope scope) {
     this.interpreter = interpreter;
@@ -43,7 +44,11 @@ public class ObjectValue extends Value implements Cloneable {
     attributes.put(attribute, value);
   }
   
-  public Member getObjectMember(String name) throws StandardError {
+  public Value getObjectMember(String name) throws StandardError {
+    Value value = memberCache.get(name);
+    if (value != null) {
+      return value;
+    }
     Member member = getType().getTypeMember(name);
     if (member == null) {
       if (parent != null) {
@@ -54,11 +59,13 @@ public class ObjectValue extends Value implements Cloneable {
       }
       throw new NameError("Undefined member: " + name);
     }
-    return new Member(member, scope);
+    value = member.getValue(interpreter, scope);
+    memberCache.put(name, value);
+    return value;
   }
   
   @Override
-  public Member getMember(String member) throws StandardError {
+  public Value getMember(String member) throws StandardError {
     if (!isSuper && child != null) {
       return child.getMember(member);
     }

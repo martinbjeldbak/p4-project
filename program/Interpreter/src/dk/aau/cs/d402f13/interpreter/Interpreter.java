@@ -329,7 +329,10 @@ public class Interpreter extends Visitor {
     for (int i = 1; i < node.size(); i++) {
       AstNode memberAccess = node.get(i);
       String memberName = memberAccess.getFirst().value;
-      Value memberObject = object.getMember(memberName).getValue(this, object);
+      Value memberObject = object.getMember(memberName);
+      if (memberObject instanceof MemberValue) {
+        memberObject = ((MemberValue)memberObject).getValue(this);
+      }
       object = memberObject;
       for (int j = 1; j < memberAccess.size(); j++) {
         ListValue list = (ListValue)visit(memberAccess.get(j));
