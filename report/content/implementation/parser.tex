@@ -1,21 +1,24 @@
 \section{Parser}
 
-In this section we present our handwritten parser for our programming language.
-We have written a recursive descent parser, which is within the class of LL(1)
-parsers. The grammar for \productname{} is suited for this because e.g. is does
-not have left-recursive productions. 
+In this section we present our handwritten parser for our programming
+language. We have written a top-down recursive descent parser, which
+is within the class of LL(1) parsers. The grammar for \productname{}
+is suited for this because e.g.\@ it does not have left-recursive
+productions. This is a result of the choice of parsing technique before
+we started formally defining our grammar.
 
 \subsection{Constructing the parser}
 %structured as the grammar
-The parser was very simple to implement, because it is structured in the same
-manner as the grammar is structured. For instance if the grammar expresses that
-the next set of terminals must begin with a left bracket (`[') then the parser
-will expect the next token to be a \tokenref{LBRACKET} which is the token name
-for a left bracket. 
+The parser was very simple to implement, because it is structured
+in the same manner as the grammar is defined in EBNF as seen in
+\secref{sub:grammar}. For instance if the grammar expresses that the
+next set of terminals must begin with a left bracket (`['), then the
+parser will expect the next token to be a \tokenref{LBRACKET} which is
+the token name for a left bracket. If the grammar then expects a non-terminal, then the parser simply calls the method for that non-terminal, allowing it to finish, possibly calling more non-terminals and expecting terminals, before continuing parsing the next part of the rule.
 
 %discuss the if expression
 In \lstref{lst:ifexpr} we give an example of how this structure looks like in
-the parser. The production rule for an if expression is presented in
+our handwritten parser. The production rule for an if-expression is presented in
 \secref{sec:grammar}.
 
 %\begin{ebnf}
@@ -23,35 +26,38 @@ the parser. The production rule for an if expression is presented in
 %\gcat \gter{else} \gcat expression}
 %\end{ebnf}
 
-The production for if expression says that every expression of this type must
-start with the combination of the two symbols which spell the word \gter{if}.
-When the parser meets this word it knows that it has to parse an if expression
-and the code for this is reflected in \lstref{lst:ifexpr}.
+The production for if-expression says that every expression of this type
+must start with the combination of the two symbols which spell the word
+\gter{if}. When the parser meets this word in an expression, it knows
+that it has to parse an if-expression and the code for this is reflected
+in \lstref{lst:ifexpr}.
 
-\lstinputlisting[caption="This shows how if expressions are parsed.",
+\lstinputlisting[caption="How if-expressions are parsed using top-down parsing in Java.",
 label=lst:ifexpr, language=Java]{listings/ifexpr.java}
 
 \subsection{Building an AST}
 %astNode()
-In \lstref{lst:ifexpr} the parser initialises the node for the expected if
-expression. The parser starts by calling the method \methodref{astNode} to
-create a node for the Abstract Syntax Tree (AST). We call the method with
-information about what type of expression this is (\tokenref{IF\_EXPR}). The
-method calls the \methodref{expect} method to verify that the next token is what
-we are expecting. If the two tokens do not match, the parser throws a syntax
-error with information about the error. If everything is syntactically correct
-the parser constructs a node for the AST for the given expression.
+In \lstref{lst:ifexpr}, the parser initialises the node for the
+expected if-expression. The parser starts by calling the method
+\methodref{astNode} to create a node for the Abstract Syntax Tree (AST).
+We call the method with information about what type of expression this
+is (\tokenref{IF\_EXPR}). The method calls the \methodref{expect} method
+to verify that the next token is what we are expecting. If the two
+tokens do not match, the parser throws a syntax error with information
+about the error. If everything is syntactically correct the parser
+constructs a node for the AST for the given expression. The first child
+of the node is the boolean expression, and the next two siblings of that
+child are the expression branches of the if-expression.
 
 \subsubsection{Terminal and nonterminals}
-%Token
-Every grammar has a finite set of nonterminals and terminals that constitute the
-productions of the grammar. We have defined tokens for every nonterminal in the
-grammar. The if expression have the token name of \tokenref{IF\_EXPR}.
+Every grammar has a finite set of nonterminals and terminals that
+constitute the productions of the grammar. We have defined tokens in the
+parser for every nonterminal in our grammar. The if-expression has the
+token name of \tokenref{IF\_EXPR}.
 
-%node.addChild(expression())
-In the production for the if expression we have three terminals; the \gter{if},
-\gter{then}, and the \gter{else}. These are all expected in the method for any
-if expression. When the parser finishes reading a terminal it knows that the
+In the production for the if-expression, we have three terminals: the \gter{if},
+\gter{then}, and the \gter{else}. These are all required in the method for any
+if-expression. When the parser finishes reading a terminal, it knows that the
 following token will be an expression, and therefore a new child for the node is
 made with a call to the \methodref{expression} method wherein we parse
 expressions. Finally the method returns the node containing every child for the
@@ -59,7 +65,7 @@ whole if expression.
 
 \subsection{Looking ahead in the input}
 %lookAhead methods - atomic
-We mentioned earlier that the parser is an LL(1) parser which means that the
+We mentioned earlier that the parser is an LL(1) parser, which means that the
 parser is able to look ahead in the sequence of tokens. We have shown the
 \methodref{lookAhead} method to determine if the next token is part of an
 atomic expression. The production for the atomic expression was presented in
@@ -113,7 +119,6 @@ example of this is given in \lstref{lst:examplelookahead}.
 %\galt{operation}
 %\end{ebnf}
 
-
 \lstinputlisting[caption="Use of the \methodref{lookAhead}-method. This example
 is from the \methodref{expression}-method.", label=lst:examplelookahead,
 language=Java]{listings/example_lookAheadAtomic.java}
@@ -121,16 +126,17 @@ language=Java]{listings/example_lookAheadAtomic.java}
 The code presented in \lstref{lst:examplelookahead} is a small section of the
 \methodref{expression} method. We have removed code from the section which is
 not relevant for the example we are trying to give. The removed code is
-presented as \{...\}. In \lstref{lst:examplelookahead} we wish to present how
+presented as \{\ldots\}. In \lstref{lst:examplelookahead} we wish to present how
 the \methodref{lookAhead} methods are used.
 
 An assignment begins with the reserved word \gter{let} and the first
-\methodref{lookAhead} method peeks for exactly that token to determine if the
-next production is an assignment. If the method returns true then the next token is
-in fact the \gter{let} word, and the parser enters a new method namely the
-\methodref{assignment} method which checks to determine if the rest of the
-production is correctly written. The same is done for the if expression, lambda
-expression and operations which begins with the ``loSequence()'' (logical operators).
+\methodref{lookAhead} method peeks for exactly that token to determine
+if the next production is an assignment. If the method returns true then
+the next token is in fact the \gter{let} word, and the parser enters a
+new method, namely the \methodref{assignment} method which checks to
+determine if the rest of the production is correctly written. The same
+is done for the if expression, lambda expression and operations which
+begins with the ``loSequence()'' (logical operators).
 
 The operation production is a bit different, because it needs two lookAhead
 methods to determine if the next production is an operation. An operation can
@@ -138,7 +144,43 @@ begin with either an atomic value or a minus operator. So the code uses a
 \methodref{lookAheadAtomic} and a regular \methodref{lookAhead} with the
 specific token as a parameter to check if the next production is an operation.
 
-The methods return nodes which are connected with each other to form a complete AST.
-When the parser has parsed every token of the input it can produce an AST that
-corresponds to the program written in \productname{}. This shows that the parser
-is built very systematically according to the grammar.
+The methods return nodes which are connected with each other to form
+a complete AST\@. When the parser has parsed every token of the input,
+it can produce an AST that corresponds to the program written in
+\productname{}. This shows that the parser is built systematically
+according to the grammar, producing a parse tree consisting of AST
+nodes.
+
+\subsection{SableCC}
+We have also implemented a scanner and parser using a
+compiler/interpreter generator known as SableCC\cite{sableccdoc}. As
+described in \secref{subsec:generatedparsers}, it is an automated
+scanner and LALR($1$) parser generator written in Java, with support for
+making compilers and interpreters. We have implemented a subset of an
+early version of \productname{} in SableCC to evaluate the capabilities
+of such a tool.
+
+\subsubsection{Choice of SableCC}
+We chose SableCC among other tools such as ANTLR\cite{antlr} and JavaCC\cite{javacc}, because SableCC's parser uses LALR($1$), whereas ANTLR and JavaCC use simpler LL($k$) parsing, which our handwritten parser already implementes. Therefore we felt LALR($1$) parsing to be more interesting 
+% Written in Java, which is desired and would work with the rest of the project
+% -LALR(1) parser, as opposed to a few other tools, which ``only'' use LR. We are not interested in using those, because our hand-written parser is already LR
+% Follows the visitor pattern with abstract syntax trees
+% Action code is separated from grammar specifications.
+
+%From our experience:
+% Pros
+%  - Fast to create scanners and parsers
+%  - Easier to maintain, simply update the specifications file
+%  - Grants the ability to have powerful grammer, given that it's a LALR parser, even though our grammar is designed for LL
+%  - Clear and clean separation between automated code and user code
+% Cons
+%  - Took way too long to figure out how it works, relatively poor documentation
+%  - Generates thousands of lines of code, even for our relatively simple grammar
+%  - Less control and customizability, compared to writing our own from scratch
+%  - Don't learn as much about different parser techniques
+%  - Old project, not as active anymore
+
+
+We chose not to continue using SableCC due to the weight of cons against pros, and the fact that during the time spent working on implementing SableCC was also spent making the handwritten scanner and parsers.
+% Why we haven't used it
+% - Took way too long to get to work
