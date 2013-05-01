@@ -92,6 +92,10 @@ public class GameEnvironment extends StandardEnvironment {
     addType(square);
   }
   
+  /**
+   * Find the a type extending Game in the symboltable
+   * @return The Game-type if it exists or null otherwise
+   */
   public TypeValue findGameType() {
     for (Entry<String, TypeValue> e : types.entrySet()) {
       if (e.getValue().isSubtypeOf(game) && !(e.getValue() instanceof AbstractTypeValue)) {
