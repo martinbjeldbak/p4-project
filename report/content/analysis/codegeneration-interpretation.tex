@@ -16,6 +16,7 @@ Lastly, we present what it will mean to have the game and engine seperate,
 followed by a short summary.
 
 \subsection{The translation process}
+\label{sec:translationprocess}
 The typical translator takes as input some given source code written in a
 language with a high level of abstraction and translates it into a language with
 lower abstraction e.g. machine code which can be executed directly by a
@@ -34,6 +35,7 @@ analysis, the semantic analysis, the code generation and the interpretation.
 \input{figures/compileroverview}
 
 \subsection{Intermediate language}
+\label{sec:intermediatelanguage}
 A middle step between compiling and interpretation is to translate to an
 intermediate format which is then interpreted further. The IL could be more
 low-level which would make it possible to optimize the code for higher
@@ -51,6 +53,7 @@ an interpreter, and the IL, which in turn is a significant
 larger amount of work.
 
 \subsection{Compilation}
+\label{sec:compilation}
 With compilation an executable file is be created for a specific platform which
 contains all the code required to play the game. Since games have common
 aspects, a game engine containing all the common aspects such as user interface,
@@ -72,6 +75,7 @@ anymore.
 \cite{java-speed}
 
 \subsection{Interpretation}
+\label{sec:interpretation}
 An interpreter takes the original source code and executes each instruction at
 each translation. This means that a program will be parsed and executed
 on-the-fly when using an interpreter. It is required that the end-user has the
@@ -145,9 +149,10 @@ that it is usually 10 to 100 times slower than compilation.
 
 If code is translated to an IL and then further translated this takes a lot of
 work away when talking about generating compilers because compilers are platform
-dependant. When compiling to an IL we only have to develop $n+m$ compilers
-instead of $n*m$ because when compiling to an IL every platform can compile to
-this language and from the IL to the target platform.
+dependant. If we say that we have $n$ compilers and $m$ platforms, then when
+compiling to an IL we only have to develop $n+m$ compilers instead of $n*m$
+because when compiling to an IL every platform can compile to this language and
+from the IL to the target platform.
 
 It is possible to combine compilation and interpretation. The prorgam is
 compiled to intermediate code which is then interpreted. By using this approach

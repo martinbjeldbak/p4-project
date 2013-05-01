@@ -70,6 +70,10 @@ public class ObjectValue extends Value implements Cloneable {
     if (value == null) {
       return value;
     }
+    if (value instanceof MemberValue) {
+      value = ((MemberValue)value).getValue(interpreter, scope);
+      attributes.put(attribute, value);
+    }
     if (value instanceof ConstValue) {
       value = ((ConstValue)value).evaluate();
       attributes.put(attribute, value);
