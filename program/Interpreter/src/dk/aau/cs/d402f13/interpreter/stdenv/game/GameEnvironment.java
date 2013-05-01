@@ -61,7 +61,7 @@ public class GameEnvironment extends StandardEnvironment {
             ((ObjectValue)object).getAttribute("currentPlayer"),
             IntValue.type())).getValue();
         Value[] players = ((ListValue)TypeValue.expect(
-            object.getMember("players"),
+            object.getMember("turnOrder"),
             ListValue.type()
         )).getValues();
         if (players.length < 1) {
