@@ -30,7 +30,6 @@ import dk.aau.cs.d402f13.scopechecker.TypeVisitor;
 
 
 public class Interactive {
-
   private Interactive() {
     // TODO Auto-generated constructor stub
   }
