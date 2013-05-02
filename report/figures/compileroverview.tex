@@ -1,0 +1,30 @@
+\begin{figure}[ht]
+  \begin{center}
+    \scalebox{0.85}{
+      \begin{tikzpicture}[node distance=.6cm, start chain=going below,]
+     	\node[punktchain, join] (scode) {Source code};
+     	\node[punktchain, join] (leana) {Lexical analyser};
+     	\node[punktchain, join] (syana) {Syntax analyser};
+     	\node[punktchain, join] (seana) {Semantic analyser};
+     	\node[punktchain, join] (cgen)  {Code generator};
+     	\node[punktchain, join] (mach)  {Machine};
+     
+  	\draw[tuborg, decoration={brace}] let 
+  	      \p1=(leana.south), \p2=(syana.north) in
+    	      ($(1.2, \y1)$) -- ($(1.2, \y2)$) node[tubnode] {Tokens};
+  	\draw[tuborg, decoration={brace}] let 
+  	      \p1=(syana.south), \p2=(seana.north) in
+    	      ($(1.2, \y1)$) -- ($(1.2, \y2)$) node[tubnode] {Abstract syntax
+	      tree};
+  	\draw[tuborg, decoration={brace}] let 
+  	      \p1=(seana.south), \p2=(cgen.north) in
+    	      ($(1.2, \y1)$) -- ($(1.2, \y2)$) node[tubnode] {Intermediate code};
+ 	\draw[tuborg, decoration={brace}] let 		
+ 	     \p1=(cgen.south), \p2=(mach.north) in
+    	     ($(1.2, \y1)$) -- ($(1.2, \y2)$) node[tubnode] {Machine language};
+    \end{tikzpicture}}
+  \end{center}
+  \capt{The different phases of a compiler. Based on Sebesta et
+    al.\cite[p. 46, figure 1.3]{sebesta2013}}
+  \label{fig:compileroverview}
+\end{figure}

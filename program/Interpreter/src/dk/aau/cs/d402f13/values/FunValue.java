@@ -1,6 +1,8 @@
 package dk.aau.cs.d402f13.values;
 
 
+import java.util.Arrays;
+
 import dk.aau.cs.d402f13.interpreter.Callable;
 import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.Scope;
@@ -59,6 +61,15 @@ public class FunValue extends Value {
   public FunValue(int minArity, boolean varArgs, Callable callable, Scope currentScope) {
     this(minArity, varArgs, callable);
     this.currentScope = currentScope;
+  }
+  
+  public FunValue(boolean varArgs, Callable callable, String ... params) {
+    this.callable = callable;
+    formalParameters = params;
+    if (varArgs) {
+      varParams = params[params.length - 1];
+      formalParameters = Arrays.copyOf(formalParameters, formalParameters.length - 1);
+    }
   }
   
   @Override
