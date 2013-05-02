@@ -38,10 +38,7 @@ public class ScopeChecker {
     UsesAreDeclaredVisitor uadv = new UsesAreDeclaredVisitor(typeHashMap);
     uadv.visit(node);
     
-    //Check that members are accessed correct. E.g. in:  $a.b.g.k  member b, g and k must exist in some type
-    //TypeMemberAccessVisitor tmav = new TypeMemberAccessVisitor();
-    //tmav.setTypeTable(typeHashMap);
-    //tmav.visit(node); not tested yet
+   
     
     TypeTablePrettyPrinter.print(typeList);
   }

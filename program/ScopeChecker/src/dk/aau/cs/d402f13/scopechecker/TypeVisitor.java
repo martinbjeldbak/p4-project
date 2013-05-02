@@ -8,6 +8,7 @@ import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.ast.DefaultVisitor;
 import dk.aau.cs.d402f13.utilities.errors.ScopeError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.utilities.scopechecker.Data;
 import dk.aau.cs.d402f13.utilities.scopechecker.TypeSymbolInfo;
 import dk.aau.cs.d402f13.utilities.scopechecker.Member;
 
@@ -105,23 +106,20 @@ public class TypeVisitor extends DefaultVisitor
     Iterator<AstNode> it = node.iterator();
 
     //find name
-    Member member = new Member(it.next().value, this.currentType, node.line, node.offset);
-    
+    String name = it.next().value;
+    Member member;
     //find varlist if any exist, which is the members arguments
     if (it.hasNext()){
-      Iterator<AstNode> varListIt = it.next().iterator();
-      while (varListIt.hasNext()){
-        member.IncrArg(); 
-        varListIt.next();
-      }
-      currentType.addAbstractFunction(member);
+      AstNode varList = it.next();
+      member = new Member(name, varList.size(), this.currentType, node.line, node.offset);
     }
     else{   //if no varlist exists, the definition is an abstract constant
-      currentType.addAbstractConstant(member);
+      member = new Member(name, this.currentType, node.line, node.offset);
     }
+    member.abstrct = true;
+    this.currentType.addMember(member);
     return null;
   }
-  
   
   @Override
   protected Object visitConstantDef(AstNode node) throws StandardError{
@@ -136,11 +134,11 @@ public class TypeVisitor extends DefaultVisitor
     AstNode temp = it.next();
     if (temp.type == Type.VARLIST){  //if VARLIST exists, it is arguments for the function
       //CONSTANT VARLIST EXPRESSION
-      currentType.addConcreteFunction(new Member(name, temp.size(), this.currentType, node.line, node.offset));
+      currentType.addMember(new Member(name, temp.size(), this.currentType, node.line, node.offset));
     }
     else{                            //VARLIST does not exist, so this is a constant
       //CONSTANT EXPRESSION
-      currentType.addConcreteConstant(new Member(name, this.currentType, node.line, node.offset));
+      currentType.addMember(new Member(name, this.currentType, node.line, node.offset));
     }  
     return null;
   }
@@ -154,7 +152,7 @@ public class TypeVisitor extends DefaultVisitor
     *  by a getter or setter actually exists
     */
     String varName = node.iterator().next().value;
-    this.currentType.addDataMember(new Member(varName, node.line, node.offset));
+    this.currentType.addData(new Data(varName, node.line, node.offset));
         return null;
   }
   
