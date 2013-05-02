@@ -13,82 +13,36 @@ public class TypeTableCleaner {
    addParentReferences(typeTable);          //adds references to a types parent, since only the name is kept at the moment
    ArrayList<TypeSymbolInfo> topSorted;
    topSorted = topologicalSort(typeTable);  //checks for extend cycles, so super type always appear before children, used for member propagation
-   propagateMembers(typeTable);             //if a type's has a member, this member shall also be available in the derived types
+   propagateMembers(topSorted);             //if a type's has a member, this member shall also be available in the derived types
    return topSorted;
   }
-  void propagateMembers(HashMap<String, TypeSymbolInfo> typeTable) throws ScopeError{
-    for (TypeSymbolInfo tsi : typeTable.values()){
+  void propagateMembers(ArrayList<TypeSymbolInfo> topSortedList) throws ScopeError{
+    for (TypeSymbolInfo tsi : topSortedList){
        if (tsi.parent != null){
-         propagateAbstractFunctions(tsi); //if parent has an abstract member, give it to this type as well + check for errors
-         propagateConcreteFunctions(tsi); //if parent has an concrete member, give it to this type as well + check for errors
-         propagateAbstractConstants(tsi);
-         propagateConcreteConstants(tsi);
+         for (Member mp : tsi.parent.members){
+           Boolean found = false;
+           for (Member m : tsi.members){
+             if (m.name.equals(mp.name)){
+               found = true;
+               if (m.args != mp.args){
+                 if (m.args == -1 || mp.args == -1)
+                   throw new ScopeError("Mistmatch between function and constant with name "+m.name+" in type " + 
+                                         tsi.name, m.line, m.offset);
+                 else
+                   throw new ScopeError("Number of arguments for member " + m.name + " in type does not match. " +
+                   		                "Expected " + mp.args + ", received " + m.args, m.line, m.offset);
+               }
+               break;
+             }
+             
+           }
+           if (!found) //add the member to a type from its parent if it is not present in the type already
+             tsi.addMember(mp);
+         }
        }
     }
   }
-  void propagateAbstractFunctions(TypeSymbolInfo tsi) throws ScopeError{
-    for (Member pm : tsi.parent.abstractFunctions){
-      Boolean overridden = false;
-      for (Member m : tsi.concreteFunctions){
-        if (m.name.equals(pm.name)){
-         if (pm.args != m.args){
-          throw new ScopeError("Number of arguments for abstract function " + m.name + " in type " + tsi.name + " does not match overloaded constant in parent type " + tsi.parent.name, m.line, m.offset);
-        }
-         else{
-           overridden = true;
-         }
-      }
-    }
-    if (!overridden)
-      tsi.addAbstractFunction(pm); //propagate the parents member to this type
-    }
-  }
-  void propagateConcreteFunctions(TypeSymbolInfo tsi) throws ScopeError{
-    for (Member pm : tsi.parent.concreteFunctions){
-      Boolean overridden = false;
-      for (Member m : tsi.concreteFunctions){
-        if (m.name.equals(pm.name)){
-         if (pm.args != m.args){
-          throw new ScopeError("Number of arguments for function " + m.name + " in type " + tsi.name + " does not match overloaded constant in parent type " + tsi.parent.name, m.line, m.offset);
-        }
-         else{
-           overridden = true;
-         }
-      }
-    }
-    if (!overridden)
-      tsi.addConcreteFunction(pm); //propagate the parents constant to this type
-    }
-  }
-  void propagateAbstractConstants(TypeSymbolInfo tsi) throws ScopeError{
-    for (Member pm : tsi.parent.abstractConstants){
-      Boolean overridden = false;
-      for (Member m : tsi.concreteConstants){
-        if (m.name.equals(pm.name)){
-           overridden = true;
-      }
-    }
-    if (!overridden)
-      tsi.addAbstractConstant(pm); //propagate the parents constant to this type
-    }
-  }
-  void propagateConcreteConstants(TypeSymbolInfo tsi) throws ScopeError{
-    for (Member pm : tsi.parent.concreteConstants){
-      Boolean overridden = false;
-      for (Member m : tsi.concreteConstants){
-        if (m.name.equals(pm.name)){
-         if (pm.args != m.args){
-          throw new ScopeError("Number of arguments for constant " + m.name + " in type " + tsi.name + " does not match overloaded constant in parent type " + tsi.parent.name, m.line, m.offset);
-        }
-         else{
-           overridden = true;
-         }
-      }
-    }
-    if (!overridden)
-      tsi.addConcreteConstant(pm); //propagate the parents constant to this type
-    }
-  }
+
   ArrayList<TypeSymbolInfo> topologicalSort(HashMap<String, TypeSymbolInfo> typeTable) throws ScopeError{
     ArrayList<TypeSymbolInfo> sorted = new ArrayList<TypeSymbolInfo>();
     for (TypeSymbolInfo tsi : typeTable.values()){
@@ -142,8 +96,12 @@ public class TypeTableCleaner {
   public void markAbstractTypes(ArrayList<TypeSymbolInfo> typeTable) {
     //if a type contains any abstract member (also propagated members), it must be marked as abstract for use in interpreter
     for (TypeSymbolInfo tsi : typeTable){
-      if (tsi.abstractFunctions.size() != 0 || tsi.abstractConstants.size() != 0)
+     for (Member m : tsi.members){
+       if (m.abstrct){
         tsi.markASTnodeAsAbstract();
+        continue;
+       }
+     }
     }
   }
 }

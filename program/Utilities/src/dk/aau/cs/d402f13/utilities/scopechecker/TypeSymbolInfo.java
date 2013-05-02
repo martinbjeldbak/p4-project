@@ -3,6 +3,7 @@ package dk.aau.cs.d402f13.utilities.scopechecker;
 import java.util.ArrayList;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
+import dk.aau.cs.d402f13.utilities.errors.ScopeError;
 
 public class TypeSymbolInfo extends SymbolInfo{
   public AstNode node; //the node from which this symbol was created
@@ -11,11 +12,8 @@ public class TypeSymbolInfo extends SymbolInfo{
   public int args;
   public ArrayList<String> parentVarArgs;       //var args for call to supers constructor
   public int parentCallArgs;                    //number of arguments in call to supers constructor
-  public ArrayList<Member> abstractConstants;   //constants with no impl
-  public ArrayList<Member> concreteConstants;   //constant with impl
-  public ArrayList<Member> abstractFunctions;   //functions with no impl
-  public ArrayList<Member> concreteFunctions;   //functions with impl
-  public ArrayList<Member> dataMembers;         //data members
+  public ArrayList<Member> members;   //constants with no impl
+  public ArrayList<Data> data;         //data members
 
   public int children; //number of children extending this type in a direct link
  
@@ -24,14 +22,12 @@ public class TypeSymbolInfo extends SymbolInfo{
    super(name, line, offset);
    this.node = node;
    this.children = 0;
+   this.parent = null;
    this.parentName = "";
    this.parentCallArgs = 0;
    this.args = 0; //constructor args
-   this.abstractConstants = new ArrayList<Member>();
-   this.concreteConstants = new ArrayList<Member>();
-   this.abstractFunctions = new ArrayList<Member>();
-   this.concreteFunctions = new ArrayList<Member>();
-   this.dataMembers = new ArrayList<Member>();
+   this.members = new ArrayList<Member>();
+   this.data = new ArrayList<Data>();
   }
   
   public TypeSymbolInfo(AstNode node, String name, int argCount, int line, int offset){
@@ -45,20 +41,13 @@ public class TypeSymbolInfo extends SymbolInfo{
   public void setParentName(String parentName){
     this.parentName = parentName;
   }
-  public void addConcreteFunction(Member member){
-    this.concreteFunctions.add(member);
+  public void addMember(Member member) throws ScopeError{
+    if (this.members.contains(member))
+      throw new ScopeError("Type " + this.name + " already contains a declaration of member " + member.name, member.line, member.offset);
+    this.members.add(member);
   }
-  public void addAbstractFunction(Member member){
-    this.abstractFunctions.add(member);
-  }
-  public void addConcreteConstant(Member member){
-    this.concreteConstants.add(member);
-  }
-  public void addAbstractConstant(Member member){
-    this.abstractConstants.add(member);
-  }
-  public void addDataMember(Member member){
-    this.dataMembers.add(member);
+  public void addData(Data data){
+    this.data.add(data);
   }
   public void incrArgCount(){
     this.args++;
@@ -68,6 +57,6 @@ public class TypeSymbolInfo extends SymbolInfo{
   }
 
   public void markASTnodeAsAbstract() { //the scopechecker marks abstract types for the interpreter
-   this.node.type = Type.ABSTRACT_TYPE_DEF; 
+   this.node.type = Type.ABSTRACT_TYPE_DEF;
   }
 }
