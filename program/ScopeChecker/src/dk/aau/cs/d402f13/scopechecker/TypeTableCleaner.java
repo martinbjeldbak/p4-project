@@ -1,23 +1,18 @@
 package dk.aau.cs.d402f13.scopechecker;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-
 import dk.aau.cs.d402f13.utilities.errors.ScopeError;
 import dk.aau.cs.d402f13.utilities.scopechecker.Member;
 import dk.aau.cs.d402f13.utilities.scopechecker.TypeSymbolInfo;
+import dk.aau.cs.d402f13.utilities.scopechecker.TypeTable;
 
 public class TypeTableCleaner {
-  public ArrayList<TypeSymbolInfo> clean(HashMap<String, TypeSymbolInfo> typeTable) throws ScopeError{
-   addParentReferences(typeTable);          //adds references to a types parent, since only the name is kept at the moment
-   ArrayList<TypeSymbolInfo> topSorted;
-   topSorted = topologicalSort(typeTable);  //checks for extend cycles, so super type always appear before children, used for member propagation
-   propagateMembers(topSorted);             //if a type's has a member, this member shall also be available in the derived types
-   return topSorted;
+  public void clean(TypeTable tt) throws ScopeError{
+   addParentReferences(tt);          //adds references to a types parent, since only the name is kept at the moment
+   tt.topologicalSort();            //checks for extend cycles, so super type always appear before children, used for member propagation
+   propagateMembers(tt);            //if a type's has a member, this member shall also be available in the derived types
+   markAbstractTypes(tt);
   }
-  void propagateMembers(ArrayList<TypeSymbolInfo> topSortedList) throws ScopeError{
-    for (TypeSymbolInfo tsi : topSortedList){
+  void propagateMembers(TypeTable tt) throws ScopeError{
+    for (TypeSymbolInfo tsi : tt){
        if (tsi.parent != null){
          for (Member mp : tsi.parent.members){
            Boolean found = false;
@@ -43,59 +38,23 @@ public class TypeTableCleaner {
     }
   }
 
-  ArrayList<TypeSymbolInfo> topologicalSort(HashMap<String, TypeSymbolInfo> typeTable) throws ScopeError{
-    ArrayList<TypeSymbolInfo> sorted = new ArrayList<TypeSymbolInfo>();
-    for (TypeSymbolInfo tsi : typeTable.values()){
-    if (tsi.parent != null)
-      tsi.parent.children++;
-    }
-    for (TypeSymbolInfo tsi: typeTable.values()){
-      while (tsi.children == 0){
-        sorted.add(tsi);
-        tsi.children = -1; //make sure this type is only added once
-        if (tsi.parent == null){
-          break;
-        }
-        else{
-          tsi.parent.children--;
-          tsi = tsi.parent;
-        }
-      }
-    }
-    Collections.reverse(sorted); //reverse list so we get super classes first
-    if (sorted.size() != typeTable.size()){
-      for (TypeSymbolInfo sti : typeTable.values()){
-        Boolean found = false;
-        for (TypeSymbolInfo sortedSti : sorted){
-          if (sti == sortedSti){
-            found = true;
-            break;
-          }
-        }
-        if (!found)
-          throw new ScopeError("Extend cycle found in type " + sti.name, sti.line, sti.offset );
-      }
-    }
-    return sorted;
-  }
- 
-  void addParentReferences(HashMap<String, TypeSymbolInfo> typeTable) throws ScopeError{
+  void addParentReferences(TypeTable tt) throws ScopeError{
     //this name must be looked up in the SymbolTable to update the real reference TypeInfo t.parent
-    for (TypeSymbolInfo tsi : typeTable.values()){
+    for (TypeSymbolInfo tsi : tt){
       if (tsi.parentName.equals(tsi.name)){ //type cannot extend itself
         throw new ScopeError("Type " + tsi.name + " cannot extend itself", tsi.line, tsi.offset);
       }
       if (tsi.parentName != ""){
-      if (typeTable.containsKey(tsi.parentName))
-        tsi.parent = typeTable.get(tsi.parentName);
+      if (tt.typeExists(tsi.parentName))
+        tsi.parent = tt.getType(tsi.parentName);
       else
         throw new ScopeError("Type " + tsi.name + " extends undefined type " + tsi.parentName, tsi.line, tsi.offset);
       }
     }
   }
-  public void markAbstractTypes(ArrayList<TypeSymbolInfo> typeTable) {
+  void markAbstractTypes(TypeTable tt) {
     //if a type contains any abstract member (also propagated members), it must be marked as abstract for use in interpreter
-    for (TypeSymbolInfo tsi : typeTable){
+    for (TypeSymbolInfo tsi : tt){
      for (Member m : tsi.members){
        if (m.abstrct){
         tsi.markASTnodeAsAbstract();
