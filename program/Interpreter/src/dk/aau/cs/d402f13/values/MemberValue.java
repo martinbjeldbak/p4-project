@@ -23,6 +23,11 @@ public class MemberValue extends Value {
   public MemberValue(Member member) {
     this.member = member;
   }
+  
+  @Override
+  public boolean equals(Object o) {
+    return member.equals(o);
+  }
 
   public Value getValue(Interpreter interpreter, Scope scope) throws StandardError {
     return member.getValue(interpreter, scope);
