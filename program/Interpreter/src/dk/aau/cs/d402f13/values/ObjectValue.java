@@ -1,5 +1,6 @@
 package dk.aau.cs.d402f13.values;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -27,14 +28,17 @@ public class ObjectValue extends Value implements Cloneable {
   private HashMap<String, Value> attributes = new HashMap<String, Value>();
   private HashMap<String, Value> memberCache = new HashMap<String, Value>();
   
-  public ObjectValue(Interpreter interpreter, TypeValue type, Scope scope) {
+  private Value[] parameters;
+  
+  public ObjectValue(Interpreter interpreter, TypeValue type, Scope scope, Value ... parameters) {
     this.interpreter = interpreter;
     this.type = type;
     this.scope = scope;
+    this.parameters = parameters;
   }
   
-  public ObjectValue(Interpreter interpreter, TypeValue type, Scope scope, Value parent) {
-    this(interpreter, type, scope);
+  public ObjectValue(Interpreter interpreter, TypeValue type, Scope scope, Value parent, Value ... parameters) {
+    this(interpreter, type, scope, parameters);
     this.parent = parent;
     if (parent instanceof ObjectValue) {
       ((ObjectValue)parent).child = this;
@@ -211,7 +215,13 @@ public class ObjectValue extends Value implements Cloneable {
     if (otherObject.type != type) {
       return BoolValue.falseValue();
     }
+    if (parameters.length != otherObject.parameters.length) {
+      return BoolValue.falseValue();
+    }
     if (attributes.size() != otherObject.attributes.size()) {
+      return BoolValue.falseValue();
+    }
+    if (!Arrays.equals(parameters, otherObject.parameters)) {
       return BoolValue.falseValue();
     }
     for (String att : attributes.keySet()) {
