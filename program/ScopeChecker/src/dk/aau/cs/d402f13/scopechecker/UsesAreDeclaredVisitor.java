@@ -1,5 +1,4 @@
 package dk.aau.cs.d402f13.scopechecker;
-import java.util.HashMap;
 import java.util.Iterator;
 
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
@@ -11,6 +10,7 @@ import dk.aau.cs.d402f13.utilities.scopechecker.Data;
 import dk.aau.cs.d402f13.utilities.scopechecker.Member;
 import dk.aau.cs.d402f13.utilities.scopechecker.SymbolTable;
 import dk.aau.cs.d402f13.utilities.scopechecker.TypeSymbolInfo;
+import dk.aau.cs.d402f13.utilities.scopechecker.TypeTable;
 import dk.aau.cs.d402f13.utilities.scopechecker.VarSymbolInfo;
 
 enum AccessType
@@ -22,14 +22,15 @@ public class UsesAreDeclaredVisitor extends DefaultVisitor {
   //This visitor checks that all variables, constants, functions and members used are actually declared somewhere 
   
   private SymbolTable currentST; //table of vars constants and functions in current scope
-  private HashMap<String, TypeSymbolInfo> typeTable;
   private Boolean varDeclaringMode; //if true, next VAR seen is a declaration, otherwise a use
   private AccessType accessType; //set to THIS, SUPER or ANY depending on kind of member accessed
   private TypeSymbolInfo currentType; //if the visitor is traversing inside a type, else null
+  private TypeSymbolInfo lookInType; //define g = A[].h.i.j.k  will set lookInType = A when visiting h
+  private TypeTable tt;
   
-  public UsesAreDeclaredVisitor(HashMap<String, TypeSymbolInfo> typeTable){
-    this.typeTable = typeTable;
-    this.currentType = this.typeTable.get("#GLOBAL");
+  public UsesAreDeclaredVisitor(TypeTable tt){
+    this.tt = tt;
+    this.currentType = this.tt.getGlobal();
     this.accessType = AccessType.ANY;
     }
   
@@ -57,14 +58,23 @@ protected Object visitElement(AstNode node) throws StandardError {
     this.accessType = AccessType.SUPER;
     temp = it.next();
   }
-  else if (temp.type != Type.MEMBER_ACCESS){
+  else if (temp.type == Type.CALL_SEQUENCE){            
+    //if node is a call to a type, set lookInType so next member accessed must be found in that type
+    if (temp.iterator().next().type == Type.TYPE)
+      this.lookInType = this.tt.getType(temp.iterator().next().value);
     visit(temp);        //visit CALL_SEQUENCE
+    temp = it.next();
+  }
+  else {
+    visit(temp);        //visit some kind of CALL_SEQUENCE
     temp = it.next();
   }
   
   // (MEMBER_ACCESS)+
   visit(temp);
   // {MEMBER_ACCESS}
+  
+  this.lookInType = null;   //reset lookInType so only the first member accessed must be found in given type
   
   //the flag shall only be present for the first element access, since that access can return
   //an arbitrary object which we dont know anything about
@@ -94,7 +104,7 @@ protected Object visitMemberAccess(AstNode node) throws StandardError {
      visit(list);       //visit LIST to check that variables used in list have been declared
    }
    
-   foundUsedConst(name, argNum, true, node.line,node.offset);
+   foundUsedConst(name, argNum, true, node.line, node.offset);
    
    return null; 
 }
@@ -169,7 +179,7 @@ protected Object visitSetExpr(AstNode node) throws StandardError {
   String name = it.next().value;
   
   //check that data member exists in the current type
-  if (!this.currentType.data.contains(new Member(name)))
+  if (!this.currentType.data.contains(new Data(name)))
     throw new ScopeError("Data member " + name + " not defined in current type " + this.currentType.name, node.line, node.offset);
   
   return null; 
@@ -195,7 +205,7 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
           //VARLIST [TYPE LIST] [TYPE_BODY]
   
   TypeSymbolInfo oldType = this.currentType;
-  this.currentType = this.typeTable.get(name);  //lookup the type name to find type reference
+  this.currentType = this.tt.getType(name);  //lookup the type name to find type reference
   
   varDeclaringMode = true;  //The constructor args are declarations
   visit(it.next());         //visit VARLIST (constructor args)
@@ -313,7 +323,7 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
   }
   public void foundUsedType(String name, int argNum, int line, int offset) throws ScopeError{
     //When a type is used, ensure that the type exists and constructor arg count matches
-    TypeSymbolInfo tsi = this.typeTable.get(name);
+    TypeSymbolInfo tsi = this.tt.getType(name);
     if (tsi == null){
      throw new ScopeError("Type " + name + " is used but not declared", line, offset);
     }
@@ -323,13 +333,6 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
   }
   
   
-  private Boolean constDeclaredInType(String name, TypeSymbolInfo tsi){
-    for (Member m : tsi.members){
-      if (m.name.equals(name) && m.declaredInType == tsi)
-        return true;
-    }
-    return false;
-  }
   private Boolean constVisibleInType(String name, TypeSymbolInfo tsi){
     for (Member m : tsi.members){
       if (m.name.equals(name))
@@ -338,7 +341,7 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
     return false;
   }
   private Boolean constVisibleInAnyType(String name){
-    for (TypeSymbolInfo tsi : this.typeTable.values()){
+    for (TypeSymbolInfo tsi : this.tt){
       if (tsi.name == "#GLOBAL")    //skip check in global scope
         continue;
       for (Member m : tsi.members){
@@ -349,8 +352,7 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
     return false;
   }
   private Boolean constDeclaredInGlobal(String name, int line, int offset) throws ScopeError{
-    TypeSymbolInfo globalType = this.typeTable.get("#GLOBAL");
-    if (globalType.members.contains(new Member(name)))
+    if (tt.getGlobal().members.contains(new Member(name)))
       return true;
     return false;
   }
@@ -359,15 +361,21 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
     if (member){
       if (this.accessType == AccessType.THIS){
         //accept if visible in current type
-        if (constDeclaredInType(name, this.currentType))
+        if (constVisibleInType(name, this.currentType))
           return;
-        throw new ScopeError("Member " + name + " used in type " +  this.currentType.name + " does not exist in type " + this.currentType.name, line, offset);
+        throw new ScopeError("Member " + name + " used in type " +  this.currentType.name + " does not exist in type " + this.currentType.name + " or any super type", line, offset);
       }
       else if (this.accessType == AccessType.SUPER){
         //accept if visible in any super type of current type
-        if (this.currentType.parent != null && constVisibleInType(name, this.currentType.parent))
+        if (this.lookInType.parent != null && constVisibleInType(name, this.currentType.parent))
           return;
-        throw new ScopeError("Member " + name + " does not exist in a super type of " + this.currentType.name, line, offset);
+        throw new ScopeError("Member " + name + " used in type " + this.currentType.name + " does not exist in a super type of " + this.currentType.name, line, offset);
+      }
+      else if (this.lookInType != null){ //when calling A[].g.h.j, when g is found, lookInType = A, but not for h and j
+        //accept if visible in the look up type
+        if (constVisibleInType(name, this.lookInType))
+          return;
+        throw new ScopeError("Member " + name + " used in type " + this.currentType.name + " does not exist in a super type of " + this.currentType.name, line, offset);
       }
       else{
         //accept if visible in any type
@@ -383,7 +391,7 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
         return;
       if (constVisibleInType(name, this.currentType))
         return;
-      throw new ScopeError("Member " + name + " used in type " + this.currentType + " does not exist in any type or global scope", line, offset);
+      throw new ScopeError("Member " + name + " used in type " + this.currentType.name + " does not exist in any type or global scope", line, offset);
     }
   }
 }
