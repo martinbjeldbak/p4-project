@@ -1,8 +1,7 @@
-\section{Code generation and Interpretation}
+\section{The phase of interpretion and generation of code}
 \label{sec:codegenerationandinterpretation}
 
-In this section we present a brief overview of the phases of translators
-which are compilers and interpreters. Along with the design of the programming
+In this section we present a brief overview of the phases of translators. Along with the design of the programming
 language \productname{}, we also want to make it possible for programmers who
 write games in \productname{} to actually play them afterwards. There are a
 number of ways we can make that happen. These are presented in the folllowing
@@ -15,46 +14,45 @@ we present a hybrid solution based upon compilation and interpretation combined.
 Lastly, we present what it will mean to have the game and engine seperate,
 followed by a short summary.
 
-\subsection{The translation process}
-\label{sec:translationprocess}
-The typical translator takes as input some given source code written in a
-language with a high level of abstraction and translates it into a language with
-lower abstraction e.g. machine code which can be executed directly by a
-computer.
-\cite[p. 44]{sebesta2013} 
+%\subsection{The translation process}
+%\label{sec:translationprocess}
+%The typical translator takes as input some given source code written in a
+%language with a high level of abstraction and translates it into a language with
+%lower abstraction e.g. machine code which can be executed directly by a
+%computer.
+%\cite[p. 44]{sebesta2013} 
 
-Some translators work differently though. They translate the source code into
-another high-level language or into machine code for virtual machines, which can
-provide portability. The translation process is typically not a simple task,
-therefore it is often split into different phases, which is shown in
-\figref{fig:compileroverview}. The process can be split into more or less phases
-though, depending on how detailed one wished to describe the process. In this
-section we describe the following phases: the lexical analysis, the syntax
-analysis, the semantic analysis, the code generation and the interpretation.
+%Some translators work differently though. They translate the source code into
+%another high-level language or into machine code for virtual machines, which can
+%provide portability. The translation process is typically not a simple task,
+%therefore it is often split into different phases, which is shown in
+%\figref{fig:compileroverview}. The process can be split into more or less phases
+%though, depending on how detailed one wished to describe the process. In this
+%section we describe the following phases: the lexical analysis, the syntax
+%analysis, the semantic analysis, the code generation and the interpretation.
 
-\input{figures/compileroverview}
+%\input{figures/compileroverview}
 
 \subsection{Intermediate language}
 \label{sec:intermediatelanguage}
-A middle step between compiling and interpretation is to translate to an
-intermediate format which is then interpreted further. The IL could be more
-low-level which would make it possible to optimize the code for higher
+A middle step between compiling and interpretation is to translate source code to an
+intermediate language which is then interpreted further. The IL could be more
+low-level than the initial source code which would make it possible to optimize the code for higher
 efficiency.
 
 The intermediate format could be stored as an archive file which contains not
-only the code, but also sounds, images and other resources required to play the
-game. This would allow for easy distribution of a game in \productname{}. The
+only the code, but also sounds, images and other resources required to play a game. 
+This for instance could make it easier to distribute games in \productname{}. The
 source code would not be available like with a compiled game, however a package
 format could allow to optionally include the original source if the developer
-wants to share.
+wanted to share.
 
 Using an intermediate format however means that you need to create a compiler,
-an interpreter, and the IL, which in turn is a significant
-larger amount of work.
+an interpreter, and the IL, which in turn requires a significant larger amount of work.
 
 \subsection{Compilation}
 \label{sec:compilation}
-With compilation an executable file is be created for a specific platform which
+With compilation an executable file is created for a specific platform which
 contains all the code required to play the game. Since games have common
 aspects, a game engine containing all the common aspects such as user interface,
 AI and/or network connection would most likely be written. This engine would
@@ -93,10 +91,10 @@ regard to methods of implementation. With this approach which can be seen in
 \input{figures/compileroerviewinterpretation}
 
 An interpreter is interpreting a program written in the targeted language. It
-acts like a virtual machine which instructions are statements of a high level
+acts like a virtual machine where instructions are statements of a high level
 language. By purely using interpretation a source code debugger can easily be
 implemented. Various errors that might occur can once they are detected easily
-refer to which place in the source code that caused the error. The debugging is
+refer to which place in the source code which caused the error. The debugging is
 eased because the interpreter works like a software implementation of a virtual
 machine, thus the state of the machine and the value of a specific variable can
 be outputted at any time when requested. This will of course lead to the
@@ -137,8 +135,8 @@ engine, however the engine developers would have to support games written for
 every version released.
 
 \subsection{Summary of code generation and interpretation}
-The advantage of compilation is that the outputted code will run faster because
-because a complete list of instructions will be ready to be executed. Although,
+The advantage of compilation is that the outputted code will run faster because 
+a complete list of instructions will be ready to be executed. Although,
 a disadvantage is the time it takes to compile the code will take longer because
 the complete source code must be translated.
 
