@@ -1,5 +1,6 @@
 package dk.aau.cs.d402f13.values;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -27,14 +28,17 @@ public class ObjectValue extends Value implements Cloneable {
   private HashMap<String, Value> attributes = new HashMap<String, Value>();
   private HashMap<String, Value> memberCache = new HashMap<String, Value>();
   
-  public ObjectValue(Interpreter interpreter, TypeValue type, Scope scope) {
+  private Value[] parameters;
+  
+  public ObjectValue(Interpreter interpreter, TypeValue type, Scope scope, Value ... parameters) {
     this.interpreter = interpreter;
     this.type = type;
     this.scope = scope;
+    this.parameters = parameters;
   }
   
-  public ObjectValue(Interpreter interpreter, TypeValue type, Scope scope, Value parent) {
-    this(interpreter, type, scope);
+  public ObjectValue(Interpreter interpreter, TypeValue type, Scope scope, Value parent, Value ... parameters) {
+    this(interpreter, type, scope, parameters);
     this.parent = parent;
     if (parent instanceof ObjectValue) {
       ((ObjectValue)parent).child = this;
@@ -193,39 +197,41 @@ public class ObjectValue extends Value implements Cloneable {
     return obj;
   }
   
+  /**
+   * The most inefficient equals operation in the world...
+   */
   @Override
   public BoolValue equalsOp(Value other) throws StandardError {
     if (other == null) {
-      System.out.println("is null");
       return BoolValue.falseValue();
     }
     if (other == this) {
       return BoolValue.trueValue();
     }
     if (!(other instanceof ObjectValue)) {
-      System.out.println("not instance");
       return BoolValue.falseValue();
     }
     ObjectValue otherObject = (ObjectValue)other;
     if (otherObject.type != type) {
-      System.out.println("types not equal");
       return BoolValue.falseValue();
     }
-    if (!attributes.equals(otherObject.attributes)) {
-      System.out.println("attributes not equal");
-      for (Entry<String, Value> e : attributes.entrySet()) {
-        System.out.println(e.getKey() + ": " + e.getValue());
-      }
-      System.out.println("==");
-      for (Entry<String, Value> e : otherObject.attributes.entrySet()) {
-        System.out.println(e.getKey() + ": " + e.getValue());
-      }
+    if (parameters.length != otherObject.parameters.length) {
       return BoolValue.falseValue();
+    }
+    if (attributes.size() != otherObject.attributes.size()) {
+      return BoolValue.falseValue();
+    }
+    if (!Arrays.equals(parameters, otherObject.parameters)) {
+      return BoolValue.falseValue();
+    }
+    for (String att : attributes.keySet()) {
+      if (!getAttribute(att).equals(otherObject.getAttribute(att))) {
+        return BoolValue.falseValue();
+      }
     }
     if (parent == null) {
       return BoolValue.trueValue();
     }
-    System.out.println("parent?");
     return parent.equalsOp(otherObject.parent);
   }
   

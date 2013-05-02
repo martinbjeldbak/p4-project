@@ -217,14 +217,14 @@ public class TypeValue extends Value {
       // Find parent
       ensureSuperType(interpreter);
       if (parentCallable != null) {
-        ret = new ObjectValue(interpreter, this, scope, parentCallable.call(interpreter));
+        ret = new ObjectValue(interpreter, this, scope, parentCallable.call(interpreter), actualParameters);
       }
       else if (parent == null) {
-        ret = new ObjectValue(interpreter, this, scope);
+        ret = new ObjectValue(interpreter, this, scope, actualParameters);
       }
       else {
         Value[] parentParams = ((ListValue)interpreter.visit(parentConstructor)).getValues();
-        ret = new ObjectValue(interpreter, this, scope, parent.getInstance(interpreter, parentParams));
+        ret = new ObjectValue(interpreter, this, scope, parent.getInstance(interpreter, parentParams), actualParameters);
       }
       ret.setScope(new Scope(scope, ret));
       interpreter.getSymbolTable().openScope(ret.getScope());
