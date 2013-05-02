@@ -26,8 +26,6 @@ import dk.aau.cs.d402f13.values.FunValue;
 import dk.aau.cs.d402f13.values.TypeValue;
 import dk.aau.cs.d402f13.values.Value;
 import dk.aau.cs.d402f13.scopechecker.ScopeChecker;
-import dk.aau.cs.d402f13.scopechecker.TypeVisitor;
-
 
 public class Interactive {
   private Interactive() {
