@@ -1,24 +1,160 @@
-\section{Code generation \& Interpretation}
-\todo{Merge with compilersandinterpreters.tex}
-The following section presents a brief overview of the phases of translators (compilers and interpreters). The typical translator takes as input some given source code written in a language with a high level of abstraction and translates it into a language with lower abstraction e.g. machine code which can be executed directly by a computer \cite[p. 44]{sebesta2013}. Some translators work differently though. They translate the source code into another high-level language or into machine code for virtual machines, which can provide portability. The translation process is typically not a simple task, therefore it is often split into different phases, which is shown in \figref{fig:compileroverview}. The process can be split into more or less phases though, depending on how detailed one wished to describe the process. In this section we describe the following phases: the lexical analysis, the syntax analysis, the semantic analysis, the code generation and the interpretation.
+\section{Code generation and Interpretation}
+\label{sec:codegenerationandinterpretation}
 
-\input{figures/compilerphases}
+In this section we present a brief overview of the phases of translators
+which are compilers and interpreters. Along with the design of the programming
+language \productname{}, we also want to make it possible for programmers who
+write games in \productname{} to actually play them afterwards. There are a
+number of ways we can make that happen. These are presented in the folllowing
+sections. 
+
+We begin by presenting the translation process followed by a presentation of
+what an intermediate language (IL) is and what it is good for. In the subsequent
+sections we present compilation and interpretation and their differences. Then
+we present a hybrid solution based upon compilation and interpretation combined.
+Lastly, we present what it will mean to have the game and engine seperate,
+followed by a short summary.
+
+\subsection{The translation process}
+\label{sec:translationprocess}
+The typical translator takes as input some given source code written in a
+language with a high level of abstraction and translates it into a language with
+lower abstraction e.g. machine code which can be executed directly by a
+computer.
+\cite[p. 44]{sebesta2013} 
+
+Some translators work differently though. They translate the source code into
+another high-level language or into machine code for virtual machines, which can
+provide portability. The translation process is typically not a simple task,
+therefore it is often split into different phases, which is shown in
+\figref{fig:compileroverview}. The process can be split into more or less phases
+though, depending on how detailed one wished to describe the process. In this
+section we describe the following phases: the lexical analysis, the syntax
+analysis, the semantic analysis, the code generation and the interpretation.
+
+\input{figures/compileroverview}
 
 \subsection{Intermediate language}
+\label{sec:intermediatelanguage}
+A middle step between compiling and interpretation is to translate to an
+intermediate format which is then interpreted further. The IL could be more
+low-level which would make it possible to optimize the code for higher
+efficiency.
 
-\subsection{Security}
+The intermediate format could be stored as an archive file which contains not
+only the code, but also sounds, images and other resources required to play the
+game. This would allow for easy distribution of a game in \productname{}. The
+source code would not be available like with a compiled game, however a package
+format could allow to optionally include the original source if the developer
+wants to share.
 
-\subsection{Just in Time compilation}
+Using an intermediate format however means that you need to create a compiler,
+an interpreter, and the IL, which in turn is a significant
+larger amount of work.
+
+\subsection{Compilation}
+\label{sec:compilation}
+With compilation an executable file is be created for a specific platform which
+contains all the code required to play the game. Since games have common
+aspects, a game engine containing all the common aspects such as user interface,
+AI and/or network connection would most likely be written. This engine would
+then be included directly in the executable.
+
+An obvious disadvantage is that the executable is platform dependant and it
+would therefore be necessary to develop a new compiler for each platform we want
+to support. On the other hand knowing the specific platform makes it possible to
+create optimized code which runs faster.
+
+Instead of compiling to native machine code it could be compiled to an
+intermediate format such as Java bytecode which is supported on many platforms.
+While Java bytecode is interpreted and therefore slower, modern interpreters
+use sophisticated methods such as Just-in-Time compilation (JIT) which at
+run-time compiles intermediate code into native machine code. This process of
+course adds an overhead, however the speed differences are not that great
+anymore.
+\cite{java-speed}
 
 \subsection{Interpretation}
-A pure interpretation of a program lies at the opposite end (from compilation) regarding to methods of implementation. With this approach, which can be see, on \figref{fig:compileroverviewinterpretation}, no translation is performed at all. An interpreter is interpreting a program written in the targeted language. It acts like a virtual machine which instructions are statements of high level language. By purely using interpretation, a source code debugger can easily be implemented. Various errors that might occur can once they are detected easily refer to which place in the source code that caused the error. The debugging is eased because the interpreter works like a software implementation of a virtual machine, thus the state of the machine and the value of a specific variable can be outputted at any time when requested. This will of course lead to the disadvantage that an interpreter uses more space than a compiler. Further more, the execution speed of an interpreter is usually 10 to 100 times slower than that of a compiler \cite[p. 48]{sebesta2013}.
+\label{sec:interpretation}
+An interpreter takes the original source code and executes each instruction at
+each translation. This means that a program will be parsed and executed
+on-the-fly when using an interpreter. It is required that the end-user has the
+interpreter. Different games written in our language would then use the same
+copy of the interpreter instead of having a copy of the engine for each
+executable. This separation will be further explored in
+\secref{subsec:engineseperation}. The execution speed will however suffer and
+while techniques such as JIT exists to improve this, it is beyond the scope of
+this project.
+
+A pure interpretation of a program lies at the opposite end from compilation in
+regard to methods of implementation. With this approach which can be seen in
+\figref{fig:compileroverviewinterpretation}, no translation is performed at all.
 
 \input{figures/compileroerviewinterpretation}
 
-\subsection{Hybrid compilation \& interpretation}
+An interpreter is interpreting a program written in the targeted language. It
+acts like a virtual machine which instructions are statements of a high level
+language. By purely using interpretation a source code debugger can easily be
+implemented. Various errors that might occur can once they are detected easily
+refer to which place in the source code that caused the error. The debugging is
+eased because the interpreter works like a software implementation of a virtual
+machine, thus the state of the machine and the value of a specific variable can
+be outputted at any time when requested. This will of course lead to the
+disadvantage that an interpreter uses more space than a compiler. Furthermore,
+the execution speed of an interpreter is usually 10 to 100 times slower than
+that of a compiler.
+\cite[p. 48]{sebesta2013}
 
-The compiling or interpreting approach can be combined to form a hybrid implementation system. This method is illustrated in \figref{fig:compileroverviewhybrid}, where a program is compiled into an intermediate code which is then interpreted. By using this approach, errors in a program can be detected before interpretation which can save much time for a programmer. A great portability can also be achieved when using hybrid system. The initial implementation of Java was hybrid and allowed Java to be compiled to an intermediate code that could run on any platform which had an implementation of Java Virtual Machine\cite[p. 50]{sebesta2013}. 
+\subsection{Hybrid compilation and interpretation}
+The compiling or interpreting approach can be combined to form a hybrid
+implementation system. This method is illustrated in
+\figref{fig:compileroverviewhybrid}, where a program is compiled into an
+intermediate code which is then interpreted. By using this approach errors in a
+program can be detected before interpretation which can save much time for a
+programmer. Great portability can also be achieved when using hybrid system.
+The initial implementation of Java was hybrid and allowed Java to be compiled to
+an intermediate code that could run on any platform which had an implementation
+of Java Virtual Machine.
+\cite[p. 50]{sebesta2013}
 
 \input{figures/compileroverviewhybrid}
 
-\subsection{Summary}
+\subsection{Separation of game and engine}
+\label{subsec:engineseperation}
+Keeping the game and the engine separated opens up for the possibility of
+changing the game engine while still being able to use the same game. 
+
+One major advantage is that it is possible to update the engine and in result,
+update all your games.  An update which improves the graphics or adds new
+features such as network support would work with older games instantly, without
+having to wait for the developer to update it.  If the developer no longer
+maintains the game, a updated version might never come out.
+
+The disadvantage with this is however that the responsibility for maintaining
+compatibility is moved from the developer of the game to the developers of the
+engine. A game developer can simply change his program so it works with a new
+engine, however the engine developers would have to support games written for
+every version released.
+
+\subsection{Summary of code generation and interpretation}
+The advantage of compilation is that the outputted code will run faster because
+because a complete list of instructions will be ready to be executed. Although,
+a disadvantage is the time it takes to compile the code will take longer because
+the complete source code must be translated.
+
+The advantage of interpretation is that it is possible to begin executing the
+program quickly because each instruction is interpreted on-the-fly which makes
+it faster than compiling the complete code. A disadvantage of interpretation is
+that it is usually 10 to 100 times slower than compilation.
+
+If code is translated to an IL and then further translated this takes a lot of
+work away when talking about generating compilers because compilers are platform
+dependant. If we say that we have $n$ compilers and $m$ platforms, then when
+compiling to an IL we only have to develop $n+m$ compilers instead of $n*m$
+because when compiling to an IL every platform can compile to this language and
+from the IL to the target platform.
+
+It is possible to combine compilation and interpretation. The prorgam is
+compiled to intermediate code which is then interpreted. By using this approach
+errors in a program can be detected before interpretation which can save much
+time for a programmer.

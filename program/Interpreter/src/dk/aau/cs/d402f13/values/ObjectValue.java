@@ -1,6 +1,7 @@
 package dk.aau.cs.d402f13.values;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.Member;
@@ -24,6 +25,7 @@ public class ObjectValue extends Value implements Cloneable {
   private boolean isSuper = false;
   
   private HashMap<String, Value> attributes = new HashMap<String, Value>();
+  private HashMap<String, Value> memberCache = new HashMap<String, Value>();
   
   public ObjectValue(Interpreter interpreter, TypeValue type, Scope scope) {
     this.interpreter = interpreter;
@@ -44,6 +46,10 @@ public class ObjectValue extends Value implements Cloneable {
   }
   
   public Value getObjectMember(String name) throws StandardError {
+    Value value = memberCache.get(name);
+    if (value != null) {
+      return value;
+    }
     Member member = getType().getTypeMember(name);
     if (member == null) {
       if (parent != null) {
@@ -54,7 +60,9 @@ public class ObjectValue extends Value implements Cloneable {
       }
       throw new NameError("Undefined member: " + name);
     }
-    return member.getValue(interpreter, scope);
+    value = member.getValue(interpreter, scope);
+    memberCache.put(name, value);
+    return value;
   }
   
   @Override
@@ -70,6 +78,10 @@ public class ObjectValue extends Value implements Cloneable {
     if (value == null) {
       return value;
     }
+    if (value instanceof MemberValue) {
+      value = ((MemberValue)value).getValue(interpreter, scope);
+      attributes.put(attribute, value);
+    }
     if (value instanceof ConstValue) {
       value = ((ConstValue)value).evaluate();
       attributes.put(attribute, value);
@@ -81,6 +93,7 @@ public class ObjectValue extends Value implements Cloneable {
     try {
       ObjectValue c = (ObjectValue)clone();
       c.scope = new Scope(scope.getParent(), c);
+      c.memberCache = new HashMap<String, Value>();
       if (c.parent != null) {
         if (c.parent instanceof ObjectValue) {
           c.parent = ((ObjectValue)c.parent).cloneParentTree();
@@ -98,6 +111,7 @@ public class ObjectValue extends Value implements Cloneable {
     try {
       ObjectValue c = (ObjectValue)clone();
       c.scope = new Scope(scope.getParent(), c);
+      c.memberCache = new HashMap<String, Value>();
       if (c.child != null) {
         c.child = c.child.getClone();
         c.child.parent = c;
@@ -177,6 +191,42 @@ public class ObjectValue extends Value implements Cloneable {
     }
 
     return obj;
+  }
+  
+  @Override
+  public BoolValue equalsOp(Value other) throws StandardError {
+    if (other == null) {
+      System.out.println("is null");
+      return BoolValue.falseValue();
+    }
+    if (other == this) {
+      return BoolValue.trueValue();
+    }
+    if (!(other instanceof ObjectValue)) {
+      System.out.println("not instance");
+      return BoolValue.falseValue();
+    }
+    ObjectValue otherObject = (ObjectValue)other;
+    if (otherObject.type != type) {
+      System.out.println("types not equal");
+      return BoolValue.falseValue();
+    }
+    if (!attributes.equals(otherObject.attributes)) {
+      System.out.println("attributes not equal");
+      for (Entry<String, Value> e : attributes.entrySet()) {
+        System.out.println(e.getKey() + ": " + e.getValue());
+      }
+      System.out.println("==");
+      for (Entry<String, Value> e : otherObject.attributes.entrySet()) {
+        System.out.println(e.getKey() + ": " + e.getValue());
+      }
+      return BoolValue.falseValue();
+    }
+    if (parent == null) {
+      return BoolValue.trueValue();
+    }
+    System.out.println("parent?");
+    return parent.equalsOp(otherObject.parent);
   }
   
   /** {@inheritDoc}  */

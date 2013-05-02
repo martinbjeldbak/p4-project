@@ -20,7 +20,6 @@ import dk.aau.cs.d402f13.utilities.errors.TypeError;
 public class TypeValue extends Value {
   private HashMap<String, Member> members = new HashMap<String, Member>();
   private HashMap<String, Member> attributes = new HashMap<String, Member>();
-  private HashMap<String, Value> staticMembers = new HashMap<String, Value>();
   private String[] formalParameters;
   private String name;
   private String varParams = null;
@@ -174,14 +173,6 @@ public class TypeValue extends Value {
     return members.get(name);
   }
 
-  public Value getStaticMember(String member) {
-    return staticMembers.get(member);
-  }
-  
-  public void addStaticMember(String member, Value value) {
-    staticMembers.put(member, value);
-  }
-  
   public void addTypeMember(String name, Member member) {
     members.put(name, member);
   }
@@ -211,7 +202,7 @@ public class TypeValue extends Value {
     }
     else {
       ObjectValue ret;
-      // Initialize object attributes
+      // Initialize constructor arguments
       for (int i = 0; i < formalParameters.length; i++) {
         interpreter.getSymbolTable().addVariable(formalParameters[i], actualParameters[i]);
       }
@@ -239,7 +230,7 @@ public class TypeValue extends Value {
       interpreter.getSymbolTable().openScope(ret.getScope());
       // Initialize attributes
       for (Entry<String, Member> e : attributes.entrySet()) {
-        ret.addAttribute(e.getKey(), e.getValue().getValue(interpreter));
+        ret.addAttribute(e.getKey(), new MemberValue(e.getValue()));
       }
       interpreter.getSymbolTable().closeScope();
       interpreter.getSymbolTable().closeScope();
@@ -258,6 +249,17 @@ public class TypeValue extends Value {
       throw new TypeError("Invalid type for value, expected " + type.toString());
     }
     return parameter.as(type);
+  }
+
+  public static Value[] expect(TypeValue type, Value ... parameters) throws StandardError {
+    Value[] casted = new Value[parameters.length];
+    for (int i = 0; i < parameters.length; i++) {
+      if (!parameters[i].is(type)) {
+        throw new TypeError("Invalid type for value, expected " + type.toString());
+      }
+      casted[i] = parameters[i].as(type); 
+    }
+    return casted;
   }
 
   public static Value expect(Value[] parameters, int i, TypeValue type) throws StandardError {

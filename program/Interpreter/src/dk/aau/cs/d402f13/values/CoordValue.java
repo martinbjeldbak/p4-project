@@ -23,7 +23,7 @@ public class CoordValue extends Value {
     this.y = y;
   }
 
-  public CoordValue(String value) {
+  public CoordValue(String value) throws StandardError  {
     int xx = 0;
     int yy = 0;
     
@@ -33,6 +33,9 @@ public class CoordValue extends Value {
       } else {
         yy = yy * 10 + Integer.parseInt(Character.toString(c));
       }
+    }
+    if (yy < 1) {
+      throw new TypeError("Coordinate y-value must be at least 1");
     }
     
     this.x = xx;

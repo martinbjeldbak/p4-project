@@ -3,6 +3,7 @@ package dk.aau.cs.d402f13.interpreter;
 import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.Stack;
+import java.util.Map.Entry;
 
 import dk.aau.cs.d402f13.utilities.errors.NameError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
@@ -16,8 +17,8 @@ import dk.aau.cs.d402f13.values.*;
  */
 public class SymbolTable {
   
-  private HashMap<String, Value> constants = new HashMap<String, Value>();
-  private HashMap<String, TypeValue> types = new HashMap<String, TypeValue>();
+  protected HashMap<String, Value> constants = new HashMap<String, Value>();
+  protected HashMap<String, TypeValue> types = new HashMap<String, TypeValue>();
   private Stack<Scope> scopeStack = new Stack<Scope>();
 
   public SymbolTable() {  
@@ -139,5 +140,11 @@ public class SymbolTable {
    */
   public void closeScope() {
     scopeStack.pop();
+  }
+
+  public void finalizeTypes(Interpreter interpreter) throws StandardError {
+    for (Entry<String, TypeValue> e : types.entrySet()) {
+      e.getValue().ensureSuperType(interpreter);
+    }
   }
 }
