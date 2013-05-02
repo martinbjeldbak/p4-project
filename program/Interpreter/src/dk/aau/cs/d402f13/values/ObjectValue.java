@@ -1,6 +1,7 @@
 package dk.aau.cs.d402f13.values;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.Member;
@@ -190,6 +191,42 @@ public class ObjectValue extends Value implements Cloneable {
     }
 
     return obj;
+  }
+  
+  @Override
+  public BoolValue equalsOp(Value other) throws StandardError {
+    if (other == null) {
+      System.out.println("is null");
+      return BoolValue.falseValue();
+    }
+    if (other == this) {
+      return BoolValue.trueValue();
+    }
+    if (!(other instanceof ObjectValue)) {
+      System.out.println("not instance");
+      return BoolValue.falseValue();
+    }
+    ObjectValue otherObject = (ObjectValue)other;
+    if (otherObject.type != type) {
+      System.out.println("types not equal");
+      return BoolValue.falseValue();
+    }
+    if (!attributes.equals(otherObject.attributes)) {
+      System.out.println("attributes not equal");
+      for (Entry<String, Value> e : attributes.entrySet()) {
+        System.out.println(e.getKey() + ": " + e.getValue());
+      }
+      System.out.println("==");
+      for (Entry<String, Value> e : otherObject.attributes.entrySet()) {
+        System.out.println(e.getKey() + ": " + e.getValue());
+      }
+      return BoolValue.falseValue();
+    }
+    if (parent == null) {
+      return BoolValue.trueValue();
+    }
+    System.out.println("parent?");
+    return parent.equalsOp(otherObject.parent);
   }
   
   /** {@inheritDoc}  */
