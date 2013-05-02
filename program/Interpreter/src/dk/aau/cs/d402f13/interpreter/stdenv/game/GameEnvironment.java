@@ -37,6 +37,30 @@ public class GameEnvironment extends StandardEnvironment {
   private final TypeValue piece = new TypeValue("Piece", false, "owner");
   private final TypeValue player = new TypeValue("Player", false);
   
+  public TypeValue gameType() {
+    return game;
+  }
+  
+  public TypeValue boardType() {
+    return board;
+  }
+  
+  public TypeValue squareType() {
+    return square;
+  }
+  
+  public TypeValue gridBoardType() {
+    return gridBoard;
+  }
+  
+  public TypeValue pieceType() {
+    return piece;
+  }
+  
+  public TypeValue playerType() {
+    return player;
+  }
+  
   public GameEnvironment() {
     super();
 
