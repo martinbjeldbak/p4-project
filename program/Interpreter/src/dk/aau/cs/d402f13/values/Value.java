@@ -234,12 +234,12 @@ public abstract class Value implements Cloneable {
   public String toString() {
     try {
       if (getType() == null) {
-        return "unknown@" + hashCode();
+        return "unknown:" + getClass().getSimpleName() + "@" + hashCode();
       }
       return getType().getName() + "@" + hashCode();
     }
     catch (StandardError e) {
-      return "unknown@" + hashCode();
+      return "unknown:" + getClass().getSimpleName() + "@" + hashCode();
     }
   }
   
