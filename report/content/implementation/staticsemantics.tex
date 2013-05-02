@@ -1,12 +1,13 @@
 \section{Static semantics}
 The \classref{ScopeChecker} is a class that uses a number of other classes to check the static semantic rules of \productname{} at compile-time. This section is aimed to explain how these static semantic checks are performed by the \classref{ScopeChecker} in simple steps. The different checks it does is as follows:
 \begin{itemize}
-\item A type cannot extend itself
-\item A type cannot extend a type that is not defined except if it is in the standard environment
-\item A type cannot extend a type if it causes an extend cycle
-\item When a type extends another type, it must call the constructor of the extended type with the right number of arguments
-\item If a type contains at least one abstract member, its AstNode's type (TypeDef) must be changed to AbstractTypeDef
-\item  
+\item A type cannot extend itself.
+\item A type cannot extend a type that is not defined except if it is in the standard environment.
+\item A type cannot extend a type if it causes an extend cycle.
+\item When a type extends another type, it must call the constructor of the extended type with the right number of arguments.
+\item If a type contains at least one abstract member, its TypeDef AstNode must be changed to AbstractTypeDef.
+\item Any variable used must have been declared prior to its use.
+\item Any 
 \end{itemize}
 
 \subsection{Type table and hash map}
