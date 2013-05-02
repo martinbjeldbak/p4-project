@@ -12,7 +12,7 @@ import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public class ListValue extends Value {
 
-  private Value[] values = null;
+  private Value[] values = {};
   
   private static TypeValue type = new TypeValue("List", 1, false);
 
