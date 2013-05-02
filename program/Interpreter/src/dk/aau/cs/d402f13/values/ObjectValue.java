@@ -92,6 +92,7 @@ public class ObjectValue extends Value implements Cloneable {
     try {
       ObjectValue c = (ObjectValue)clone();
       c.scope = new Scope(scope.getParent(), c);
+      c.memberCache = new HashMap<String, Value>();
       if (c.parent != null) {
         if (c.parent instanceof ObjectValue) {
           c.parent = ((ObjectValue)c.parent).cloneParentTree();
@@ -109,6 +110,7 @@ public class ObjectValue extends Value implements Cloneable {
     try {
       ObjectValue c = (ObjectValue)clone();
       c.scope = new Scope(scope.getParent(), c);
+      c.memberCache = new HashMap<String, Value>();
       if (c.child != null) {
         c.child = c.child.getClone();
         c.child.parent = c;
