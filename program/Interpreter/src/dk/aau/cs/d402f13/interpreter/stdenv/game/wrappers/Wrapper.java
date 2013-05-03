@@ -3,6 +3,8 @@ package dk.aau.cs.d402f13.interpreter.stdenv.game.wrappers;
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
+import dk.aau.cs.d402f13.values.BoolValue;
+import dk.aau.cs.d402f13.values.CoordValue;
 import dk.aau.cs.d402f13.values.IntValue;
 import dk.aau.cs.d402f13.values.ListValue;
 import dk.aau.cs.d402f13.values.ObjectValue;
@@ -44,16 +46,29 @@ public abstract class Wrapper {
     return v;
   }
   
+  protected Value getMemberAs(String name, TypeValue type) throws StandardError {
+    Value v = getMember(name, type);
+    return v.as(type);
+  }
+  
   protected String getMemberString(String name) throws StandardError {
-    return ((StrValue)getMember(name, StrValue.type())).getValue();
+    return ((StrValue)getMemberAs(name, StrValue.type())).getValue();
   }
   
   protected int getMemberInt(String name) throws StandardError {
-    return ((IntValue)getMember(name, IntValue.type())).getValue();
+    return ((IntValue)getMemberAs(name, IntValue.type())).getValue();
+  }
+  
+  protected boolean getMemberBoolean(String name) throws StandardError {
+    return (BoolValue)getMemberAs(name, IntValue.type()) == BoolValue.trueValue();
+  }
+  
+  protected CoordValue getMemberCoord(String name) throws StandardError {
+    return (CoordValue)getMemberAs(name, ListValue.type());
   }
   
   protected Value[] getMemberList(String name) throws StandardError {
-    return ((ListValue)getMember(name, ListValue.type())).getValues();
+    return ((ListValue)getMemberAs(name, ListValue.type())).getValues();
   }
   
   protected Value[] getMemberList(String name, int minLength) throws StandardError {
