@@ -331,7 +331,7 @@ public class Interpreter extends Visitor {
       String memberName = memberAccess.getFirst().value;
       Value memberObject = object.getMember(memberName);
       if (memberObject instanceof MemberValue) {
-        memberObject = ((MemberValue)memberObject).getValue(this);
+        memberObject = ((MemberValue)memberObject).getValue(this, new Scope(object));
       }
       object = memberObject;
       for (int j = 1; j < memberAccess.size(); j++) {

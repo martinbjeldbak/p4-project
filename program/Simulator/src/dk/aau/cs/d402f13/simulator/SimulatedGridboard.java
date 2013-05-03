@@ -43,7 +43,7 @@ public class SimulatedGridboard extends SimulatedBoard {
 	 */
 	protected void renderPieceLocal( Graphics g, Piece p
 			,	int x, int y, int size, int offsetX, int offsetY
-			) throws SlickException{
+			){
 		renderPiece( g, p, x * size, invertY(y) * size, size, offsetX, offsetY );
 	}
 	
@@ -54,7 +54,7 @@ public class SimulatedGridboard extends SimulatedBoard {
 	 * @param height Available height
 	 * @throws SlickException
 	 */
-	public void drawBoard( Graphics g, int width, int height ) throws SlickException{
+	public void drawBoard( Graphics g, int width, int height ){
 		int numSquaresX = board.getWidth();
 		int numSquaresY = board.getHeight();
 		int size_x = (int) ((width) / (numSquaresX + 2.25));
@@ -109,5 +109,11 @@ public class SimulatedGridboard extends SimulatedBoard {
 	protected void alignDrag(){
 		dragStartX = offsetX + size * ((dragStartX - offsetX) / size) + size / 2;
 		dragStartY = offsetY + size * ((dragStartY - offsetY) / size) + size / 2;
+	}
+
+	@Override
+	public void draw(Graphics g) {
+		drawBoard( g, getWidth(), getHeight() );
+		super.draw( g );
 	}
 }

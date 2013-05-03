@@ -1,19 +1,17 @@
 \chapter{Design}
 \label{chap:design}
 
-%should be possible to construct the language by reading this design document..
+\section{Code example - Naughts and Crosses}
 
-Since the dawn of time, programming languages have been developped far and wide.
-
-We have developped \productname{} by first writing a bunch of implementations
-using the young programming language. E.g. the following is an implementation of
-the board game Noughts and Crosses:
+We have developped \productname{} by first brainstorming and writing a bunch of game implementations
+using a ``programming language'' which felt the most natural to us. The following is a result of this 
+and it's an example of an implementation of the board game Noughts and Crosses:
 
 \codesample{noughtandcrosses.game}
 
 Based on our implementations, we first define the formal grammar of
-\productname{}. Then the contextual constraints are informally described.
-Lastly, the formal semantics are described.
+\productname{}. Then the contextual constraints are informally described and 
+lastly, the formal semantics are described.
 
 \input{content/design/grammar}
 \input{content/design/types}
