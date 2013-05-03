@@ -12,7 +12,7 @@ import dk.aau.cs.d402f13.utilities.types.Piece;
 import dk.aau.cs.d402f13.utilities.types.RemoveAction;
 import dk.aau.cs.d402f13.utilities.types.Square;
 
-public class ActionHelper {
+public class ActionHelper{
 
 	/**
 	 * Checks if an Action contains a AddAction

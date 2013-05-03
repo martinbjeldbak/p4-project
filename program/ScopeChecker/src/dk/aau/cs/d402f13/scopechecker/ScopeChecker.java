@@ -1,45 +1,38 @@
 package dk.aau.cs.d402f13.scopechecker;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
-import dk.aau.cs.d402f13.utilities.scopechecker.TypeSymbolInfo;
+import dk.aau.cs.d402f13.utilities.scopechecker.TypeTable;
 
 public class ScopeChecker {
-  HashMap<String, TypeSymbolInfo> typeHashMap = new HashMap<String, TypeSymbolInfo>();
-  ArrayList<TypeSymbolInfo> typeList = new ArrayList<TypeSymbolInfo>();
-  //The HashMap and ArrayList contains the same elements
-  //Some times it is nice to have a hashmap for quick lookup on type names
-  //In other situations it is nice to have types in a list, for topological sorting and iteration.
-  
   public void visit(AstNode node) throws StandardError{
+    
+    TypeTable tt = new TypeTable();
+    
+    //Insert the standard environment types and their members into TypeTable
+    StandardEnvironment.insertInto(tt);
+    
     //Find types, their members, constructor and super constructor call
-    TypeVisitor typeVisitor = new TypeVisitor(); 
+    TypeVisitor typeVisitor = new TypeVisitor();
+    typeVisitor.setTypeTable(tt);
     typeVisitor.visit(node);
-    typeHashMap = typeVisitor.getTypeTable();
-    for (TypeSymbolInfo tsi : typeHashMap.values())
-      typeList.add(tsi);
     
-    
-    //Make reference from types to their parents, propogate type members to derived types, topological sort types
+    //Make reference from types to their parents, 
+    //propogate type members to derived types, topological sort types
+    //and mark types containing at least 1 abstract member as an abstract type AstNode
     TypeTableCleaner ttc = new TypeTableCleaner();
-    typeList = ttc.clean(typeHashMap);
-    
-    //Any type containing at least one abstract member is marked as abstract type for use in interpreter
-    ttc.markAbstractTypes(typeList); 
-    
+    ttc.clean(tt);
+ 
     //Check that a call to a parent type constructor has the right number of arguments
     TypeSuperCallChecker teec = new TypeSuperCallChecker();
-    teec.check(typeList);
+    teec.check(tt);
     
     //Check that every variable, constant and function used are declared in correct scopes
-    UsesAreDeclaredVisitor uadv = new UsesAreDeclaredVisitor(typeHashMap);
+    UsesAreDeclaredVisitor uadv = new UsesAreDeclaredVisitor(tt);
     uadv.visit(node);
     
    
     
-    TypeTablePrettyPrinter.print(typeList);
+    TypeTablePrettyPrinter.print(tt);
   }
 }
