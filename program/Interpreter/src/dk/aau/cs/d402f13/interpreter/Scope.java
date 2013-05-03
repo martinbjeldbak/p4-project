@@ -62,13 +62,11 @@ public class Scope {
    */
   public Value getVariable(String var) throws StandardError {
     Value v = variableValues.get(var);
-    if (v == null) {
-      if (parent != null) {
-        return parent.getVariable(var);
-      }
-      else if (thisObject != null && thisObject instanceof ObjectValue){
-        return ((ObjectValue)thisObject).getAttribute(var);
-      }
+    if (v == null && parent != null) {
+      v = parent.getVariable(var);
+    }
+    if (v == null && thisObject != null && thisObject instanceof ObjectValue) {
+      return ((ObjectValue)thisObject).getAttribute(var);
     }
     return v;
   }

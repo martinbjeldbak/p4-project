@@ -1,18 +1,22 @@
 package dk.aau.cs.d402f13.values;
 
-import java.util.HashMap;
-
-import dk.aau.cs.d402f13.interpreter.ConstantCallable;
 import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.Member;
-import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
-import dk.aau.cs.d402f13.utilities.errors.DivideByZeroError;
-import dk.aau.cs.d402f13.utilities.errors.NameError;
-import dk.aau.cs.d402f13.utilities.errors.StandardError;
-import dk.aau.cs.d402f13.utilities.errors.TypeError;
+import dk.aau.cs.d402f13.utilities.errors.*;
+import dk.aau.cs.d402f13.utilities.errors.InternalError;
 
-public abstract class Value {
+
+  /**
+   * Returns the type of the Value. All sub-classes need
+   * to overrride this.
+   * @return                a TypeValue describing the
+   *                        abstract type
+   * @throws StandardError  if the value doesn't have
+   *                        a type
+   */
+public abstract class Value implements Cloneable {
   
+
   public abstract TypeValue getType() throws StandardError;
 
   /**
@@ -218,9 +222,9 @@ public abstract class Value {
    *                       doesn't exist
    */
   public Value getMember(String member) throws StandardError {
-    Value v = getType().getStaticMember(member);
-    if (v != null) {
-      return v;
+    Member m = getType().getTypeMember(member);
+    if (m != null) {
+      return new MemberValue(m);
     }
     throw new NameError("Undefined member: " + member);
   }
@@ -229,10 +233,22 @@ public abstract class Value {
   @Override
   public String toString() {
     try {
+      if (getType() == null) {
+        return "unknown:" + getClass().getSimpleName() + "@" + hashCode();
+      }
       return getType().getName() + "@" + hashCode();
     }
     catch (StandardError e) {
-      return "unknown@" + hashCode();
+      return "unknown:" + getClass().getSimpleName() + "@" + hashCode();
+    }
+  }
+  
+  public Value getClone() throws InternalError {
+    try {
+      return (Value)clone();
+    }
+    catch (CloneNotSupportedException e) {
+      throw new InternalError(e);
     }
   }
 }

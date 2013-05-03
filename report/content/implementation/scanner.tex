@@ -30,9 +30,9 @@ When a lexeme is found in the input stream, the scanner analyses which token typ
 
 When an input is to be analysed the scanner looks at the first symbol of the input, which is not a blank or white space character. Based on the first character it makes a jump to a subfunction. The subfunction is then responsible for determining which kind of token that is supposed to be generated. With this approach we have constructed a DFA with explicit control. The explicit control means that the transitions are handled ``manually'' using conditional jumps to subfunctions rather than having a table driven automaton with defined states and a transition table.
 
-In \lstref{lst:scan} you can clearly see many functions with the name \methodref{isSomething()}. These functions check the first character in an input and checks if the next symbol in the input stream is ``Something''. \methodref{isWhitespace()} checks if the next input character (\varref{nextChar}) is a white space. While true \methodref{pop()} dequeues the next symbol in the input stream and updates \varref{nextChar}. Therefore, the while loop with \methodref{isWhitespace()} removes all initial white spaces before a next token is found. If, at any time, the scanner has reached the end of the input stream it returns a \tokenref{EOF} so succeeding parts of the parser knows where the program ends.
+In \lstref{lst:scan} you can clearly see many functions with the name \methodref{is{Something}()} for instace the isDigit() function. These functions check the first character in an input and checks if the next symbol in the input stream is that ``{Something}''. \methodref{isWhitespace()} checks if the next input character (\varref{nextChar}) is a white space. While true \methodref{pop()} dequeues the next symbol in the input stream and updates \varref{nextChar}. Therefore, the while loop with \methodref{isWhitespace()} removes all initial white spaces before a next token is found. If, at any time, the scanner has reached the end of the input stream it returns a \tokenref{EOF} so succeeding parts of the parser knows where the program ends.
 
-Beside the \methodref{isWhitespace()} function, all other \methodref{isSomething()} functions are reponsible for returning a token based on their evaluation of the input stream.
+Beside the \methodref{isWhitespace()} function, all other functions of the form \methodref{is{Something}()} are reponsible for returning a token based on their evaluation of the input stream.
 For example, if the first symbol of a lexeme is an upper-case character, the function \methodref{scanUppercase()} is responsible for determining whether the lexeme is an \tokenref{identifier} or a \tokenref{direction} because they are the only two tokens starting with an upper-case character in \productname{}. This is depicted in \tableref{table:scanner}. 
 
 
@@ -45,7 +45,7 @@ For example, if the first symbol of a lexeme is an upper-case character, the fun
 \tabrow{Uppercase    	}{scanUppercase()		& ID, COORD\_LIT						}
 \tabrow{''			   	}{scanString()			& STRING\_LIT							}
 \tabrow{\$    			}{scanVar()				& VAR									}
-\tabrow{Operator    	}{scanOperator()		& LBRACKET, RBRACKET, LBRACE, RBRACE, 
+\tabrow{Operator (e.g. ``+'', ``-'' and ``*'')   	}{scanOperator()		& LBRACKET, RBRACKET, LBRACE, RBRACE, 
 												  LPAREN, RPAREN, PATTERN\_OR, COMMA, 
 												  SHARED\_OPERATOR, NORMAL\_OPERATOR, 
 												  ASSIGN, PATTERN\_OP, LAMBDABEGIN		}

@@ -16,7 +16,6 @@ import dk.aau.cs.d402f13.utilities.errors.ArgumentError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.values.ActionValue;
 import dk.aau.cs.d402f13.values.BoolValue;
-import dk.aau.cs.d402f13.values.ConstMemberValue;
 import dk.aau.cs.d402f13.values.ConstValue;
 import dk.aau.cs.d402f13.values.CoordValue;
 import dk.aau.cs.d402f13.values.DirValue;
@@ -54,7 +53,7 @@ public class StandardEnvironment extends SymbolTable {
     ////////////////////////////////////
     addType(FunValue.type());
     
-    FunValue.type().addStaticMember("call", new ConstMemberValue(1, false, new Callable() {
+    FunValue.type().addTypeMember("call", new Member(1, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters)
           throws StandardError {
@@ -74,7 +73,7 @@ public class StandardEnvironment extends SymbolTable {
     ////////////////////////////////////
     addType(ListValue.type());
     
-    ListValue.type().addStaticMember("size", new ConstMemberValue(new ConstantCallable() {
+    ListValue.type().addTypeMember("size", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
         ListValue o = (ListValue)object;
@@ -82,7 +81,7 @@ public class StandardEnvironment extends SymbolTable {
       }
     }));
     
-    ListValue.type().addStaticMember("sort", new ConstMemberValue(1, false, new Callable() {
+    ListValue.type().addTypeMember("sort", new Member(1, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters)
           throws StandardError {
@@ -99,7 +98,7 @@ public class StandardEnvironment extends SymbolTable {
       }
     }));
     
-    ListValue.type().addStaticMember("map", new ConstMemberValue(1, false, new Callable() {
+    ListValue.type().addTypeMember("map", new Member(1, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters)
           throws StandardError {
@@ -114,7 +113,7 @@ public class StandardEnvironment extends SymbolTable {
       }
     }));
     
-    ListValue.type().addStaticMember("filter", new ConstMemberValue(1, false, new Callable() {
+    ListValue.type().addTypeMember("filter", new Member(1, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters)
           throws StandardError {
@@ -143,7 +142,7 @@ public class StandardEnvironment extends SymbolTable {
     ////////////////////////////////////
     addType(StrValue.type());
     
-    StrValue.type().addStaticMember("size", new ConstMemberValue(new ConstantCallable() {
+    StrValue.type().addTypeMember("size", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
         StrValue a = (StrValue)object;
@@ -156,7 +155,7 @@ public class StandardEnvironment extends SymbolTable {
     ////////////////////////////////////
     addType(TypeValue.type());
     
-    TypeValue.type().addStaticMember("isSubtypeOf", new ConstMemberValue(1, false, new Callable() {
+    TypeValue.type().addTypeMember("isSubtypeOf", new Member(1, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters)
           throws StandardError {
@@ -167,7 +166,7 @@ public class StandardEnvironment extends SymbolTable {
       }
     }));
     
-    TypeValue.type().addStaticMember("isSupertypeOf", new ConstMemberValue(1, false, new Callable() {
+    TypeValue.type().addTypeMember("isSupertypeOf", new Member(1, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters)
           throws StandardError {

@@ -1,8 +1,11 @@
 package dk.aau.cs.d402f13.values;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import dk.aau.cs.d402f13.interpreter.Interpreter;
+import dk.aau.cs.d402f13.interpreter.Member;
 import dk.aau.cs.d402f13.interpreter.Scope;
 import dk.aau.cs.d402f13.utilities.errors.DivideByZeroError;
 import dk.aau.cs.d402f13.utilities.errors.InternalError;
@@ -15,53 +18,54 @@ public class ObjectValue extends Value implements Cloneable {
   private TypeValue type;
   private Scope scope;
   
+  private Interpreter interpreter;
+  
   private Value parent;
-  private Value child;
+  private ObjectValue child;
   
   private boolean isSuper = false;
   
-  private HashMap<String, Value> members = new HashMap<String, Value>();
   private HashMap<String, Value> attributes = new HashMap<String, Value>();
+  private HashMap<String, Value> memberCache = new HashMap<String, Value>();
   
-  public ObjectValue(TypeValue type, Scope scope) {
+  private Value[] parameters;
+  
+  public ObjectValue(Interpreter interpreter, TypeValue type, Scope scope, Value ... parameters) {
+    this.interpreter = interpreter;
     this.type = type;
     this.scope = scope;
+    this.parameters = parameters;
   }
   
-  public ObjectValue(TypeValue type, Scope scope, Value parent) {
-    this(type, scope);
+  public ObjectValue(Interpreter interpreter, TypeValue type, Scope scope, Value parent, Value ... parameters) {
+    this(interpreter, type, scope, parameters);
     this.parent = parent;
     if (parent instanceof ObjectValue) {
       ((ObjectValue)parent).child = this;
     }
   }
   
-  public void addMember(String member, Value value) {
-    members.put(member, value);
-  }
-  
   public void addAttribute(String attribute, Value value) {
     attributes.put(attribute, value);
   }
   
-  public Value getObjectMember(String member) throws StandardError {
-    Value value = members.get(member);
-    if (value == null) {
-      if (parent != null) {
-        if (parent instanceof ObjectValue) {
-          return ((ObjectValue)parent).getObjectMember(member);
-        }
-        return parent.getMember(member);
-      }
-      throw new NameError("Undefined member: " + member);
-    }
-    if (value == null) {
+  public Value getObjectMember(String name) throws StandardError {
+    Value value = memberCache.get(name);
+    if (value != null) {
       return value;
     }
-    if (value instanceof ConstValue) {
-      value = ((ConstValue)value).evaluate();
-      members.put(member, value);
+    Member member = getType().getTypeMember(name);
+    if (member == null) {
+      if (parent != null) {
+        if (parent instanceof ObjectValue) {
+          return ((ObjectValue)parent).getObjectMember(name);
+        }
+        return parent.getMember(name);
+      }
+      throw new NameError("Undefined member: " + name);
     }
+    value = member.getValue(interpreter, scope);
+    memberCache.put(name, value);
     return value;
   }
   
@@ -73,10 +77,24 @@ public class ObjectValue extends Value implements Cloneable {
     return getObjectMember(member);
   }
   
+  public Value getMember(String member, TypeValue type) throws StandardError {
+    Value value = getMember(member);
+    if (!value.is(type)) {
+      throw new TypeError("Invalid type for member " + member
+          + " of object of type " + this.type.toString()
+          + ", expected " + type.toString());
+    }
+    return value;
+  }
+  
   public Value getAttribute(String attribute) throws StandardError {
     Value value = attributes.get(attribute);
     if (value == null) {
       return value;
+    }
+    if (value instanceof MemberValue) {
+      value = ((MemberValue)value).getValue(interpreter, scope);
+      attributes.put(attribute, value);
     }
     if (value instanceof ConstValue) {
       value = ((ConstValue)value).evaluate();
@@ -85,19 +103,63 @@ public class ObjectValue extends Value implements Cloneable {
     return value;
   }
   
-  private ObjectValue clone = null;
-  
-  public void beginClone() throws InternalError {
+  private ObjectValue cloneParentTree() throws InternalError {
     try {
-      clone = (ObjectValue)clone();
-      clone.attributes = (HashMap<String, Value>)attributes.clone();
+      ObjectValue c = (ObjectValue)clone();
+      c.scope = new Scope(scope.getParent(), c);
+      c.memberCache = new HashMap<String, Value>();
+      if (c.parent != null) {
+        if (c.parent instanceof ObjectValue) {
+          c.parent = ((ObjectValue)c.parent).cloneParentTree();
+          ((ObjectValue)c.parent).child = c;
+        }
+      }
+      return c;
     }
     catch (CloneNotSupportedException e) {
       throw new InternalError(e);
     }
   }
   
-  public ObjectValue setAttribute(String attribute, Value value) throws StandardError {
+  private ObjectValue cloneChildTree() throws InternalError {
+    try {
+      ObjectValue c = (ObjectValue)clone();
+      c.scope = new Scope(scope.getParent(), c);
+      c.memberCache = new HashMap<String, Value>();
+      if (c.child != null) {
+        c.child = c.child.getClone();
+        c.child.parent = c;
+      }
+      return c;
+    }
+    catch (CloneNotSupportedException e) {
+      throw new InternalError(e);
+    }
+  }
+  
+  @Override
+  public ObjectValue getClone() throws InternalError {
+    ObjectValue c = cloneChildTree();
+    if (c.parent != null && c.parent instanceof ObjectValue) {
+      c.parent = ((ObjectValue)c.parent).cloneParentTree();
+      ((ObjectValue)c.parent).child = c;
+    }
+    return c;
+  }
+  
+  private ObjectValue clone = null;
+  private ObjectValue cloneReturn = null;
+  
+  public void beginClone() throws InternalError {
+    clone = (ObjectValue)getClone();
+    clone.attributes = (HashMap<String, Value>)attributes.clone();
+    cloneReturn = clone;
+    while (cloneReturn.child != null) {
+      cloneReturn = cloneReturn.child;
+    }
+  }
+  
+  public Value setAttribute(String attribute, Value value) throws StandardError {
     if (attributes.get(attribute) == null) {
       throw new NameError("Undefined attribute: $" + attribute);
     }
@@ -110,10 +172,9 @@ public class ObjectValue extends Value implements Cloneable {
     return null;
   }
   
-  public ObjectValue endClone() {
-    ObjectValue r = clone;
+  public Value endClone() {
     clone = null;
-    return r;
+    return cloneReturn;
   }
 
   /** {@inheritDoc}  */
@@ -144,6 +205,44 @@ public class ObjectValue extends Value implements Cloneable {
     }
 
     return obj;
+  }
+  
+  /**
+   * The most inefficient equals operation in the world...
+   */
+  @Override
+  public BoolValue equalsOp(Value other) throws StandardError {
+    if (other == null) {
+      return BoolValue.falseValue();
+    }
+    if (other == this) {
+      return BoolValue.trueValue();
+    }
+    if (!(other instanceof ObjectValue)) {
+      return BoolValue.falseValue();
+    }
+    ObjectValue otherObject = (ObjectValue)other;
+    if (otherObject.type != type) {
+      return BoolValue.falseValue();
+    }
+    if (parameters.length != otherObject.parameters.length) {
+      return BoolValue.falseValue();
+    }
+    if (attributes.size() != otherObject.attributes.size()) {
+      return BoolValue.falseValue();
+    }
+    if (!Arrays.equals(parameters, otherObject.parameters)) {
+      return BoolValue.falseValue();
+    }
+    for (String att : attributes.keySet()) {
+      if (!getAttribute(att).equals(otherObject.getAttribute(att))) {
+        return BoolValue.falseValue();
+      }
+    }
+    if (parent == null) {
+      return BoolValue.trueValue();
+    }
+    return parent.equalsOp(otherObject.parent);
   }
   
   /** {@inheritDoc}  */
