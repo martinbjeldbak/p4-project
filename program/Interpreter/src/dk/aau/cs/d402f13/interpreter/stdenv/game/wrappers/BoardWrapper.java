@@ -1,18 +1,21 @@
 package dk.aau.cs.d402f13.interpreter.stdenv.game.wrappers;
 
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
+import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.gameapi.Board;
+import dk.aau.cs.d402f13.utilities.gameapi.Piece;
 import dk.aau.cs.d402f13.values.ObjectValue;
+import dk.aau.cs.d402f13.values.Value;
 
-public class BoardWrapper implements Board {
-
-  private ObjectValue object;
+public class BoardWrapper extends Wrapper implements Board {
   
-  public ObjectValue getObject() {
-    return object;
+  public BoardWrapper(GameEnvironment env, Value object) {
+    super(env, object);
   }
-  
-  public BoardWrapper(GameEnvironment env, ObjectValue object) {
-    this.object = object;
+
+  @Override
+  public Piece[] getPieces() throws StandardError {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

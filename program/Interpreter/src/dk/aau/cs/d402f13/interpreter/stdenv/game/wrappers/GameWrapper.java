@@ -15,47 +15,33 @@ import dk.aau.cs.d402f13.values.TypeValue;
 import dk.aau.cs.d402f13.values.StrValue;
 import dk.aau.cs.d402f13.values.Value;
 
-public class GameWrapper implements Game {
+public class GameWrapper extends Wrapper implements Game {
   
   private String title;
-  private ObjectValue object;
   private BoardWrapper board;
   
   private PlayerWrapper[] players;
   private PlayerWrapper[] turnOrder;
   
   private PlayerWrapper currentPlayer;
-  
-  public ObjectValue getObject() {
-    return object;
-  }
 
-  public GameWrapper(GameEnvironment env, ObjectValue object) throws StandardError {
-    title = ((StrValue)TypeValue.expect(object.getMember("title"), StrValue.type())).getValue();
-    this.object = object;
-    board = new BoardWrapper(env, (ObjectValue)object.getMember("board", env.boardType()));
-    Value[] players = ((ListValue)object.getMember("players", ListValue.type())).getValues();
-    if (players.length < 1) {
-      throw new TypeError("Invalid length of players-list");
-    }
-    TypeValue.expect(env.playerType(), players);
+  public GameWrapper(GameEnvironment env, Value object) throws StandardError {
+    super(env, object);
+    title = getMemberString("title");
+    board = new BoardWrapper(env, getMember("board", env.boardType()));
+    
+    Value[] players = getMemberList("players", env.playerType(), 1);
     this.players = new PlayerWrapper[players.length];
     for (int i = 0; i < players.length; i++) {
-      this.players[i] = new PlayerWrapper(env, (ObjectValue)players[i]);
+      this.players[i] = new PlayerWrapper(env, players[i]);
     }
-    
-    Value[] turnOrder = ((ListValue)object.getMember("turnOrder", ListValue.type())).getValues();
-    if (turnOrder.length < 1) {
-      throw new TypeError("Invalid length of turnOrder-list");
-    }
-    TypeValue.expect(env.playerType(), turnOrder);
+    Value[] turnOrder = getMemberList("turnOrder", env.playerType(), 1);
     this.turnOrder = new PlayerWrapper[players.length];
     for (int i = 0; i < players.length; i++) {
-      this.players[i] = new PlayerWrapper(env, (ObjectValue)players[i]);
+      this.players[i] = new PlayerWrapper(env, players[i]);
     }
     
-    this.currentPlayer = new PlayerWrapper(env,
-        (ObjectValue)object.getMember("currentPlayer", env.playerType()));
+    currentPlayer = new PlayerWrapper(env, getMember("currentPlayer", env.playerType()));
   }
 
   @Override
