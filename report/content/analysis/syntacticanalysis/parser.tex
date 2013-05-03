@@ -1,25 +1,28 @@
-\subsection{LL-parsers and LR-parsers}
+\subsection{LL- and LR-parsers}
 \label{subsec:llparsersandlrparsers}
-As mentioned in the itroduction to the section, the LL-parsers derives from the top-down parsing approach.
-In terms of grammars, this means the LL-parsers attempts to parse a string by starting at the start symbol of 
-the grammar and through a series of leftmost derivations match the
-input string. On the opposite the LR-parsers derives from the bottom-up parsing
-approach. Here the LR-parsers attempts to parse by starting with the input
-string and through a series of reductions get back to the start symbol.
-The LL-parsers has two actions: predict and match. The predict action is used
-when the parser is trying to guess the next production to apply in order to get
-closer to the input string. While the match action eats the next unconsumed
-input symbol if it corresponds to the leftmost predicted terminal. These two
-actions are continuously called until the entire input string has been eaten and
-thereby has been matched. An example of a LL(1) parser in action can be seen in
-table \ref{table:LL1}. In the example the parser is based on the simple grammar: 
+As mentioned in the introduction to the section, the LL-parsers derive from the
+top-down parsing approach. In terms of grammars, this means the LL-parsers
+attempt to parse a string by starting at the start symbol of the grammar and
+through a series of left-most derivations match the input string. On the
+opposite, the LR-parsers derive from the bottom-up parsing approach. Here the
+LR-parsers attempt to parse by starting with the input string and through a
+series of reductions get back to the start symbol.
+
+The LL-parsers have two
+actions; predict and match. The predict action is used when the parser is trying
+to guess the next production to apply in order to get closer to the input
+string. While the match action eats the next unconsumed input symbol if it
+corresponds to the left-most predicted terminal. These two actions are
+continuously called until the entire input string has been eaten and thereby has
+been matched. An example of a LL(1)-parser can be seen in
+\tableref{table:LL1}. In the example the parser is based on the simple grammar: 
 
 \begin{centering}
 \begin{ebnf}
-	\grule{S}{E}
-	\grule{E}{T \gcat + \gcat E}
-	\galt{T}
-	\grule{T}{int}
+  \grule{S}{E}
+  \grule{E}{T \gcat + \gcat E}
+  \galt{T}
+  \grule{T}{int}
 \end{ebnf}
 \end{centering}
 
@@ -30,28 +33,30 @@ table \ref{table:LL1}. In the example the parser is based on the simple grammar:
 \tabrow{2}{$E$	      & $int + int$ & Predict $E \rightarrow T + E$ }
 \tabrow{3}{$T+E$      & $int + int$ & Predict $T \rightarrow int$   }
 \tabrow{4}{$int+E$    & $int + int$ & Match $int$  		    }
-\tabrow{5}{$+E$       & $+ int$     & Match $+$		    	    }
+\tabrow{5}{$+E$       & $+\; int$   & Match $+$		    	    }
 \tabrow{6}{$E$ 	      & $int$ 	    & Predict $E \rightarrow T$     }
 \tabrow{7}{$T$ 	      & $int$ 	    & Predict $T \rightarrow int$   }
 \tabrow{8}{$int$      & $int$       & Match $int$   		    }
 \tabrow{ }{           &             & Accept			    }
 }
 
-S, E and T are non-terminals and ``+'' and int are terminals. 
-The LR-parsers also has two actions: the shift action and the reduce action. The
-shift action adds the next input symbol of the input string into a buffer for
-consideration. The reduce action reduces a collection of nonterminals and
-terminals into a nonterminal by reversing a production. These two actions are
-continuously called until the input string is reduced to the start symbol.
-\cite{LL(1)andLR(2)inaction}. An example of a LR(2)-parser in action is
-illustrated in table \ref{table:LR2}.
+$S$, $E$ and $T$ are non-terminals, and $+$ and $int$ are terminals. 
+
+The LR-parsers
+also have two actions; shift and reduce. The shift action adds the next input
+symbol of the input string into a buffer for consideration. The reduce action
+reduces a collection of non-terminals and terminals into a non-terminal by
+reversing a production. These two actions are continuously called until the
+input string is reduced to the start symbol.
+\cite{LL(1)andLR(2)inaction} 
+An example of a LR(2)-parser in action is illustrated in \tableref{table:LR2}.
 
 \tab[11cm]{LR2}{3}{A LR(2) parser seen in action parsing the string ``int + int''.}
 	  {The process	    					 }
 {Step  	 }{Production & Input       & Action                     }{
 \tabrow{1}{           & $int + int$ & Shift   			 }
-\tabrow{2}{$int$      & $+ int$     & Reduce $T \rightarrow int$ }
-\tabrow{3}{$T$        & $+ int$     & Shift     		 }
+\tabrow{2}{$int$      & $+\; int$   & Reduce $T \rightarrow int$ }
+\tabrow{3}{$T$        & $+\; int$   & Shift     		 }
 \tabrow{4}{$T+$       & $int$ 	    & Shift			 }
 \tabrow{5}{$T+int$    & 	    & Reduce $T \rightarrow int$ }
 \tabrow{6}{$T+T$      &             & Reduce $E \rightarrow T$   }
@@ -61,16 +66,22 @@ illustrated in table \ref{table:LR2}.
 }
 
 \subsubsection{Comparison of the parsers}
-Compared to the LL-parsers the LR-parsers are more complex and they are generally harder
-to construct \cite[pp. 193]{sebesta2013}, thus by the use of automated generator tools this
-might not be the case, but we will save the analysis of how to construct a parser to the up-coming section.  
-The LR-parsers are more powerful than the LL-parsers, because they accept a bigger variety of grammars. 
-For instance LL-parsers can't handle grammars with left-recursion,
-while LR-parsers can. The ``power'' and complexity of a parser is very dependent on the number of lookahead tokens, $k$,
-the parser makes use of. The bigger k is, the more complex and difficult the parsers is to contruct, but the bigger variety of
-grammars the parser also accepts. As illustrated in \figref{fig:LL-parserandLR-parser} the LL parser is a proper subset of the LR parsers.
-The figure is taken from slides in the ``language and compiler'' course. 
+Compared to the LL-parsers, the LR-parsers are more complex and they are
+generally harder to construct,\cite[pp. 193]{sebesta2013} thus by the use of
+automated generator tools this might not be the case. We take a loot at how to 
+construct a parser in \secref{subsec:constructingaparser}. 
+
+The LR-parsers are more powerful than the LL-parsers, because they accept a
+bigger variety of grammars. For instance LL-parsers can't handle grammars with
+left-recursion, while LR-parsers can. The ``power'' and complexity of a parser
+is very dependent on the number of lookahead tokens, $k$, which the parser makes
+use of. The bigger $k$ is, the more complex and difficult the parser is to
+contruct, but the bigger variety of grammars the parser also accepts. As
+illustrated in \figref{fig:LL-parserandLR-parser} the LL-parser is a proper
+subset of the LR-parsers.
 
 \fig[width=0.75\textwidth]{LL-parserandLR-parser}{The set of grammars accepted
-by different parsers. As illustrated LR(k)-parsers are supersets of
-LL(k)-parsers for different number of lookahead tokens, $k$.}         
+by different parsers. As illustrated LL(k)-parsers are a subsets of
+LR(k)-parsers for different number of lookahead tokens, $k$. The figure is
+modified from slides presented in the ``Languages and Compilers''
+course from Aalborg University in the fall of 2013.}

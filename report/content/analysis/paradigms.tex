@@ -1,14 +1,19 @@
-\section{Programming Paradigms}
+\section{Overview of the four main programming paradigms}
 \label{sec:paradigms}
 
+In this section we will present the four main programming paradigms; imperative,
+object-oriented, declarative, and functional programming. It is not
+inconsequential to just develop a programming language before having a good
+understanding of the paradigms behind these languages. We can simplify this
+argument by saying that each paradigm has its own area of expertise.
+
 A programming paradigm describes a method and style of computer programming.
-Some of the primary paradigms are imperative, object-oriented, functional and
-declarative programming. While some programming languages strictly follow one
-paradigm, there are many so-called multi-paradigm languages, that implement
-several paradigms and therefore allow multiple styles of programming. Examples
-of multi-paradigm languages include C\# and Java. It is essential for us to be
-aware of these different paradigms, since it may help us to find a good style of
-programming for the design of \productname{}.
+While some programming languages strictly follow one paradigm, there are many
+so-called multi-paradigm languages, that implement several paradigms and
+therefore allow multiple styles of programming. Examples of multi-paradigm
+languages include C\# and Java. It is essential for us to be aware of these
+different paradigms, since it may help us to find a good style of programming
+for the design of \productname{}.
 
 \subsection{Overview}
 The four main paradigms are described as follows:\cite{fourparadigms}
@@ -40,13 +45,18 @@ The four main paradigms are described as follows:\cite{fourparadigms}
   possible to apply functional programming concepts to many other languages.
 \end{description}
 
-\todo{rewrite ending}
-%While general-purpose languages, such as C\# and Java, generally tend to lean
-%towards the imperative and object-oriented paradigms, a domain-specific
-%language, with very specific goals in design, may benefit from other paradigms,
-%e.g. declarative programming. Since our language is primarily meant for \emph{
-%declaring} board games, it would likely benefit from being a declarative
-%programming language. Based on this we have set up some requirements in the
-%requirement list in \chapref{chap:requirements} which indicates that we want
-%\productname{} to become a declarative programming language.  
+
+While general-purpose languages such as C\# and Java generally tend to lean
+towards the imperative and object-oriented paradigms, a domain-specific
+language with very specific goals in design may benefit from other paradigms,
+e.g. declarative programming. We want to be able to have complete control
+over state changes in board games so following the functional paradigm
+and preventing side-effects will make it easier to manage state changes
+and the movement history of a game. Also, the object-oriented paradigm,
+has proved to be very useful for describing many real-word systems. Allowing
+the use of classes and objects may make it easier to create board games
+(e.g. an instance of class \emph{Board} consists of many \emph{Squares} 
+containing \emph{Pieces} belonging to \emph{Players}). Combining these two
+paradigms we will get a functional object-oriented programming language
+for describing board games.
 

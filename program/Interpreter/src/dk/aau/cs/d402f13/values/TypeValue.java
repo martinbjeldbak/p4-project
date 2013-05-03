@@ -20,7 +20,6 @@ import dk.aau.cs.d402f13.utilities.errors.TypeError;
 public class TypeValue extends Value {
   private HashMap<String, Member> members = new HashMap<String, Member>();
   private HashMap<String, Member> attributes = new HashMap<String, Member>();
-  private HashMap<String, Value> staticMembers = new HashMap<String, Value>();
   private String[] formalParameters;
   private String name;
   private String varParams = null;
@@ -173,13 +172,12 @@ public class TypeValue extends Value {
   public Member getTypeMember(String name) {
     return members.get(name);
   }
-  
+
   public void addTypeMember(String name, Member member) {
     members.put(name, member);
   }
   
   public void addAttribute(String name, Member member) {
-    System.out.println("add: " + name);
     attributes.put(name, member);
   }
   
@@ -204,7 +202,7 @@ public class TypeValue extends Value {
     }
     else {
       ObjectValue ret;
-      // Initialize object attributes
+      // Initialize constructor arguments
       for (int i = 0; i < formalParameters.length; i++) {
         interpreter.getSymbolTable().addVariable(formalParameters[i], actualParameters[i]);
       }
@@ -219,25 +217,20 @@ public class TypeValue extends Value {
       // Find parent
       ensureSuperType(interpreter);
       if (parentCallable != null) {
-        ret = new ObjectValue(this, scope, parentCallable.call(interpreter));
+        ret = new ObjectValue(interpreter, this, scope, parentCallable.call(interpreter), actualParameters);
       }
       else if (parent == null) {
-        ret = new ObjectValue(this, scope);
+        ret = new ObjectValue(interpreter, this, scope, actualParameters);
       }
       else {
         Value[] parentParams = ((ListValue)interpreter.visit(parentConstructor)).getValues();
-        ret = new ObjectValue(this, scope, parent.getInstance(interpreter, parentParams));
+        ret = new ObjectValue(interpreter, this, scope, parent.getInstance(interpreter, parentParams), actualParameters);
       }
       ret.setScope(new Scope(scope, ret));
       interpreter.getSymbolTable().openScope(ret.getScope());
-      // Initialize members
-      for (Entry<String, Member> e : members.entrySet()) {
-        ret.addMember(e.getKey(), e.getValue().getValue(interpreter));
-      }
       // Initialize attributes
       for (Entry<String, Member> e : attributes.entrySet()) {
-        System.out.println("eval: " + e.getValue());
-        ret.addAttribute(e.getKey(), e.getValue().getValue(interpreter));
+        ret.addAttribute(e.getKey(), new MemberValue(e.getValue()));
       }
       interpreter.getSymbolTable().closeScope();
       interpreter.getSymbolTable().closeScope();
@@ -258,19 +251,22 @@ public class TypeValue extends Value {
     return parameter.as(type);
   }
 
+  public static Value[] expect(TypeValue type, Value ... parameters) throws StandardError {
+    Value[] casted = new Value[parameters.length];
+    for (int i = 0; i < parameters.length; i++) {
+      if (!parameters[i].is(type)) {
+        throw new TypeError("Invalid type for value, expected " + type.toString());
+      }
+      casted[i] = parameters[i].as(type); 
+    }
+    return casted;
+  }
+
   public static Value expect(Value[] parameters, int i, TypeValue type) throws StandardError {
     if (!parameters[i].is(type)) {
       throw new TypeError("Invalid type for argument #" + i + ", expected " + type.toString());
     }
     return parameters[i].as(type);
-  }
-
-  public Value getStaticMember(String member) {
-    return staticMembers.get(member);
-  }
-  
-  public void addStaticMember(String member, Value value) {
-    staticMembers.put(member, value);
   }
 
   public String getName() {
