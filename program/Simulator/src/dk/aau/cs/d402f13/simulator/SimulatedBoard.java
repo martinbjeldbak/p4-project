@@ -9,6 +9,9 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
+import widgets.Message;
+import widgets.SceneObject;
+
 import dk.aau.cs.d402f13.utilities.types.Action;
 import dk.aau.cs.d402f13.utilities.types.MoveAction;
 import dk.aau.cs.d402f13.utilities.types.Piece;
@@ -21,7 +24,7 @@ import dk.aau.cs.d402f13.utilities.types.Square;
  * @author Spiller
  *
  */
-public abstract class SimulatedBoard {
+public abstract class SimulatedBoard extends SceneObject {
 	protected SimulatedGame game;
 	
 	protected List<Square> hintSquares = new ArrayList<Square>();
@@ -31,13 +34,29 @@ public abstract class SimulatedBoard {
 	protected int dragStartY = 0;
 	protected int dragOffsetX = 0;
 	protected int dragOffsetY = 0;
-
+	
+	private Message waitForPlayer = null;
+	private ActionSelector actionSelector = null;
+	
+	
 	/**
 	 * Constructs a SimulatedBoard
 	 * @param game SimulatedGame to visualize
 	 */
 	public SimulatedBoard( SimulatedGame game ){
+		scaleWidth( 0 );
+		scaleHeight( 0 );
 		this.game = game;
+		actionSelector = new ActionAi( game );
+		
+	//	addObject( new Message( "test", "test2", 0,0, width, height ));
+		waitForPlayer = new Message( "Please wait...", "Opponent ponders over his move", 0,0, getWidth(), getHeight() );
+		waitForPlayer.startListening( this );
+	}
+	
+	public void setError( String title, String text ){
+		Message msg = new Message( title, text, 0,0, getWidth(), getHeight() ); 
+		addObject( msg );
 	}
 	
 	/**
@@ -72,9 +91,14 @@ public abstract class SimulatedBoard {
 	 * @param button The mouse button pressed
 	 * @param x Horizontal position of the click
 	 * @param y Vertical position of the click
+	 * @return 
 	 */
-	public void mouseClicked( int button, int x, int y ){
-        if( button == Input.MOUSE_LEFT_BUTTON ){
+	@Override
+	public boolean mouseClicked( int button, int x, int y ){
+        if( super.mouseClicked( button, x, y ) )
+        	return true;
+		
+		if( button == Input.MOUSE_LEFT_BUTTON ){
 	    	Square s = findSquare(x, y);
 	    	List<Action> actions = game.getGame().actions();
 	    	
@@ -148,7 +172,10 @@ public abstract class SimulatedBoard {
 		        		selected = s;
 		        }
 	    	}
+	    	return true;
         }
+        else
+        	return false;
 	}
 	
 	/**
@@ -158,11 +185,18 @@ public abstract class SimulatedBoard {
 	 * @param newx New horizontal position of mouse pointer
 	 * @param newy New vertical position of mouse pointer
 	 */
-	public void mouseDragged( int oldx, int oldy, int newx, int newy ){
+	@Override
+	public boolean mouseDragged( int oldX, int oldY, int newX, int newY ){
+		if( super.mouseDragged( oldX, oldY, newX, newY ) )
+			return true;
+		
 		if( dragged != null ){
-			dragOffsetX += newx - oldx;
-			dragOffsetY += newy - oldy;
+			dragOffsetX += newX - oldX;
+			dragOffsetY += newY - oldY;
+			return true;
 		}
+		else
+			return false;
 	}
 	
 	/**
@@ -171,7 +205,11 @@ public abstract class SimulatedBoard {
 	 * @param x Horizontal position of mouse pointer
 	 * @param y Vertical position of mouse pointer
 	 */
-	public void mouseReleased( int button, int x, int y ){
+	@Override
+	public boolean mouseReleased( int button, int x, int y ){
+		if( super.mouseReleased( button, x, y ) )
+			return true;
+		
 		if( button == Input.MOUSE_LEFT_BUTTON ){
 			if( dragged != null ){
 				Square end = findSquare( dragStartX + dragOffsetX, dragStartY + dragOffsetY );
@@ -191,6 +229,7 @@ public abstract class SimulatedBoard {
 		}
 
 		dragged = null;
+		return true;
 	}
 	
 	/**
@@ -206,14 +245,25 @@ public abstract class SimulatedBoard {
 			for( Action a : actions )
 				ActionHelper.debugAction( a );
 		}
-		if( actions.size() == 0 )
+		if( actions.size() == 0 ){
 			System.out.println( "No actions found !!!" );
 			//TODO: throw exception
+			setError( "No actions found!", "Something went very wrong :\\" );
+			return;
+		}
 		
 		//Apply the action and remove hints
 		game.getGame().applyAction( actions.get(0) );
     	selected = null;
     	hintSquares.clear();
+    	
+    	if( game.getGame().players().get(0) == game.getGame().currentPlayer() ){
+    		removeObject( waitForPlayer );
+    	}
+    	else{
+    		addObject( waitForPlayer );
+    		actionSelector.retriveAction( this );
+    	}
 	}
 	
 	/**
@@ -236,8 +286,8 @@ public abstract class SimulatedBoard {
 	 * @param offsetY Vertical offset of board
 	 * @throws SlickException
 	 */
-	protected void renderPiece( Graphics g, Piece p, int x, int y, int size, int offsetX, int offsetY) throws SlickException{
-		Image img = game.getImage( p.getImgPath() );
+	protected void renderPiece( Graphics g, Piece p, int x, int y, int size, int offsetX, int offsetY){
+		Image img = ResourceHandler.getImage( p.getImgPath() );
 		int imgMax = Math.max( img.getHeight(), img.getWidth() );
 		
 		int borderSize = (int) (size * 0.05);
@@ -246,10 +296,9 @@ public abstract class SimulatedBoard {
 		int imgYOffset = (int) ((imgMax - img.getHeight() ) * scale / 2);
 		int imgXOffset = (int) ((imgMax - img.getWidth() ) * scale / 2);
 		
-		img = game.getImageScaled( p.getImgPath(), scale );
+		img = ResourceHandler.getImageScaled( p.getImgPath(), scale );
 
 		img.draw( x + imgXOffset + offsetX + borderSize, y + imgYOffset + offsetY + borderSize );
-		
 	}
 	
 	/**
@@ -261,13 +310,13 @@ public abstract class SimulatedBoard {
 	 * @param size Size of Square
 	 * @throws SlickException
 	 */
-	protected void renderSquare( Graphics g, Square s, int posX, int posY, int size ) throws SlickException{
+	protected void renderSquare( Graphics g, Square s, int posX, int posY, int size ){
 		Square hover = hoversOn();
 		
 		//Draw background for square
-		Image img = game.getImage( s.getImgPath() );
+		Image img = ResourceHandler.getImage( s.getImgPath() );
 		int imgMax = Math.max(img.getWidth(), img.getHeight());
-		img = game.getImageScaled( s.getImgPath(), (float)size /(float) imgMax );
+		img = ResourceHandler.getImageScaled( s.getImgPath(), (float)size /(float) imgMax );
 		img.draw( posX, posY );
 		
 		if( s == selected ){
@@ -288,5 +337,21 @@ public abstract class SimulatedBoard {
 				g.fillRect( posX, posY, size, size );
 			}
 		}
+	}
+	
+	@Override
+	public void acceptEvent( SceneObject obj, Event event ){
+		if( event == Event.ACCEPT ){
+			removeObject( obj );
+		}
+		else if( event == Event.MOVE_GENERATED ){
+			executeActions( actionSelector.getAction() );
+		}
+	}
+
+	private void executeActions(Action action) {
+		List<Action> actions = new ArrayList<Action>();
+		actions.add( action );
+		executeActions( actions );
 	}
 }
