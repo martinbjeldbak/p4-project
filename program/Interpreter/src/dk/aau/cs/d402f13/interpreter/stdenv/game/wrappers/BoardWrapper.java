@@ -1,10 +1,10 @@
 package dk.aau.cs.d402f13.interpreter.stdenv.game.wrappers;
 
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
-import dk.aau.cs.d402f13.utilities.types.Board;
+import dk.aau.cs.d402f13.utilities.gameapi.Board;
 import dk.aau.cs.d402f13.values.ObjectValue;
 
-public class BoardWrapper extends Board {
+public class BoardWrapper implements Board {
 
   private ObjectValue object;
   
