@@ -1,24 +1,25 @@
 \subsection{Constructing a parser}
 \label{subsec:constructingaparser}
-As we described in \secref{sec:lexicalanalysis} a scanner can be generetad by a
-scanner generator tool. The same can be done for parsers. Since the principle of
-crafting parsers is very systematic there exists different automated tools to
-generate parsers with, for grammars that meets some specific standards. A
-grammar must for instance not be ambiguous otherwise the tools cannot make a
-distinct parser for the grammar. A grammar is ambiguous if a string can be
-expressed by more than one different parse tree. In the following section we
-anlyse the subjects of contructing a parser by hand and by use of a parser
-generator tool. In the end we sum up the pros and cons of each of the methods. 
+The art of crafting parsers is very systematic and therefore there are different
+automated tools to generate parsers for grammars that meet some specific
+standards. A grammar must for instance not be ambiguous otherwise the tools
+cannot make a distinct parser for the grammar. A grammar is ambiguous if a more
+than one parse tree can be constructed for a given string expressed in the
+language of that grammar. 
+
+In the following section we anlyse the elements of contructing a parser by hand
+and by use of a parser-generating tool. In the end we sum up the pros and cons
+of each of the methods. 
 
 \subsubsection{Handwritten parsers}
 \label{subsec:handwrittenparsers}
 Why would you write a parser on your own when you have automated tools for this
 job? If we were to construct our own handwritten parser, and not use the tools
 already built for this, it would provide us with a greater understanding of how
-a parser work. It is commonly known that one of the best ways to learn is from
-making mistakes and later correcting them. But there are the pitfalls in taking
+a parser works. It is commonly known that one of the best ways to learn is by
+trial and error. But there are some pitfalls in taking
 on this task. First of all we could be stumbling upon many errors in the code.
-These errors must be solved before the parser can be functional. Therefore the
+These errors must be solved before the parser can be ready. Therefore, the
 construction of the parser in this way, will be time-consuming.
 
 Programming languages evolve and their grammars can change. When this is the
@@ -29,8 +30,8 @@ because we must search through the code of the parser and correct it.
 Whenever we work on correcting existing code we are likely going to run into new
 errors that need to be resolved. This brings us to the topic of how reliable our
 handwritten parsers are. So far we have discussed that the produced code for a
-handwritten parser will be error-prone so this will naturally bring us to
-conclude that this code must be less reliable than the automated generators
+handwritten parser will be error-prone, which will naturally bring us to the
+conclusion that this code must be less reliable than the automated generators
 produced code. This is a big disadvantage because we have to be able to rely on
 the output of the parser. To check the validity of a parser, it can be given a
 set of inputs that are almost in its language but contains a small error, which
@@ -38,16 +39,25 @@ must cause the parser to reject the inputs. Additionally, a set of inputs can
 also be constructed, which is in the language, hence the parser must build a
 correct abstract syntax tree.
 
+A big advantage for handwritten parsers is that we are 100 \% sure of what is
+written in the parser and we can customise the code for our specific needs. If
+we step back and look at this from a learning perspective then this must be the
+optimal choice to take. Of course, this does not mean that there is nothing to
+be learned from using a generating tool. By using a generating tool we will
+learn to be critical against automated solutions and make decisions on whether
+or not a given tool would be optimal as a solution.
+
 \subsubsection{Generated parsers}
 \label{subsec:generatedparsers}
-There exists quite a few parser generators. To construct af parser with a
-generator the developer must input a grammar into the generator, and it will
-output a parser for that specific grammar. This can be a bit different from
-software to software but the grammar is often expressed using the Extended
-Backus Naur Form (EBNF). A context-free grammar is on EBNF if it satifies a
-certain set of rules and contains some special abilities. We will not describe
-these here, but for further information we refer to.
-\cite[152]{fischer2009} 
+To construct af parser with a generator the developer must input a grammar into
+the generator, and it will output a parser for that specific grammar. This can
+be a bit different from software to software but the grammar is often expressed
+using the Extended Backus Naur Form (EBNF). A context-free grammar is on EBNF if
+it satifies a certain set of rules and contains some special abilities. We will
+not describe these here, but for further information we refer to
+\cite{fischer2009}.
+%\cite[152]{fischer2009} 
+
 The outputted parser will be produced in the language specified by the
 generator. An example of a parser generator is the SableCC parser, which is a
 bottom-up parser generator that generates LALR(1) parsers. This generator runs
@@ -64,26 +74,39 @@ parser for us. Before we can use the software we have to figure out how to use
 it but this is not a complicated process. For every software there is some kind
 of tutorial on how to use the software.
 
-The software that generate the parsers have been under development for quite a
+The software that generates the parsers have been under development for quite a
 while and therefore the developers are using efficient algorithms to implement
-the parsers. This means that the parser we construct by hand will not be as fast
-and reliable as the ones generated by the software - unless the programmer is
-very experienced with a wide knowledge base about this subject. Maintenance of
-the parser is also much easier because everything is machine-produced and can
-easily be changed to correspond with a grammar if it has been changed.
+the parsers. This means that the parser we construct by hand will most likely
+not be as fast and reliable as the ones generated by the software - unless the
+programmer is very experienced with a wide knowledge base about this subject.
+Maintenance of the parser is also much easier because everything is
+machine-produced and can easily be changed to correspond with a grammar if it
+has been changed.
 
-\subsection{Summary}
+Though, a disadvantage for the generated parsers is that there will be produce a
+huge amount of code. To sit down and go through it all would be a daunting task.
+We could call this produced code for a black box because we really don't know
+what is inside it and how it works - it just does.
+
+\subsection{Summary of constructing parsers}
 \label{subsec:summary-parser}
 From the above section about handwritten parser and parser generators we
 conclude the following advantages and disadvantages for handwriting a parser and
 generating a parser by a parser generator tool:
 
 \begin{dlist}
-  \item Handwriting a parser means we gain a better understanding of how the parser work
-  \item Both handwritten parsers and generated parsers are time-consuming to construct
-  \item Handwritten parsers are more time-consuming to maintain than generated parsers
+  \item Handwriting a parser means we gain a better understanding of how the
+    parser work
+  \item handwriting a parser gives us the opportunity to customise the code
+    specifically for our needs.
+  \item Both handwritten parsers and generated parsers are time-consuming to
+    construct
+  \item Handwritten parsers are more time-consuming to maintain than generated
+    parsers
   \item Handwritten parsers are less reliable than generated parsers
   \item Handwritten parsers are slower than generated parsers
+  \item A generated parser is like a black box - we don't really know how it
+    works.
 \end{dlist}
 
 It is clear from the above list that there are many benefits in using a parser
@@ -91,5 +114,6 @@ generator tool to construct a parser. It will be much easier to reach our goal
 by using such as tool and gaining experience in how they work can be a valuable
 skill. But we believe that it is also very important to gain experience in
 writting parsers ourself and knowledge on how they work from the beginning to
-the end.  Therefore we think it would be beneficial to both write a parser by
-hand and generate a parser with a parser generator tool as well.
+the end. Furthermore, we can customise the code specifically for our needs.
+Therefore, we believe it will be beneficial to both write a parser by hand and
+generate a parser with a parser generator tool as well.
