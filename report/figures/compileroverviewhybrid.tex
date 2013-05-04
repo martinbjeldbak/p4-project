@@ -5,7 +5,7 @@
         \node[punktchain, join,] (sprog) {Source program};
         \node[punktchain, join] (leana) {Lexical analyser};
         \node[punktchain, join] (syana) {Syntax analyser};
-	\node[punktchain, join] (seana) {Semantic analyser};
+	\node[punktchain, join] (seana) {Intermediate code generator};
 	\node[punktchain, join,] (interp) {Interpreter};
 	
 	\begin{scope}[start branch=venstre, every join/.style={->, thick, shorten <=1pt}, ]
@@ -20,11 +20,12 @@
   
   	\draw[tuborg, decoration={brace}] let 
   	      \p1=(syana.south), \p2=(seana.north) in
-    	      ($(1.2, \y1)$) -- ($(1.2, \y2)$) node[tubnode] {Abstract syntax tree};
+    	      ($(1.2, \y1)$) -- ($(1.2, \y2)$) node[tubnode] {Abstract syntax
+	      tree};
   
   	\draw[tuborg, decoration={brace}] let 
   	      \p1=(seana.south), \p2=(interp.north) in
-    	      ($(1.2, \y1)$) -- ($(1.2, \y2)$) node[tubnode] {Decorated abstract syntax tree};
+    	      ($(1.2, \y1)$) -- ($(1.2, \y2)$) node[tubnode] {Intermediate code};
       \end{tikzpicture}}
   \end{center}
   \capt{The different phases of a hybrid implementation systems. Based on
