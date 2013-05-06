@@ -19,6 +19,7 @@ public class PieceWrapper extends Wrapper implements Piece {
   public PieceWrapper(GameEnvironment env, Value object) throws StandardError {
     super(env, object);
     image = getMemberString("image");
+    onBoard = getMemberBoolean("onBoard");
   }
   
   @Override
