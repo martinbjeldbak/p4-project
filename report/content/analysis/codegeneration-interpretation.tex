@@ -1,11 +1,11 @@
 \section{The phase of interpretion and generation of code}
 \label{sec:codegenerationandinterpretation}
 
-In this section we present a brief overview of the phases of translators. Along with the design of the programming
-language \productname{}, we also want to make it possible for programmers who
-write games in \productname{} to actually play them afterwards. There are a
-number of ways we can make that happen. These are presented in the folllowing
-sections. 
+In this section we present a brief overview of the phases of translators. Along
+with the design of the programming language \productname{}, we also want to make
+it possible for programmers who write games in \productname{} to actually play
+them afterwards. There are a number of ways we can make that happen. These are
+presented in the folllowing sections. 
 
 We begin by presenting the translation process followed by a presentation of
 what an intermediate language (IL) is and what it is good for. In the subsequent
@@ -31,14 +31,12 @@ followed by a short summary.
 %section we describe the following phases: the lexical analysis, the syntax
 %analysis, the semantic analysis, the code generation and the interpretation.
 
-%\input{figures/compileroverview}
-
 \subsection{Intermediate language}
 \label{sec:intermediatelanguage}
-A middle step between compiling and interpretation is to translate source code to an
-intermediate language which is then interpreted further. The IL could be more
-low-level than the initial source code which would make it possible to optimize the code for higher
-efficiency.
+A middle step between compiling and interpretation is to translate source code
+to an IL which is then interpreted further. The IL could be more low-level than
+the initial source code which would make it possible to optimize the code for
+higher efficiency.
 
 The intermediate format could be stored as an archive file which contains not
 only the code, but also sounds, images and other resources required to play a game. 
@@ -58,6 +56,17 @@ aspects, a game engine containing all the common aspects such as user interface,
 AI and/or network connection would most likely be written. This engine would
 then be included directly in the executable.
 
+The translation process is typically not a simple task, therefore it is often
+split into different phases, which is shown in \figref{fig:compileroverview}.
+The process can be split into more or less phases though, depending on how
+detailed one wished to describe the process. In \figref{fig:compileroverview}
+the lexical and syntax analyser make a lookup in a symbol table. Then the
+semantic analyser and the code generator use the symbol table to generate the
+correct code. Optimisation is optional in the phase of semantic analysis.
+\cite[p. 46]{sebesta2013}
+
+\input{figures/compileroverview}
+
 An obvious disadvantage is that the executable is platform dependant and it
 would therefore be necessary to develop a new compiler for each platform we want
 to support. On the other hand knowing the specific platform makes it possible to
@@ -72,6 +81,8 @@ course adds an overhead, however the speed differences are not that great
 anymore.
 \cite{java-speed}
 
+\todo{why is that?}
+
 \subsection{Interpretation}
 \label{sec:interpretation}
 An interpreter takes the original source code and executes each instruction at
@@ -85,16 +96,16 @@ while techniques such as JIT exists to improve this, it is beyond the scope of
 this project.
 
 A pure interpretation of a program lies at the opposite end from compilation in
-regard to methods of implementation. With this approach which can be seen in
+regard to methods of implementation. With this approach, which is illustrated in
 \figref{fig:compileroverviewinterpretation}, no translation is performed at all.
 
 \input{figures/compileroerviewinterpretation}
 
 An interpreter is interpreting a program written in the targeted language. It
-acts like a virtual machine where instructions are statements of a high level
+acts like a virtual machine where instructions are statements of a high-level
 language. By purely using interpretation a source code debugger can easily be
 implemented. Various errors that might occur can once they are detected easily
-refer to which place in the source code which caused the error. The debugging is
+refer to the location of faulty source code that caused the error. The debugging is
 eased because the interpreter works like a software implementation of a virtual
 machine, thus the state of the machine and the value of a specific variable can
 be outputted at any time when requested. This will of course lead to the
@@ -122,13 +133,13 @@ of Java Virtual Machine.
 Keeping the game and the engine separated opens up for the possibility of
 changing the game engine while still being able to use the same game. 
 
-One major advantage is that it is possible to update the engine and in result,
-update all your games.  An update which improves the graphics or adds new
-features such as network support would work with older games instantly, without
-having to wait for the developer to update it.  If the developer no longer
-maintains the game, a updated version might never come out.
+One major advantage is that it is possible to update the engine and in result
+update all your games. An update which improves the graphics or adds new
+features such as network support would work with older games instantly without
+having to wait for the developer to update it. If the developer no longer
+maintains the game an updated version might never come out.
 
-The disadvantage with this is however that the responsibility for maintaining
+The disadvantage is however that the responsibility for maintaining
 compatibility is moved from the developer of the game to the developers of the
 engine. A game developer can simply change his program so it works with a new
 engine, however the engine developers would have to support games written for
