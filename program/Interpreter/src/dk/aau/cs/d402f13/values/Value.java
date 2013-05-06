@@ -233,7 +233,7 @@ public abstract class Value implements Cloneable {
     Value v = getMember(name);
     if (!v.is(type)) {
       throw new TypeError("Invalid type " + v.getType().getName()
-          + " for member " + name + " in object of type "
+          + " for member '" + name + "' in object of type "
           + this.getType().getName() + ", expected " + type.getName());
     }
     return v;
@@ -267,8 +267,8 @@ public abstract class Value implements Cloneable {
   public Value[] getMemberList(String name, int minLength) throws StandardError {
     Value[] list = getMemberList(name);
     if (list.length < minLength) {
-      throw new TypeError("Invalid length of list in member "
-        + name + " in object of type " + this.getType().getName()
+      throw new TypeError("Invalid length of list in member '"
+        + name + "' in object of type " + this.getType().getName()
         + ", expected at least " + minLength);
     }
     return list;
@@ -279,8 +279,8 @@ public abstract class Value implements Cloneable {
     for (Value v : list) {
       if (!v.is(type)) {
         throw new TypeError("Invalid type " + v.getType().getName()
-          + " for value of list in member " + name
-          + " in object of type " + this.getType().getName()
+          + " for value of list in member '" + name
+          + "' in object of type " + this.getType().getName()
           + ", expected " + type.getName());
       } 
     }
@@ -292,8 +292,84 @@ public abstract class Value implements Cloneable {
     for (Value v : list) {
       if (!v.is(type)) {
         throw new TypeError("Invalid type " + v.getType().getName()
-          + " for value of list in member " + name
-          + " in object of type " + this.getType().getName()
+          + " for value of list in member '" + name
+          + "' in object of type " + this.getType().getName()
+          + ", expected " + type.getName());
+      } 
+    }
+    return list;
+  }
+  
+  public Value callMember(String name, Interpreter interpreter, Value ... actualParameters) throws StandardError {
+    FunValue func = (FunValue)getMemberAs(name, FunValue.type());
+    return func.call(interpreter, actualParameters);
+  }
+  
+  public Value callMember(String name, TypeValue type, Interpreter interpreter, Value ... actualParameters) throws StandardError {
+    Value v = callMember(name, interpreter, actualParameters);
+    if (!v.is(type)) {
+      throw new TypeError("Invalid type " + v.getType().getName()
+          + " for member '" + name + "' in object of type "
+          + this.getType().getName() + ", expected " + type.getName());
+    }
+    return v;
+  }
+  
+  public Value callMemberAs(String name, TypeValue type, Interpreter interpreter, Value ... actualParameters) throws StandardError {
+    Value v = callMember(name, type, interpreter, actualParameters);
+    return v.as(type);
+  }
+  
+  public String callMemberString(String name, Interpreter interpreter, Value ... actualParameters) throws StandardError {
+    return ((StrValue)callMemberAs(name, StrValue.type(), interpreter, actualParameters)).getValue();
+  }
+  
+  public int callMemberInt(String name, Interpreter interpreter, Value ... actualParameters) throws StandardError {
+    return ((IntValue)callMemberAs(name, IntValue.type(), interpreter, actualParameters)).getValue();
+  }
+  
+  public boolean callMemberBoolean(String name, Interpreter interpreter, Value ... actualParameters) throws StandardError {
+    return (BoolValue)callMemberAs(name, IntValue.type(), interpreter, actualParameters) == BoolValue.trueValue();
+  }
+  
+  public CoordValue callMemberCoord(String name, Interpreter interpreter, Value ... actualParameters) throws StandardError {
+    return (CoordValue)callMemberAs(name, ListValue.type(), interpreter, actualParameters);
+  }
+  
+  public Value[] callMemberList(String name, Interpreter interpreter, Value ... actualParameters) throws StandardError {
+    return ((ListValue)callMemberAs(name, ListValue.type(), interpreter, actualParameters)).getValues();
+  }
+  
+  public Value[] callMemberList(String name, int minLength, Interpreter interpreter, Value ... actualParameters) throws StandardError {
+    Value[] list = callMemberList(name, interpreter, actualParameters);
+    if (list.length < minLength) {
+      throw new TypeError("Invalid length of list in member '"
+        + name + "' in object of type " + this.getType().getName()
+        + ", expected at least " + minLength);
+    }
+    return list;
+  }
+  
+  public Value[] callMemberList(String name, TypeValue type, Interpreter interpreter, Value ... actualParameters) throws StandardError {
+    Value[] list = callMemberList(name, interpreter, actualParameters);
+    for (Value v : list) {
+      if (!v.is(type)) {
+        throw new TypeError("Invalid type " + v.getType().getName()
+          + " for value of list in member '" + name
+          + "' in object of type " + this.getType().getName()
+          + ", expected " + type.getName());
+      } 
+    }
+    return list;
+  }
+  
+  public Value[] callMemberList(String name, TypeValue type, int minLength, Interpreter interpreter, Value ... actualParameters) throws StandardError {
+    Value[] list = callMemberList(name, minLength, interpreter, actualParameters);
+    for (Value v : list) {
+      if (!v.is(type)) {
+        throw new TypeError("Invalid type " + v.getType().getName()
+          + " for value of list in member '" + name
+          + "' in object of type " + this.getType().getName()
           + ", expected " + type.getName());
       } 
     }
