@@ -14,6 +14,7 @@ public class Interpreter extends Visitor {
   
   public Interpreter(SymbolTable symbolTable) throws StandardError {
     this.symbolTable = symbolTable;
+    symbolTable.setInterpreter(this);
   }
 
   public Interpreter() throws StandardError {
@@ -165,13 +166,13 @@ public class Interpreter extends Visitor {
   @Override
   protected Value visitThis(AstNode node) throws StandardError {
     Value thisValue = symbolTable.getThis();
-    if (!(thisValue instanceof ObjectValue)) {
-      throw new NameError("Invalid use of super-keyword");
-    }
-    ObjectValue thisObject = (ObjectValue)thisValue;
-    if (thisObject == null) {
+    if (thisValue == null) {
       throw new NameError("Invalid use of this-keyword");
     }
+    if (!(thisValue instanceof ObjectValue)) {
+      throw new NameError("Invalid use of this-keyword");
+    }
+    ObjectValue thisObject = (ObjectValue)thisValue;
     return thisObject;
   }
 

@@ -8,6 +8,12 @@
      	\node[punktchain, join] (seana) {Semantic analyser};
      	\node[punktchain, join] (cgen)  {Code generator};
      	\node[punktchain, join] (mach)  {Machine};
+		
+	\begin{scope}[start branch=venstre, every join/.style={->, thick, shorten <=1pt}, ]
+	  \node[punktchain, on chain=going left, join=by {<-}] (indat) {Input data};
+      	\end{scope}
+
+	\node[punktchain, join] (res)   {Result};
      
   	\draw[tuborg, decoration={brace}] let 
   	      \p1=(leana.south), \p2=(syana.north) in

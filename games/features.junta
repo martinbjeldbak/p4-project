@@ -138,3 +138,12 @@ type B[] extends A[] {
 define main = let $b = B[] in
 [$b.next.next.getB[], $b.getB[], $b.next.ass[3].next.getB[]]
 
+
+
+type A[$test] {
+  define test = $test
+}
+
+type B[] extends A["test"]
+
+define main = B[].test
