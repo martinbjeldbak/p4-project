@@ -14,6 +14,7 @@ public class Interpreter extends Visitor {
   
   public Interpreter(SymbolTable symbolTable) throws StandardError {
     this.symbolTable = symbolTable;
+    symbolTable.setInterpreter(this);
   }
 
   public Interpreter() throws StandardError {

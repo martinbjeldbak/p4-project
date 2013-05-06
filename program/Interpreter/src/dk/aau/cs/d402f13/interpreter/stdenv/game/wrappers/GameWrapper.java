@@ -6,9 +6,9 @@ import java.util.List;
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
+import dk.aau.cs.d402f13.utilities.gameapi.Action;
 import dk.aau.cs.d402f13.utilities.gameapi.Game;
 import dk.aau.cs.d402f13.utilities.gameapi.Player;
-import dk.aau.cs.d402f13.utilities.types.Action;
 import dk.aau.cs.d402f13.values.ListValue;
 import dk.aau.cs.d402f13.values.ObjectValue;
 import dk.aau.cs.d402f13.values.TypeValue;
@@ -28,7 +28,7 @@ public class GameWrapper extends Wrapper implements Game {
   public GameWrapper(GameEnvironment env, Value object) throws StandardError {
     super(env, object);
     title = getMemberString("title");
-    board = new BoardWrapper(env, getMember("board", env.boardType()));
+    board = new BoardWrapper(env, getMember("currentBoard", env.boardType()));
     
     Value[] players = getMemberList("players", env.playerType(), 1);
     this.players = new PlayerWrapper[players.length];
@@ -71,6 +71,12 @@ public class GameWrapper extends Wrapper implements Game {
 
   @Override
   public Game applyAction(Action action) throws StandardError {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Game undoAction(Action action) throws StandardError {
     // TODO Auto-generated method stub
     return null;
   }
