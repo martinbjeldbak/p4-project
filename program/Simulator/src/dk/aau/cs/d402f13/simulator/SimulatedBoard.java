@@ -30,8 +30,6 @@ public abstract class SimulatedBoard extends SceneObject {
 	protected List<Square> hintSquares = new ArrayList<Square>();
 	protected Square selected;
 	protected Piece dragged = null;
-	protected int dragStartX = 0;
-	protected int dragStartY = 0;
 	protected int dragOffsetX = 0;
 	protected int dragOffsetY = 0;
 	
@@ -94,11 +92,8 @@ public abstract class SimulatedBoard extends SceneObject {
 	 * @return 
 	 */
 	@Override
-	public boolean mouseClicked( int button, int x, int y ){
-        if( super.mouseClicked( button, x, y ) )
-        	return true;
-		
-		if( button == Input.MOUSE_LEFT_BUTTON ){
+	protected boolean handleMouseClicked( int button, int x, int y ){
+        if( button == Input.MOUSE_LEFT_BUTTON ){
 	    	Square s = findSquare(x, y);
 	    	List<Action> actions = game.getGame().actions();
 	    	
@@ -149,9 +144,8 @@ public abstract class SimulatedBoard extends SceneObject {
 		        		
 		        		//Start drag if actions found
 		        		if( hintSquares.size() > 0 ){
+		        			startDragging( x, y );
 			        		dragged = p;
-			        		dragStartX = x;
-			        		dragStartY = y;
 			        		dragOffsetX = 0;
 			        		dragOffsetY = 0;
 			        		alignDrag();
@@ -186,17 +180,10 @@ public abstract class SimulatedBoard extends SceneObject {
 	 * @param newy New vertical position of mouse pointer
 	 */
 	@Override
-	public boolean mouseDragged( int oldX, int oldY, int newX, int newY ){
-		if( super.mouseDragged( oldX, oldY, newX, newY ) )
-			return true;
-		
-		if( dragged != null ){
-			dragOffsetX += newX - oldX;
-			dragOffsetY += newY - oldY;
-			return true;
-		}
-		else
-			return false;
+	public boolean handleMouseDragged( int oldX, int oldY, int newX, int newY ){
+		dragOffsetX += newX - oldX;
+		dragOffsetY += newY - oldY;
+		return true;
 	}
 	
 	/**
@@ -206,10 +193,7 @@ public abstract class SimulatedBoard extends SceneObject {
 	 * @param y Vertical position of mouse pointer
 	 */
 	@Override
-	public boolean mouseReleased( int button, int x, int y ){
-		if( super.mouseReleased( button, x, y ) )
-			return true;
-		
+	public boolean handleMouseReleased( int button, int x, int y ){
 		if( button == Input.MOUSE_LEFT_BUTTON ){
 			if( dragged != null ){
 				Square end = findSquare( dragStartX + dragOffsetX, dragStartY + dragOffsetY );
