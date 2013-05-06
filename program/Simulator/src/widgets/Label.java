@@ -39,7 +39,5 @@ public class Label extends SceneObject{
 		g.setFont( font() );
 		g.setColor( Color.black );
 		g.drawString( text, 0, 0 );
-		
-		super.draw( g );
 	}
 }
