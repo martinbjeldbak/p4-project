@@ -18,13 +18,13 @@ public abstract class Wrapper {
   protected GameEnvironment env;
   protected Interpreter interpreter;
 
-  public Wrapper(GameEnvironment env, ObjectValue object) {
+  public Wrapper(GameEnvironment env, ObjectValue object) throws StandardError {
     this.object = object;
     this.env = env;
     this.interpreter = env.getInterpreter();
   }
   
-  public Wrapper(GameEnvironment env, Value object) {
+  public Wrapper(GameEnvironment env, Value object) throws StandardError {
     this(env, (ObjectValue)object);
   }
   
