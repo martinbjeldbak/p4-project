@@ -1,0 +1,45 @@
+\subsection{Dynamic and static scope rules}
+
+In this section we take a quick look at the advantages and disadvantages of
+static and dynamic scoping and compare the two types of scoping.
+
+With static scoping the scopes of variables can be determined prior to
+execution. This means that a compiler can easily determine the type of every
+variable in the program by just examining the source code. So, when a variable
+is referenced in a statically scoped language the value and type of the variable 
+is the on it had at the time of declaration.
+\cite[5.5.1, p. X]{sebesta2013}
+%5.5.1, side 219 (sebesta)
+
+Static scope rules provide subprograms with access to nonlocal identifiers and
+this type of scoping works very well with compilers because the scope can be
+determined at compile time.
+\cite[5.5.5, p. X]{sebesta2013}
+%5.5.5, side 227 (sebesta)
+
+A disadvantage of static scoping is that it can give too much access and might
+need restrictions. But programs are dynamic and are often restructured which
+can lead to destruction of initial restrictions.
+\cite[5.5.5, p. X]{sebesta2013}
+%5.5.5, side 227 (sebesta)
+
+With dynamic scoping the scopes of variables can only be determine at run time
+because it is based on the calling sequence of subprograms. When a variable is
+referenced in a language with dynamic scoping then the value and type of the 
+variable is what it had on the time of the call to it.
+\cite[5.5.6, p. X]{sebesta2013}
+%5.5.6, side 227 (sebesta)
+
+It is not possible to determine scopes statically because the calling sequence
+of subprograms is not always known. When a method A calls a method B then B has 
+access to variables in that were declared in A. As a result dynamically scoped
+languages are much more difficult to read and understand and this results in
+them being less reliable.
+\cite[5.5.7, p. X]{sebesta2013}
+%5.5.7, side 229 (sebesta)
+
+Comparing two similar programs with different scoping, then the statically
+scoped program will be much easier to read, more reliable, and it will execute
+much faster than the program written with dynamic scoping.
+\cite[5.5.7, p. X]{sebesta2013}
+%5.5.7, side 229 (sebesta)
