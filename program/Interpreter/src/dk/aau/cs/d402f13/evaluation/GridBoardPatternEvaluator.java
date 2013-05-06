@@ -1,5 +1,6 @@
 package dk.aau.cs.d402f13.evaluation;
 
+import dk.aau.cs.d402f13.utilities.gameapi.GridBoard;
 import dk.aau.cs.d402f13.utilities.types.Board;
 import dk.aau.cs.d402f13.utilities.types.Game;
 import dk.aau.cs.d402f13.utilities.types.Piece;
@@ -31,6 +32,10 @@ public class GridBoardPatternEvaluator {
       }
     }
 
+
+    if(game.board() instanceof GridBoard) {
+
+    }
 
 
     return false;
