@@ -28,7 +28,7 @@ public class GameWrapper extends Wrapper implements Game {
   public GameWrapper(GameEnvironment env, Value object) throws StandardError {
     super(env, object);
     title = getMemberString("title");
-    board = new BoardWrapper(env, getMember("board", env.boardType()));
+    board = new BoardWrapper(env, getMember("currentBoard", env.boardType()));
     
     Value[] players = getMemberList("players", env.playerType(), 1);
     this.players = new PlayerWrapper[players.length];

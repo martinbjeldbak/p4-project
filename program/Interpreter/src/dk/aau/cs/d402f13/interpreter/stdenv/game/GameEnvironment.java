@@ -87,21 +87,18 @@ public class GameEnvironment extends StandardEnvironment {
     game.addTypeMember("currentPlayer", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        int i = ((IntValue)TypeValue.expect(
-            ((ObjectValue)object).getAttribute("currentPlayer"),
-            IntValue.type())).getValue();
-        Value[] players = ((ListValue)TypeValue.expect(
-            object.getMember("turnOrder"),
-            ListValue.type()
-        )).getValues();
-        if (players.length < 1) {
-          throw new TypeError("Invalid length of players-list");
-        }
-        TypeValue.expect(player, players);
+        int i = ((ObjectValue)object).getAttributeInt("currentPlayer");
+        Value[] players = object.getMemberList("turnOrder", player, 1);
         if (i >= players.length || i < 0) {
           throw new ArgumentError("Invalid player index:  + i");
         }
         return players[i];
+      }
+    }));
+    game.addTypeMember("currentBoard", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return ((ObjectValue)object).getAttribute("currentBoard");
       }
     }));
     game.addTypeMember("turnOrder", new Member(new ConstantCallable() {
@@ -157,22 +154,9 @@ public class GameEnvironment extends StandardEnvironment {
     gridBoard.addAttribute("squares", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        int width = ((IntValue)TypeValue.expect(
-            interpreter.getSymbolTable().getVariable("width"),
-            IntValue.type()
-        )).getValue();
-        int height = ((IntValue)TypeValue.expect(
-            interpreter.getSymbolTable().getVariable("height"),
-            IntValue.type()
-        )).getValue(); 
-        Value[] types = ((ListValue)TypeValue.expect(
-            object.getMember("squareTypes"),
-            ListValue.type()
-        )).getValues();
-        if (types.length < 1) {
-          throw new TypeError("Invalid length of squareTypes-list");
-        }
-        TypeValue.expect(square, types); // Expect all elements of array to be of type Square
+        int width = interpreter.getSymbolTable().getVariableInt("width");
+        int height = interpreter.getSymbolTable().getVariableInt("height");
+        Value[] types = object.getMemberList("squareTypes", square, 1);
         int size = width * height;
         Value[] squares = new Value[size];
         int x = 0, y = 0, numTypes = types.length;

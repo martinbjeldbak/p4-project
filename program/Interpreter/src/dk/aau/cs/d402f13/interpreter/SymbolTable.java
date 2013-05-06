@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import dk.aau.cs.d402f13.utilities.errors.NameError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.utilities.errors.TypeError;
 import dk.aau.cs.d402f13.values.*;
 
 /**
@@ -20,6 +21,16 @@ public class SymbolTable {
   protected HashMap<String, Value> constants = new HashMap<String, Value>();
   protected HashMap<String, TypeValue> types = new HashMap<String, TypeValue>();
   private Stack<Scope> scopeStack = new Stack<Scope>();
+  
+  private Interpreter interpreter;
+  
+  public Interpreter getInterpreter() {
+    return interpreter;
+  }
+  
+  public void setInterpreter(Interpreter interpreter) {
+    this.interpreter = interpreter;
+  }
 
   public SymbolTable() {  
   }
@@ -74,6 +85,73 @@ public class SymbolTable {
       return null;
     }
     return currentScope().getVariable(variable);
+  }
+  
+  public Value getVariable(String name, TypeValue type) throws StandardError {
+    Value v = getVariable(name);
+    if (!v.is(type)) {
+      throw new TypeError("Invalid type " + v.getType().getName()
+          + " for parameter $" + name + ", expected " + type.getName());
+    }
+    return v;
+  }
+  
+  public Value getVariableAs(String name, TypeValue type) throws StandardError {
+    Value v = getVariable(name, type);
+    return v.as(type);
+  }
+  
+  public String getVariableString(String name) throws StandardError {
+    return ((StrValue)getVariableAs(name, StrValue.type())).getValue();
+  }
+  
+  public int getVariableInt(String name) throws StandardError {
+    return ((IntValue)getVariableAs(name, IntValue.type())).getValue();
+  }
+  
+  public boolean getVariableBoolean(String name) throws StandardError {
+    return (BoolValue)getVariableAs(name, IntValue.type()) == BoolValue.trueValue();
+  }
+  
+  public CoordValue getVariableCoord(String name) throws StandardError {
+    return (CoordValue)getVariableAs(name, ListValue.type());
+  }
+  
+  public Value[] getVariableList(String name) throws StandardError {
+    return ((ListValue)getVariableAs(name, ListValue.type())).getValues();
+  }
+  
+  public Value[] getVariableList(String name, int minLength) throws StandardError {
+    Value[] list = getVariableList(name);
+    if (list.length < minLength) {
+      throw new TypeError("Invalid length of list in parameter $"
+        + name + ", expected at least " + minLength);
+    }
+    return list;
+  }
+  
+  public Value[] getVariableList(String name, TypeValue type) throws StandardError {
+    Value[] list = getVariableList(name);
+    for (Value v : list) {
+      if (!v.is(type)) {
+        throw new TypeError("Invalid type " + v.getType().getName()
+          + " for value of list in parameter $" + name
+          + ", expected " + type.getName());
+      } 
+    }
+    return list;
+  }
+  
+  public Value[] getVariableList(String name, TypeValue type, int minLength) throws StandardError {
+    Value[] list = getVariableList(name, minLength);
+    for (Value v : list) {
+      if (!v.is(type)) {
+        throw new TypeError("Invalid type " + v.getType().getName()
+            + " for value of list in parameter $" + name
+            + ", expected " + type.getName());
+      } 
+    }
+    return list;
   }
   
   /**
