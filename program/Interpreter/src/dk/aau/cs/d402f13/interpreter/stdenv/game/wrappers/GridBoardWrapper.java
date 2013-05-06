@@ -41,6 +41,7 @@ public class GridBoardWrapper extends BoardWrapper implements GridBoard {
 
   @Override
   public Square getSquareAt(int x, int y) throws StandardError {
+    // faster: i = y * width + x
     for (Square s : squares) {
       if (s.getX() == x && s.getY() == y) {
         return s;
