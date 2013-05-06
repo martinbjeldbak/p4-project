@@ -37,6 +37,46 @@ public class GameEnvironment extends StandardEnvironment {
   private final TypeValue piece = new TypeValue("Piece", false, "owner");
   private final TypeValue player = new TypeValue("Player", false);
   
+  private final AbstractTypeValue action = new AbstractTypeValue("Action", false);
+  private final TypeValue actionSequence = new TypeValue("ActionSequence", action,
+      new ParentCallable() {
+        @Override
+        public Value call(Interpreter interpreter) throws StandardError {
+          return action.getInstance(interpreter);
+        }
+      }, true, "actions");
+  private final AbstractTypeValue unitAction = new AbstractTypeValue("UnitAction", action,
+      new ParentCallable() {
+        @Override
+        public Value call(Interpreter interpreter) throws StandardError {
+          return action.getInstance(interpreter);
+        }
+      }, false, "piece");
+  private final TypeValue addAction = new TypeValue("AddAction", unitAction,
+      new ParentCallable() {
+        @Override
+        public Value call(Interpreter interpreter) throws StandardError {
+          Value v = interpreter.getSymbolTable().getVariable("piece", piece);
+          return v;
+        }
+      }, false, "piece", "to");
+  private final TypeValue removeAction = new TypeValue("RemoveAction", unitAction,
+      new ParentCallable() {
+        @Override
+        public Value call(Interpreter interpreter) throws StandardError {
+          Value v = interpreter.getSymbolTable().getVariable("piece", piece);
+          return v;
+        }
+      }, false, "piece", "from");
+  private final TypeValue moveAction = new TypeValue("MoveAction", unitAction,
+      new ParentCallable() {
+        @Override
+        public Value call(Interpreter interpreter) throws StandardError {
+          Value v = interpreter.getSymbolTable().getVariable("piece", piece);
+          return v;
+        }
+      }, false, "piece", "from", "to");
+  
   public TypeValue gameType() {
     return game;
   }
@@ -59,6 +99,30 @@ public class GameEnvironment extends StandardEnvironment {
   
   public TypeValue playerType() {
     return player;
+  }
+  
+  public TypeValue actionType() {
+    return action;
+  }
+  
+  public TypeValue actionSequenceType() {
+    return actionSequence;
+  }
+  
+  public TypeValue unitActionType() {
+    return unitAction;
+  }
+  
+  public TypeValue addActionType() {
+    return addAction;
+  }
+  
+  public TypeValue removeActionType() {
+    return removeAction;
+  }
+  
+  public TypeValue moveActionType() {
+    return moveAction;
   }
   
   public GameEnvironment() {
@@ -296,6 +360,41 @@ public class GameEnvironment extends StandardEnvironment {
         return object.endClone();
       }
     }));
+    
+    ////////////////////////////////////
+    // type: Action
+    ////////////////////////////////////
+    addType(action);
+    
+
+    ////////////////////////////////////
+    // type: ActionSequence
+    ////////////////////////////////////
+    addType(actionSequence);
+
+    
+    ////////////////////////////////////
+    // type: UnitAction
+    ////////////////////////////////////
+    addType(unitAction);
+
+    
+    ////////////////////////////////////
+    // type: AddAction
+    ////////////////////////////////////
+    addType(addAction);
+
+    
+    ////////////////////////////////////
+    // type: RemoveAction
+    ////////////////////////////////////
+    addType(removeAction);
+
+    
+    ////////////////////////////////////
+    // type: MoveAction
+    ////////////////////////////////////
+    addType(moveAction);
   }
   
   /**
