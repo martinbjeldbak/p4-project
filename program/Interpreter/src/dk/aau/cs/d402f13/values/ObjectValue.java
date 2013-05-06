@@ -77,16 +77,6 @@ public class ObjectValue extends Value implements Cloneable {
     return getObjectMember(member);
   }
   
-  public Value getMember(String member, TypeValue type) throws StandardError {
-    Value value = getMember(member);
-    if (!value.is(type)) {
-      throw new TypeError("Invalid type for member " + member
-          + " of object of type " + this.type.toString()
-          + ", expected " + type.toString());
-    }
-    return value;
-  }
-  
   public Value getAttribute(String attribute) throws StandardError {
     Value value = attributes.get(attribute);
     if (value == null) {

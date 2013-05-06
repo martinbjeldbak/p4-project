@@ -78,6 +78,12 @@ public class GameEnvironment extends StandardEnvironment {
         return new IntValue(0);
       }
     }));
+    game.addAttribute("currentBoard", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return object.getMember("board", board);
+      }
+    }));
     game.addTypeMember("currentPlayer", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
@@ -283,6 +289,29 @@ public class GameEnvironment extends StandardEnvironment {
     // type: Square
     ////////////////////////////////////
     addType(square);
+    
+    square.addAttribute("position", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return new CoordValue(1, 1);
+      }
+    }));
+    square.addTypeMember("position", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return ((ObjectValue)object).getAttribute("position");
+      }
+    }));
+    square.addTypeMember("setPosition", new Member(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
+        TypeValue.expect(actualParameters, 0, CoordValue.type());
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        object.beginClone();
+        object.setAttribute("position", actualParameters[0]);
+        return object.endClone();
+      }
+    }));
   }
   
   /**
