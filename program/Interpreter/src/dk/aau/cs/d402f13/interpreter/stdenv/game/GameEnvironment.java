@@ -1,5 +1,6 @@
 package dk.aau.cs.d402f13.interpreter.stdenv.game;
 
+import java.lang.reflect.Array;
 import java.util.Map.Entry;
 
 import dk.aau.cs.d402f13.interpreter.AbstractMember;
@@ -57,7 +58,7 @@ public class GameEnvironment extends StandardEnvironment {
         @Override
         public Value call(Interpreter interpreter) throws StandardError {
           Value v = interpreter.getSymbolTable().getVariable("piece", piece);
-          return v;
+          return unitAction.getInstance(interpreter, v);
         }
       }, false, "piece", "to");
   private final TypeValue removeAction = new TypeValue("RemoveAction", unitAction,
@@ -65,7 +66,7 @@ public class GameEnvironment extends StandardEnvironment {
         @Override
         public Value call(Interpreter interpreter) throws StandardError {
           Value v = interpreter.getSymbolTable().getVariable("piece", piece);
-          return v;
+          return unitAction.getInstance(interpreter, v);
         }
       }, false, "piece", "from");
   private final TypeValue moveAction = new TypeValue("MoveAction", unitAction,
@@ -73,7 +74,7 @@ public class GameEnvironment extends StandardEnvironment {
         @Override
         public Value call(Interpreter interpreter) throws StandardError {
           Value v = interpreter.getSymbolTable().getVariable("piece", piece);
-          return v;
+          return unitAction.getInstance(interpreter, v);
         }
       }, false, "piece", "from", "to");
   
@@ -371,30 +372,79 @@ public class GameEnvironment extends StandardEnvironment {
     // type: ActionSequence
     ////////////////////////////////////
     addType(actionSequence);
+    actionSequence.addTypeMember("actions", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return new ListValue(interpreter.getSymbolTable().getVariableList("actions", unitAction, 1));
+      }
+    }));
+    actionSequence.addTypeMember("addAction", new Member(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
+        TypeValue.expect(actualParameters, 0, unitAction);
+        Value[] actions = interpreter.getSymbolTable().getVariableList("actions", unitAction, 1);
+        Value[] actionsAfter = new Value[actions.length + 1];
+        for (int i = 0; i < actions.length; i++) {
+          actionsAfter[i] = actions[i];
+        }
+        actionsAfter[actions.length] = actualParameters[0];
+        return actionSequence.getInstance(interpreter, actionsAfter);
+      }
+    }));
 
     
     ////////////////////////////////////
     // type: UnitAction
     ////////////////////////////////////
     addType(unitAction);
+    unitAction.addTypeMember("piece", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return interpreter.getSymbolTable().getVariable("piece", piece);
+      }
+    }));
 
     
     ////////////////////////////////////
     // type: AddAction
     ////////////////////////////////////
     addType(addAction);
+    addAction.addTypeMember("to", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return interpreter.getSymbolTable().getVariable("to", square);
+      }
+    }));
 
     
     ////////////////////////////////////
     // type: RemoveAction
     ////////////////////////////////////
     addType(removeAction);
+    removeAction.addTypeMember("from", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return interpreter.getSymbolTable().getVariable("from", square);
+      }
+    }));
 
     
     ////////////////////////////////////
     // type: MoveAction
     ////////////////////////////////////
     addType(moveAction);
+    moveAction.addTypeMember("to", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return interpreter.getSymbolTable().getVariable("to", square);
+      }
+    }));
+    moveAction.addTypeMember("from", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return interpreter.getSymbolTable().getVariable("from", square);
+      }
+    }));
   }
   
   /**
