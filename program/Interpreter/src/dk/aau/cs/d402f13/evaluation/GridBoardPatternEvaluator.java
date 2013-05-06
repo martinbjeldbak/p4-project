@@ -9,12 +9,12 @@ import dk.aau.cs.d402f13.values.PatternValue;
 
 import java.util.List;
 
-public class PatternEvaluator {
+public class GridBoardPatternEvaluator {
   private final CoordValue coord;
   private final PatternValue pattern;
   private final Game game;
 
-  public PatternEvaluator(CoordValue coord, PatternValue pattern, Game game) {
+  public GridBoardPatternEvaluator(CoordValue coord, PatternValue pattern, Game game) {
     this.coord = coord;
     this.pattern = pattern;
     this.game = game;
