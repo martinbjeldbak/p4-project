@@ -228,6 +228,77 @@ public abstract class Value implements Cloneable {
     }
     throw new NameError("Undefined member: " + member);
   }
+  
+  public Value getMember(String name, TypeValue type) throws StandardError {
+    Value v = getMember(name);
+    if (!v.is(type)) {
+      throw new TypeError("Invalid type " + v.getType().getName()
+          + " for member " + name + " in object of type "
+          + this.getType().getName() + ", expected " + type.getName());
+    }
+    return v;
+  }
+  
+  public Value getMemberAs(String name, TypeValue type) throws StandardError {
+    Value v = getMember(name, type);
+    return v.as(type);
+  }
+  
+  public String getMemberString(String name) throws StandardError {
+    return ((StrValue)getMemberAs(name, StrValue.type())).getValue();
+  }
+  
+  public int getMemberInt(String name) throws StandardError {
+    return ((IntValue)getMemberAs(name, IntValue.type())).getValue();
+  }
+  
+  public boolean getMemberBoolean(String name) throws StandardError {
+    return (BoolValue)getMemberAs(name, IntValue.type()) == BoolValue.trueValue();
+  }
+  
+  public CoordValue getMemberCoord(String name) throws StandardError {
+    return (CoordValue)getMemberAs(name, ListValue.type());
+  }
+  
+  public Value[] getMemberList(String name) throws StandardError {
+    return ((ListValue)getMemberAs(name, ListValue.type())).getValues();
+  }
+  
+  public Value[] getMemberList(String name, int minLength) throws StandardError {
+    Value[] list = getMemberList(name);
+    if (list.length < minLength) {
+      throw new TypeError("Invalid length of list in member "
+        + name + " in object of type " + this.getType().getName()
+        + ", expected at least " + minLength);
+    }
+    return list;
+  }
+  
+  public Value[] getMemberList(String name, TypeValue type) throws StandardError {
+    Value[] list = getMemberList(name);
+    for (Value v : list) {
+      if (!v.is(type)) {
+        throw new TypeError("Invalid type " + v.getType().getName()
+          + " for value of list in member " + name
+          + " in object of type " + this.getType().getName()
+          + ", expected " + type.getName());
+      } 
+    }
+    return list;
+  }
+  
+  public Value[] getMemberList(String name, TypeValue type, int minLength) throws StandardError {
+    Value[] list = getMemberList(name, minLength);
+    for (Value v : list) {
+      if (!v.is(type)) {
+        throw new TypeError("Invalid type " + v.getType().getName()
+          + " for value of list in member " + name
+          + " in object of type " + this.getType().getName()
+          + ", expected " + type.getName());
+      } 
+    }
+    return list;
+  }
 
   /** {@inheritDoc} */
   @Override

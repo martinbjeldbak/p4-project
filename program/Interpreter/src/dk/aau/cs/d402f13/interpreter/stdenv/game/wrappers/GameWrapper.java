@@ -75,4 +75,10 @@ public class GameWrapper extends Wrapper implements Game {
     return null;
   }
 
+  @Override
+  public Game undoAction(Action action) throws StandardError {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
 }

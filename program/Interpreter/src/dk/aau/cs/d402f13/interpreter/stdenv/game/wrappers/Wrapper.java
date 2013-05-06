@@ -38,72 +38,42 @@ public abstract class Wrapper {
   }
   
   protected Value getMember(String name, TypeValue type) throws StandardError {
-    Value v = getMember(name);
-    if (!v.is(type)) {
-      throw new TypeError("Invalid type " + v.getType().getName()
-          + " for member " + name + " of object of type " + object.getType().getName());
-    }
-    return v;
+    return object.getMember(name, type);
   }
   
   protected Value getMemberAs(String name, TypeValue type) throws StandardError {
-    Value v = getMember(name, type);
-    return v.as(type);
+    return object.getMemberAs(name, type);
   }
   
   protected String getMemberString(String name) throws StandardError {
-    return ((StrValue)getMemberAs(name, StrValue.type())).getValue();
+    return object.getMemberString(name);
   }
   
   protected int getMemberInt(String name) throws StandardError {
-    return ((IntValue)getMemberAs(name, IntValue.type())).getValue();
+    return getMemberInt(name);
   }
   
   protected boolean getMemberBoolean(String name) throws StandardError {
-    return (BoolValue)getMemberAs(name, IntValue.type()) == BoolValue.trueValue();
+    return getMemberBoolean(name);
   }
   
   protected CoordValue getMemberCoord(String name) throws StandardError {
-    return (CoordValue)getMemberAs(name, ListValue.type());
+    return getMemberCoord(name);
   }
   
   protected Value[] getMemberList(String name) throws StandardError {
-    return ((ListValue)getMemberAs(name, ListValue.type())).getValues();
+    return getMemberList(name);
   }
   
   protected Value[] getMemberList(String name, int minLength) throws StandardError {
-    Value[] list = getMemberList(name);
-    if (list.length < minLength) {
-      throw new TypeError("Invalid length of list in member "
-        + name + " of object of type " + object.getType().getName()
-        + ", expected at least " + minLength);
-    }
-    return list;
+    return getMemberList(name, minLength);
   }
   
   protected Value[] getMemberList(String name, TypeValue type) throws StandardError {
-    Value[] list = getMemberList(name);
-    for (Value v : list) {
-      if (!v.is(type)) {
-        throw new TypeError("Invalid type " + type.getName()
-          + "for value of list in member " + name
-          + " of object of type " + object.getType().getName()
-          + ", expected " + type);
-      } 
-    }
-    return list;
+    return getMemberList(name, type);
   }
   
   protected Value[] getMemberList(String name, TypeValue type, int minLength) throws StandardError {
-    Value[] list = getMemberList(name, minLength);
-    for (Value v : list) {
-      if (!v.is(type)) {
-        throw new TypeError("Invalid type " + type.getName()
-          + "for value of list in member " + name
-          + " of object of type " + object.getType().getName()
-          + ", expected " + type);
-      } 
-    }
-    return list;
+    return getMemberList(name, type, minLength);
   }
 }
