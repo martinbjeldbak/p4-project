@@ -49,12 +49,12 @@ public class Message extends SceneObject {
 	}
 
 	@Override
-	public boolean mouseClicked( int button, int x, int y ){
+	protected boolean handleMouseClicked( int button, int x, int y ){
 		createEvent( Event.ACCEPT );
 		return true;
 	}
 	@Override
-	public boolean mouseReleased( int button, int x, int y ){
+	protected boolean handleMouseReleased( int button, int x, int y ){
 		return true;
 	}
 }
