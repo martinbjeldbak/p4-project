@@ -14,6 +14,10 @@ public class SceneObject {
 	private int minWidth = 0, minHeight = 0;
 	private int maxWidth = 0, maxHeight = 0;
 	
+	protected boolean dragging = false;
+	protected int dragStartX = 0;
+	protected int dragStartY = 0;
+	
 	protected List<SceneObject> objects = new ArrayList<SceneObject>();
 	private List<SceneObject> listeners = new ArrayList<SceneObject>();
 
@@ -25,7 +29,6 @@ public class SceneObject {
 	public int getMinWidth(){ return minWidth; }
 	public int getMinHeight(){ return minHeight; }
 	public int getMaxWidth(){ return maxWidth; }
-	public int getMaxHeight(){ return maxHeight; }
 	
 	public void adjustSizes(){
 		for( SceneObject o : objects )
@@ -71,6 +74,27 @@ public class SceneObject {
 		return true;
 	}
 	
+	public int getMaxHeight(){ return maxHeight; }
+	
+	protected void startDragging( int x, int y ){
+		dragging = true;
+		dragStartX = x;
+		dragStartY = y;
+	}
+	protected void stopDragging(){
+		dragging = false;
+	}
+	protected boolean childrenDragging(){
+		for( SceneObject o : objects ){
+			if( o.dragging )
+				return true;
+			else
+				if( o.childrenDragging() )
+					return true;
+		}
+		return false;
+	}
+	
 	public void addObject( SceneObject o ){
 		objects.add( o );
 	}
@@ -78,16 +102,21 @@ public class SceneObject {
 		objects.remove( o );
 	}
 	
-	public void draw( Graphics g ){
+	final public void startDraw( Graphics g ){
 		for( SceneObject o : objects ){
 			g.translate( o.getX(), o.getY() );
 		//TODO: clip appears to use absolute coordinates
 		//	g.setClip( o.getX(), o.getY(), o.getWidth(), o.getHeight() );
+			
 			o.draw( g );
+			o.startDraw( g );
+			
 		//	g.clearClip();
 			g.translate( -o.getX(), -o.getY() );
 		}
 	}
+	
+	protected void draw( Graphics g ){ }
 	
 	public void setSize( int newWidth, int newHeight ){
 		width = newWidth;
@@ -100,30 +129,59 @@ public class SceneObject {
 	}
 	
 	
-	public boolean mouseClicked( int button, int x, int y ){
+	protected boolean handleMouseClicked( int button, int x, int y ){
+		return false;
+	}
+	protected boolean handleMouseDragged( int oldX, int oldY, int newX, int newY ){
+		return false;
+	}
+	protected boolean handleMouseReleased( int button, int x, int y ){
+		return false;
+	}
+	
+	final public boolean mouseClicked( int button, int x, int y ){
 		for( SceneObject o : objects )
-			if( o.containsPoint( x, y ) )
+			if( o.containsPoint( x, y ) ){
 				if( o.mouseClicked( button, x - o.getX(), y - o.getY() ) )
 					return true;
+				else
+					if( o.handleMouseClicked( button, x - o.getX(), y - o.getY() ) )
+						return true;
+			}
 		return false;
 	}
 	
-	public boolean mouseDragged( int oldX, int oldY, int newX, int newY ){
-		for( SceneObject o : objects )
-			if( o.containsPoint( oldX, oldY ) )
-				if( o.mouseDragged(
-							oldX - o.getX(), oldY - o.getY()
-						,	newX - o.getX(), newY - o.getY() )
-					)
+	final public boolean mouseDragged( int oldX, int oldY, int newX, int newY ){
+		for( SceneObject o : objects ){
+			int x1 = oldX - o.getX();
+			int y1 = oldY - o.getY();
+			int x2 = newX - o.getX();
+			int y2 = newY - o.getY();
+			
+			if( o.mouseDragged( x1, y1, x2, y2 ) )
+				return true;
+			else
+				if( o.dragging && o.handleMouseDragged( x1, y1, x2, y2 ) )
 					return true;
+		}
+		
 		return false;
 	}
 	
-	public boolean mouseReleased( int button, int x, int y ){
-		for( SceneObject o : objects )
-			if( o.containsPoint( x, y ) )
-				if( o.mouseReleased( button, x - o.getX(), y - o.getY() ) )
-					return true;
+	final public boolean mouseReleased( int button, int x, int y ){
+		for( SceneObject o : objects ){
+			boolean handled = false;
+			if( o.mouseReleased( button, x - o.getX(), y - o.getY() ) )
+				handled = true;
+			else
+				if( o.containsPoint( x, y ) )
+					if( o.handleMouseReleased( button, x - o.getX(), y - o.getY() ) )
+						handled = true;
+			
+			o.stopDragging();
+			if( handled )
+				return true;
+		}
 		return false;
 	}
 	
