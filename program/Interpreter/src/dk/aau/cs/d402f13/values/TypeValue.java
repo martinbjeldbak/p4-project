@@ -2,6 +2,7 @@ package dk.aau.cs.d402f13.values;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import dk.aau.cs.d402f13.interpreter.Callable;
@@ -171,6 +172,10 @@ public class TypeValue extends Value {
   
   public Member getTypeMember(String name) {
     return members.get(name);
+  }
+  
+  public HashMap<String, Member> getTypeMembers() {
+    return members;
   }
 
   public void addTypeMember(String name, Member member) {
