@@ -70,7 +70,7 @@ public class GameEnvironment extends StandardEnvironment {
           Value v = interpreter.getSymbolTable().getVariable("piece", piece);
           return unitAction.getInstance(interpreter, v);
         }
-      }, false, "piece", "from");
+      }, false, "piece");
   private final TypeValue moveAction = new TypeValue("MoveAction", unitAction,
       new ParentCallable() {
         @Override
@@ -78,7 +78,7 @@ public class GameEnvironment extends StandardEnvironment {
           Value v = interpreter.getSymbolTable().getVariable("piece", piece);
           return unitAction.getInstance(interpreter, v);
         }
-      }, false, "piece", "from", "to");
+      }, false, "piece", "to");
   
   private final TypeValue testCase = new AbstractTypeValue("TestCase", false);
   
@@ -436,12 +436,6 @@ public class GameEnvironment extends StandardEnvironment {
     // type: RemoveAction
     ////////////////////////////////////
     addType(removeAction);
-    removeAction.addTypeMember("from", new Member(new ConstantCallable() {
-      @Override
-      public Value call(Interpreter interpreter, Value object) throws StandardError {
-        return interpreter.getSymbolTable().getVariable("from", square);
-      }
-    }));
 
     
     ////////////////////////////////////
@@ -452,12 +446,6 @@ public class GameEnvironment extends StandardEnvironment {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
         return interpreter.getSymbolTable().getVariable("to", square);
-      }
-    }));
-    moveAction.addTypeMember("from", new Member(new ConstantCallable() {
-      @Override
-      public Value call(Interpreter interpreter, Value object) throws StandardError {
-        return interpreter.getSymbolTable().getVariable("from", square);
       }
     }));
     
