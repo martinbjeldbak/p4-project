@@ -16,6 +16,14 @@ public class PatternValue extends Value {
     return type;
   }
 
+  public int length() {
+    return values.length;
+  }
+
+  public Value[] getValues() {
+    return values;
+  }
+
   /**
    * Creates a new pattern from the given parameters. The method
    * checks the values to see if they're allowed in patterns, throws
@@ -61,19 +69,11 @@ public class PatternValue extends Value {
    *                       a pattern
    */
   protected boolean isPatTypeCompatible(Value v) throws StandardError {
-    if(v.is(IntValue.type()))
+    if(v instanceof ObjectValue)
       return true;
-    else if(v.is(StrValue.type()))
+    else if(v.is(TypeValue.type()))
       return true;
     else if(v.is(DirValue.type()))
-      return true;
-    else if(v.is(CoordValue.type()))
-      return true;
-    else if(v.is(FunValue.type()))
-      return true;
-    else if(v.is(ListValue.type()))
-      return true;
-    else if(v.is(ActionValue.type()))
       return true;
     else if(v.is(PatternValue.type()))
       return true;

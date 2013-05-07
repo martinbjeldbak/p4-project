@@ -95,7 +95,7 @@ public class TypeVisitor extends DefaultVisitor
       member = new Member(name, varList.size(), this.currentType, node.line, node.offset);
     }
     else{   //if no varlist exists, the definition is an abstract constant
-      member = new Member(name, this.currentType, node.line, node.offset);
+      member = new Member(name, node.line, node.offset);
     }
     member.abstrct = true;
     this.currentType.addMember(member);
@@ -119,7 +119,7 @@ public class TypeVisitor extends DefaultVisitor
     }
     else{                            //VARLIST does not exist, so this is a constant
       //CONSTANT EXPRESSION
-      currentType.addMember(new Member(name, this.currentType, node.line, node.offset));
+      currentType.addMember(new Member(name, node.line, node.offset));
     }  
     return null;
   }

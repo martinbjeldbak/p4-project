@@ -14,6 +14,7 @@ public class Interpreter extends Visitor {
   
   public Interpreter(SymbolTable symbolTable) throws StandardError {
     this.symbolTable = symbolTable;
+    symbolTable.setInterpreter(this);
   }
 
   public Interpreter() throws StandardError {
@@ -104,6 +105,10 @@ public class Interpreter extends Visitor {
 
     for(int i = 0; i < node.size(); i++)
       values[i] = visit(node.get(i));
+
+    //PatternValue vals = new PatternValue(values);
+    //System.out.println("LENGTH OF PATTERN: " + vals.length() + " " + vals);
+
     return new PatternValue(values);
   }
 
