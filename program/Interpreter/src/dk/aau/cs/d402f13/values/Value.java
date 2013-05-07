@@ -1,5 +1,8 @@
 package dk.aau.cs.d402f13.values;
 
+import java.util.HashMap;
+import java.util.Map.Entry;
+
 import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.Member;
 import dk.aau.cs.d402f13.utilities.errors.*;
@@ -227,6 +230,14 @@ public abstract class Value implements Cloneable {
       return new MemberValue(m);
     }
     throw new NameError("Undefined member: " + member);
+  }
+  
+  public HashMap<String, Value> getMembers(Interpreter interpreter) throws StandardError {
+    HashMap<String, Value> result = new HashMap<String, Value>();
+    for (Entry<String, Member> e : getType().getTypeMembers().entrySet()) {
+      result.put(e.getKey(), e.getValue().getValue(interpreter));
+    }
+    return result;
   }
   
   public Value getMember(String name, TypeValue type) throws StandardError {

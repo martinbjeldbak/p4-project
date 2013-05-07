@@ -1,6 +1,8 @@
 package dk.aau.cs.d402f13.interpreter.stdenv.game;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import dk.aau.cs.d402f13.interpreter.AbstractMember;
@@ -78,6 +80,8 @@ public class GameEnvironment extends StandardEnvironment {
         }
       }, false, "piece", "from", "to");
   
+  private final TypeValue testCase = new AbstractTypeValue("TestCase", false);
+  
   public TypeValue gameType() {
     return game;
   }
@@ -124,6 +128,10 @@ public class GameEnvironment extends StandardEnvironment {
   
   public TypeValue moveActionType() {
     return moveAction;
+  }
+  
+  public TypeValue testCaseType() {
+    return testCase;
   }
   
   public GameEnvironment() {
@@ -452,11 +460,33 @@ public class GameEnvironment extends StandardEnvironment {
         return interpreter.getSymbolTable().getVariable("from", square);
       }
     }));
+    
+    
+    ////////////////////////////////////
+    // type: TestCase
+    ////////////////////////////////////
+    addType(testCase);
+    
+  }  
+  
+  /**
+   * Find all types extending TestCase in the symbol table
+   * @return A list of testCases
+   */
+  public List<TypeValue> findTestCases() {
+    List<TypeValue> result = new ArrayList<TypeValue>();
+    for (Entry<String, TypeValue> e : types.entrySet()) {
+      if (e.getValue().isSubtypeOf(testCase) && !(e.getValue() instanceof AbstractTypeValue)) {
+        result.add(e.getValue());
+      }
+    }
+    return result;
   }
   
   /**
    * Find any type extending Game in the symbol table
    * @return The Game-type if it exists or null otherwise
+   * @TODO Multiple game variants?
    */
   public TypeValue findGameType() {
     for (Entry<String, TypeValue> e : types.entrySet()) {
