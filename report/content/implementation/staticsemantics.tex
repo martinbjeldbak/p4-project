@@ -10,7 +10,7 @@ The first visitor used is the \classref{TypeVisitor}. This visitor traverses the
 \item \classref{Integer} parentArgs: The number of arguments given in the call to its parent constructor.
 \item \classref{List of Data} data: Each data defined in the type body has a corresponding \classref{Data}-object describing its name and position in the input program. The input program position (IPP) is stored as a line and an offset and makes it possible to produce error messages with information about where in the input program an error was found.
 \item \classref{List of Member} members: Each constant and function defined in the type body has a corresponding \classref{Member}-object describing its name, argument count, an abstract flag, a \classref{TypeSymbolInfo} reference to the type defining the \classref{Member} and IPP.
-\item \classref{AstNode} node: A reference to the TYPE_DEF-\classref{AstNode} which defines the type. This reference is used to get the input program position but is also used for a special purpose described in \secref{sec:typetablecleaner} 
+\item \classref{AstNode} node: A reference to the TYPE\_DEF-\classref{AstNode} which defines the type. This reference is used to get the input program position but is also used for a special purpose described in \secref{sec:typetablecleaner} 
 \item \classref{TypeSymbolInfo} parent: This will contain an object reference to its parent type if it has one. This is however a null pointer until running the \classref{TypeTableCleaner} described in \secref{sec:typetablecleaner}.
 \end{itemize}
 
