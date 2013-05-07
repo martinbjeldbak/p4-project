@@ -10,7 +10,7 @@ The first visitor used is the \classref{TypeVisitor}. This visitor traverses the
 \item \classref{Integer} parentArgs: The number of arguments given in the call to its parent constructor.
 \item \classref{List of Data} data: Each data defined in the type body has a corresponding \classref{Data}-object describing its name and position in the input program. The input program position (IPP) is stored as a line and an offset and makes it possible to produce error messages with information about where in the input program an error was found.
 \item \classref{List of Member} members: Each constant and function defined in the type body has a corresponding \classref{Member}-object describing its name, argument count, an abstract flag, a \classref{TypeSymbolInfo} reference to the type defining the \classref{Member} and IPP.
-\item \classref{AstNode} node: A reference to the TYPE_DEF-\classref{AstNode} which defines the type. This reference is used to get the input program position but is also used for a special purpose described in \secref{sec:typetablecleaner} 
+\item \classref{AstNode} node: A reference to the TYPE\_DEF-\classref{AstNode} which defines the type. This reference is used to get the input program position but is also used for a special purpose described in \secref{sec:typetablecleaner} 
 \item \classref{TypeSymbolInfo} parent: This will contain an object reference to its parent type if it has one. This is however a null pointer until running the \classref{TypeTableCleaner} described in \secref{sec:typetablecleaner}.
 \end{itemize}
 
@@ -18,15 +18,17 @@ All the \classref{TypeSymbolInfo} objects are kept in an object of class \classr
 
 When a type is added to the type table, it is checked that no other types with the same name exists.
 
-\subsection{TypeTableCleaner}
-\label{sec:typetablecleaner}
-The \classref{TypeSymbolInfo}-objects does only contain the name of their parent type as a \classref{String} or a null value if it is not a subtype. By making a lookup in the \classref{TypeTable} on the parent name, the real object references can be found and stored for faster and more convenient parent-chain lookups which is used by the \secref{sec:usesaredeclaredvisitor}.
-A topological sort is done on the \classref{TypeSymbolInfo}-objects by calling the \classref{TypeTable}.\methodref{topologicalSort()}, such that when iterating over the type table, any type yielded will always appear before all of its subtypes. This makes it efficient to propagate members, a technique which purpose and implementation will now be explained. Notice that the topological sorting is eased by the fact that multiple inheritance is not allowed.
+\subsection{TypeParentRefMaker}
+\label{sec:TypeParentRefMaker}
+The \classref{TypeSymbolInfo}-objects does yet only contain the name of their super type as a \classref{String} or a null value if has no super type. By making a lookup in the \classref{TypeTable} on the parent name, the real object references can be found and stored for faster and more convenient parent lookups which is used greatly by the visitor described in \secref{sec:usesaredeclaredvisitor}.
 
-In \secref{sec:usesaredeclaredvisitor}, we will need a way to determine whether a function or a constant is visible in a given type. 
-Visible means that the type itself or any super type contains the member. If we want to check if type G has a visible function foo[], we could first look in G and if not found, follow the parent-chain all the way from G up to A. Following these parent-chains would have to be done every time we need to know if any member is visible in any type. A much smarter approach is used though. Given that the types in the type table are topological sorted, we just iterate over them. If we meet a type C, we put the members in its parent type B in C as well. If B derives from A, we know that B has already gotten the members from A due to the topological sorting. This is the technique earlier mentioned as propagating members.
+\subsection{TypeMemberPropagator}
+\label{sec:TypeMemberPropagator}
+The \classref{UsesAreDeclaredVisitor} described in \secref{sec:usesaredeclaredvisitor} is quite complex. In some cases it needs to check whether a constant or a function with a specific name is visible in a given type. This requires looking in the given type and recursively in all super types. If the same is referenced many times in the one type, then the same super type chains will be searched many times. Looking through the same long chains of super types is not only inefficient, but does also make the code unnecessarily more complex. To simplify and speed up this process, the \classref{TypeMemberPropagator} ensures that all members of a type A is also present in a type C, if C is a subtype of A. When checking if a member is visible in C, it is only required to look in C instead of following the parent-chains. This propagation of members is done by first doing a topological sort on the \classref{TypeSymbolInfo}-objects, such that when iterating over the type table, any type yielded will always appear before all of its subtypes. This makes the afterwards propagation of members possible in linear time by iterating over the topological sorted types. If a type C is met, the members in its parent type B is put in C as well. If B has a parent A, we know that B has already gotten the members from A due to the topological sorting.
 
-After having propagated the members, every type that contains any abstract members are marked as being abstract. This is done by changing the type of the \classref{AstNode} to an ABSTRACT_TYPE_DEF.
+The process of topological sorting the types is eased by the fact that multiple inheritance is not allowed.
+ 
+After having propagated the members, every type that contains any abstract members are marked as being abstract. This is done by changing the type of the \classref{AstNode} to an ABSTRACT\_TYPE\_DEF.
 
 Due to the sorting criteria, a topological sort cannot be performed if an extend cycle exists, e.g: A extends B, B extends C and C extends A. The \classref{TypeTable}.\methodref{topologicalSort()} will detect a cycle and throw an error.
 
