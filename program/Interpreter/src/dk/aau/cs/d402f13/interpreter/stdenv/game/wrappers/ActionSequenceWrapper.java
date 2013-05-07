@@ -1,6 +1,7 @@
 package dk.aau.cs.d402f13.interpreter.stdenv.game.wrappers;
 
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
+import dk.aau.cs.d402f13.utilities.errors.InternalError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 import dk.aau.cs.d402f13.utilities.gameapi.ActionSequence;
@@ -40,8 +41,11 @@ public class ActionSequenceWrapper extends Wrapper implements ActionSequence {
 
   @Override
   public ActionSequenceWrapper addAction(UnitAction action) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    if (!(action instanceof UnitActionWrapper)) {
+      throw new InternalError("Invalid class: " + action.getClass().getSimpleName());
+    }
+    Value r = callMember("addAction", env.actionSequenceType(), ((Wrapper)action).object);
+    return new ActionSequenceWrapper(env, r);
   }
 
 }
