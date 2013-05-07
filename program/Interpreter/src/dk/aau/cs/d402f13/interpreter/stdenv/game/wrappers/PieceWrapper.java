@@ -1,6 +1,7 @@
 package dk.aau.cs.d402f13.interpreter.stdenv.game.wrappers;
 
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
+import dk.aau.cs.d402f13.utilities.errors.InternalError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.gameapi.Action;
 import dk.aau.cs.d402f13.utilities.gameapi.Game;
@@ -50,8 +51,10 @@ public class PieceWrapper extends Wrapper implements Piece {
 
   @Override
   public Action[] getActions(Game game) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    if (!(game instanceof GameWrapper)) {
+      throw new InternalError("Invalid class: " + game.getClass().getSimpleName());
+    }
+    return callMemberActions("actions", ((GameWrapper)game).object);
   }
 
 }

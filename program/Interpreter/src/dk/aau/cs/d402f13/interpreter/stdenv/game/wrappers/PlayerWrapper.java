@@ -33,8 +33,10 @@ public class PlayerWrapper extends Wrapper implements Player {
 
   @Override
   public Action[] getActions(Game game) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    if (!(game instanceof GameWrapper)) {
+      throw new InternalError("Invalid class: " + game.getClass().getSimpleName());
+    }
+    return callMemberActions("actions", ((GameWrapper)game).object);
   }
 
 }
