@@ -1,7 +1,7 @@
 package dk.aau.cs.d402f13.simulator;
 
-import widgets.SceneObject;
 import dk.aau.cs.d402f13.utilities.types.Action;
+import dk.aau.cs.d402f13.widgets.Widget;
 
 public abstract class ActionSelector {
 	SimulatedGame game = null;
@@ -10,6 +10,6 @@ public abstract class ActionSelector {
 		this.game = game;
 	}
 	
-	public abstract void retriveAction( SceneObject callback );
+	public abstract void retriveAction( Widget callback );
 	public abstract Action getAction();
 }

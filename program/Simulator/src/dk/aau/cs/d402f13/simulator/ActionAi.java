@@ -2,10 +2,10 @@ package dk.aau.cs.d402f13.simulator;
 
 import java.util.List;
 
-import widgets.SceneObject;
-import widgets.SceneObject.Event;
 
 import dk.aau.cs.d402f13.utilities.types.Action;
+import dk.aau.cs.d402f13.widgets.Widget;
+import dk.aau.cs.d402f13.widgets.Widget.Event;
 
 public class ActionAi extends ActionSelector {
 	private Action calculatedAction = null;
@@ -15,7 +15,7 @@ public class ActionAi extends ActionSelector {
 	}
 
 	@Override
-	public void retriveAction( SceneObject callback ){
+	public void retriveAction( Widget callback ){
 		List<Action> actions = game.getGame().actions();
 		
 		int index = (int)( Math.random() * actions.size() );

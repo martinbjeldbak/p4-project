@@ -6,21 +6,23 @@ import java.util.List;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 
-import widgets.Label;
-import widgets.ObjectContainer;
-import widgets.ScrollContainer;
 
+import dk.aau.cs.d402f13.helpers.ActionHelper;
+import dk.aau.cs.d402f13.helpers.ResourceHelper;
 import dk.aau.cs.d402f13.utilities.types.Action;
 import dk.aau.cs.d402f13.utilities.types.Game;
+import dk.aau.cs.d402f13.widgets.Label;
+import dk.aau.cs.d402f13.widgets.ScaleContainer;
+import dk.aau.cs.d402f13.widgets.ScrollContainer;
 
-public class SimulatedGameInfo extends ObjectContainer {
+public class GameInfoWidget extends ScaleContainer {
 	private SimulatedGame game;
 	private ScrollContainer historyList;
 	
 	private Label title;
 	private Label player;
 	
-	SimulatedGameInfo( SimulatedGame game ){
+	GameInfoWidget( SimulatedGame game ){
 		super( true );
 		//We want to use the image dimensions as the size, however,
 		//as an Image in Slick can't be loaded before an OpenGl context
@@ -42,7 +44,7 @@ public class SimulatedGameInfo extends ObjectContainer {
 	public void draw( Graphics g ){
 		Game game = this.game.getGame();
 		//Draw side bar
-		Image side = ResourceHandler.getImage( "img/book.png" );
+		Image side = ResourceHelper.getImage( "img/book.png" );
 		g.drawImage( side, 0, 0 );
 		
 		title.setString( game.title() );

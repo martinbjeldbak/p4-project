@@ -9,13 +9,15 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
-import widgets.Message;
-import widgets.SceneObject;
 
+import dk.aau.cs.d402f13.helpers.ActionHelper;
+import dk.aau.cs.d402f13.helpers.ResourceHelper;
 import dk.aau.cs.d402f13.utilities.types.Action;
 import dk.aau.cs.d402f13.utilities.types.MoveAction;
 import dk.aau.cs.d402f13.utilities.types.Piece;
 import dk.aau.cs.d402f13.utilities.types.Square;
+import dk.aau.cs.d402f13.widgets.Message;
+import dk.aau.cs.d402f13.widgets.Widget;
 
 /**
  * SimulatedBoard represents and visualizes the game board and its pieces.
@@ -24,7 +26,7 @@ import dk.aau.cs.d402f13.utilities.types.Square;
  * @author Spiller
  *
  */
-public abstract class SimulatedBoard extends SceneObject {
+public abstract class BoardWidget extends Widget {
 	protected SimulatedGame game;
 	
 	protected List<Square> hintSquares = new ArrayList<Square>();
@@ -41,7 +43,7 @@ public abstract class SimulatedBoard extends SceneObject {
 	 * Constructs a SimulatedBoard
 	 * @param game SimulatedGame to visualize
 	 */
-	public SimulatedBoard( SimulatedGame game ){
+	public BoardWidget( SimulatedGame game ){
 		scaleWidth( 0 );
 		scaleHeight( 0 );
 		this.game = game;
@@ -271,7 +273,7 @@ public abstract class SimulatedBoard extends SceneObject {
 	 * @throws SlickException
 	 */
 	protected void renderPiece( Graphics g, Piece p, int x, int y, int size, int offsetX, int offsetY){
-		Image img = ResourceHandler.getImage( p.getImgPath() );
+		Image img = ResourceHelper.getImage( p.getImgPath() );
 		int imgMax = Math.max( img.getHeight(), img.getWidth() );
 		
 		int borderSize = (int) (size * 0.05);
@@ -280,7 +282,7 @@ public abstract class SimulatedBoard extends SceneObject {
 		int imgYOffset = (int) ((imgMax - img.getHeight() ) * scale / 2);
 		int imgXOffset = (int) ((imgMax - img.getWidth() ) * scale / 2);
 		
-		img = ResourceHandler.getImageScaled( p.getImgPath(), scale );
+		img = ResourceHelper.getImageScaled( p.getImgPath(), scale );
 
 		img.draw( x + imgXOffset + offsetX + borderSize, y + imgYOffset + offsetY + borderSize );
 	}
@@ -298,9 +300,9 @@ public abstract class SimulatedBoard extends SceneObject {
 		Square hover = hoversOn();
 		
 		//Draw background for square
-		Image img = ResourceHandler.getImage( s.getImgPath() );
+		Image img = ResourceHelper.getImage( s.getImgPath() );
 		int imgMax = Math.max(img.getWidth(), img.getHeight());
-		img = ResourceHandler.getImageScaled( s.getImgPath(), (float)size /(float) imgMax );
+		img = ResourceHelper.getImageScaled( s.getImgPath(), (float)size /(float) imgMax );
 		img.draw( posX, posY );
 		
 		if( s == selected ){
@@ -324,7 +326,7 @@ public abstract class SimulatedBoard extends SceneObject {
 	}
 	
 	@Override
-	public void acceptEvent( SceneObject obj, Event event ){
+	public void acceptEvent( Widget obj, Event event ){
 		if( event == Event.ACCEPT ){
 			removeObject( obj );
 		}
