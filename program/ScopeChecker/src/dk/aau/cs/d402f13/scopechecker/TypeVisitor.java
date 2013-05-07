@@ -90,7 +90,7 @@ public class TypeVisitor extends DefaultVisitor
     //find varlist if any exist, which is the members arguments
     if (it.hasNext()){
       AstNode varList = it.next();
-      member = new Member(name, varList.size(), this.currentType, node.line, node.offset);
+      member = new Member(name, varList.size(), node.line, node.offset);
     }
     else{   //if no varlist exists, the definition is an abstract constant
       member = new Member(name, node.line, node.offset);
@@ -113,7 +113,7 @@ public class TypeVisitor extends DefaultVisitor
     AstNode temp = it.next();
     if (temp.type == Type.VARLIST){  //if VARLIST exists, it is arguments for the function
       //CONSTANT VARLIST EXPRESSION
-      currentType.addMember(new Member(name, temp.size(), this.currentType, node.line, node.offset));
+      currentType.addMember(new Member(name, temp.size(), node.line, node.offset));
     }
     else{                            //VARLIST does not exist, so this is a constant
       //CONSTANT EXPRESSION

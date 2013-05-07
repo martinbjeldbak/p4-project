@@ -10,7 +10,8 @@ public class TypeSuperCallChecker {
   //required number of arguments
     for (TypeSymbolInfo tsi : tt){
       if (tsi.parent != null){
-        if (tsi.parentCallArgs != tsi.parent.args){
+        if (tsi.parent.args != -1 && tsi.parentCallArgs != tsi.parent.args){
+        //arg count of -1 means a varlist which can be 0 to many arguments
           throw new ScopeError("Number of arguments does not match for call to parent type " + tsi.parent.name + " in type " + tsi.name + ". Expected " + tsi.parent.args + ", received " + tsi.parentCallArgs+".", tsi.line, tsi.offset);
         }
       }

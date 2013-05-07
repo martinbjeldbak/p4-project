@@ -28,7 +28,7 @@ public class StandardEnvironment {
     //Function
     current = new TypeSymbolInfo(null, "Function", -1, 0);
     current.args = 1;
-    current.members.add(new Member("call"));
+    current.members.add(new Member("call", 0, -1, 0));
      tt.addType(current);
     
     //Integer
@@ -39,15 +39,16 @@ public class StandardEnvironment {
     //List
     current = new TypeSymbolInfo(null, "List", -1, 0);
     current.args = 1;
-    current.members.add(new Member("size"));
-    current.members.add(new Member("sort"));
-    current.members.add(new Member("map"));
-    current.members.add(new Member("filter"));
+    current.members.add(new Member("size", 0, -1, 0));
+    current.members.add(new Member("sort", 0, -1, 0));
+    current.members.add(new Member("map", 0, -1, 0));
+    current.members.add(new Member("filter", 0, -1, 0));
      tt.addType(current);
     
     //Pattern
     current = new TypeSymbolInfo(null, "Pattern", -1, 0);
     current.args = 1;
+    current.members.add(new Member("size"));
      tt.addType(current);
     
     //String
@@ -58,17 +59,12 @@ public class StandardEnvironment {
     //Type
     current = new TypeSymbolInfo(null, "Type", -1, 0);
     current.args = 1;
-    current.members.add(new Member("isSubtypeOf"));
-    current.members.add(new Member("isSupertypeOf"));
-     tt.addType(current);
-    
-    //Action
-    current = new TypeSymbolInfo(null, "Action", -1, 0);
-    current.args = 1;
+    current.members.add(new Member("isSubtypeOf", 0, -1, 0));
+    current.members.add(new Member("isSupertypeOf", 0, -1, 0));
      tt.addType(current);
     
     //GLOBAL FUNCTIONS
-     tt.getGlobal().addMember(new Member("typeOf"));
-     tt.getGlobal().addMember(new Member("union"));
+     tt.getGlobal().addMember(new Member("typeOf", 0, -1, 0));
+     tt.getGlobal().addMember(new Member("union", 0, -1, 0));
   }
 }

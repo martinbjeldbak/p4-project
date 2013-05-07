@@ -342,10 +342,8 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
   }
   private Boolean constVisibleInAnyType(String name){
     for (TypeSymbolInfo tsi : this.tt){
-      if (tsi.name == "#GLOBAL")    //skip check in global scope
-        continue;
       for (Member m : tsi.members){
-        if (m.name.equals(name) && m.declaredInType == tsi)
+        if (m.name.equals(name))
           return true;
       }
     }
@@ -381,7 +379,7 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
         //accept if visible in any type
         if (constVisibleInAnyType(name))
           return;
-        throw new ScopeError("Member " + name + " used in type " +  this.currentType.name + " does not exist in any type ", line, offset);
+        throw new ScopeError("Member " + name + " used in type " +  this.currentType.name + " does not exist in any type", line, offset);
       }
     }
     else{
