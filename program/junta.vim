@@ -2,6 +2,9 @@
 " Language:	      	Junta
 " Last Change:		2013 March 04
 " Original Author:	Niels Poulsen <a@apakoh.dk>
+"
+" Smid følgende i .vimrc for at bruge:
+" au BufRead,BufNewFile *.junta set filetype=junta
 
 syn match ConId "\(\<[A-Z][a-zA-Z0-9_']*\.\)\=\<[A-Z][a-zA-Z0-9_']*\>"
 syn match VarId "\(\<[A-Z][a-zA-Z0-9_']*\.\)\=\<[a-z][a-zA-Z0-9_']*\>"
