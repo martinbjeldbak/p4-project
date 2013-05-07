@@ -8,12 +8,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map.Entry;
 
 import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
 import dk.aau.cs.d402f13.parser.Parser;
 import dk.aau.cs.d402f13.scanner.Scanner;
-//import dk.aau.cs.d402f13.scopechecker.ScopeChecker;
+import dk.aau.cs.d402f13.scopechecker.ScopeChecker;
 import dk.aau.cs.d402f13.utilities.PrettyPrinter;
 import dk.aau.cs.d402f13.utilities.Token;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
@@ -22,8 +24,10 @@ import dk.aau.cs.d402f13.utilities.errors.Error;
 import dk.aau.cs.d402f13.utilities.errors.InternalError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.SyntaxError;
+import dk.aau.cs.d402f13.values.BoolValue;
 import dk.aau.cs.d402f13.values.ConstValue;
 import dk.aau.cs.d402f13.values.FunValue;
+import dk.aau.cs.d402f13.values.ObjectValue;
 import dk.aau.cs.d402f13.values.TypeValue;
 import dk.aau.cs.d402f13.values.Value;
 
@@ -106,6 +110,7 @@ public class Interactive {
         case ":i":
         case ":nk":
         case ":k":
+        case ":t":
           try {
             ByteArrayInputStream bais = new ByteArrayInputStream(
               input.getBytes("UTF-8")
@@ -152,15 +157,15 @@ public class Interactive {
                   System.out.println(code);
                 }
                 else{
-                  if (!line.equals(":nk")) {
+                  if (!line.equals(":nk") && !line.equals(":t")) {
                     System.out.println("Scope checking...");
                     start = new Date();
-//                    ScopeChecker scopeChecker;
-//                    scopeChecker.visit(ast);
+                    ScopeChecker scopeChecker = new ScopeChecker();
+                    scopeChecker.visit(ast);
                     time = new Date().getTime() - start.getTime();
                     System.out.println("Scope checking took " + time + " ms");
                   }
-                  if (line.equals(":i") || line.equals(":nk")) {
+                  if (line.equals(":i") || line.equals(":nk") || line.equals(":t")) {
                     System.out.println("Interpreting...");
                     start = new Date();
                     GameEnvironment env = new GameEnvironment();
@@ -168,25 +173,61 @@ public class Interactive {
                     i.visit(ast);
                     time = new Date().getTime() - start.getTime();
                     System.out.println("Interpreting took " + time + " ms");
-                    TypeValue game = env.findGameType();
-                    if (game != null) {
-                      System.out.println("Found game: " + game.getName());
-                    }
-                    Value main = env.getConstant("main"); 
-                    if (main != null) {
-                      Value v = null;
-                      System.out.println("Evaluating main...");
+                    if (line.equals(":t")) {
+                      System.out.println("Unit testing...");
                       start = new Date();
-                      if (main instanceof ConstValue) {
-                        v = ((ConstValue)main).evaluate();
+                      List<TypeValue> tests = env.findTestCases();
+                      int numTests = 0;
+                      int numSuccesses = 0;
+                      for (TypeValue test : tests) {
+                        System.out.println("--------------------------------------------");
+                        System.out.println("Test case: " + test.getName());
+                        Value testObject = test.getInstance(i);
+                        for (Entry<String, Value> e : testObject.getMembers(i).entrySet()) {
+                          System.out.print(" - " + e.getKey() + " : ");
+                          Value v = e.getValue();
+                          numTests++;
+                          if (v.is(BoolValue.type())) {
+                            if (v.as(BoolValue.type()) == BoolValue.trueValue()) {
+                              System.out.println("SUCCESS");
+                              numSuccesses++;
+                            }
+                            else {
+                              System.out.println("FAIL");
+                            }
+                          }
+                          else {
+                            System.out.println("FAIL (Wrong type: " + v.getType().getName() + ")");
+                          }
+                        }
                       }
-                      else if (main instanceof FunValue) {
-                        v = ((FunValue)main).call(i);
-                      }
+                      System.out.println("--------------------------------------------");
+                      System.out.println("Testing completed: " + numSuccesses + " / " + numTests + " successful");
+                      System.out.println("--------------------------------------------");
                       time = new Date().getTime() - start.getTime();
-                      System.out.println("Evaluating main took " + time + " ms");
-                      if (v != null) 
-                        System.out.println(" = " + v + " (" + v.getClass().getSimpleName() + ")");
+                      System.out.println("Unit testing took " + time + " ms");
+                    }
+                    else {
+                      TypeValue game = env.findGameType();
+                      if (game != null) {
+                        System.out.println("Found game: " + game.getName());
+                      }
+                      Value main = env.getConstant("main"); 
+                      if (main != null) {
+                        Value v = null;
+                        System.out.println("Evaluating main...");
+                        start = new Date();
+                        if (main instanceof ConstValue) {
+                          v = ((ConstValue)main).evaluate();
+                        }
+                        else if (main instanceof FunValue) {
+                          v = ((FunValue)main).call(i);
+                        }
+                        time = new Date().getTime() - start.getTime();
+                        System.out.println("Evaluating main took " + time + " ms");
+                        if (v != null) 
+                          System.out.println(" = " + v + " (" + v.getClass().getSimpleName() + ")");
+                      }
                     }
                   }
                 }
