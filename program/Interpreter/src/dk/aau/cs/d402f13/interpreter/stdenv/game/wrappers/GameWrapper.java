@@ -7,6 +7,7 @@ import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 import dk.aau.cs.d402f13.utilities.gameapi.Action;
+import dk.aau.cs.d402f13.utilities.gameapi.ActionSequence;
 import dk.aau.cs.d402f13.utilities.gameapi.Game;
 import dk.aau.cs.d402f13.utilities.gameapi.Player;
 import dk.aau.cs.d402f13.values.ListValue;
@@ -71,8 +72,17 @@ public class GameWrapper extends Wrapper implements Game {
 
   @Override
   public Game applyAction(Action action) throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    if (action instanceof ActionSequence) {
+    }
+    else if (action.is(env.removeActionType())) {
+    }
+    else if (action.is(env.moveActionType())) {
+    }
+    else if (action.is(env.actionSequenceType())) {
+    }
+    else {
+      throw new TypeError("Invalid action type: " + action.getType().getName());
+    }
   }
 
   @Override
