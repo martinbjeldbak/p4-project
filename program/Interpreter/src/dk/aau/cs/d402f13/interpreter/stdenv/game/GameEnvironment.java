@@ -36,7 +36,7 @@ public class GameEnvironment extends StandardEnvironment {
         }
       }, false, "width", "height");
   private final TypeValue piece = new TypeValue("Piece", false, "owner");
-  private final TypeValue player = new TypeValue("Player", false);
+  private final TypeValue player = new TypeValue("Player", false, "name");
   
   private final AbstractTypeValue action = new AbstractTypeValue("Action", false);
   private final TypeValue actionSequence = new TypeValue("ActionSequence", action,
@@ -309,6 +309,13 @@ public class GameEnvironment extends StandardEnvironment {
     // type: Player
     ////////////////////////////////////
     addType(player);
+    
+    player.addTypeMember("name", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return interpreter.getSymbolTable().getVariable("name");
+      }
+    }));
     
     player.addTypeMember("winCondition", new Member(1, false, new Callable() {
       @Override

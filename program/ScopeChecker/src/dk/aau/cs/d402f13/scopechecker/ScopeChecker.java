@@ -13,15 +13,20 @@ public class ScopeChecker {
     StandardEnvironment.insertInto(tt);
     
     //Find types, their members, constructor and super constructor call
-    TypeVisitor typeVisitor = new TypeVisitor();
-    typeVisitor.setTypeTable(tt);
+    TypeVisitor typeVisitor = new TypeVisitor(tt);
     typeVisitor.visit(node);
     
-    //Make reference from types to their parents, 
+    //Make references from types to their parents based on the String name of their parent
+    TypeParentRefMaker tprm = new TypeParentRefMaker(tt);
+    tprm.makeReferences();
+    
     //propogate type members to derived types, topological sort types
-    //and mark types containing at least 1 abstract member as an abstract type AstNode
-    TypeTableCleaner ttc = new TypeTableCleaner();
-    ttc.clean(tt);
+    TypeMemberPropagator tmp = new TypeMemberPropagator(tt);
+    tmp.propagateMembers();
+    
+    //mark types containing at least 1 abstract member as an ABSTRACT_TYPE_DEF AstNode
+    AbstractTypeMarker atm = new AbstractTypeMarker(tt);
+    atm.markAbstractTypes();
  
     //Check that a call to a parent type constructor has the right number of arguments
     TypeSuperCallChecker teec = new TypeSuperCallChecker();
