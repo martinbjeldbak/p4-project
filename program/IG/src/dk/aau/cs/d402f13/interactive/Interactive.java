@@ -158,7 +158,7 @@ public class Interactive {
                   System.out.println(code);
                 }
                 else{
-                  if (!line.equals(":nk") && !line.equals(":t")) {
+                  if (!line.equals(":nk")) {
                     System.out.println("Scope checking...");
                     start = new Date();
                     ScopeChecker scopeChecker = new ScopeChecker();
