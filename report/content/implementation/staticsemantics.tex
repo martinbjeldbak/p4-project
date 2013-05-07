@@ -1,23 +1,40 @@
 \section{Static semantics}
-The \classref{ScopeChecker} is a class that uses a number of other classes to check the static semantic rules of \productname{} at compile-time. This section is aimed to explain how these static semantic checks are performed by the \classref{ScopeChecker} in simple steps. The different checks it does is as follows:
-\begin{itemize}
-\item A type cannot extend itself.
-\item A type cannot extend a type that is not defined except if it is in the standard environment.
-\item A type cannot extend a type if it causes an extend cycle.
-\item When a type extends another type, it must call the constructor of the extended type with the right number of arguments.
-\item If a type contains at least one abstract member, its TypeDef AstNode must be changed to AbstractTypeDef.
-\item Any variable used must have been declared prior to its use.
-\item Any 
-\end{itemize}
-
-\subsection{Type table and hash map}
+The \classref{ScopeChecker} is the class responsible for enforcing some of the static semantic rules of \productname{}, described in \chapref{chap:design}, at compile-time. This section is aimed to explain how these static semantic checks are performed by the \classref{ScopeChecker} in simple sequential steps. Any error detected by the \classref{ScopeChecker} will cause a \classref{ScopeError} exception to be thrown. This error contains helpful information about the type of error and where in the input program the error is located. 
 
 \subsection{TypeVisitor}
+The first visitor used is the \classref{TypeVisitor}. This visitor traverses the AST, finds all type definitions in the input program and for each type definition, an object of class \classref{TypeSymbolInfo} is instantiated. After running the \classref{TypeVisitor}, each type definition in the input program has an associated object of class \classref{TypeSymbolInfo} which makes it easy to get information about any type in the input program by accessing the following members contained in the \classref{TypeSymbolInfo} object:
+\begin{itemize}
+\item \classref{String} name: The type's name.
+\item \classref{String} parentName: The name of its super type or null if not a derived type.
+\item \classref{Integer} args: The number of arguments in the type's constructor.
+\item \classref{Integer} parentArgs: The number of arguments given in the call to its parent constructor.
+\item \classref{List of Data} data: Each data defined in the type body has a corresponding \classref{Data}-object describing its name and position in the input program. The input program position (IPP) is stored as a line and an offset and makes it possible to produce error messages with information about where in the input program an error was found.
+\item \classref{List of Member} members: Each constant and function defined in the type body has a corresponding \classref{Member}-object describing its name, argument count, an abstract flag, a \classref{TypeSymbolInfo} reference to the type defining the \classref{Member} and IPP.
+\item \classref{AstNode} node: A reference to the TYPE\_DEF-\classref{AstNode} which defines the type. This reference is used to get the input program position but is also used for a special purpose described in \secref{sec:typetablecleaner} 
+\item \classref{TypeSymbolInfo} parent: This will contain an object reference to its parent type if it has one. This is however a null pointer until running the \classref{TypeTableCleaner} described in \secref{sec:typetablecleaner}.
+\end{itemize}
 
-\subsection{TypeTableCleaner}
-%topological sort types
-%mark abstract types
+All the \classref{TypeSymbolInfo} objects are kept in an object of class \classref{TypeTable}. The \classref{TypeTable}-class is a layer of abstraction which provides easy and fast access information about the types contained in the input program. The underlying implementation is a hashmap from the type's name as a \classref{String} to its object reference, which provides quick lookup on type names, and a \classref{TypeSymbolInfo}-list, which makes iterating over the \classref{TypeSymbolInfo}'s convenient and makes it possible to sort the types with a purpose described in \secref{sec:typetablecleaner}. For convenience, we say that a type is added to a type table which means that a \classref{TypeSymbolInfo}-object representing the type is added to the \classref{TypeTable}-object representing the type table.
+
+When a type is added to the type table, it is checked that no other types with the same name exists.
+
+\subsection{TypeParentRefMaker}
+\label{sec:TypeParentRefMaker}
+The \classref{TypeSymbolInfo}-objects does yet only contain the name of their super type as a \classref{String} or a null value if has no super type. By making a lookup in the \classref{TypeTable} on the parent name, the real object references can be found and stored for faster and more convenient parent lookups which is used greatly by the visitor described in \secref{sec:usesaredeclaredvisitor}.
+
+\subsection{TypeMemberPropagator}
+\label{sec:TypeMemberPropagator}
+The \classref{UsesAreDeclaredVisitor} described in \secref{sec:usesaredeclaredvisitor} is quite complex. In some cases it needs to check whether a constant or a function with a specific name is visible in a given type. This requires looking in the given type and recursively in all super types. If the same is referenced many times in the one type, then the same super type chains will be searched many times. Looking through the same long chains of super types is not only inefficient, but does also make the code unnecessarily more complex. To simplify and speed up this process, the \classref{TypeMemberPropagator} ensures that all members of a type A is also present in a type C, if C is a subtype of A. When checking if a member is visible in C, it is only required to look in C instead of following the parent-chains. This propagation of members is done by first doing a topological sort on the \classref{TypeSymbolInfo}-objects, such that when iterating over the type table, any type yielded will always appear before all of its subtypes. This makes the afterwards propagation of members possible in linear time by iterating over the topological sorted types. If a type C is met, the members in its parent type B is put in C as well. If B has a parent A, we know that B has already gotten the members from A due to the topological sorting.
+
+The process of topological sorting the types is eased by the fact that multiple inheritance is not allowed.
+ 
+After having propagated the members, every type that contains any abstract members are marked as being abstract. This is done by changing the type of the \classref{AstNode} to an ABSTRACT\_TYPE\_DEF.
+
+Due to the sorting criteria, a topological sort cannot be performed if an extend cycle exists, e.g: A extends B, B extends C and C extends A. The \classref{TypeTable}.\methodref{topologicalSort()} will detect a cycle and throw an error.
 
 \subsection{UsesAreDeclaredVisitor}
+\label{sec:usesaredeclaredvisitor}
 %symbol table
 %opening scope
+
+%error handling, line and offsets are kept

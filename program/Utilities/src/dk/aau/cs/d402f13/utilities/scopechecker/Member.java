@@ -24,12 +24,8 @@ public class Member{
     this.line = line;
     this.offset = offset;
   }
-  public Member(String name, TypeSymbolInfo declaredInType, int line, int offset){
-    this(name, line, offset);
-    this.declaredInType = declaredInType;
-  }
   public Member(String name, int args, TypeSymbolInfo declaredInType, int line, int offset){
-    this(name, declaredInType, line, offset);
+    this(name,line, offset);
     this.args = args;
   }
   public void IncrArg(){

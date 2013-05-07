@@ -1,5 +1,8 @@
 package dk.aau.cs.d402f13.interpreter.stdenv.game;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import dk.aau.cs.d402f13.interpreter.AbstractMember;
@@ -35,7 +38,7 @@ public class GameEnvironment extends StandardEnvironment {
         }
       }, false, "width", "height");
   private final TypeValue piece = new TypeValue("Piece", false, "owner");
-  private final TypeValue player = new TypeValue("Player", false);
+  private final TypeValue player = new TypeValue("Player", false, "name");
   
   private final AbstractTypeValue action = new AbstractTypeValue("Action", false);
   private final TypeValue actionSequence = new TypeValue("ActionSequence", action,
@@ -57,7 +60,7 @@ public class GameEnvironment extends StandardEnvironment {
         @Override
         public Value call(Interpreter interpreter) throws StandardError {
           Value v = interpreter.getSymbolTable().getVariable("piece", piece);
-          return v;
+          return unitAction.getInstance(interpreter, v);
         }
       }, false, "piece", "to");
   private final TypeValue removeAction = new TypeValue("RemoveAction", unitAction,
@@ -65,17 +68,19 @@ public class GameEnvironment extends StandardEnvironment {
         @Override
         public Value call(Interpreter interpreter) throws StandardError {
           Value v = interpreter.getSymbolTable().getVariable("piece", piece);
-          return v;
+          return unitAction.getInstance(interpreter, v);
         }
-      }, false, "piece", "from");
+      }, false, "piece");
   private final TypeValue moveAction = new TypeValue("MoveAction", unitAction,
       new ParentCallable() {
         @Override
         public Value call(Interpreter interpreter) throws StandardError {
           Value v = interpreter.getSymbolTable().getVariable("piece", piece);
-          return v;
+          return unitAction.getInstance(interpreter, v);
         }
-      }, false, "piece", "from", "to");
+      }, false, "piece", "to");
+  
+  private final TypeValue testCase = new AbstractTypeValue("TestCase", false);
   
   public TypeValue gameType() {
     return game;
@@ -123,6 +128,10 @@ public class GameEnvironment extends StandardEnvironment {
   
   public TypeValue moveActionType() {
     return moveAction;
+  }
+  
+  public TypeValue testCaseType() {
+    return testCase;
   }
   
   public GameEnvironment() {
@@ -309,6 +318,13 @@ public class GameEnvironment extends StandardEnvironment {
     ////////////////////////////////////
     addType(player);
     
+    player.addTypeMember("name", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return interpreter.getSymbolTable().getVariable("name");
+      }
+    }));
+    
     player.addTypeMember("winCondition", new Member(1, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters)
@@ -371,18 +387,49 @@ public class GameEnvironment extends StandardEnvironment {
     // type: ActionSequence
     ////////////////////////////////////
     addType(actionSequence);
+    actionSequence.addTypeMember("actions", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return new ListValue(interpreter.getSymbolTable().getVariableList("actions", unitAction, 1));
+      }
+    }));
+    actionSequence.addTypeMember("addAction", new Member(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
+        TypeValue.expect(actualParameters, 0, unitAction);
+        Value[] actions = interpreter.getSymbolTable().getVariableList("actions", unitAction, 1);
+        Value[] actionsAfter = new Value[actions.length + 1];
+        for (int i = 0; i < actions.length; i++) {
+          actionsAfter[i] = actions[i];
+        }
+        actionsAfter[actions.length] = actualParameters[0];
+        return actionSequence.getInstance(interpreter, actionsAfter);
+      }
+    }));
 
     
     ////////////////////////////////////
     // type: UnitAction
     ////////////////////////////////////
     addType(unitAction);
+    unitAction.addTypeMember("piece", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return interpreter.getSymbolTable().getVariable("piece", piece);
+      }
+    }));
 
     
     ////////////////////////////////////
     // type: AddAction
     ////////////////////////////////////
     addType(addAction);
+    addAction.addTypeMember("to", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return interpreter.getSymbolTable().getVariable("to", square);
+      }
+    }));
 
     
     ////////////////////////////////////
@@ -395,11 +442,39 @@ public class GameEnvironment extends StandardEnvironment {
     // type: MoveAction
     ////////////////////////////////////
     addType(moveAction);
+    moveAction.addTypeMember("to", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return interpreter.getSymbolTable().getVariable("to", square);
+      }
+    }));
+    
+    
+    ////////////////////////////////////
+    // type: TestCase
+    ////////////////////////////////////
+    addType(testCase);
+    
+  }  
+  
+  /**
+   * Find all types extending TestCase in the symbol table
+   * @return A list of testCases
+   */
+  public List<TypeValue> findTestCases() {
+    List<TypeValue> result = new ArrayList<TypeValue>();
+    for (Entry<String, TypeValue> e : types.entrySet()) {
+      if (e.getValue().isSubtypeOf(testCase) && !(e.getValue() instanceof AbstractTypeValue)) {
+        result.add(e.getValue());
+      }
+    }
+    return result;
   }
   
   /**
    * Find any type extending Game in the symbol table
    * @return The Game-type if it exists or null otherwise
+   * @TODO Multiple game variants?
    */
   public TypeValue findGameType() {
     for (Entry<String, TypeValue> e : types.entrySet()) {

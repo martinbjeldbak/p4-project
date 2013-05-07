@@ -4,6 +4,7 @@ import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
+import dk.aau.cs.d402f13.utilities.gameapi.Action;
 import dk.aau.cs.d402f13.values.BoolValue;
 import dk.aau.cs.d402f13.values.CoordValue;
 import dk.aau.cs.d402f13.values.IntValue;
@@ -18,13 +19,13 @@ public abstract class Wrapper {
   protected GameEnvironment env;
   protected Interpreter interpreter;
 
-  public Wrapper(GameEnvironment env, ObjectValue object) {
+  public Wrapper(GameEnvironment env, ObjectValue object) throws StandardError {
     this.object = object;
     this.env = env;
     this.interpreter = env.getInterpreter();
   }
   
-  public Wrapper(GameEnvironment env, Value object) {
+  public Wrapper(GameEnvironment env, Value object) throws StandardError {
     this(env, (ObjectValue)object);
   }
   
@@ -122,6 +123,30 @@ public abstract class Wrapper {
   
   protected Value[] callMemberList(String name, TypeValue type, int minLength, Value ... actualParameters) throws StandardError {
     return object.callMemberList(name, type, minLength, interpreter, actualParameters);
+  }
+  
+  protected Action[] callMemberActions(String name, Value ... actualParameters) throws StandardError {
+    Value[] list = callMemberList(name, env.actionType(), actualParameters);
+    Action[] actions = new Action[list.length];
+    for (int i = 0; i < list.length; i++) {
+      Value action = list[i];
+      if (action.is(env.addActionType())) {
+        actions[i] = new AddActionWrapper(env, action);
+      }
+      else if (action.is(env.removeActionType())) {
+        actions[i] = new RemoveActionWrapper(env, action);
+      }
+      else if (action.is(env.moveActionType())) {
+        actions[i] = new MoveActionWrapper(env, action);
+      }
+      else if (action.is(env.actionSequenceType())) {
+        actions[i] = new ActionSequenceWrapper(env, action);
+      }
+      else {
+        throw new TypeError("Invalid action type: " + action.getType().getName());
+      }
+    }
+    return actions; 
   }
   
   protected Value getAttribute(String name) throws StandardError {

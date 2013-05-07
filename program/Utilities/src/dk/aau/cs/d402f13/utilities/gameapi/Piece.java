@@ -7,5 +7,5 @@ public interface Piece {
   public Player getOwner() throws StandardError;
   public Square getSquare() throws StandardError;
   public boolean isOnBoard() throws StandardError;
-  public Action[] getActions() throws StandardError;
+  public Action[] getActions(Game game) throws StandardError;
 }

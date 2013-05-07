@@ -16,6 +16,14 @@ public class PatternValue extends Value {
     return type;
   }
 
+  public int length() {
+    return values.length;
+  }
+
+  public Value[] getValues() {
+    return values;
+  }
+
   /**
    * Creates a new pattern from the given parameters. The method
    * checks the values to see if they're allowed in patterns, throws
