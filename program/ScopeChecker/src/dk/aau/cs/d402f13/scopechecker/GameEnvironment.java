@@ -27,6 +27,8 @@ public class GameEnvironment {
     current = new TypeSymbolInfo(null, "Board", -1, 0);
     current.args = 0;
     current.members.add(new Member("pieces"));
+    current.members.add(new Member("addPiece", 0, -1, 0));
+    current.members.add(new Member("addPieces", 0, -1, 0));
     tt.addType(current);
     
     //GRIDBOARD
@@ -44,6 +46,7 @@ public class GameEnvironment {
     //SQUARE
     current = new TypeSymbolInfo(null, "Square", -1, 0);
     current.args = 0;
+    current.members.add(new Member("addPiece", 0, -1, 0));
     current.members.add(new Member("position"));
     current.members.add(new Member("pieces"));
     current.members.add(new Member("image"));
@@ -55,6 +58,8 @@ public class GameEnvironment {
     //PIECE
     current = new TypeSymbolInfo(null, "Piece", -1, 0);
     current.args = 1;
+    current.members.add(new Member("move", 0, -1, 0));
+    current.members.add(new Member("remove", 0, -1, 0));
     current.members.add(new Member("owner"));
     current.members.add(new Member("image"));
     current.members.add(new Member("square"));
