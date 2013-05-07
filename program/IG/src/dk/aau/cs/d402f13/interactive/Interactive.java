@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 
 import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
+import dk.aau.cs.d402f13.interpreter.stdenv.game.wrappers.GameWrapper;
 import dk.aau.cs.d402f13.parser.Parser;
 import dk.aau.cs.d402f13.scanner.Scanner;
 import dk.aau.cs.d402f13.scopechecker.ScopeChecker;
@@ -157,7 +158,7 @@ public class Interactive {
                   System.out.println(code);
                 }
                 else{
-                  if (!line.equals(":nk") && !line.equals(":t")) {
+                  if (!line.equals(":nk")) {
                     System.out.println("Scope checking...");
                     start = new Date();
                     ScopeChecker scopeChecker = new ScopeChecker();
@@ -208,9 +209,11 @@ public class Interactive {
                       System.out.println("Unit testing took " + time + " ms");
                     }
                     else {
-                      TypeValue game = env.findGameType();
-                      if (game != null) {
-                        System.out.println("Found game: " + game.getName());
+                      TypeValue gameType = env.findGameType();
+                      if (gameType != null) {
+                        System.out.println("Found game: " + gameType.getName());
+                        GameWrapper game = new GameWrapper(env, gameType.getInstance(i));
+                        System.out.println("Title: " + game.getTitle());
                       }
                       Value main = env.getConstant("main"); 
                       if (main != null) {
