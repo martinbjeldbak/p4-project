@@ -1,0 +1,38 @@
+// the following is 20 examples of junta source code
+
+type TrueOrFalse [] extends TestCase[] {
+  define opIs = 1 == 5 is Boolean
+  define equality = 5 == 5
+  define notEqual = not 5 != 5
+  define negate = not 2 == 1
+  define notEqNegate = 1 != 2 and 2 == 2
+  define greater = 20 > 2
+  define less = 20 < 21
+  define greatEq = 2 >= 1 and 10 >= 10
+  define lessEq = 0 <= 1
+  define addGreatSub = 5 + 5 > 5 - 5
+  define multEqDiv = not 2 * 2 == 2 / 2
+}
+
+define sortAscend = [151, 157, 163, 7, 11, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59,
+                     13, 17, 73, 79, 83, 89, 97, 101, 103, 107,2, 3, 5, 109, 61, 67, 
+                     71, 113, 149, 167, 173, 179, 181, 191, 127, 131, 137, 139]
+                     .sort[#[$a, $b] => $a - $b]
+define sortDescend = [151, 157, 163, 7, 11, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59,
+                      13, 17, 73, 79, 83, 89, 97, 101, 103, 107,2, 3, 5, 109, 61, 67, 
+                      71, 113, 149, 167, 173, 179, 181, 191, 127, 131, 137, 139]
+                      .sort[#[$a, $b] => $b - $a]
+
+type Numbers [] extends TestCase[] {
+  define addition = let $d = 5 + 2 + 1 in $d + $d == 8 + 8
+  define subtract = let $d = 3 - 2, $e = 5 - 4 in $d - $e == 1 - 1
+  define ascendOrd = sortAscend == [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 
+                     47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 
+                     127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191]
+  define sizeOfAsc = sortAscend.size == 43
+  data $filterAsc = sortAscend.filter[#[$a] => $a >= 107] 
+  define filterAsc = $filterAsc == [107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 
+                     163, 167, 173, 179, 181, 191]
+  define mapAsc = $filterAsc.map[#[$a] => $a + 10] == [117, 119, 123, 137, 141, 147, 149, 
+                  159, 161, 167, 173, 177, 183, 189, 191, 201]
+}
