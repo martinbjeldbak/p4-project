@@ -7,8 +7,12 @@ import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 import dk.aau.cs.d402f13.utilities.gameapi.Action;
+import dk.aau.cs.d402f13.utilities.gameapi.ActionSequence;
+import dk.aau.cs.d402f13.utilities.gameapi.AddAction;
 import dk.aau.cs.d402f13.utilities.gameapi.Game;
+import dk.aau.cs.d402f13.utilities.gameapi.MoveAction;
 import dk.aau.cs.d402f13.utilities.gameapi.Player;
+import dk.aau.cs.d402f13.utilities.gameapi.RemoveAction;
 import dk.aau.cs.d402f13.values.ListValue;
 import dk.aau.cs.d402f13.values.ObjectValue;
 import dk.aau.cs.d402f13.values.TypeValue;
@@ -71,13 +75,33 @@ public class GameWrapper extends Wrapper implements Game {
 
   @Override
   public Game applyAction(Action action) throws StandardError {
-    // TODO Auto-generated method stub
+    if (action instanceof ActionSequence) {
+    }
+    else if (action instanceof AddAction) {
+    }
+    else if (action instanceof RemoveAction) {
+    }
+    else if (action instanceof MoveAction) {
+    }
+    else {
+      throw new InternalError("Invalid action class: " + action.getClass());
+    }
     return null;
   }
 
   @Override
   public Game undoAction(Action action) throws StandardError {
-    // TODO Auto-generated method stub
+    if (action instanceof ActionSequence) {
+    }
+    else if (action instanceof AddAction) {
+    }
+    else if (action instanceof RemoveAction) {
+    }
+    else if (action instanceof MoveAction) {
+    }
+    else {
+      throw new InternalError("Invalid action class: " + action.getClass());
+    }
     return null;
   }
 
