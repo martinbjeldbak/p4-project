@@ -27,6 +27,24 @@ public class GridBoardWrapper extends BoardWrapper implements GridBoard {
     width = getMemberInt("width");
     height = getMemberInt("height");
     isFull = getMemberBoolean("isFull");
+    
+    Value[] squares = getMemberList("squares", env.pieceType(), 1);
+    this.squares = new SquareWrapper[squares.length];
+    for (int i = 0; i < squares.length; i++) {
+      this.squares[i] = new SquareWrapper(env, squares[i]);
+    }
+    
+    Value[] squareTypes = getMemberList("squareTypes", env.pieceType(), 1);
+    this.squareTypes = new SquareWrapper[squareTypes.length];
+    for (int i = 0; i < squareTypes.length; i++) {
+      this.squareTypes[i] = new SquareWrapper(env, squareTypes[i]);
+    }
+    
+    Value[] emptySquares = getMemberList("emptySquares", env.pieceType(), 1);
+    this.emptySquares = new SquareWrapper[emptySquares.length];
+    for (int i = 0; i < emptySquares.length; i++) {
+      this.emptySquares[i] = new SquareWrapper(env, emptySquares[i]);
+    }
   }
 
   @Override
@@ -42,12 +60,16 @@ public class GridBoardWrapper extends BoardWrapper implements GridBoard {
   @Override
   public Square getSquareAt(int x, int y) throws StandardError {
     // faster: i = y * width + x
-    for (Square s : squares) {
-      if (s.getX() == x && s.getY() == y) {
-        return s;
-      }
+    int i = y * width + x;
+    if (i < 0 || i >= squares.length) {
+      throw new ArgumentError("Coordinates out of bounds");
     }
-    throw new ArgumentError("Coordinates out of bounds");
+    return squares[i];
+//    for (Square s : squares) {
+//      if (s.getX() == x && s.getY() == y) {
+//        return s;
+//      }
+//    }
   }
 
   @Override

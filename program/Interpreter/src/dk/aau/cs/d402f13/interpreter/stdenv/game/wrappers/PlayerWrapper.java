@@ -11,8 +11,16 @@ import dk.aau.cs.d402f13.values.Value;
 
 public class PlayerWrapper extends Wrapper implements Player {
   
+  private String name;
+  
   public PlayerWrapper(GameEnvironment env, Value object) throws StandardError {
     super(env, object);
+    name = getMemberString("name");
+  }
+  
+  @Override
+  public String getName() throws StandardError {
+    return name;
   }
 
   @Override

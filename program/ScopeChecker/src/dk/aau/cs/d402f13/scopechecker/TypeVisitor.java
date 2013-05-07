@@ -22,11 +22,9 @@ public class TypeVisitor extends DefaultVisitor
   private TypeTable tt;
   private TypeSymbolInfo currentType;
   
-  public void setTypeTable(TypeTable tt){
-    this.tt = tt;
-  }
   
-  public TypeVisitor(){   
+  public TypeVisitor(TypeTable tt){   
+    this.tt = tt;
   }
 
   @Override
