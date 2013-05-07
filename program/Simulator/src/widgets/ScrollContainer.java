@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.TrueTypeFont;
 
 import dk.aau.cs.d402f13.simulator.ResourceHandler;
@@ -13,6 +14,8 @@ public class ScrollContainer extends SceneObject {
 	private int y = 0;
 	
 	private int yStart = 0;
+	private int barWidth = 19;
+	private int barPadding = 14;
 	
 	public ScrollContainer(){
 		scaleHeight( 0 );
@@ -28,20 +31,47 @@ public class ScrollContainer extends SceneObject {
 		return getHeight() / font.getLineHeight();
 	}
 	
+	private void drawScalable( Graphics g, int x, int y, int height , String name ){
+		Image topImg = ResourceHandler.getImage( "img/" + name + "_top.png" );
+		Image middleImg = ResourceHandler.getImage( "img/" + name + "_middle.png" );
+		Image bottomImg = ResourceHandler.getImage( "img/" + name + "_bottom.png" );
+		
+		g.drawImage( topImg, x, y );
+		g.drawImage( bottomImg, x, y + height - bottomImg.getHeight() );
+
+		//Draw middle part
+		int yStart = y + topImg.getHeight();
+		int yEnd = y + height - bottomImg.getHeight();
+		int yStep = middleImg.getHeight();
+		for( int iy = yStart; iy + yStep <= yEnd; iy += yStep )
+			g.drawImage( middleImg, x, iy );
+		
+		//We might not be able to draw a full image at the end,
+		//draw the remaining, but limit the height
+		int rest = (yEnd - yStart) % yStep;
+		if( rest > 0 )
+			middleImg.draw( x, yEnd - rest, middleImg.getWidth(), rest );
+	}
+	
 	@Override
 	public void draw( Graphics g ){
 		TrueTypeFont font = ResourceHandler.getFont( "gtw", 16 );
 		int linePos = 0;
 		g.setFont( font );
 		g.setColor( Color.black );
-		g.drawRect( 0, 0, getWidth(), getHeight() );
 		
 		//Draw scroll bar
-		int right = getWidth() - 8;
+		int right = getWidth() - barWidth;
 		int difference = lines.size() - amountShown();
 		if( difference > 0 ){
-			float scale = getHeight() / (float)lines.size();
-			g.drawLine( (float)right, y * scale, (float)right, (y + amountShown()) * scale );
+			drawScalable( g, right, 0, getHeight(), "bar" );
+
+			int height = getHeight() - barPadding * 2;
+			float scale = height / (float)lines.size();
+			drawScalable( g, right, (int)(y * scale) + barPadding
+				,	(int)(amountShown() * scale )
+				,	"handle"
+				);
 		}
 		
 		if( lines != null ){
@@ -59,7 +89,7 @@ public class ScrollContainer extends SceneObject {
 	
 	@Override
 	protected boolean handleMouseClicked( int button, int x, int y ){
-		if( x >= getWidth() - 8 ){
+		if( x >= getWidth() - barWidth ){
 			startDragging( x, y );
 			yStart = this.y;
 			return true;
