@@ -77,6 +77,15 @@ public class ObjectValue extends Value implements Cloneable {
     return getObjectMember(member);
   }
   
+  @Override
+  public HashMap<String, Value> getMembers(Interpreter interpreter) throws StandardError {
+    HashMap<String, Value> result = new HashMap<String, Value>();
+    for (Entry<String, Member> e : getType().getTypeMembers().entrySet()) {
+      result.put(e.getKey(), e.getValue().getValue(interpreter, scope));
+    }
+    return result;
+  }
+  
   public Value getAttribute(String attribute) throws StandardError {
     Value value = attributes.get(attribute);
     if (value == null) {
