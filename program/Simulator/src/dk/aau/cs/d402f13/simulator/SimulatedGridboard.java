@@ -114,6 +114,5 @@ public class SimulatedGridboard extends SimulatedBoard {
 	@Override
 	public void draw(Graphics g) {
 		drawBoard( g, getWidth(), getHeight() );
-		super.draw( g );
 	}
 }

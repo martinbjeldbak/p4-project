@@ -52,7 +52,7 @@ public class SimulatedGame extends BasicGame {
 		g.texture( shape, ResourceHandler.getImage( "img/wood.png" ) );
 		
 		//Draw board
-		sceneHandler.draw( g );
+		sceneHandler.startDraw( g );
 	}
 	
 	@Override
