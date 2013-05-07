@@ -20,7 +20,7 @@ public class GameEnvironment {
     current.members.add(new Member("turnOrder"));
     current.members.add(new Member("currentBoard"));
     current.members.add(new Member("title"));
-    current.members.add(new Member("findSquares"));
+    current.members.add(new Member("findSquares", 0, -1, 0));
     tt.addType(current);
     
     //BOARD
@@ -59,16 +59,16 @@ public class GameEnvironment {
     current.members.add(new Member("image"));
     current.members.add(new Member("square"));
     current.members.add(new Member("onBoard"));
-    current.members.add(new Member("actions"));
+    current.members.add(new Member("actions", 0, -1, 0));
     tt.addType(current);
     
     //PLAYER
     current = new TypeSymbolInfo(null, "Player", -1, 0);
     current.args = 1;
     current.members.add(new Member("name"));
-    current.members.add(new Member("winCondition"));
-    current.members.add(new Member("tieCondition"));
-    current.members.add(new Member("actions"));
+    current.members.add(new Member("winCondition", 0, -1, 0));
+    current.members.add(new Member("tieCondition", 0, -1, 0));
+    current.members.add(new Member("actions", 0, -1, 0));
     tt.addType(current);
     
     
