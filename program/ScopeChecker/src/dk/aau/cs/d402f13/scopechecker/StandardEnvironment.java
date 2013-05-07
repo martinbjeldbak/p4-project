@@ -48,6 +48,7 @@ public class StandardEnvironment {
     //Pattern
     current = new TypeSymbolInfo(null, "Pattern", -1, 0);
     current.args = 1;
+    current.members.add(new Member("size"));
      tt.addType(current);
     
     //String
@@ -60,11 +61,6 @@ public class StandardEnvironment {
     current.args = 1;
     current.members.add(new Member("isSubtypeOf"));
     current.members.add(new Member("isSupertypeOf"));
-     tt.addType(current);
-    
-    //Action
-    current = new TypeSymbolInfo(null, "Action", -1, 0);
-    current.args = 1;
      tt.addType(current);
     
     //GLOBAL FUNCTIONS

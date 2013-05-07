@@ -3,7 +3,6 @@ package dk.aau.cs.d402f13.utilities.scopechecker;
 public class Member{
   public int args;
   public String name;
-  public TypeSymbolInfo declaredInType;
   public int line, offset;
   public Boolean abstrct;
  
@@ -24,7 +23,7 @@ public class Member{
     this.line = line;
     this.offset = offset;
   }
-  public Member(String name, int args, TypeSymbolInfo declaredInType, int line, int offset){
+  public Member(String name, int args, int line, int offset){
     this(name,line, offset);
     this.args = args;
   }

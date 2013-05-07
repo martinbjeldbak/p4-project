@@ -11,6 +11,7 @@ public class ScopeChecker {
     
     //Insert the standard environment types and their members into TypeTable
     StandardEnvironment.insertInto(tt);
+    GameEnvironment.insertInto(tt);
     
     //Find types, their members, constructor and super constructor call
     TypeVisitor typeVisitor = new TypeVisitor(tt);
