@@ -1,5 +1,6 @@
 package dk.aau.cs.d402f13.interpreter.stdenv.game;
 
+import java.lang.reflect.Array;
 import java.util.Map.Entry;
 
 import dk.aau.cs.d402f13.interpreter.AbstractMember;
@@ -37,6 +38,46 @@ public class GameEnvironment extends StandardEnvironment {
   private final TypeValue piece = new TypeValue("Piece", false, "owner");
   private final TypeValue player = new TypeValue("Player", false);
   
+  private final AbstractTypeValue action = new AbstractTypeValue("Action", false);
+  private final TypeValue actionSequence = new TypeValue("ActionSequence", action,
+      new ParentCallable() {
+        @Override
+        public Value call(Interpreter interpreter) throws StandardError {
+          return action.getInstance(interpreter);
+        }
+      }, true, "actions");
+  private final AbstractTypeValue unitAction = new AbstractTypeValue("UnitAction", action,
+      new ParentCallable() {
+        @Override
+        public Value call(Interpreter interpreter) throws StandardError {
+          return action.getInstance(interpreter);
+        }
+      }, false, "piece");
+  private final TypeValue addAction = new TypeValue("AddAction", unitAction,
+      new ParentCallable() {
+        @Override
+        public Value call(Interpreter interpreter) throws StandardError {
+          Value v = interpreter.getSymbolTable().getVariable("piece", piece);
+          return unitAction.getInstance(interpreter, v);
+        }
+      }, false, "piece", "to");
+  private final TypeValue removeAction = new TypeValue("RemoveAction", unitAction,
+      new ParentCallable() {
+        @Override
+        public Value call(Interpreter interpreter) throws StandardError {
+          Value v = interpreter.getSymbolTable().getVariable("piece", piece);
+          return unitAction.getInstance(interpreter, v);
+        }
+      }, false, "piece", "from");
+  private final TypeValue moveAction = new TypeValue("MoveAction", unitAction,
+      new ParentCallable() {
+        @Override
+        public Value call(Interpreter interpreter) throws StandardError {
+          Value v = interpreter.getSymbolTable().getVariable("piece", piece);
+          return unitAction.getInstance(interpreter, v);
+        }
+      }, false, "piece", "from", "to");
+  
   public TypeValue gameType() {
     return game;
   }
@@ -61,6 +102,30 @@ public class GameEnvironment extends StandardEnvironment {
     return player;
   }
   
+  public TypeValue actionType() {
+    return action;
+  }
+  
+  public TypeValue actionSequenceType() {
+    return actionSequence;
+  }
+  
+  public TypeValue unitActionType() {
+    return unitAction;
+  }
+  
+  public TypeValue addActionType() {
+    return addAction;
+  }
+  
+  public TypeValue removeActionType() {
+    return removeAction;
+  }
+  
+  public TypeValue moveActionType() {
+    return moveAction;
+  }
+  
   public GameEnvironment() {
     super();
 
@@ -78,24 +143,27 @@ public class GameEnvironment extends StandardEnvironment {
         return new IntValue(0);
       }
     }));
+    game.addAttribute("currentBoard", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return object.getMember("board", board);
+      }
+    }));
     game.addTypeMember("currentPlayer", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        int i = ((IntValue)TypeValue.expect(
-            ((ObjectValue)object).getAttribute("currentPlayer"),
-            IntValue.type())).getValue();
-        Value[] players = ((ListValue)TypeValue.expect(
-            object.getMember("turnOrder"),
-            ListValue.type()
-        )).getValues();
-        if (players.length < 1) {
-          throw new TypeError("Invalid length of players-list");
-        }
-        TypeValue.expect(player, players);
+        int i = ((ObjectValue)object).getAttributeInt("currentPlayer");
+        Value[] players = object.getMemberList("turnOrder", player, 1);
         if (i >= players.length || i < 0) {
           throw new ArgumentError("Invalid player index:  + i");
         }
         return players[i];
+      }
+    }));
+    game.addTypeMember("currentBoard", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return ((ObjectValue)object).getAttribute("currentBoard");
       }
     }));
     game.addTypeMember("turnOrder", new Member(new ConstantCallable() {
@@ -151,22 +219,9 @@ public class GameEnvironment extends StandardEnvironment {
     gridBoard.addAttribute("squares", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        int width = ((IntValue)TypeValue.expect(
-            interpreter.getSymbolTable().getVariable("width"),
-            IntValue.type()
-        )).getValue();
-        int height = ((IntValue)TypeValue.expect(
-            interpreter.getSymbolTable().getVariable("height"),
-            IntValue.type()
-        )).getValue(); 
-        Value[] types = ((ListValue)TypeValue.expect(
-            object.getMember("squareTypes"),
-            ListValue.type()
-        )).getValues();
-        if (types.length < 1) {
-          throw new TypeError("Invalid length of squareTypes-list");
-        }
-        TypeValue.expect(square, types); // Expect all elements of array to be of type Square
+        int width = interpreter.getSymbolTable().getVariableInt("width");
+        int height = interpreter.getSymbolTable().getVariableInt("height");
+        Value[] types = object.getMemberList("squareTypes", square, 1);
         int size = width * height;
         Value[] squares = new Value[size];
         int x = 0, y = 0, numTypes = types.length;
@@ -283,6 +338,113 @@ public class GameEnvironment extends StandardEnvironment {
     // type: Square
     ////////////////////////////////////
     addType(square);
+    
+    square.addAttribute("position", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return new CoordValue(1, 1);
+      }
+    }));
+    square.addTypeMember("position", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return ((ObjectValue)object).getAttribute("position");
+      }
+    }));
+    square.addTypeMember("setPosition", new Member(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
+        TypeValue.expect(actualParameters, 0, CoordValue.type());
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        object.beginClone();
+        object.setAttribute("position", actualParameters[0]);
+        return object.endClone();
+      }
+    }));
+    
+    ////////////////////////////////////
+    // type: Action
+    ////////////////////////////////////
+    addType(action);
+    
+
+    ////////////////////////////////////
+    // type: ActionSequence
+    ////////////////////////////////////
+    addType(actionSequence);
+    actionSequence.addTypeMember("actions", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return new ListValue(interpreter.getSymbolTable().getVariableList("actions", unitAction, 1));
+      }
+    }));
+    actionSequence.addTypeMember("addAction", new Member(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
+        TypeValue.expect(actualParameters, 0, unitAction);
+        Value[] actions = interpreter.getSymbolTable().getVariableList("actions", unitAction, 1);
+        Value[] actionsAfter = new Value[actions.length + 1];
+        for (int i = 0; i < actions.length; i++) {
+          actionsAfter[i] = actions[i];
+        }
+        actionsAfter[actions.length] = actualParameters[0];
+        return actionSequence.getInstance(interpreter, actionsAfter);
+      }
+    }));
+
+    
+    ////////////////////////////////////
+    // type: UnitAction
+    ////////////////////////////////////
+    addType(unitAction);
+    unitAction.addTypeMember("piece", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return interpreter.getSymbolTable().getVariable("piece", piece);
+      }
+    }));
+
+    
+    ////////////////////////////////////
+    // type: AddAction
+    ////////////////////////////////////
+    addType(addAction);
+    addAction.addTypeMember("to", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return interpreter.getSymbolTable().getVariable("to", square);
+      }
+    }));
+
+    
+    ////////////////////////////////////
+    // type: RemoveAction
+    ////////////////////////////////////
+    addType(removeAction);
+    removeAction.addTypeMember("from", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return interpreter.getSymbolTable().getVariable("from", square);
+      }
+    }));
+
+    
+    ////////////////////////////////////
+    // type: MoveAction
+    ////////////////////////////////////
+    addType(moveAction);
+    moveAction.addTypeMember("to", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return interpreter.getSymbolTable().getVariable("to", square);
+      }
+    }));
+    moveAction.addTypeMember("from", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return interpreter.getSymbolTable().getVariable("from", square);
+      }
+    }));
   }
   
   /**
