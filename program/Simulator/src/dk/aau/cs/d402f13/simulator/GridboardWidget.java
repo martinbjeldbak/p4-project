@@ -8,7 +8,7 @@ import dk.aau.cs.d402f13.utilities.types.Gridboard;
 import dk.aau.cs.d402f13.utilities.types.Piece;
 import dk.aau.cs.d402f13.utilities.types.Square;
 
-public class SimulatedGridboard extends SimulatedBoard {
+public class GridboardWidget extends BoardWidget {
 	private Gridboard board;
 	private int size = 0;
 	private int offsetX = 0;
@@ -18,7 +18,7 @@ public class SimulatedGridboard extends SimulatedBoard {
 		return board.getHeight() - y - 1;
 	}
 	
-	public SimulatedGridboard( SimulatedGame game, Gridboard b ) {
+	public GridboardWidget( SimulatedGame game, Gridboard b ) {
 		super( game );
 		board = b;
 	}

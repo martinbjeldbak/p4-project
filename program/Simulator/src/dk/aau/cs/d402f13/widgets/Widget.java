@@ -1,11 +1,11 @@
-package widgets;
+package dk.aau.cs.d402f13.widgets;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.newdawn.slick.Graphics;
 
-public class SceneObject {
+public class Widget {
 	private int x = 0;
 	private int y = 0;
 	private int width = 0;
@@ -18,8 +18,8 @@ public class SceneObject {
 	protected int dragStartX = 0;
 	protected int dragStartY = 0;
 	
-	protected List<SceneObject> objects = new ArrayList<SceneObject>();
-	private List<SceneObject> listeners = new ArrayList<SceneObject>();
+	protected List<Widget> widgets = new ArrayList<Widget>();
+	private List<Widget> listeners = new ArrayList<Widget>();
 
 	public int getX(){ return x; }
 	public int getY(){ return y; }
@@ -31,7 +31,7 @@ public class SceneObject {
 	public int getMaxWidth(){ return maxWidth; }
 	
 	public void adjustSizes(){
-		for( SceneObject o : objects )
+		for( Widget o : widgets )
 			o.adjustSizes();
 	}
 	
@@ -85,7 +85,7 @@ public class SceneObject {
 		dragging = false;
 	}
 	protected boolean childrenDragging(){
-		for( SceneObject o : objects ){
+		for( Widget o : widgets ){
 			if( o.dragging )
 				return true;
 			else
@@ -95,15 +95,15 @@ public class SceneObject {
 		return false;
 	}
 	
-	public void addObject( SceneObject o ){
-		objects.add( o );
+	public void addObject( Widget o ){
+		widgets.add( o );
 	}
-	public void removeObject( SceneObject o ){
-		objects.remove( o );
+	public void removeObject( Widget o ){
+		widgets.remove( o );
 	}
 	
 	final public void startDraw( Graphics g ){
-		for( SceneObject o : objects ){
+		for( Widget o : widgets ){
 			g.translate( o.getX(), o.getY() );
 		//TODO: clip appears to use absolute coordinates
 		//	g.setClip( o.getX(), o.getY(), o.getWidth(), o.getHeight() );
@@ -140,7 +140,7 @@ public class SceneObject {
 	}
 	
 	final public boolean mouseClicked( int button, int x, int y ){
-		for( SceneObject o : objects )
+		for( Widget o : widgets )
 			if( o.containsPoint( x, y ) ){
 				if( o.mouseClicked( button, x - o.getX(), y - o.getY() ) )
 					return true;
@@ -152,7 +152,7 @@ public class SceneObject {
 	}
 	
 	final public boolean mouseDragged( int oldX, int oldY, int newX, int newY ){
-		for( SceneObject o : objects ){
+		for( Widget o : widgets ){
 			int x1 = oldX - o.getX();
 			int y1 = oldY - o.getY();
 			int x2 = newX - o.getX();
@@ -169,7 +169,7 @@ public class SceneObject {
 	}
 	
 	final public boolean mouseReleased( int button, int x, int y ){
-		for( SceneObject o : objects ){
+		for( Widget o : widgets ){
 			boolean handled = false;
 			if( o.mouseReleased( button, x - o.getX(), y - o.getY() ) )
 				handled = true;
@@ -192,19 +192,19 @@ public class SceneObject {
 		MOVE_GENERATED
 	}
 	
-	public void acceptEvent( SceneObject obj, Event event ){
+	public void acceptEvent( Widget obj, Event event ){
 		//Nothing here, this is intended, as the default is no action
 	}
 	
 	protected void createEvent( Event event ){
-		for( SceneObject o : listeners )
+		for( Widget o : listeners )
 			o.acceptEvent( this, event );
 	}
 	
-	public void startListening( SceneObject obj ){
+	public void startListening( Widget obj ){
 		listeners.add( obj );
 	}
-	public void stopListening( SceneObject obj ){
+	public void stopListening( Widget obj ){
 		listeners.remove( obj );
 	}
 }

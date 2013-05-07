@@ -1,12 +1,12 @@
-package widgets;
+package dk.aau.cs.d402f13.widgets;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.TrueTypeFont;
 
-import dk.aau.cs.d402f13.simulator.ResourceHandler;
+import dk.aau.cs.d402f13.helpers.ResourceHelper;
 
-public class Label extends SceneObject{
+public class Label extends Widget{
 	private String fontName;
 	private int fontSize;
 	private String text;
@@ -19,7 +19,7 @@ public class Label extends SceneObject{
 	}
 	
 	public TrueTypeFont font(){
-		return ResourceHandler.getFont( fontName, fontSize );
+		return ResourceHelper.getFont( fontName, fontSize );
 	}
 	
 	public void setString( String newText ){

@@ -9,16 +9,17 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
-import widgets.ObjectContainer;
 
+import dk.aau.cs.d402f13.helpers.ResourceHelper;
 import dk.aau.cs.d402f13.utilities.types.Game;
 import dk.aau.cs.d402f13.utilities.types.Gridboard;
+import dk.aau.cs.d402f13.widgets.ScaleContainer;
 
 public class SimulatedGame extends BasicGame {
 	//Game mechanics stuff
-	ObjectContainer sceneHandler = null;
-	SimulatedGridboard board = null;
-	SimulatedGameInfo sidebar = null;
+	ScaleContainer sceneHandler = null;
+	GridboardWidget board = null;
+	GameInfoWidget sidebar = null;
 	Game game;
 	
 	
@@ -29,13 +30,13 @@ public class SimulatedGame extends BasicGame {
 		game = new ChessGame();
 		Object obj = game.board();
 		if( obj instanceof Gridboard )
-			board = new SimulatedGridboard( this, (Gridboard)obj );
+			board = new GridboardWidget( this, (Gridboard)obj );
 		else
 			; //TODO:
 		
-		sidebar = new SimulatedGameInfo( this );
+		sidebar = new GameInfoWidget( this );
 		
-		sceneHandler = new ObjectContainer( false );
+		sceneHandler = new ScaleContainer( false );
 		sceneHandler.addObject( board );
 		sceneHandler.addObject( sidebar );
 	}
@@ -49,7 +50,7 @@ public class SimulatedGame extends BasicGame {
 		//Fill background
 		g.setColor( Color.white );
 		Shape shape = new Rectangle( 0,0, gc.getWidth(), gc.getHeight() );
-		g.texture( shape, ResourceHandler.getImage( "img/wood.png" ) );
+		g.texture( shape, ResourceHelper.getImage( "img/wood.png" ) );
 		
 		//Draw board
 		sceneHandler.startDraw( g );
@@ -77,7 +78,7 @@ public class SimulatedGame extends BasicGame {
 	public static void main( String[] args ) throws SlickException, CloneNotSupportedException {
 		SimulatedGame simulator = new SimulatedGame( "chess.junta" );
 		AppGameContainer app = new AppGameContainer( simulator );
-		//app.setDisplayMode( 1366, 768, true ); //fullscreen
+		//app.setDisplayMode( 1366, 768, true ); //full-screen
 		app.setDisplayMode( 1024, 600, false );
 		app.setTargetFrameRate( 60 );
 		app.setVSync( true );
