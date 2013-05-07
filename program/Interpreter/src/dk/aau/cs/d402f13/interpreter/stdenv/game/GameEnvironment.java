@@ -199,25 +199,20 @@ public class GameEnvironment extends StandardEnvironment {
     // type: Board
     ////////////////////////////////////
     addType(board);
-    
-    board.addTypeMember("squares", new Member(new ConstantCallable() {
+
+    board.addAttribute("pieces", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
         return new ListValue();
       }
     }));
-    board.addTypeMember("isFull", new Member(new ConstantCallable() {
+    board.addTypeMember("pieces", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        return BoolValue.falseValue();
+        return ((ObjectValue)object).getAttribute("pieces");
       }
     }));
-    board.addTypeMember("emptySquares", new Member(new ConstantCallable() {
-      @Override
-      public Value call(Interpreter interpreter, Value object) throws StandardError {
-        return object.getMember("squares");
-      }
-    }));
+
     
     ////////////////////////////////////
     // type: GridBoard
@@ -244,10 +239,22 @@ public class GameEnvironment extends StandardEnvironment {
         return new ListValue(squares);
       }
     }));
+    gridBoard.addTypeMember("isFull", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return BoolValue.falseValue();
+      }
+    }));
     gridBoard.addTypeMember("squares", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
         return ((ObjectValue)object).getAttribute("squares");
+      }
+    }));
+    gridBoard.addTypeMember("emptySquares", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return object.getMember("squares");
       }
     }));
     gridBoard.addTypeMember("squareTypes", new Member(new ConstantCallable() {
@@ -262,22 +269,26 @@ public class GameEnvironment extends StandardEnvironment {
     ////////////////////////////////////
     addType(piece);
     
-    piece.addTypeMember("player", new Member(new ConstantCallable() {
+    piece.addTypeMember("owner", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
         return interpreter.getSymbolTable().getVariable("owner");
       }
     }));
-    piece.addAttribute("position", new Member(new ConstantCallable() {
+    piece.addAttribute("square", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        return new CoordValue(1, 1);
+        return null;
       }
     }));
-    piece.addTypeMember("position", new Member(new ConstantCallable() {
+    piece.addTypeMember("square", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        return ((ObjectValue)object).getAttribute("position");
+        Value a = ((ObjectValue)object).getAttribute("square");
+        if (a == null) {
+          throw new ArgumentError("Piece not on board. Invalid use of member 'square'.");
+        }
+        return a;
       }
     }));
     piece.addAttribute("onBoard", new Member(new ConstantCallable() {
@@ -292,26 +303,26 @@ public class GameEnvironment extends StandardEnvironment {
         return ((ObjectValue)object).getAttribute("onBoard");
       }
     }));
-    piece.addTypeMember("move", new Member(1, false, new Callable() {
-      @Override
-      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
-        TypeValue.expect(actualParameters, 0, CoordValue.type());
-        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
-        object.beginClone();
-        object.setAttribute("position", actualParameters[0]);
-        object.setAttribute("onBoard", BoolValue.trueValue());
-        return object.endClone();
-      }
-    }));
-    piece.addTypeMember("remove", new Member(0, false, new Callable() {
-      @Override
-      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
-        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
-        object.beginClone();
-        object.setAttribute("onBoard", BoolValue.falseValue());
-        return object.endClone();
-      }
-    }));
+//    piece.addTypeMember("move", new Member(1, false, new Callable() {
+//      @Override
+//      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
+//        TypeValue.expect(actualParameters, 0, CoordValue.type());
+//        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+//        object.beginClone();
+//        object.setAttribute("position", actualParameters[0]);
+//        object.setAttribute("onBoard", BoolValue.trueValue());
+//        return object.endClone();
+//      }
+//    }));
+//    piece.addTypeMember("remove", new Member(0, false, new Callable() {
+//      @Override
+//      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
+//        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+//        object.beginClone();
+//        object.setAttribute("onBoard", BoolValue.falseValue());
+//        return object.endClone();
+//      }
+//    }));
     
     ////////////////////////////////////
     // type: Player
