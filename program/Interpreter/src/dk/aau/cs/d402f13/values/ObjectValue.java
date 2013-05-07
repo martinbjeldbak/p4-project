@@ -93,6 +93,41 @@ public class ObjectValue extends Value implements Cloneable {
     return value;
   }
   
+  public Value getAttribute(String name, TypeValue type) throws StandardError {
+    Value v = getAttribute(name);
+    if (!v.is(type)) {
+      throw new TypeError("Invalid type " + v.getType().getName()
+          + " for attribute $" + name + " in object of type "
+          + this.getType().getName() + ", expected " + type.getName());
+    }
+    return v;
+  }
+  
+  public Value getAttributeAs(String name, TypeValue type) throws StandardError {
+    Value v = getAttribute(name, type);
+    return v.as(type);
+  }
+  
+  public String getAttributeString(String name) throws StandardError {
+    return ((StrValue)getAttributeAs(name, StrValue.type())).getValue();
+  }
+  
+  public int getAttributeInt(String name) throws StandardError {
+    return ((IntValue)getAttributeAs(name, IntValue.type())).getValue();
+  }
+  
+  public boolean getAttributeBoolean(String name) throws StandardError {
+    return (BoolValue)getAttributeAs(name, IntValue.type()) == BoolValue.trueValue();
+  }
+  
+  public CoordValue getAttributeCoord(String name) throws StandardError {
+    return (CoordValue)getAttributeAs(name, ListValue.type());
+  }
+  
+  public Value[] getAttributeList(String name) throws StandardError {
+    return ((ListValue)getAttributeAs(name, ListValue.type())).getValues();
+  }
+  
   private ObjectValue cloneParentTree() throws InternalError {
     try {
       ObjectValue c = (ObjectValue)clone();

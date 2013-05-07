@@ -55,7 +55,5 @@ public class SimulatedGameInfo extends ObjectContainer {
 		for( Action a : game.history() )
 			historyLines.add( ActionHelper.humanReadable( game, a ) );
 		historyList.setLines( historyLines );
-		
-		super.draw( g );
 	}
 }
