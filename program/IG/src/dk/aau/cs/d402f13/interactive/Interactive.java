@@ -13,6 +13,7 @@ import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
 import dk.aau.cs.d402f13.parser.Parser;
 import dk.aau.cs.d402f13.scanner.Scanner;
+import dk.aau.cs.d402f13.scopechecker.ScopeChecker;
 //import dk.aau.cs.d402f13.scopechecker.ScopeChecker;
 import dk.aau.cs.d402f13.utilities.PrettyPrinter;
 import dk.aau.cs.d402f13.utilities.Token;
@@ -155,8 +156,8 @@ public class Interactive {
                   if (!line.equals(":nk")) {
                     System.out.println("Scope checking...");
                     start = new Date();
-//                    ScopeChecker scopeChecker;
-//                    scopeChecker.visit(ast);
+                    ScopeChecker scopeChecker = new ScopeChecker();
+                    scopeChecker.visit(ast);
                     time = new Date().getTime() - start.getTime();
                     System.out.println("Scope checking took " + time + " ms");
                   }
