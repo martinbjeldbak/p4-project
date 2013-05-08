@@ -9,38 +9,51 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
-import widgets.ObjectContainer;
 
-import dk.aau.cs.d402f13.utilities.types.Game;
-import dk.aau.cs.d402f13.utilities.types.Gridboard;
+import dk.aau.cs.d402f13.helpers.ResourceHelper;
+import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.utilities.gameapi.Game;
+import dk.aau.cs.d402f13.utilities.gameapi.GridBoard;
+import dk.aau.cs.d402f13.widgets.ScaleContainer;
 
 public class SimulatedGame extends BasicGame {
 	//Game mechanics stuff
-	ObjectContainer sceneHandler = null;
-	SimulatedGridboard board = null;
-	SimulatedGameInfo sidebar = null;
+	ScaleContainer sceneHandler = null;
+	GridBoardWidget board = null;
+	GameInfoWidget sidebar = null;
 	Game game;
 	
 	
 	public SimulatedGame( String path ) throws CloneNotSupportedException {
 		super( "Junta Simulator" );
 		
-		//TODO: load from file system
-		game = new ChessGame();
-		Object obj = game.board();
-		if( obj instanceof Gridboard )
-			board = new SimulatedGridboard( this, (Gridboard)obj );
-		else
-			; //TODO:
 		
-		sidebar = new SimulatedGameInfo( this );
-		
-		sceneHandler = new ObjectContainer( false );
-		sceneHandler.addObject( board );
-		sceneHandler.addObject( sidebar );
+		try{
+			//TODO: load from file system
+			//game = new ChessGame();
+			Object obj = game.getBoard();
+			if( obj instanceof GridBoard )
+				board = new GridBoardWidget( this, (GridBoard)obj );
+			else
+				; //TODO:
+			
+			sidebar = new GameInfoWidget( this );
+			
+			sceneHandler = new ScaleContainer( false );
+			sceneHandler.addObject( board );
+			sceneHandler.addObject( sidebar );
+		}
+		catch( StandardError err ){
+			handleStandardError( err );
+		}
 	}
 	
 	public Game getGame(){ return game; }
+	
+	private void handleStandardError( StandardError stdErr ){
+		//TODO:
+		System.out.println( "StandardError thrown, but not handled : \\" );
+	}
 	
 	@Override
 	public void render( GameContainer gc, Graphics g ){
@@ -49,35 +62,59 @@ public class SimulatedGame extends BasicGame {
 		//Fill background
 		g.setColor( Color.white );
 		Shape shape = new Rectangle( 0,0, gc.getWidth(), gc.getHeight() );
-		g.texture( shape, ResourceHandler.getImage( "img/wood.png" ) );
+		g.texture( shape, ResourceHelper.getImage( "img/wood.png" ) );
 		
-		//Draw board
-		sceneHandler.startDraw( g );
+		try{
+			//Draw board
+			sceneHandler.startDraw( g );
+		}
+		catch( StandardError err ){
+			handleStandardError( err );
+		}
 	}
 	
 	@Override
 	public void mousePressed( int button, int x, int y ){
-		sceneHandler.mouseClicked( button, x, y );
+		try{
+			sceneHandler.mouseClicked( button, x, y );
+		}
+		catch( StandardError err ){
+			handleStandardError( err );
+		}
     }
 	
 	@Override
 	public void mouseDragged( int oldx, int oldy, int newx, int newy ){
-		sceneHandler.mouseDragged( oldx, oldy, newx, newy );
+		try{
+			sceneHandler.mouseDragged( oldx, oldy, newx, newy );
+		}
+		catch( StandardError err ){
+			handleStandardError( err );
+		}
 	}
 	
 	public void mouseReleased( int button, int x, int y ){
-		sceneHandler.mouseReleased( button, x, y );
+		try{
+			sceneHandler.mouseReleased( button, x, y );
+		}
+		catch( StandardError err ){
+			handleStandardError( err );
+		}
 	}
 	
 	@Override
 	public String getTitle(){
-		return "Junta Simulator - " + game.title();
+		try {
+			return "Junta Simulator - " + game.getTitle();
+		} catch (StandardError e) {
+			return "error in title"; //TODO:
+		}
 	}
 
 	public static void main( String[] args ) throws SlickException, CloneNotSupportedException {
 		SimulatedGame simulator = new SimulatedGame( "chess.junta" );
 		AppGameContainer app = new AppGameContainer( simulator );
-		//app.setDisplayMode( 1366, 768, true ); //fullscreen
+		//app.setDisplayMode( 1366, 768, true ); //full-screen
 		app.setDisplayMode( 1024, 600, false );
 		app.setTargetFrameRate( 60 );
 		app.setVSync( true );

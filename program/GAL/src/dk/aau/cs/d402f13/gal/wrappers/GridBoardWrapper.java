@@ -1,4 +1,4 @@
-package dk.aau.cs.d402f13.interpreter.stdenv.game.wrappers;
+package dk.aau.cs.d402f13.gal.wrappers;
 
 import java.util.Arrays;
 
@@ -96,7 +96,7 @@ public class GridBoardWrapper extends BoardWrapper implements GridBoard {
       newList[i] = getPieces()[i].object;
     }
     newList[newList.length - 1] = piece.object;
-    return new GridBoardWrapper(env, object.setAttribute("pieces", new ListValue(newList)));
+    return new GridBoardWrapper(env, callMember("setPieces", env.gridBoardType(), new ListValue(newList)));
   }
   
   public GridBoardWrapper addPiece(PieceWrapper piece, int x, int y) throws StandardError {

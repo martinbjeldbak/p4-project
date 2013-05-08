@@ -1,5 +1,6 @@
 package dk.aau.cs.d402f13.interpreter.stdenv.game;
 
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -213,6 +214,16 @@ public class GameEnvironment extends StandardEnvironment {
         return ((ObjectValue)object).getAttribute("pieces");
       }
     }));
+    board.addTypeMember("setPieces", new Member(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters)
+          throws StandardError {
+        Value[] pieces = ((ListValue)TypeValue.expect(actualParameters, 0, ListValue.type())).getValues();
+        TypeValue.expect(piece, pieces);
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        return object.setAttribute("pieces", actualParameters[0]);
+      }
+    }));
 
     
     ////////////////////////////////////
@@ -286,6 +297,24 @@ public class GameEnvironment extends StandardEnvironment {
         return new ListValue(square.getInstance(interpreter));
       }
     }));
+    gridBoard.addTypeMember("squareAt", new Member(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
+        CoordValue pos = (CoordValue)TypeValue.expect(actualParameters, 0, CoordValue.type());
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        int x = pos.getX();
+        int y = pos.getY();
+        int width = object.getMemberInt("width");
+        int height = object.getMemberInt("height");
+        int size = width * height;
+        Value[] squares = object.getMemberList("squares", square, size);
+        int i = (y - 1) * width + (x - 1);
+        if (i < 0 || i >= size) {
+          throw new ArgumentError("Coordinate out of bounds");
+        }
+        return squares[(y - 1) * width + (x - 1)];
+      }
+    }));
     gridBoard.addTypeMember("addPiece", new Member(2, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
@@ -302,6 +331,9 @@ public class GameEnvironment extends StandardEnvironment {
         Value[] squares = object.getMemberList("squares", square, size);
         Value[] newList = new Value[size];
         int target = (y - 1) * width + (x - 1);
+        if (target < 0 || target >= size) {
+          throw new ArgumentError("Coordinate out of bounds");
+        }
         for (int i = 0; i < newList.length; i++) {
           if (i == target) {
             newList[i] = ((ObjectValue)squares[i])
@@ -311,22 +343,31 @@ public class GameEnvironment extends StandardEnvironment {
             newList[i] = squares[i];
           }
         }
-        object.beginClone();
-        object.setAttribute("squares", new ListValue(newList));
+        object = (ObjectValue)object.setAttribute("squares", new ListValue(newList));
         Value[] pieces = object.getMemberList("pieces", piece);
         newList = new Value[pieces.length + 1];
         for  (int i = 0; i < pieces.length; i++) {
           newList[i] = pieces[i];
         }
         newList[newList.length - 1] = p;
-        object.setAttribute("pieces", new ListValue(newList));
-        return object.endClone();
+        object = (ObjectValue)object.callMember("setPieces", gridBoard, interpreter, new ListValue(newList));
+        return object;
       }
     }));
     gridBoard.addTypeMember("addPieces", new Member(2, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
-        return null;
+        TypeValue.expect(actualParameters, 0, piece);
+        ObjectValue p = (ObjectValue)actualParameters[0];
+        Value[] positions = ((ListValue)TypeValue.expect(actualParameters, 1, ListValue.type())).getValues();
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        for (Value coord : positions) {
+          if (!coord.is(CoordValue.type())) {
+            throw new TypeError("Invalid element type in list for 'addPieces', expected Coordinate");
+          }
+          object = (ObjectValue)object.callMember("addPiece", gridBoard, interpreter, p, coord);
+        }
+        return object;
       }
     }));
     
@@ -385,10 +426,10 @@ public class GameEnvironment extends StandardEnvironment {
     piece.addTypeMember("move", new Member(1, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
-        TypeValue.expect(actualParameters, 0, square);
+        TypeValue.expect(actualParameters, 0, CoordValue.type());
         ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
         object.beginClone();
-        object.setAttribute("square", actualParameters[0]);
+        object.setAttribute("position", actualParameters[0]);
         object.setAttribute("onBoard", BoolValue.trueValue());
         return object.endClone();
       }
@@ -631,6 +672,16 @@ public class GameEnvironment extends StandardEnvironment {
       }
     }
     return null;
+  }
+  
+  public List<TypeValue> findGameTypes() {
+    ArrayList<TypeValue> games = new ArrayList<TypeValue>();
+    for (Entry<String, TypeValue> e : types.entrySet()) {
+      if (e.getValue().isSubtypeOf(game) && !(e.getValue() instanceof AbstractTypeValue)) {
+        games.add(e.getValue());
+      }
+    }
+    return games;
   }
 
 }

@@ -1,18 +1,18 @@
 
 \begin{figure}[ht]
   \begin{center}
-    \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
-      \node [square] (c) {C};
-      \node [square, yshift=-4em, xshift=2.5em] (b) {B};
-      \node [square, yshift=-4em, xshift=7.5em] (d) {D};
-      \node [square, yshift=-8em, xshift=5em] (a) {A};
-      \node [square, yshift=-2em, xshift=12em] (f) {F};
-      \node [square, yshift=-6em, xshift=12em] (e) {E};
+    \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]      
+      \node [square] (a) {A};
+      \node [square, yshift=-4em, xshift=-2.5em] (b) {B};
+      \node [square, yshift=-4em, xshift=2.5em] (d) {D};
+      \node [square, yshift=-8em, xshift=-5em] (c) {C};
+      \node [square, yshift=0em, xshift=12em] (e) {E};
+      \node [square, yshift=-4em, xshift=12em] (f) {F};
 
-      \draw[->, thick,] (c) -- (b);
-      \draw[->, thick,] (b) -- (a);
-      \draw[->, thick,] (d) -- (a);
-      \draw[->, thick,] (f) -- (e);
+      \draw[<-, thick,] (a) -- (b);
+      \draw[<-, thick,] (b) -- (c);
+      \draw[<-, thick,] (a) -- (d);
+      \draw[<-, thick,] (e) -- (f);
     \end{tikzpicture}
   \end{center}
   \capt{Example of topologically sorted types. An edge goes from type X to type Y if X is a subtype of Y.}
