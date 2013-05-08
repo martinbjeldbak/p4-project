@@ -6,7 +6,9 @@ import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.ast.DefaultVisitor;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.utilities.scopechecker.ConstantMember;
 import dk.aau.cs.d402f13.utilities.scopechecker.Data;
+import dk.aau.cs.d402f13.utilities.scopechecker.FunctionMember;
 import dk.aau.cs.d402f13.utilities.scopechecker.TypeSymbolInfo;
 import dk.aau.cs.d402f13.utilities.scopechecker.Member;
 import dk.aau.cs.d402f13.utilities.scopechecker.TypeTable;
@@ -28,6 +30,13 @@ public class TypeVisitor extends DefaultVisitor
   }
 
   @Override
+  protected Object visitProgram(AstNode node) throws StandardError {
+   this.currentType = tt.getGlobal();
+   visitChildren(node);
+   return null;
+  }
+  
+  @Override
   protected Object visitTypeDef(AstNode node) throws StandardError{
     //TYPE  VARLIST       [TYPE         LIST]      [TYPE_BODY]
     //name cnstr_args  supertype  spr_cnstr_args     body
@@ -40,11 +49,22 @@ public class TypeVisitor extends DefaultVisitor
     this.tt.addType(ci); //adds type and checks if another type with same name exists
     
     //get constructor arguments
-    Iterator<AstNode> varlistIt = it.next().iterator();
-    while (varlistIt.hasNext()){
-      ci.incrArgCount(); //increase number of arguments in constructor
-      varlistIt.next();
+    Iterator<AstNode> varListIt = it.next().iterator();
+
+    //find number of arguments and if varargs exists
+    int args = 0;
+    boolean varArgs = false;
+    while (varListIt.hasNext()){
+      switch (varListIt.next().type){
+      case VAR: args++; break;
+      case VARS: varArgs = true; break;
+      default: //this default should never be reached, only VAR and VARS are options
+        break;
+      }
     }
+    
+    ci.setArgCount(args);
+    ci.setVarArgs(varArgs);
     
     if (!it.hasNext()) //having a type body is optional
       return null;
@@ -57,10 +77,13 @@ public class TypeVisitor extends DefaultVisitor
       //get the parameters to the supertype' constructor call
       //not all these parameters are var's, some could be int. Only save the vars, since we want to check they have been declared somewhere
       Iterator<AstNode> superArglistIt = it.next().iterator();
+      int parentCallArgCount = 0;
       while (superArglistIt.hasNext()){
-        ci.incrSuperArgCount(); //save the number of args used when calling the parent constructor. We later check that this number match the number of args
+        parentCallArgCount++;
         superArglistIt.next();
       }
+      
+      ci.setSuperCallArgCount(parentCallArgCount);
       
       if (!it.hasNext()) //having a body is optional
         return null;
@@ -90,7 +113,7 @@ public class TypeVisitor extends DefaultVisitor
     //find varlist if any exist, which is the members arguments
     if (it.hasNext()){
       AstNode varList = it.next();
-      member = new Member(name, varList.size(), this.currentType, node.line, node.offset);
+      member = new FunctionMember(name, varList.size(), node.line, node.offset);
     }
     else{   //if no varlist exists, the definition is an abstract constant
       member = new Member(name, node.line, node.offset);
@@ -113,11 +136,24 @@ public class TypeVisitor extends DefaultVisitor
     AstNode temp = it.next();
     if (temp.type == Type.VARLIST){  //if VARLIST exists, it is arguments for the function
       //CONSTANT VARLIST EXPRESSION
-      currentType.addMember(new Member(name, temp.size(), this.currentType, node.line, node.offset));
+      Iterator<AstNode> varListIt = temp.iterator();
+      int args = 0;
+      boolean varArgs = false;
+      while (varListIt.hasNext()){
+        switch (varListIt.next().type){
+        case VAR: args++; break;
+        case VARS: varArgs = true; break;
+        default: //this default should never be reached, only VAR and VARS are options
+          break;
+        }
+      }
+      FunctionMember fm = new FunctionMember(name, args, node.line, node.offset);
+      fm.setVarArgs(varArgs);
+      currentType.addMember(fm);
     }
     else{                            //VARLIST does not exist, so this is a constant
       //CONSTANT EXPRESSION
-      currentType.addMember(new Member(name, node.line, node.offset));
+      currentType.addMember(new ConstantMember(name, node.line, node.offset));
     }  
     return null;
   }
@@ -127,7 +163,7 @@ public class TypeVisitor extends DefaultVisitor
   protected Object visitDataDef(AstNode node) throws StandardError{
     /* DATA_DEF = VAR EXPRESSION
     *  Add the variable name to the data members of the type
-    *  The UsesAreDeclaredVisitor will check that tje data member accessed
+    *  The UsesAreDeclaredVisitor will check that the data member accessed
     *  by a getter or setter actually exists
     */
     String varName = node.iterator().next().value;
