@@ -25,6 +25,7 @@ import dk.aau.cs.d402f13.values.Value;
 public class GameWrapper extends Wrapper implements Game {
   
   private String title;
+  private String description;
   private BoardWrapper board;
   
   private PlayerWrapper[] players;
@@ -37,6 +38,7 @@ public class GameWrapper extends Wrapper implements Game {
   public GameWrapper(GameEnvironment env, Value object) throws StandardError {
     super(env, object);
     title = getMemberString("title");
+    title = getMemberString("description");
     board = new BoardWrapper(env, getMember("currentBoard", env.boardType()));
     
     Value[] players = getMemberList("players", env.playerType(), 1);
@@ -168,6 +170,11 @@ public class GameWrapper extends Wrapper implements Game {
     }
     this.actions = actions;
     return actions;
+  }
+
+  @Override
+  public String getDescription() throws StandardError {
+    return description;
   }
 
 }

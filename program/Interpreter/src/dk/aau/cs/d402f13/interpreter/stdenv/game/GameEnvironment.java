@@ -188,6 +188,12 @@ public class GameEnvironment extends StandardEnvironment {
         return interpreter.getSymbolTable().getVariable("title");
       }
     }));
+    game.addTypeMember("description", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return new StrValue("A board game.");
+      }
+    }));
     game.addTypeMember("findSquares", new Member(1, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters)
