@@ -31,6 +31,8 @@ public class GameWrapper extends Wrapper implements Game {
   private PlayerWrapper[] turnOrder;
   
   private PlayerWrapper currentPlayer;
+  
+  private Action[] actions;
 
   public GameWrapper(GameEnvironment env, Value object) throws StandardError {
     super(env, object);
@@ -93,8 +95,11 @@ public class GameWrapper extends Wrapper implements Game {
       PieceWrapper piece = ((AddActionWrapper)action).getPiece();
       SquareWrapper to = ((AddActionWrapper)action).getTo();
       GridBoardWrapper boardState = (GridBoardWrapper)board;
-      GameWrapper state = this;
-      return null;
+      piece = piece.setPosition(to.getX(), to.getY());
+      to = to.addPiece(piece);
+      boardState = boardState.setSquareAt(to.getX(), to.getY(), to);
+      boardState = boardState.addPiece(piece);
+      return setBoard(boardState);
     }
     else if (action instanceof RemoveActionWrapper) {
       PieceWrapper piece = ((RemoveActionWrapper)action).getPiece();
@@ -137,6 +142,32 @@ public class GameWrapper extends Wrapper implements Game {
     else {
       throw new InternalError("Invalid action class: " + action.getClass());
     }
+  }
+
+  @Override
+  public Action[] getActions() throws StandardError {
+    if (actions != null) {
+      return actions;
+    }
+    ArrayList<Action> actionList = new ArrayList<Action>();
+    for (PlayerWrapper p : players) {
+      Action[] playerActions = p.getActions(this);
+      for (Action a : playerActions) {
+        actionList.add(a);
+      }
+    }
+    for (PieceWrapper p : board.getPieces()) {
+      Action[] pieceActions = p.getActions(this);
+      for (Action a : pieceActions) {
+        actionList.add(a);
+      }
+    }
+    Action[] actions = new Action[actionList.size()];
+    for (int i = 0; i < actions.length; i++) {
+      actions[i] = actionList.get(i);
+    }
+    this.actions = actions;
+    return actions;
   }
 
 }

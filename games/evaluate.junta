@@ -1,6 +1,7 @@
 // the following is 20 examples of junta source code
 
 type TrueOrFalse [] extends TestCase[] {
+  define subType = TrueOrFalse.isSubtypeOf[TestCase]
   define opIs = 1 == 5 is Boolean
   define equality = 5 == 5
   define notEqual = not 5 != 5
@@ -36,6 +37,7 @@ define sortDescend = [151, 157, 163, 7, 11, 19, 23, 29, 31, 37, 41, 43, 47, 53, 
                       .sort[#[$a, $b] => $b - $a]
 
 type Numbers [] extends TestCase [] {
+  define correctType = typeOf[120 + 20] == Integer
   define addition = let $d = 5 + 2 + 1 
                       in $d + $d == 8 + 8
   define subtract = let $d = 3 - 2, $e = 5 - 4 
@@ -60,13 +62,59 @@ type Numbers [] extends TestCase [] {
 }
 
 type DirectionTest [] extends TestCase [] {
+  define correctType = typeOf[ne + sw] == Direction
   
 }
 
 type CoordinateTest [] extends TestCase [] {
-  
+  define correctType = typeOf[A2 + ne] == Coordinate
 }
 
 type StringTest [] extends TestCase [] {
-  
+  data $string = "Hello, " + "my friend."
+  define correctType = typeOf[$string] == String
+  define stringSize = $string.size == 17
+  define combine = $string + " How are you?" == "Hello, my friend. How are you?"
+}
+
+type ListTest [] extends TestCase [] {
+  data $listOne = ["hej", "farvel", "god dag", "hvemerdu?"]
+  data $listTwo = ["hello", "goodbye", "good day", "whoareyou?"]
+  define combinedSize = $listOne.size + $listTwo.size == 8
+  define listFilter = $listOne.filter[#[$a] => $a == "god dag"] == ["god dag"]
+  define unite = union[$listOne, $listTwo] == ["hej", "farvel", "god dag",
+                "hvemerdu?", "hello", "goodbye", "good day", "whoareyou?"]
+
+}
+
+type NacGame[] extends Game["Noughts and Crosses"] {
+  define players = [
+    NacPlayer[Crosses, "Crosses"],
+    NacPlayer[Noughts, "Noughts"]
+  ]
+  define board = GridBoard[3, 3]
+}
+type NacPlayer[$pieceType, $name] extends Player[$name] {
+  define winCondition[$gameState] =
+    $gameState.findSquares[
+      /friend (n friend n) | (e friend e) |
+		(nw friend nw) | (ne friend ne ) friend/].size != 0
+  define tieCondition[$gameState] =
+    $gameState.board.isFull
+//  define actions[$gameState] =
+//    addActions[$pieceType[this], $gameState.board.emptySquares]
+}
+type Crosses[$owner] extends Piece[$owner]
+type Noughts[$owner] extends Piece[$owner]
+
+type GameTest [] extends TestCase [] {
+  data $theGame = NacGame[]
+  define turn = $theGame.turnOrder == $theGame.players
+  define currentPlayers = $theGame.currentPlayer == $theGame.players[0]
+  define board = $theGame.board == $theGame.currentBoard
+  define title = $theGame.title == "Noughts and Crosses"
+  define width = $theGame.board.width == 3
+  define height = $theGame.board.height == 3
+  define crosses = $theGame.players[0].name == "Crosses"
+  define noughts = $theGame.players[1].name == "Noughts"
 }
