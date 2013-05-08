@@ -22,6 +22,7 @@ import dk.aau.cs.d402f13.values.IntValue;
 import dk.aau.cs.d402f13.values.ListValue;
 import dk.aau.cs.d402f13.values.ObjectValue;
 import dk.aau.cs.d402f13.values.PatternValue;
+import dk.aau.cs.d402f13.values.StrValue;
 import dk.aau.cs.d402f13.values.TypeValue;
 import dk.aau.cs.d402f13.values.Value;
 
@@ -239,6 +240,18 @@ public class GameEnvironment extends StandardEnvironment {
         return new ListValue(squares);
       }
     }));
+    gridBoard.addTypeMember("width", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return interpreter.getSymbolTable().getVariable("width");
+      }
+    }));
+    gridBoard.addTypeMember("height", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return interpreter.getSymbolTable().getVariable("height");
+      }
+    }));
     gridBoard.addTypeMember("isFull", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
@@ -263,6 +276,12 @@ public class GameEnvironment extends StandardEnvironment {
         return new ListValue(square.getInstance(interpreter));
       }
     }));
+    gridBoard.addTypeMember("addPiece", new Member(2, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
+        return null;
+      }
+    }));
     
     ////////////////////////////////////
     // type: Piece
@@ -275,18 +294,18 @@ public class GameEnvironment extends StandardEnvironment {
         return interpreter.getSymbolTable().getVariable("owner");
       }
     }));
-    piece.addAttribute("square", new Member(new ConstantCallable() {
+    piece.addAttribute("position", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
         return null;
       }
     }));
-    piece.addTypeMember("square", new Member(new ConstantCallable() {
+    piece.addTypeMember("position", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        Value a = ((ObjectValue)object).getAttribute("square");
+        Value a = ((ObjectValue)object).getAttribute("position");
         if (a == null) {
-          throw new ArgumentError("Piece not on board. Invalid use of member 'square'.");
+          throw new ArgumentError("Piece not on board. Invalid use of member 'position'.");
         }
         return a;
       }
@@ -303,26 +322,39 @@ public class GameEnvironment extends StandardEnvironment {
         return ((ObjectValue)object).getAttribute("onBoard");
       }
     }));
-//    piece.addTypeMember("move", new Member(1, false, new Callable() {
-//      @Override
-//      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
-//        TypeValue.expect(actualParameters, 0, CoordValue.type());
-//        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
-//        object.beginClone();
-//        object.setAttribute("position", actualParameters[0]);
-//        object.setAttribute("onBoard", BoolValue.trueValue());
-//        return object.endClone();
-//      }
-//    }));
-//    piece.addTypeMember("remove", new Member(0, false, new Callable() {
-//      @Override
-//      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
-//        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
-//        object.beginClone();
-//        object.setAttribute("onBoard", BoolValue.falseValue());
-//        return object.endClone();
-//      }
-//    }));
+    piece.addTypeMember("image", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return new StrValue("not-implemented.png");
+      }
+    }));
+    piece.addTypeMember("actions", new Member(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters)
+          throws StandardError {
+        return new ListValue();
+      }
+    }));
+    piece.addTypeMember("move", new Member(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
+        TypeValue.expect(actualParameters, 0, square);
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        object.beginClone();
+        object.setAttribute("square", actualParameters[0]);
+        object.setAttribute("onBoard", BoolValue.trueValue());
+        return object.endClone();
+      }
+    }));
+    piece.addTypeMember("remove", new Member(0, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        object.beginClone();
+        object.setAttribute("onBoard", BoolValue.falseValue());
+        return object.endClone();
+      }
+    }));
     
     ////////////////////////////////////
     // type: Player
@@ -371,10 +403,28 @@ public class GameEnvironment extends StandardEnvironment {
         return new CoordValue(1, 1);
       }
     }));
+    square.addAttribute("pieces", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return new ListValue();
+      }
+    }));
+    square.addTypeMember("image", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return new StrValue("not-implemented.png");
+      }
+    }));
     square.addTypeMember("position", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
         return ((ObjectValue)object).getAttribute("position");
+      }
+    }));
+    square.addTypeMember("pieces", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return ((ObjectValue)object).getAttribute("pieces");
       }
     }));
     square.addTypeMember("setPosition", new Member(1, false, new Callable() {
@@ -385,6 +435,46 @@ public class GameEnvironment extends StandardEnvironment {
         object.beginClone();
         object.setAttribute("position", actualParameters[0]);
         return object.endClone();
+      }
+    }));
+    square.addTypeMember("addPiece", new Member(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
+        TypeValue.expect(actualParameters, 0, piece);
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        ListValue list = (ListValue)object.getAttributeAs("pieces", ListValue.type());
+        object.beginClone();
+        object.setAttribute("pieces", list.add(actualParameters[0]));
+        return object.endClone();
+      }
+    }));
+    square.addTypeMember("removePiece", new Member(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
+        TypeValue.expect(actualParameters, 0, piece);
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        ListValue list = (ListValue)object.getAttributeAs("pieces", ListValue.type());
+        object.beginClone();
+        object.setAttribute("pieces", list.subtract(actualParameters[0]));
+        return object.endClone();
+      }
+    }));
+    square.addTypeMember("isOccupied", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        if (((ObjectValue)object).getAttributeList("pieces").length > 0) {
+          return BoolValue.trueValue();
+        }
+        return BoolValue.falseValue();
+      }
+    }));
+    square.addTypeMember("isEmpty", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        if (((ObjectValue)object).getAttributeList("pieces").length == 0) {
+          return BoolValue.trueValue();
+        }
+        return BoolValue.falseValue();
       }
     }));
     
