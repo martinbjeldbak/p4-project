@@ -126,11 +126,11 @@ public class ObjectValue extends Value implements Cloneable {
   }
   
   public boolean getAttributeBoolean(String name) throws StandardError {
-    return (BoolValue)getAttributeAs(name, IntValue.type()) == BoolValue.trueValue();
+    return (BoolValue)getAttributeAs(name, BoolValue.type()) == BoolValue.trueValue();
   }
   
   public CoordValue getAttributeCoord(String name) throws StandardError {
-    return (CoordValue)getAttributeAs(name, ListValue.type());
+    return (CoordValue)getAttributeAs(name, CoordValue.type());
   }
   
   public Value[] getAttributeList(String name) throws StandardError {

@@ -54,7 +54,7 @@ public class PieceWrapper extends Wrapper implements Piece {
   }
   
   public PieceWrapper setPosition(int x, int y) throws StandardError {
-    return new PieceWrapper(env, callMember("setPosition", env.pieceType(), new CoordValue(x, y)));
+    return new PieceWrapper(env, callMember("move", env.pieceType(), new CoordValue(x, y)));
   }
 
   @Override

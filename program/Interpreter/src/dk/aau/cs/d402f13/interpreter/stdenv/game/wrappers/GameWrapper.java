@@ -93,9 +93,11 @@ public class GameWrapper extends Wrapper implements Game {
       PieceWrapper piece = ((AddActionWrapper)action).getPiece();
       SquareWrapper to = ((AddActionWrapper)action).getTo();
       GridBoardWrapper boardState = (GridBoardWrapper)board;
-      to = to.addPiece(piece); 
-      GameWrapper state = this; 
-      return null;
+      piece = piece.setPosition(to.getX(), to.getY());
+      to = to.addPiece(piece);
+      boardState = boardState.setSquareAt(to.getX(), to.getY(), to);
+      boardState = boardState.addPiece(piece);
+      return setBoard(boardState);
     }
     else if (action instanceof RemoveActionWrapper) {
       PieceWrapper piece = ((RemoveActionWrapper)action).getPiece();
