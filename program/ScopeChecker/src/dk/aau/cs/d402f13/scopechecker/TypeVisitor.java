@@ -6,7 +6,9 @@ import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.ast.DefaultVisitor;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.utilities.scopechecker.ConstantMember;
 import dk.aau.cs.d402f13.utilities.scopechecker.Data;
+import dk.aau.cs.d402f13.utilities.scopechecker.FunctionMember;
 import dk.aau.cs.d402f13.utilities.scopechecker.TypeSymbolInfo;
 import dk.aau.cs.d402f13.utilities.scopechecker.Member;
 import dk.aau.cs.d402f13.utilities.scopechecker.TypeTable;
@@ -27,6 +29,12 @@ public class TypeVisitor extends DefaultVisitor
     this.tt = tt;
   }
 
+  @Override
+  protected Object visitProgram(AstNode node) {
+   this.currentType = tt.getGlobal();
+   return null;
+  }
+  
   @Override
   protected Object visitTypeDef(AstNode node) throws StandardError{
     //TYPE  VARLIST       [TYPE         LIST]      [TYPE_BODY]
@@ -90,7 +98,7 @@ public class TypeVisitor extends DefaultVisitor
     //find varlist if any exist, which is the members arguments
     if (it.hasNext()){
       AstNode varList = it.next();
-      member = new Member(name, varList.size(), node.line, node.offset);
+      member = new FunctionMember(name, varList.size(), node.line, node.offset);
     }
     else{   //if no varlist exists, the definition is an abstract constant
       member = new Member(name, node.line, node.offset);
@@ -113,11 +121,11 @@ public class TypeVisitor extends DefaultVisitor
     AstNode temp = it.next();
     if (temp.type == Type.VARLIST){  //if VARLIST exists, it is arguments for the function
       //CONSTANT VARLIST EXPRESSION
-      currentType.addMember(new Member(name, temp.size(), node.line, node.offset));
+      currentType.addMember(new FunctionMember(name, temp.size(), node.line, node.offset));
     }
     else{                            //VARLIST does not exist, so this is a constant
       //CONSTANT EXPRESSION
-      currentType.addMember(new Member(name, node.line, node.offset));
+      currentType.addMember(new ConstantMember(name, node.line, node.offset));
     }  
     return null;
   }
