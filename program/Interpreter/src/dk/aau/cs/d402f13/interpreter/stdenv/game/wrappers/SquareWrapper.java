@@ -12,11 +12,25 @@ public class SquareWrapper extends Wrapper implements Square {
   private int x;
   private int y;
   
+  private String image;
+  private boolean isEmpty;
+  private boolean isOccupied;
+  
+  private PieceWrapper[] pieces;
+  
   public SquareWrapper(GameEnvironment env, Value object) throws StandardError {
     super(env, object);
     CoordValue coord = getMemberCoord("position");
     x = coord.getX();
     y = coord.getY();
+    image = getMemberString("image");
+    isEmpty = getMemberBoolean("isEmpty");
+    isOccupied = getMemberBoolean("isOccupied");
+    Value[] pieces = getMemberList("pieces", env.pieceType(), 0);
+    this.pieces = new PieceWrapper[pieces.length];
+    for (int i = 0; i < pieces.length; i++) {
+      this.pieces[i] = new PieceWrapper(env, pieces[i]);
+    }
   }
   
   @Override
@@ -31,26 +45,26 @@ public class SquareWrapper extends Wrapper implements Square {
 
   @Override
   public Piece[] getPieces() throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    return pieces;
+  }
+  
+  public SquareWrapper addPiece(PieceWrapper piece) throws StandardError {
+    return new SquareWrapper(env, callMember("addPiece", env.squareType(), piece.object));
   }
 
   @Override
   public String getImage() throws StandardError {
-    // TODO Auto-generated method stub
-    return null;
+    return image;
   }
 
   @Override
   public boolean isEmpty() throws StandardError {
-    // TODO Auto-generated method stub
-    return false;
+    return isEmpty;
   }
 
   @Override
   public boolean isOccupied() throws StandardError {
-    // TODO Auto-generated method stub
-    return false;
+    return isOccupied;
   }
 
 }
