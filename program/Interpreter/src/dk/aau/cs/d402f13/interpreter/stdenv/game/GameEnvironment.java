@@ -296,6 +296,20 @@ public class GameEnvironment extends StandardEnvironment {
         return new ListValue(square.getInstance(interpreter));
       }
     }));
+    gridBoard.addTypeMember("squareAt", new Member(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
+        CoordValue pos = (CoordValue)TypeValue.expect(actualParameters, 0, CoordValue.type());
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        int x = pos.getX();
+        int y = pos.getY();
+        int width = object.getMemberInt("width");
+        int height = object.getMemberInt("height");
+        int size = width * height;
+        Value[] squares = object.getMemberList("squares", square, size);
+        return squares[(y - 1) * width + (x - 1)];
+      }
+    }));
     gridBoard.addTypeMember("addPiece", new Member(2, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
