@@ -1,4 +1,4 @@
-package widgets;
+package dk.aau.cs.d402f13.widgets;
 
 import java.util.List;
 
@@ -7,9 +7,9 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.TrueTypeFont;
 
-import dk.aau.cs.d402f13.simulator.ResourceHandler;
+import dk.aau.cs.d402f13.helpers.ResourceHelper;
 
-public class ScrollContainer extends SceneObject {
+public class ScrollContainer extends Widget {
 	private List<String> lines = null;
 	private int y = 0;
 	
@@ -27,14 +27,14 @@ public class ScrollContainer extends SceneObject {
 	}
 	
 	private int amountShown(){
-		TrueTypeFont font = ResourceHandler.getFont( "gtw", 16 );
+		TrueTypeFont font = ResourceHelper.getFont( "gtw", 16 );
 		return getHeight() / font.getLineHeight();
 	}
 	
 	private void drawScalable( Graphics g, int x, int y, int height , String name ){
-		Image topImg = ResourceHandler.getImage( "img/" + name + "_top.png" );
-		Image middleImg = ResourceHandler.getImage( "img/" + name + "_middle.png" );
-		Image bottomImg = ResourceHandler.getImage( "img/" + name + "_bottom.png" );
+		Image topImg = ResourceHelper.getImage( "img/" + name + "_top.png" );
+		Image middleImg = ResourceHelper.getImage( "img/" + name + "_middle.png" );
+		Image bottomImg = ResourceHelper.getImage( "img/" + name + "_bottom.png" );
 		
 		g.drawImage( topImg, x, y );
 		g.drawImage( bottomImg, x, y + height - bottomImg.getHeight() );
@@ -55,7 +55,7 @@ public class ScrollContainer extends SceneObject {
 	
 	@Override
 	public void draw( Graphics g ){
-		TrueTypeFont font = ResourceHandler.getFont( "gtw", 16 );
+		TrueTypeFont font = ResourceHelper.getFont( "gtw", 16 );
 		int linePos = 0;
 		g.setFont( font );
 		g.setColor( Color.black );

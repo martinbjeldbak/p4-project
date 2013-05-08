@@ -1,4 +1,4 @@
-package dk.aau.cs.d402f13.interpreter.stdenv.game.wrappers;
+package dk.aau.cs.d402f13.gal.wrappers;
 
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
 import dk.aau.cs.d402f13.utilities.errors.InternalError;
@@ -49,7 +49,7 @@ public class PieceWrapper extends Wrapper implements Piece {
   }
   
   @Override
-  public int gety() throws StandardError {
+  public int getY() throws StandardError {
     return y;
   }
   
