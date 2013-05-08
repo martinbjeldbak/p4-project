@@ -8,6 +8,7 @@ import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.gameapi.GridBoard;
 import dk.aau.cs.d402f13.utilities.gameapi.Piece;
 import dk.aau.cs.d402f13.utilities.gameapi.Square;
+import dk.aau.cs.d402f13.utilities.gameapi.Board;
 
 public class GridBoardWidget extends BoardWidget {
 	private GridBoard board;
@@ -25,10 +26,10 @@ public class GridBoardWidget extends BoardWidget {
 	}
 
 	private int pieceXCoordiate( Piece p ) throws StandardError{
-		return p.getSquare().getX();
+		return p.getX();
 	}
 	private int pieceYCoordiate( Piece p ) throws StandardError{
-		return p.getSquare().getY();
+		return p.getY();
 	}
 	
 	/**
@@ -117,5 +118,13 @@ public class GridBoardWidget extends BoardWidget {
 	@Override
 	public void draw(Graphics g) throws StandardError {
 		drawBoard( g, getWidth(), getHeight() );
+	}
+
+	@Override
+	protected Square getSquareFromPiece( Board b, Piece p ) throws StandardError {
+		if( !(b instanceof GridBoard ) )
+			return null;
+		GridBoard gb = (GridBoard)b;
+		return gb.getSquareAt( p.getX(), p.getY() );
 	}
 }

@@ -92,7 +92,7 @@ public class ActionHelper{
 		RemoveAction ra = isRemoveAction( a );
 		if( ra == null )
 			return null;
-		if( ra.getPiece().getSquare() == s )
+		if( ra.getPiece().getX() == s.getX() && ra.getPiece().getY() == s.getY() )
 			return ra;
 		return null;
 	}
@@ -136,7 +136,7 @@ public class ActionHelper{
 		if( adds.size() > 0 ){
 			text += "Adds ";
 			for( AddAction aa : adds ){
-				text += squarePosition( g, aa.getPiece().getSquare() );
+				text += ActionHelper.position( aa.getPiece() );
 				text += " & ";
 				//TODO: write name of piece
 			}
@@ -147,9 +147,9 @@ public class ActionHelper{
 		if( moves.size() > 0 ){
 			text += "Moves ";
 			for( MoveAction ma : moves ){
-				text += squarePosition( g, ma.getPiece().getSquare() );
+				text += ActionHelper.position( ma.getPiece() );
 				text += "->";
-				text += squarePosition( g, ma.getTo() );
+				text += ActionHelper.position( ma.getTo() );
 				text += " & ";
 			}
 			text = text.substring( 0, text.length()-3 );
@@ -159,7 +159,7 @@ public class ActionHelper{
 		if( removes.size() > 0 ){
 			text += "Removes ";
 			for( RemoveAction ra : removes ){
-				text += squarePosition( g, ra.getPiece().getSquare() );
+				text += ActionHelper.position( ra.getPiece() );
 				text += " & ";
 			}
 			text = text.substring( 0, text.length()-3 );
@@ -169,22 +169,13 @@ public class ActionHelper{
 		return text.trim();
 	}
 	
-	/**
-	 * A human readable textual representation of a Squares position
-	 * @param g The Game the Square is a part of
-	 * @param s The Square to describe
-	 * @return The textual representation
-	 * @throws StandardError 
-	 */
-	static private String squarePosition( Game g, Square s ) throws StandardError{
-		//if( (Object)g.getBoard() instanceof GridBoard ){
-			//GridBoard b = (GridBoard)g.getBoard();
-			//TODO: how to generalize positions?
-			int x = s.getX();
-			int y = s.getY();
-			
-			return (char)('A' + x) + "" + (y + 1);
-		//}
-		//return "board type not supported";
+	static private String position( int x, int y ) throws StandardError{
+		return (char)('A' + x) + "" + (y + 1);
+	}
+	static private String position( Piece p ) throws StandardError{
+		return position( p.getX(), p.getY() );
+	}
+	static private String position( Square s ) throws StandardError{
+		return position( s.getX(), s.getY() );
 	}
 }
