@@ -1,6 +1,7 @@
 package dk.aau.cs.d402f13.values;
 
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
+import dk.aau.cs.d402f13.utilities.errors.ArgumentError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
@@ -78,12 +79,19 @@ public class CoordValue extends Value {
     }
     else if(other.is(DirValue.type())) {
       DirValue oDir = (DirValue)other.as(DirValue.type());
+
+      int xx = x + oDir.getX();
+      int yy = y + oDir.getY();
+
+      if(xx < 1 || yy < 1)
+        throw new TypeError("The addition yields an invalid coordinate");
+
       return new CoordValue(x + oDir.getX(), y + oDir.getY());
     }
     else if(other.is(ListValue.type())) {
       return ListValue.prepend(this, other);
     }
-    throw new TypeError("Addition cannot be done on coordinates with " + other);
+    throw new ArgumentError("Addition cannot be done on coordinates with " + other);
   }
   
   /** {@inheritDoc}  */
