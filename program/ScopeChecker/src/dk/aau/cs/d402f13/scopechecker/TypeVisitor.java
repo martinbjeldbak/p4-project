@@ -49,11 +49,22 @@ public class TypeVisitor extends DefaultVisitor
     this.tt.addType(ci); //adds type and checks if another type with same name exists
     
     //get constructor arguments
-    Iterator<AstNode> varlistIt = it.next().iterator();
-    while (varlistIt.hasNext()){
-      ci.incrArgCount(); //increase number of arguments in constructor
-      varlistIt.next();
+    Iterator<AstNode> varListIt = it.next().iterator();
+
+    //find number of arguments and if varargs exists
+    int args = 0;
+    boolean varArgs = false;
+    while (varListIt.hasNext()){
+      switch (varListIt.next().type){
+      case VAR: args++; break;
+      case VARS: varArgs = true; break;
+      default: //this default should never be reached, only VAR and VARS are options
+        break;
+      }
     }
+    
+    ci.setArgCount(args);
+    ci.setVarArgs(varArgs);
     
     if (!it.hasNext()) //having a type body is optional
       return null;
@@ -66,10 +77,13 @@ public class TypeVisitor extends DefaultVisitor
       //get the parameters to the supertype' constructor call
       //not all these parameters are var's, some could be int. Only save the vars, since we want to check they have been declared somewhere
       Iterator<AstNode> superArglistIt = it.next().iterator();
+      int parentCallArgCount = 0;
       while (superArglistIt.hasNext()){
-        ci.incrSuperArgCount(); //save the number of args used when calling the parent constructor. We later check that this number match the number of args
+        parentCallArgCount++;
         superArglistIt.next();
       }
+      
+      ci.setSuperCallArgCount(parentCallArgCount);
       
       if (!it.hasNext()) //having a body is optional
         return null;
@@ -122,7 +136,20 @@ public class TypeVisitor extends DefaultVisitor
     AstNode temp = it.next();
     if (temp.type == Type.VARLIST){  //if VARLIST exists, it is arguments for the function
       //CONSTANT VARLIST EXPRESSION
-      currentType.addMember(new FunctionMember(name, temp.size(), node.line, node.offset));
+      Iterator<AstNode> varListIt = temp.iterator();
+      int args = 0;
+      boolean varArgs = false;
+      while (varListIt.hasNext()){
+        switch (varListIt.next().type){
+        case VAR: args++; break;
+        case VARS: varArgs = true; break;
+        default: //this default should never be reached, only VAR and VARS are options
+          break;
+        }
+      }
+      FunctionMember fm = new FunctionMember(name, args, node.line, node.offset);
+      fm.setVarArgs(varArgs);
+      currentType.addMember(fm);
     }
     else{                            //VARLIST does not exist, so this is a constant
       //CONSTANT EXPRESSION
