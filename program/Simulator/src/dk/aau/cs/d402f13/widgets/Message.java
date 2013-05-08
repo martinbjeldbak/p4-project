@@ -1,4 +1,4 @@
-package widgets;
+package dk.aau.cs.d402f13.widgets;
 
 import java.util.List;
 
@@ -6,11 +6,12 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.TrueTypeFont;
 
-import dk.aau.cs.d402f13.simulator.ResourceHandler;
-import dk.aau.cs.d402f13.simulator.TextHelper;
+import dk.aau.cs.d402f13.helpers.ResourceHelper;
+import dk.aau.cs.d402f13.helpers.TextHelper;
+import dk.aau.cs.d402f13.utilities.errors.StandardError;
 
 
-public class Message extends SceneObject {
+public class Message extends Widget {
 	private String title;
 	private String text;
 	
@@ -22,9 +23,9 @@ public class Message extends SceneObject {
 	}
 	
 	public void draw( Graphics g ){
-		Image paper = ResourceHandler.getImage( "img/message.png" );
-		TrueTypeFont big = ResourceHandler.getFont( "gtw", 32 );
-		TrueTypeFont small = ResourceHandler.getFont( "gtw", 16 );
+		Image paper = ResourceHelper.getImage( "img/message.png" );
+		TrueTypeFont big = ResourceHelper.getFont( "gtw", 32 );
+		TrueTypeFont small = ResourceHelper.getFont( "gtw", 16 );
 
 		int posX = ( (getWidth() - getX()) - paper.getWidth() ) / 2 + getX();
 		int posY = ( (getHeight() - getY()) - paper.getHeight() ) / 2 + getY();
@@ -49,7 +50,7 @@ public class Message extends SceneObject {
 	}
 
 	@Override
-	protected boolean handleMouseClicked( int button, int x, int y ){
+	protected boolean handleMouseClicked( int button, int x, int y ) throws StandardError{
 		createEvent( Event.ACCEPT );
 		return true;
 	}
