@@ -12,18 +12,21 @@ public class TypeTablePrettyPrinter {
  
     public static void print(TypeTable tt){
       for (TypeSymbolInfo ci : tt){
-        System.out.print("Type " + ci.name + " takes " + ci.args + " args, ");
+        System.out.print("Type " + ci.name + " takes " + ci.args + " args" +
+        (ci.varArgs ? " and has varargs," : ","));
     
         if (ci.parent != null){
-          System.out.print("extends " + ci.parent.name);
-          System.out.print(", takes " + ci.parentCallArgs + " args");
+          System.out.print(" extends " + ci.parent.name);
+          System.out.print(" with " + ci.parentCallArgs + " args");
         }
         
         System.out.println("");
         System.out.println("  Has members:");
         for (Member m : ci.members){
           if (m instanceof FunctionMember)
-            System.out.println("    " + (m.abstrct ? "abstract " : "") + " func " + m.name + ", takes " + ((FunctionMember)m).argCount() + " args");
+            System.out.println("    " + (m.abstrct ? "abstract " : "") + 
+                               " func " + m.name + ", takes " + ((FunctionMember)m).argCount() + " args" + 
+                               (((FunctionMember)m).hasVarArgs() ? " and varargs" : "") );
           else if (m instanceof ConstantMember)
             System.out.println("    " + (m.abstrct ? "abstract " : "") + " const " + m.name);
           else

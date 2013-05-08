@@ -265,11 +265,11 @@ public abstract class Value implements Cloneable {
   }
   
   public boolean getMemberBoolean(String name) throws StandardError {
-    return (BoolValue)getMemberAs(name, IntValue.type()) == BoolValue.trueValue();
+    return (BoolValue)getMemberAs(name, BoolValue.type()) == BoolValue.trueValue();
   }
   
   public CoordValue getMemberCoord(String name) throws StandardError {
-    return (CoordValue)getMemberAs(name, ListValue.type());
+    return (CoordValue)getMemberAs(name, CoordValue.type());
   }
   
   public Value[] getMemberList(String name) throws StandardError {
@@ -341,11 +341,11 @@ public abstract class Value implements Cloneable {
   }
   
   public boolean callMemberBoolean(String name, Interpreter interpreter, Value ... actualParameters) throws StandardError {
-    return (BoolValue)callMemberAs(name, IntValue.type(), interpreter, actualParameters) == BoolValue.trueValue();
+    return (BoolValue)callMemberAs(name, BoolValue.type(), interpreter, actualParameters) == BoolValue.trueValue();
   }
   
   public CoordValue callMemberCoord(String name, Interpreter interpreter, Value ... actualParameters) throws StandardError {
-    return (CoordValue)callMemberAs(name, ListValue.type(), interpreter, actualParameters);
+    return (CoordValue)callMemberAs(name, CoordValue.type(), interpreter, actualParameters);
   }
   
   public Value[] callMemberList(String name, Interpreter interpreter, Value ... actualParameters) throws StandardError {
