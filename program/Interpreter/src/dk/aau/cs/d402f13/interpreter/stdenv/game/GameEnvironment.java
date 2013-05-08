@@ -294,18 +294,18 @@ public class GameEnvironment extends StandardEnvironment {
         return interpreter.getSymbolTable().getVariable("owner");
       }
     }));
-    piece.addAttribute("square", new Member(new ConstantCallable() {
+    piece.addAttribute("position", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
         return null;
       }
     }));
-    piece.addTypeMember("square", new Member(new ConstantCallable() {
+    piece.addTypeMember("position", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        Value a = ((ObjectValue)object).getAttribute("square");
+        Value a = ((ObjectValue)object).getAttribute("position");
         if (a == null) {
-          throw new ArgumentError("Piece not on board. Invalid use of member 'square'.");
+          throw new ArgumentError("Piece not on board. Invalid use of member 'position'.");
         }
         return a;
       }
