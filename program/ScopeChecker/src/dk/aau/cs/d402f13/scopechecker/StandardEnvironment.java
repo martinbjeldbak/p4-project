@@ -30,7 +30,7 @@ public class StandardEnvironment {
     //Function
     current = new TypeSymbolInfo(null, "Function", -1, 0);
     current.args = 1;
-    current.members.add(new FunctionMember("call"));
+    current.members.add(new FunctionMember("call", 1));
      tt.addType(current);
     
     //Integer
@@ -66,7 +66,9 @@ public class StandardEnvironment {
      tt.addType(current);
     
     //GLOBAL FUNCTIONS
-     tt.getGlobal().addMember(new FunctionMember("typeOf"));
-     tt.getGlobal().addMember(new FunctionMember("union"));
+     tt.getGlobal().addMember(new FunctionMember("typeOf", 1));
+     FunctionMember union = new FunctionMember("union", 1);
+     union.setVarArgs(true);
+     tt.getGlobal().addMember(union);
   }
 }
