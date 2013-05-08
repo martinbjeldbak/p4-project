@@ -3,6 +3,7 @@ package dk.aau.cs.d402f13.utilities.scopechecker;
 public class FunctionMember extends Member{
  
   int argCount;
+  boolean varArgs;
   
   public FunctionMember(String name){
   super(name);  
@@ -25,7 +26,14 @@ public class FunctionMember extends Member{
     super(name, abstrct, line, offset);  
     this.argCount = argCount;
   }
-  
+  public boolean hasVarArgs()
+  {
+    return this.varArgs;
+  }
+  public void setVarArgs(boolean varArgs)
+  {
+    this.varArgs = varArgs;
+  }
   public int argCount()
   {
   return this.argCount;

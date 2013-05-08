@@ -54,6 +54,9 @@ public class CallValue extends Value implements Cloneable {
   @Override
   public TypeValue getType() throws StandardError {
     evaluate();
+    if (value == this) {
+      throw new InternalError("Recursion error in CallValue");
+    }
     return value.getType();
   }
   

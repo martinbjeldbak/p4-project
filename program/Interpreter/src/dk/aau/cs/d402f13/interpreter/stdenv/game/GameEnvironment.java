@@ -213,6 +213,16 @@ public class GameEnvironment extends StandardEnvironment {
         return ((ObjectValue)object).getAttribute("pieces");
       }
     }));
+    board.addTypeMember("setPieces", new Member(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters)
+          throws StandardError {
+        Value[] pieces = ((ListValue)TypeValue.expect(actualParameters, 0, ListValue.type())).getValues();
+        TypeValue.expect(piece, pieces);
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        return object.setAttribute("pieces", actualParameters[0]);
+      }
+    }));
 
     
     ////////////////////////////////////
@@ -255,7 +265,10 @@ public class GameEnvironment extends StandardEnvironment {
     gridBoard.addTypeMember("isFull", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        return BoolValue.falseValue();
+        if (object.getMemberList("emptySquares", square).length > 0) {
+          return BoolValue.falseValue();
+        }
+        return BoolValue.trueValue();
       }
     }));
     gridBoard.addTypeMember("squares", new Member(new ConstantCallable() {
@@ -267,7 +280,14 @@ public class GameEnvironment extends StandardEnvironment {
     gridBoard.addTypeMember("emptySquares", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        return object.getMember("squares");
+        Value[] squares = object.getMemberList("squares", square, 1);
+        ArrayList<Value> emptySquares = new ArrayList<Value>();
+        for (Value s : squares) {
+          if (s.getMemberBoolean("isEmpty")) {
+            emptySquares.add(s);
+          }
+        }
+        return new ListValue(emptySquares);
       }
     }));
     gridBoard.addTypeMember("squareTypes", new Member(new ConstantCallable() {
@@ -279,7 +299,51 @@ public class GameEnvironment extends StandardEnvironment {
     gridBoard.addTypeMember("addPiece", new Member(2, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
-        return null;
+        TypeValue.expect(actualParameters, 0, piece);
+        ObjectValue p = (ObjectValue)actualParameters[0]; 
+        CoordValue pos = (CoordValue)TypeValue.expect(actualParameters, 1, CoordValue.type());
+        p = (ObjectValue)p.callMember("move", piece, interpreter, pos);
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        int x = pos.getX();
+        int y = pos.getY();
+        int width = object.getMemberInt("width");
+        int height = object.getMemberInt("height");
+        int size = width * height;
+        Value[] squares = object.getMemberList("squares", square, size);
+        Value[] newList = new Value[size];
+        int target = (y - 1) * width + (x - 1);
+        for (int i = 0; i < newList.length; i++) {
+          if (i == target) {
+            newList[i] = ((ObjectValue)squares[i])
+                .callMember("addPiece", square, interpreter, p);
+          }
+          else {
+            newList[i] = squares[i];
+          }
+        }
+        object = (ObjectValue)object.setAttribute("squares", new ListValue(newList));
+        Value[] pieces = object.getMemberList("pieces", piece);
+        newList = new Value[pieces.length + 1];
+        for  (int i = 0; i < pieces.length; i++) {
+          newList[i] = pieces[i];
+        }
+        newList[newList.length - 1] = p;
+        object = (ObjectValue)object.callMember("setPieces", gridBoard, interpreter, new ListValue(newList));
+        return object;
+      }
+    }));
+    gridBoard.addTypeMember("addPieces", new Member(2, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
+        TypeValue.expect(actualParameters, 0, piece);
+        ObjectValue p = (ObjectValue)actualParameters[0];
+        Value[] positionValues = ((ListValue)TypeValue.expect(actualParameters, 1, ListValue.type())).getValues();
+        CoordValue[] positions = (CoordValue[])TypeValue.expect(CoordValue.type(), positionValues);
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        for (CoordValue coord : positions) {
+          object = (ObjectValue)object.callMember("addPiece", gridBoard, interpreter, p, coord);
+        }
+        return object;
       }
     }));
     
@@ -338,10 +402,10 @@ public class GameEnvironment extends StandardEnvironment {
     piece.addTypeMember("move", new Member(1, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
-        TypeValue.expect(actualParameters, 0, square);
+        TypeValue.expect(actualParameters, 0, CoordValue.type());
         ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
         object.beginClone();
-        object.setAttribute("square", actualParameters[0]);
+        object.setAttribute("position", actualParameters[0]);
         object.setAttribute("onBoard", BoolValue.trueValue());
         return object.endClone();
       }
