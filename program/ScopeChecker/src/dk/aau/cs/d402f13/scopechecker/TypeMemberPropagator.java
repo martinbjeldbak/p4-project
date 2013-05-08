@@ -26,7 +26,8 @@ public class TypeMemberPropagator {
                    continue;
                }
                else if (m instanceof FunctionMember && mp instanceof FunctionMember){
-                   throw new ScopeError("Number of arguments for member " + m.name + " in type does not match. " +
+                 if (((FunctionMember)m).argCount() != ((FunctionMember)mp).argCount())  
+                   throw new ScopeError("Number of arguments for member " + m.name + " in type " + tsi.name + " does not match. " +
                                         "Expected " + ((FunctionMember)mp).argCount() + ", " +
                                         "received " + ((FunctionMember)m).argCount(), m.line, m.offset);
                }
