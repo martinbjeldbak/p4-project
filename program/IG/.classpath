@@ -7,5 +7,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Utilities"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Interpreter"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ScopeChecker"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/GAL"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
