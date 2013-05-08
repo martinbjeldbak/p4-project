@@ -1,6 +1,6 @@
 package dk.aau.cs.d402f13.simulator;
 
-import dk.aau.cs.d402f13.utilities.types.Action;
+import dk.aau.cs.d402f13.utilities.gameapi.Action;
 import dk.aau.cs.d402f13.widgets.Widget;
 
 public abstract class ActionSelector {

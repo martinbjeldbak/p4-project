@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.newdawn.slick.Graphics;
 
+import dk.aau.cs.d402f13.utilities.errors.StandardError;
+
 public class Widget {
 	private int x = 0;
 	private int y = 0;
@@ -102,7 +104,7 @@ public class Widget {
 		widgets.remove( o );
 	}
 	
-	final public void startDraw( Graphics g ){
+	final public void startDraw( Graphics g ) throws StandardError{
 		for( Widget o : widgets ){
 			g.translate( o.getX(), o.getY() );
 		//TODO: clip appears to use absolute coordinates
@@ -116,7 +118,7 @@ public class Widget {
 		}
 	}
 	
-	protected void draw( Graphics g ){ }
+	protected void draw( Graphics g ) throws StandardError{ }
 	
 	public void setSize( int newWidth, int newHeight ){
 		width = newWidth;
@@ -129,7 +131,7 @@ public class Widget {
 	}
 	
 	
-	protected boolean handleMouseClicked( int button, int x, int y ){
+	protected boolean handleMouseClicked( int button, int x, int y ) throws StandardError{
 		return false;
 	}
 	protected boolean handleMouseDragged( int oldX, int oldY, int newX, int newY ){
@@ -139,7 +141,7 @@ public class Widget {
 		return false;
 	}
 	
-	final public boolean mouseClicked( int button, int x, int y ){
+	final public boolean mouseClicked( int button, int x, int y ) throws StandardError{
 		for( Widget o : widgets )
 			if( o.containsPoint( x, y ) ){
 				if( o.mouseClicked( button, x - o.getX(), y - o.getY() ) )
@@ -192,11 +194,11 @@ public class Widget {
 		MOVE_GENERATED
 	}
 	
-	public void acceptEvent( Widget obj, Event event ){
+	public void acceptEvent( Widget obj, Event event ) throws StandardError{
 		//Nothing here, this is intended, as the default is no action
 	}
 	
-	protected void createEvent( Event event ){
+	protected void createEvent( Event event ) throws StandardError{
 		for( Widget o : listeners )
 			o.acceptEvent( this, event );
 	}

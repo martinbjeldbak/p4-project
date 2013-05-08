@@ -8,6 +8,7 @@ import org.newdawn.slick.TrueTypeFont;
 
 import dk.aau.cs.d402f13.helpers.ResourceHelper;
 import dk.aau.cs.d402f13.helpers.TextHelper;
+import dk.aau.cs.d402f13.utilities.errors.StandardError;
 
 
 public class Message extends Widget {
@@ -49,7 +50,7 @@ public class Message extends Widget {
 	}
 
 	@Override
-	protected boolean handleMouseClicked( int button, int x, int y ){
+	protected boolean handleMouseClicked( int button, int x, int y ) throws StandardError{
 		createEvent( Event.ACCEPT );
 		return true;
 	}

@@ -9,8 +9,9 @@ import org.newdawn.slick.Image;
 
 import dk.aau.cs.d402f13.helpers.ActionHelper;
 import dk.aau.cs.d402f13.helpers.ResourceHelper;
-import dk.aau.cs.d402f13.utilities.types.Action;
-import dk.aau.cs.d402f13.utilities.types.Game;
+import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.utilities.gameapi.Action;
+import dk.aau.cs.d402f13.utilities.gameapi.Game;
 import dk.aau.cs.d402f13.widgets.Label;
 import dk.aau.cs.d402f13.widgets.ScaleContainer;
 import dk.aau.cs.d402f13.widgets.ScrollContainer;
@@ -22,7 +23,7 @@ public class GameInfoWidget extends ScaleContainer {
 	private Label title;
 	private Label player;
 	
-	GameInfoWidget( SimulatedGame game ){
+	GameInfoWidget( SimulatedGame game ) throws StandardError{
 		super( true );
 		//We want to use the image dimensions as the size, however,
 		//as an Image in Slick can't be loaded before an OpenGl context
@@ -35,7 +36,7 @@ public class GameInfoWidget extends ScaleContainer {
 		this.game = game;
 		
 		//Add the objects, while keeping references to them
-		addObject( title = new Label( "gtw", 32, game.getGame().title() ) );
+		addObject( title = new Label( "gtw", 32, game.getGame().getTitle() ) );
 		addObject( player = new Label( "gtw", 16, "Player" ) );
 		addObject( historyList = new ScrollContainer() );
 	}
@@ -47,9 +48,12 @@ public class GameInfoWidget extends ScaleContainer {
 		Image side = ResourceHelper.getImage( "img/book.png" );
 		g.drawImage( side, 0, 0 );
 		
-		title.setString( game.title() );
+		title.setString( game.getTitle() );
 		
-		int position = game.players().indexOf( game.currentPlayer() );
+		int position = -1;
+		for( int i=0; i<game.getPlayers().length; i++ )
+			if( game.getPlayers()[i] == game.getCurrentPlayer() )
+				position = i;
 		player.setString( "Player " + ( position + 1) );
 
 		//Display Action history

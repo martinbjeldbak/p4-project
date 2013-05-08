@@ -11,14 +11,15 @@ import org.newdawn.slick.geom.Shape;
 
 
 import dk.aau.cs.d402f13.helpers.ResourceHelper;
-import dk.aau.cs.d402f13.utilities.types.Game;
-import dk.aau.cs.d402f13.utilities.types.Gridboard;
+import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.utilities.gameapi.Game;
+import dk.aau.cs.d402f13.utilities.gameapi.GridBoard;
 import dk.aau.cs.d402f13.widgets.ScaleContainer;
 
 public class SimulatedGame extends BasicGame {
 	//Game mechanics stuff
 	ScaleContainer sceneHandler = null;
-	GridboardWidget board = null;
+	GridBoardWidget board = null;
 	GameInfoWidget sidebar = null;
 	Game game;
 	
@@ -27,10 +28,10 @@ public class SimulatedGame extends BasicGame {
 		super( "Junta Simulator" );
 		
 		//TODO: load from file system
-		game = new ChessGame();
-		Object obj = game.board();
-		if( obj instanceof Gridboard )
-			board = new GridboardWidget( this, (Gridboard)obj );
+		//game = new ChessGame();
+		Object obj = game.getBoard();
+		if( obj instanceof GridBoard )
+			board = new GridBoardWidget( this, (GridBoard)obj );
 		else
 			; //TODO:
 		
@@ -72,7 +73,11 @@ public class SimulatedGame extends BasicGame {
 	
 	@Override
 	public String getTitle(){
-		return "Junta Simulator - " + game.title();
+		try {
+			return "Junta Simulator - " + game.getTitle();
+		} catch (StandardError e) {
+			return "error in title"; //TODO:
+		}
 	}
 
 	public static void main( String[] args ) throws SlickException, CloneNotSupportedException {
