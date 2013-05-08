@@ -32,19 +32,19 @@ public class GridBoardWrapper extends BoardWrapper implements GridBoard {
     height = getMemberInt("height");
     isFull = getMemberBoolean("isFull");
     
-    Value[] squares = getMemberList("squares", env.pieceType(), 1);
+    Value[] squares = getMemberList("squares", env.squareType(), 1);
     this.squares = new SquareWrapper[squares.length];
     for (int i = 0; i < squares.length; i++) {
       this.squares[i] = new SquareWrapper(env, squares[i]);
     }
     
-    Value[] squareTypes = getMemberList("squareTypes", env.pieceType(), 1);
+    Value[] squareTypes = getMemberList("squareTypes", env.squareType(), 1);
     this.squareTypes = new SquareWrapper[squareTypes.length];
     for (int i = 0; i < squareTypes.length; i++) {
       this.squareTypes[i] = new SquareWrapper(env, squareTypes[i]);
     }
     
-    Value[] emptySquares = getMemberList("emptySquares", env.pieceType(), 1);
+    Value[] emptySquares = getMemberList("emptySquares", env.squareType(), 1);
     this.emptySquares = new SquareWrapper[emptySquares.length];
     for (int i = 0; i < emptySquares.length; i++) {
       this.emptySquares[i] = new SquareWrapper(env, emptySquares[i]);
