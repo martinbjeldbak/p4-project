@@ -1,6 +1,8 @@
 package dk.aau.cs.d402f13.scopechecker;
 
+import dk.aau.cs.d402f13.utilities.scopechecker.ConstantMember;
 import dk.aau.cs.d402f13.utilities.scopechecker.Data;
+import dk.aau.cs.d402f13.utilities.scopechecker.FunctionMember;
 import dk.aau.cs.d402f13.utilities.scopechecker.TypeSymbolInfo;
 import dk.aau.cs.d402f13.utilities.scopechecker.Member;
 import dk.aau.cs.d402f13.utilities.scopechecker.TypeTable;
@@ -20,9 +22,13 @@ public class TypeTablePrettyPrinter {
         System.out.println("");
         System.out.println("  Has members:");
         for (Member m : ci.members){
-          System.out.println("    " + (m.abstrct ? "abstract " : "") + m.name + ", takes " + m.args + " args");
-   
-        }
+          if (m instanceof FunctionMember)
+            System.out.println("    " + (m.abstrct ? "abstract " : "") + " func " + m.name + ", takes " + ((FunctionMember)m).argCount() + " args");
+          else if (m instanceof ConstantMember)
+            System.out.println("    " + (m.abstrct ? "abstract " : "") + " const " + m.name);
+          else
+            System.out.println("    " + (m.abstrct ? "abstract " : "") + " unknown " + m.name);       
+          }
         
         System.out.println("  Has data:");
         for (Data d : ci.data){
