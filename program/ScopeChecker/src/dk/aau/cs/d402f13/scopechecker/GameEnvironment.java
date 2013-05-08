@@ -129,5 +129,9 @@ public class GameEnvironment {
     current = new TypeSymbolInfo(null, "TestCase", -1, 0);
     current.args = 0;
     tt.addType(current);
+    
+    //GLOBAL
+    current = tt.getGlobal();
+    current.members.add(new FunctionMember("addActions", 2));
     }
 }
