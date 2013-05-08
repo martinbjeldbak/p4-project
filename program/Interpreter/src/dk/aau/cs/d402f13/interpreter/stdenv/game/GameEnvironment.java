@@ -687,26 +687,26 @@ public class GameEnvironment extends StandardEnvironment {
       }
     ));
     addConstant("moveActions", new FunValue(
-        2, false,
-        new Callable() {
-          @Override
-          public Value call(Interpreter interpreter, Value... actualParameters)
-              throws StandardError {
-            TypeValue.expect(actualParameters, 0, piece);
-            ObjectValue p = (ObjectValue)actualParameters[0];
-            Value[] positions = ((ListValue)TypeValue.expect(actualParameters, 1, ListValue.type())).getValues();
-            Value[] actions = new Value[positions.length];
-            for (int i = 0; i < positions.length; i++) {
-              Value coord = positions[i];
-              if (!coord.is(CoordValue.type())) {
-                throw new TypeError("Invalid element type in list for 'moveActions', expected Coordinate");
-              }
-              actions[i] = moveAction.getInstance(interpreter, p, coord);
+      2, false,
+      new Callable() {
+        @Override
+        public Value call(Interpreter interpreter, Value... actualParameters)
+            throws StandardError {
+          TypeValue.expect(actualParameters, 0, piece);
+          ObjectValue p = (ObjectValue)actualParameters[0];
+          Value[] positions = ((ListValue)TypeValue.expect(actualParameters, 1, ListValue.type())).getValues();
+          Value[] actions = new Value[positions.length];
+          for (int i = 0; i < positions.length; i++) {
+            Value coord = positions[i];
+            if (!coord.is(CoordValue.type())) {
+              throw new TypeError("Invalid element type in list for 'moveActions', expected Coordinate");
             }
-            return new ListValue(actions); 
+            actions[i] = moveAction.getInstance(interpreter, p, coord);
           }
+          return new ListValue(actions); 
         }
-      ));
+      }
+    ));
   }  
   
   /**
