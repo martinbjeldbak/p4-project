@@ -1,6 +1,8 @@
 package dk.aau.cs.d402f13.scopechecker;
 
 import dk.aau.cs.d402f13.utilities.errors.ScopeError;
+import dk.aau.cs.d402f13.utilities.scopechecker.ConstantMember;
+import dk.aau.cs.d402f13.utilities.scopechecker.FunctionMember;
 import dk.aau.cs.d402f13.utilities.scopechecker.Member;
 import dk.aau.cs.d402f13.utilities.scopechecker.TypeSymbolInfo;
 import dk.aau.cs.d402f13.utilities.scopechecker.TypeTable;
@@ -14,66 +16,67 @@ public class GameEnvironment {
     //GAME
     current = new TypeSymbolInfo(null, "Game", -1, 0);
     current.args = 1;
-    current.members.add(new Member("players"));
-    current.members.add(new Member("board"));
-    current.members.add(new Member("currentPlayer"));
-    current.members.add(new Member("turnOrder"));
-    current.members.add(new Member("currentBoard"));
-    current.members.add(new Member("title"));
-    current.members.add(new Member("findSquares", 0, -1, 0));
+    current.members.add(new ConstantMember("players"));
+    current.members.add(new ConstantMember("board"));
+    current.members.add(new ConstantMember("currentPlayer"));
+    current.members.add(new ConstantMember("turnOrder"));
+    current.members.add(new ConstantMember("currentBoard"));
+    current.members.add(new ConstantMember("title"));
+    current.members.add(new FunctionMember("findSquares", 1));
     tt.addType(current);
     
     //BOARD
     current = new TypeSymbolInfo(null, "Board", -1, 0);
     current.args = 0;
-    current.members.add(new Member("pieces"));
-    current.members.add(new Member("addPiece", 0, -1, 0));
-    current.members.add(new Member("addPieces", 0, -1, 0));
+    current.members.add(new ConstantMember("pieces"));
+    current.members.add(new FunctionMember("addPiece", 2));
+    current.members.add(new FunctionMember("addPieces", 2));
     tt.addType(current);
     
     //GRIDBOARD
     current = new TypeSymbolInfo(null, "GridBoard", -1, 0);
     current.args = 2;
     current.setParentName("Board");
-    current.members.add(new Member("width"));
-    current.members.add(new Member("height"));
-    current.members.add(new Member("squares"));
-    current.members.add(new Member("isFull"));
-    current.members.add(new Member("emptySquares"));
-    current.members.add(new Member("squareTypes"));
+    current.members.add(new ConstantMember("width"));
+    current.members.add(new ConstantMember("height"));
+    current.members.add(new ConstantMember("squares"));
+    current.members.add(new ConstantMember("isFull"));
+    current.members.add(new ConstantMember("emptySquares"));
+    current.members.add(new ConstantMember("squareTypes"));
     tt.addType(current);
     
     //SQUARE
     current = new TypeSymbolInfo(null, "Square", -1, 0);
     current.args = 0;
-    current.members.add(new Member("addPiece", 0, -1, 0));
-    current.members.add(new Member("position"));
-    current.members.add(new Member("pieces"));
-    current.members.add(new Member("image"));
-    current.members.add(new Member("isOccupied"));
-    current.members.add(new Member("position"));
-    current.members.add(new Member("isEmpty"));
+    current.members.add(new FunctionMember("addPiece", 1));
+    current.members.add(new FunctionMember("removePiece", 1));
+    current.members.add(new ConstantMember("position"));
+    current.members.add(new ConstantMember("pieces"));
+    current.members.add(new ConstantMember("image"));
+    current.members.add(new ConstantMember("isOccupied"));
+    current.members.add(new ConstantMember("position"));
+    current.members.add(new ConstantMember("isEmpty"));
     tt.addType(current);
     
     //PIECE
     current = new TypeSymbolInfo(null, "Piece", -1, 0);
     current.args = 1;
-    current.members.add(new Member("move", 0, -1, 0));
-    current.members.add(new Member("remove", 0, -1, 0));
-    current.members.add(new Member("owner"));
-    current.members.add(new Member("image"));
-    current.members.add(new Member("square"));
-    current.members.add(new Member("onBoard"));
-    current.members.add(new Member("actions", 0, -1, 0));
+    current.members.add(new FunctionMember("move", 1));
+    current.members.add(new FunctionMember("remove", 0));
+    current.members.add(new ConstantMember("owner"));
+    current.members.add(new ConstantMember("image"));
+    current.members.add(new ConstantMember("square"));
+    current.members.add(new ConstantMember("onBoard"));
+    current.members.add(new FunctionMember("actions", 1));
     tt.addType(current);
     
     //PLAYER
     current = new TypeSymbolInfo(null, "Player", -1, 0);
     current.args = 1;
-    current.members.add(new Member("name"));
-    current.members.add(new Member("winCondition", 0, -1, 0));
-    current.members.add(new Member("tieCondition", 0, -1, 0));
-    current.members.add(new Member("actions", 0, -1, 0));
+    current.members.add(new ConstantMember("name"));
+    current.members.add(new FunctionMember("winCondition", 1));
+    current.members.add(new FunctionMember("tieCondition", 1));
+    current.members.add(new FunctionMember("actions", 1));
     tt.addType(current);
     
     
@@ -85,17 +88,18 @@ public class GameEnvironment {
     
     //ACTIONSEQUENCE
     current = new TypeSymbolInfo(null, "ActionSequence", -1, 0);
-    current.args = -1; //skip check since it contains varargs
+    current.args = 0; //0 args additional to varargs
+    current.varArgs = true;
     current.setParentName("Action");
-    current.members.add(new Member("addAction"));
-    current.members.add(new Member("actions"));
+    current.members.add(new FunctionMember("addAction", 1));
+    current.members.add(new ConstantMember("actions"));
     tt.addType(current);
     
     //UNITACTION
     current = new TypeSymbolInfo(null, "UnitAction", -1, 0);
     current.args = 1;
     current.setParentName("Action");
-    current.members.add(new Member("piece"));
+    current.members.add(new ConstantMember("piece"));
     tt.addType(current);
     
     //ADDACTION
@@ -103,7 +107,7 @@ public class GameEnvironment {
     current.args = 2;
     current.parentCallArgs = 1;
     current.setParentName("UnitAction");
-    current.members.add(new Member("to"));
+    current.members.add(new ConstantMember("to"));
     tt.addType(current);
   
     //REMOVEACTION
@@ -111,14 +115,14 @@ public class GameEnvironment {
     current.args = 1;
     current.parentCallArgs = 1;
     current.setParentName("UnitAction");
-    current.members.add(new Member("to"));
+    current.members.add(new ConstantMember("to"));
     
     //MOVEACTION
     current = new TypeSymbolInfo(null, "MoveAction", -1, 0);
     current.args = 2;
     current.parentCallArgs = 1;
     current.setParentName("UnitAction");
-    current.members.add(new Member("to"));
+    current.members.add(new ConstantMember("to"));
     tt.addType(current);
     
     //TESTCASE
