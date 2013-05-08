@@ -31,6 +31,8 @@ public class GameWrapper extends Wrapper implements Game {
   private PlayerWrapper[] turnOrder;
   
   private PlayerWrapper currentPlayer;
+  
+  private Action[] actions;
 
   public GameWrapper(GameEnvironment env, Value object) throws StandardError {
     super(env, object);
@@ -144,6 +146,9 @@ public class GameWrapper extends Wrapper implements Game {
 
   @Override
   public Action[] getActions() throws StandardError {
+    if (actions != null) {
+      return actions;
+    }
     ArrayList<Action> actionList = new ArrayList<Action>();
     for (PlayerWrapper p : players) {
       Action[] playerActions = p.getActions(this);
@@ -161,6 +166,7 @@ public class GameWrapper extends Wrapper implements Game {
     for (int i = 0; i < actions.length; i++) {
       actions[i] = actionList.get(i);
     }
+    this.actions = actions;
     return actions;
   }
 

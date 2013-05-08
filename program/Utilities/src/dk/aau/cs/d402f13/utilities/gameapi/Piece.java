@@ -6,7 +6,7 @@ public interface Piece {
   public String getImage() throws StandardError;
   public Player getOwner() throws StandardError;
   public int getX() throws StandardError;
-  public int gety() throws StandardError;
+  public int getY() throws StandardError;
   public boolean isOnBoard() throws StandardError;
   public Action[] getActions(Game game) throws StandardError;
 }
