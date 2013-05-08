@@ -11,8 +11,11 @@ import dk.aau.cs.d402f13.utilities.gameapi.ActionSequence;
 import dk.aau.cs.d402f13.utilities.gameapi.AddAction;
 import dk.aau.cs.d402f13.utilities.gameapi.Game;
 import dk.aau.cs.d402f13.utilities.gameapi.MoveAction;
+import dk.aau.cs.d402f13.utilities.gameapi.Piece;
 import dk.aau.cs.d402f13.utilities.gameapi.Player;
 import dk.aau.cs.d402f13.utilities.gameapi.RemoveAction;
+import dk.aau.cs.d402f13.utilities.gameapi.Square;
+import dk.aau.cs.d402f13.utilities.gameapi.UnitAction;
 import dk.aau.cs.d402f13.values.ListValue;
 import dk.aau.cs.d402f13.values.ObjectValue;
 import dk.aau.cs.d402f13.values.TypeValue;
@@ -41,8 +44,8 @@ public class GameWrapper extends Wrapper implements Game {
     }
     Value[] turnOrder = getMemberList("turnOrder", env.playerType(), 1);
     this.turnOrder = new PlayerWrapper[players.length];
-    for (int i = 0; i < players.length; i++) {
-      this.players[i] = new PlayerWrapper(env, players[i]);
+    for (int i = 0; i < turnOrder.length; i++) {
+      this.players[i] = new PlayerWrapper(env, turnOrder[i]);
     }
     
     currentPlayer = new PlayerWrapper(env, getMember("currentPlayer", env.playerType()));
@@ -51,6 +54,10 @@ public class GameWrapper extends Wrapper implements Game {
   @Override
   public BoardWrapper getBoard() {
     return board;
+  }
+  
+  public GameWrapper setBoard(BoardWrapper board) throws StandardError {
+    return new GameWrapper(env, object.setAttribute("currentBoard", board.object));
   }
 
   @Override
@@ -74,35 +81,87 @@ public class GameWrapper extends Wrapper implements Game {
   }
 
   @Override
-  public Game applyAction(Action action) throws StandardError {
-    if (action instanceof ActionSequence) {
+  public GameWrapper applyAction(Action action) throws StandardError {
+    if (action instanceof ActionSequenceWrapper) {
+      GameWrapper state = this;
+      for (UnitActionWrapper a: ((ActionSequenceWrapper)action).getActions()) {
+        state = state.applyAction(a);
+      }
+      return state;
     }
-    else if (action instanceof AddAction) {
+    else if (action instanceof AddActionWrapper) {
+      PieceWrapper piece = ((AddActionWrapper)action).getPiece();
+      SquareWrapper to = ((AddActionWrapper)action).getTo();
+      GridBoardWrapper boardState = (GridBoardWrapper)board;
+      piece = piece.setPosition(to.getX(), to.getY());
+      to = to.addPiece(piece);
+      boardState = boardState.setSquareAt(to.getX(), to.getY(), to);
+      boardState = boardState.addPiece(piece);
+      return setBoard(boardState);
     }
-    else if (action instanceof RemoveAction) {
+    else if (action instanceof RemoveActionWrapper) {
+      PieceWrapper piece = ((RemoveActionWrapper)action).getPiece();
+      return null;
     }
-    else if (action instanceof MoveAction) {
+    else if (action instanceof MoveActionWrapper) {
+      PieceWrapper piece = ((MoveActionWrapper)action).getPiece();
+      SquareWrapper to = ((MoveActionWrapper)action).getTo();
+      return null;
     }
     else {
       throw new InternalError("Invalid action class: " + action.getClass());
     }
-    return null;
   }
 
   @Override
-  public Game undoAction(Action action) throws StandardError {
-    if (action instanceof ActionSequence) {
+  public GameWrapper undoAction(Action action) throws StandardError {
+    if (action instanceof ActionSequenceWrapper) {
+      GameWrapper state = this;
+      UnitActionWrapper[] list = ((ActionSequenceWrapper)action).getActions();
+      for (int i = list.length - 1; i >= 0; i--) {
+        state = state.undoAction(list[i]);
+      }
+      return state;
     }
-    else if (action instanceof AddAction) {
+    else if (action instanceof AddActionWrapper) {
+      PieceWrapper piece = ((AddActionWrapper)action).getPiece();
+      SquareWrapper to = ((AddActionWrapper)action).getTo(); 
+      return null;
     }
-    else if (action instanceof RemoveAction) {
+    else if (action instanceof RemoveActionWrapper) {
+      PieceWrapper piece = ((RemoveActionWrapper)action).getPiece();
+      return null;
     }
-    else if (action instanceof MoveAction) {
+    else if (action instanceof MoveActionWrapper) {
+      PieceWrapper piece = ((MoveActionWrapper)action).getPiece();
+      SquareWrapper to = ((MoveActionWrapper)action).getTo(); 
+      return null;
     }
     else {
       throw new InternalError("Invalid action class: " + action.getClass());
     }
-    return null;
+  }
+
+  @Override
+  public Action[] getActions() throws StandardError {
+    ArrayList<Action> actionList = new ArrayList<Action>();
+    for (PlayerWrapper p : players) {
+      Action[] playerActions = p.getActions(this);
+      for (Action a : playerActions) {
+        actionList.add(a);
+      }
+    }
+    for (PieceWrapper p : board.getPieces()) {
+      Action[] pieceActions = p.getActions(this);
+      for (Action a : pieceActions) {
+        actionList.add(a);
+      }
+    }
+    Action[] actions = new Action[actionList.size()];
+    for (int i = 0; i < actions.length; i++) {
+      actions[i] = actionList.get(i);
+    }
+    return actions;
   }
 
 }

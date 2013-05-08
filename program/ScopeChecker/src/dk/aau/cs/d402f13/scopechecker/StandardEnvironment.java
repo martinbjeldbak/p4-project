@@ -1,6 +1,8 @@
 package dk.aau.cs.d402f13.scopechecker;
 
 import dk.aau.cs.d402f13.utilities.errors.ScopeError;
+import dk.aau.cs.d402f13.utilities.scopechecker.ConstantMember;
+import dk.aau.cs.d402f13.utilities.scopechecker.FunctionMember;
 import dk.aau.cs.d402f13.utilities.scopechecker.Member;
 import dk.aau.cs.d402f13.utilities.scopechecker.TypeSymbolInfo;
 import dk.aau.cs.d402f13.utilities.scopechecker.TypeTable;
@@ -28,7 +30,7 @@ public class StandardEnvironment {
     //Function
     current = new TypeSymbolInfo(null, "Function", -1, 0);
     current.args = 1;
-    current.members.add(new Member("call"));
+    current.members.add(new FunctionMember("call", 1));
      tt.addType(current);
     
     //Integer
@@ -39,15 +41,16 @@ public class StandardEnvironment {
     //List
     current = new TypeSymbolInfo(null, "List", -1, 0);
     current.args = 1;
-    current.members.add(new Member("size"));
-    current.members.add(new Member("sort"));
-    current.members.add(new Member("map"));
-    current.members.add(new Member("filter"));
+    current.members.add(new ConstantMember("size"));
+    current.members.add(new FunctionMember("sort", 1));
+    current.members.add(new FunctionMember("map", 1));
+    current.members.add(new FunctionMember("filter", 1));
      tt.addType(current);
     
     //Pattern
     current = new TypeSymbolInfo(null, "Pattern", -1, 0);
     current.args = 1;
+    current.members.add(new Member("size"));
      tt.addType(current);
     
     //String
@@ -58,17 +61,14 @@ public class StandardEnvironment {
     //Type
     current = new TypeSymbolInfo(null, "Type", -1, 0);
     current.args = 1;
-    current.members.add(new Member("isSubtypeOf"));
-    current.members.add(new Member("isSupertypeOf"));
-     tt.addType(current);
-    
-    //Action
-    current = new TypeSymbolInfo(null, "Action", -1, 0);
-    current.args = 1;
+    current.members.add(new FunctionMember("isSubtypeOf", 1));
+    current.members.add(new FunctionMember("isSupertypeOf", 1));
      tt.addType(current);
     
     //GLOBAL FUNCTIONS
-     tt.getGlobal().addMember(new Member("typeOf"));
-     tt.getGlobal().addMember(new Member("union"));
+     tt.getGlobal().addMember(new FunctionMember("typeOf", 1));
+     FunctionMember union = new FunctionMember("union", 1);
+     union.setVarArgs(true);
+     tt.getGlobal().addMember(union);
   }
 }

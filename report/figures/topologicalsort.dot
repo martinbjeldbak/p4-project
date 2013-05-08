@@ -1,0 +1,7 @@
+digraph graphname {
+     a0 -> b2 -> c2;
+     d0 -> b2;
+     e0 -> c2;
+     f0 -> g1;
+     sorted;
+ }

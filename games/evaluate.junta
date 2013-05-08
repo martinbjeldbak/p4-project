@@ -12,6 +12,18 @@ type TrueOrFalse [] extends TestCase[] {
   define lessEq = 0 <= 1
   define addGreatSub = 5 + 5 > 5 - 5
   define multEqDiv = not 2 * 2 == 2 / 2
+  define conditionalThen = if 1+1 < 5 
+                             then 0 == 0 
+                             else 0 != 0
+  define condtiionalElse = if 1+1 > 5 
+                             then 0 != 0 
+                             else 0 == 0
+  define conditionalNest = if 1+1 < 5 
+                             then 
+                               if 0 >= 0 
+                                 then 0 == 0 
+                                 else 0 != 0 
+                             else 0 != 0
 }
 
 define sortAscend = [151, 157, 163, 7, 11, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59,
@@ -23,9 +35,20 @@ define sortDescend = [151, 157, 163, 7, 11, 19, 23, 29, 31, 37, 41, 43, 47, 53, 
                       71, 113, 149, 167, 173, 179, 181, 191, 127, 131, 137, 139]
                       .sort[#[$a, $b] => $b - $a]
 
-type Numbers [] extends TestCase[] {
-  define addition = let $d = 5 + 2 + 1 in $d + $d == 8 + 8
-  define subtract = let $d = 3 - 2, $e = 5 - 4 in $d - $e == 1 - 1
+type Numbers [] extends TestCase [] {
+  define correctType = typeOf[120 + 20] == Integer
+  define addition = let $d = 5 + 2 + 1 
+                      in $d + $d == 8 + 8
+  define subtract = let $d = 3 - 2, $e = 5 - 4 
+                      in $d - $e == 1 - 1
+  define mult = let $d = 7 * 7
+                  in $d == 49
+  define division = let $d = 49 / 7 
+                      in $d == 7
+  define modulo = let $d = 13 % 5
+                    in $d == 3
+  define negation = let $d = --2
+                      in $d == 2
   define ascendOrd = sortAscend == [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 
                      47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 
                      127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191]
@@ -35,4 +58,28 @@ type Numbers [] extends TestCase[] {
                      163, 167, 173, 179, 181, 191]
   define mapAsc = $filterAsc.map[#[$a] => $a + 10] == [117, 119, 123, 137, 141, 147, 149, 
                   159, 161, 167, 173, 177, 183, 189, 191, 201]
+}
+
+type DirectionTest [] extends TestCase [] {
+  define correctType = typeOf[ne + sw] == Direction
+  
+}
+
+type CoordinateTest [] extends TestCase [] {
+  define correctType = typeOf[A2 + ne] == Coordinate
+}
+
+type StringTest [] extends TestCase [] {
+  data $string = "Hello, " + "my friend."
+  define correctType = typeOf[$string] == String
+  define stringSize = $string.size == 17
+  define hello = $string[0, 4] == "Hello"
+  define myFriend = $string[7, 15] == "my friend"
+}
+
+type ListTest [] extends TestCase [] {
+  data $listOne = ["hej", "farvel", "god dag", "hvemerdu?"]
+  data $listTwo = ["hello", "goodbye", "good day", "whoareyou?"]
+  define combinedSize = $listOne.size + $listTwo.size == 8
+  define listFilter = $listTwo.filter[#[$a] => $a == "god dag"] == ["god dag"]
 }
