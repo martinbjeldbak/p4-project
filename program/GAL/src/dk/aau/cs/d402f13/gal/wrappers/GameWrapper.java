@@ -26,7 +26,7 @@ public class GameWrapper extends Wrapper implements Game {
   
   private String title;
   private String description;
-  private BoardWrapper board;
+  private GridBoardWrapper board;
   
   private PlayerWrapper[] players;
   private PlayerWrapper[] turnOrder;
@@ -39,7 +39,7 @@ public class GameWrapper extends Wrapper implements Game {
     super(env, object);
     title = getMemberString("title");
     title = getMemberString("description");
-    board = new BoardWrapper(env, getMember("currentBoard", env.boardType()));
+    board = new GridBoardWrapper(env, getMember("currentBoard", env.gridBoardType()));
     
     Value[] players = getMemberList("players", env.playerType(), 1);
     this.players = new PlayerWrapper[players.length];
@@ -56,11 +56,11 @@ public class GameWrapper extends Wrapper implements Game {
   }
 
   @Override
-  public BoardWrapper getBoard() {
+  public GridBoardWrapper getBoard() {
     return board;
   }
   
-  public GameWrapper setBoard(BoardWrapper board) throws StandardError {
+  public GameWrapper setBoard(GridBoardWrapper board) throws StandardError {
     return new GameWrapper(env, object.setAttribute("currentBoard", board.object));
   }
 
