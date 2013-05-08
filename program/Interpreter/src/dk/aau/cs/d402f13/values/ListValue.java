@@ -40,6 +40,13 @@ public class ListValue extends Value {
     this.values = values;
   }
   
+  public ListValue(List<Value> values) {
+    this.values = new Value[values.size()];
+    for (int i = 0; i < values.size(); i++) {
+      this.values[i] = values.get(i);
+    }
+  }
+  
   public Value[] getValues() {
     return values;
   }
