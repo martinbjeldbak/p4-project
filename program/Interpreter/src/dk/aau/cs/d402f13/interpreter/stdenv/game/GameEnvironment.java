@@ -213,6 +213,16 @@ public class GameEnvironment extends StandardEnvironment {
         return ((ObjectValue)object).getAttribute("pieces");
       }
     }));
+    board.addTypeMember("setPieces", new Member(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters)
+          throws StandardError {
+        Value[] pieces = ((ListValue)TypeValue.expect(actualParameters, 0, ListValue.type())).getValues();
+        TypeValue.expect(piece, pieces);
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        return object.setAttribute("pieces", actualParameters[0]);
+      }
+    }));
 
     
     ////////////////////////////////////
@@ -311,16 +321,15 @@ public class GameEnvironment extends StandardEnvironment {
             newList[i] = squares[i];
           }
         }
-        object.beginClone();
-        object.setAttribute("squares", new ListValue(newList));
+        object = (ObjectValue)object.setAttribute("squares", new ListValue(newList));
         Value[] pieces = object.getMemberList("pieces", piece);
         newList = new Value[pieces.length + 1];
         for  (int i = 0; i < pieces.length; i++) {
           newList[i] = pieces[i];
         }
         newList[newList.length - 1] = p;
-        object.setAttribute("pieces", new ListValue(newList));
-        return object.endClone();
+        object = (ObjectValue)object.callMember("setPieces", gridBoard, interpreter, new ListValue(newList));
+        return object;
       }
     }));
     gridBoard.addTypeMember("addPieces", new Member(2, false, new Callable() {
@@ -385,10 +394,10 @@ public class GameEnvironment extends StandardEnvironment {
     piece.addTypeMember("move", new Member(1, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
-        TypeValue.expect(actualParameters, 0, square);
+        TypeValue.expect(actualParameters, 0, CoordValue.type());
         ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
         object.beginClone();
-        object.setAttribute("square", actualParameters[0]);
+        object.setAttribute("position", actualParameters[0]);
         object.setAttribute("onBoard", BoolValue.trueValue());
         return object.endClone();
       }

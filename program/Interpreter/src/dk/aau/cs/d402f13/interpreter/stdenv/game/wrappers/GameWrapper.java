@@ -142,4 +142,26 @@ public class GameWrapper extends Wrapper implements Game {
     }
   }
 
+  @Override
+  public Action[] getActions() throws StandardError {
+    ArrayList<Action> actionList = new ArrayList<Action>();
+    for (PlayerWrapper p : players) {
+      Action[] playerActions = p.getActions(this);
+      for (Action a : playerActions) {
+        actionList.add(a);
+      }
+    }
+    for (PieceWrapper p : board.getPieces()) {
+      Action[] pieceActions = p.getActions(this);
+      for (Action a : pieceActions) {
+        actionList.add(a);
+      }
+    }
+    Action[] actions = new Action[actionList.size()];
+    for (int i = 0; i < actions.length; i++) {
+      actions[i] = actionList.get(i);
+    }
+    return actions;
+  }
+
 }
