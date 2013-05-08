@@ -14,7 +14,7 @@ public class TypeSymbolInfo extends SymbolInfo{
   public int parentCallArgs;                    //number of arguments in call to supers constructor
   public ArrayList<Member> members;   //constants with no impl
   public ArrayList<Data> data;         //data members
-
+  public boolean varArgs; //if it has varArgs, args still means the needed number of args
   public int children; //number of children extending this type in a direct link
  
   
