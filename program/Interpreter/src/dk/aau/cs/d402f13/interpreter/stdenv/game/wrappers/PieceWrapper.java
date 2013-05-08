@@ -8,6 +8,7 @@ import dk.aau.cs.d402f13.utilities.gameapi.Game;
 import dk.aau.cs.d402f13.utilities.gameapi.Piece;
 import dk.aau.cs.d402f13.utilities.gameapi.Player;
 import dk.aau.cs.d402f13.utilities.gameapi.Square;
+import dk.aau.cs.d402f13.values.CoordValue;
 import dk.aau.cs.d402f13.values.ObjectValue;
 import dk.aau.cs.d402f13.values.Value;
 
@@ -16,7 +17,8 @@ public class PieceWrapper extends Wrapper implements Piece {
   private String image;
   private boolean onBoard;
   private PlayerWrapper owner;
-  private SquareWrapper square;
+  private int x;
+  private int y;
   
   
   public PieceWrapper(GameEnvironment env, Value object) throws StandardError {
@@ -25,7 +27,9 @@ public class PieceWrapper extends Wrapper implements Piece {
     onBoard = getMemberBoolean("onBoard");
     owner = new PlayerWrapper(env, getMember("owner", env.playerType()));
     if (onBoard) {
-      square = new SquareWrapper(env, getMember("square", env.squareType()));
+      CoordValue coord = getMemberCoord("position");
+      x = coord.getX();
+      y = coord.getY();
     }
   }
   
@@ -38,10 +42,19 @@ public class PieceWrapper extends Wrapper implements Piece {
   public PlayerWrapper getOwner() throws StandardError {
     return owner;
   }
-
+  
   @Override
-  public SquareWrapper getSquare() throws StandardError {
-    return square;
+  public int getX() throws StandardError {
+    return x;
+  }
+  
+  @Override
+  public int gety() throws StandardError {
+    return y;
+  }
+  
+  public PieceWrapper setPosition(int x, int y) throws StandardError {
+    return new PieceWrapper(env, callMember("setPosition", env.pieceType(), new CoordValue(x, y)));
   }
 
   @Override
