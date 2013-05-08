@@ -335,7 +335,15 @@ public class GameEnvironment extends StandardEnvironment {
     gridBoard.addTypeMember("addPieces", new Member(2, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
-        return null;
+        TypeValue.expect(actualParameters, 0, piece);
+        ObjectValue p = (ObjectValue)actualParameters[0];
+        Value[] positionValues = ((ListValue)TypeValue.expect(actualParameters, 1, ListValue.type())).getValues();
+        CoordValue[] positions = (CoordValue[])TypeValue.expect(CoordValue.type(), positionValues);
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        for (CoordValue coord : positions) {
+          object = (ObjectValue)object.callMember("addPiece", gridBoard, interpreter, p, coord);
+        }
+        return object;
       }
     }));
     

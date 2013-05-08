@@ -49,7 +49,7 @@ public class PieceWrapper extends Wrapper implements Piece {
   }
   
   @Override
-  public int gety() throws StandardError {
+  public int getY() throws StandardError {
     return y;
   }
   
