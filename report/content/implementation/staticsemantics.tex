@@ -39,10 +39,11 @@ Given the graph in \label{fig:topological}, the following sequences are examples
 \end{align}
 
 \input{figures/topologicalsort}
- 
-After having propagated the members, every type that contains any abstract members are marked as being abstract. This is done by changing the type of the \classref{AstNode} to an ABSTRACT\_TYPE\_DEF.
 
-Due to the sorting criteria, a topological sort cannot be performed if an extend cycle exists, e.g: A extends B, B extends C and C extends A. The \classref{TypeTable}.\methodref{topologicalSort()} will detect a cycle and throw an error.
+Another great advantage from topological sorting is the fact that it reveals cycles in the graph. A cycle in the graph means an extend cycle between types exists, e.g: A extends B, B extends C and C extends A.
+
+\subsection{AbstractTypeMarker}
+The interpreter needs to know whether a given type contains any abstract members. Such a type is an abstract type and should not be allowed to instantiate. Marking these abstract types is now smooth. Due to the propagated members it can just be checked whether any abstract members are present in the given type. This check is done by the \classref{AbstractTypeMarker}. Any type described by a \classref{TypeSymbolInfo} has a reference to the \classref{AstNode} it was defined from. If the type is found to be an abstract type, the type of the \classref{AstNode} is changed from TYPE\_DEF to ABSTRACT\_TYPE\_DEF. This is the only way to make information visible to the interpreter, since the \classref{Interpreter} does not use the same \classref{TypeTable} class used by the \classref{ScopeChecker}.
 
 \subsection{UsesAreDeclaredVisitor}
 \label{sec:usesaredeclaredvisitor}
