@@ -36,9 +36,7 @@ public class ScopeChecker {
     //Check that every variable, constant and function used are declared in correct scopes
     UsesAreDeclaredVisitor uadv = new UsesAreDeclaredVisitor(tt);
     uadv.visit(node);
-    
-   
-    
-    TypeTablePrettyPrinter.print(tt);
-  }
+ 
+    //TypeTablePrettyPrinter.print(tt); //Print types and global functions
+  } 
 }
