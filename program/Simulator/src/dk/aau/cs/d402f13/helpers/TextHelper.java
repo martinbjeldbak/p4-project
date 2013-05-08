@@ -1,4 +1,4 @@
-package dk.aau.cs.d402f13.simulator;
+package dk.aau.cs.d402f13.helpers;
 
 import java.util.ArrayList;
 import java.util.List;

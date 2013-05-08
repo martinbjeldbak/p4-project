@@ -22,7 +22,7 @@ public class BoardWrapper extends Wrapper implements Board {
   }
 
   @Override
-  public Piece[] getPieces() throws StandardError {
+  public PieceWrapper[] getPieces() throws StandardError {
     return pieces;
   }
 }

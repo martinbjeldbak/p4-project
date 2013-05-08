@@ -9,13 +9,17 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
-import widgets.Message;
-import widgets.SceneObject;
 
-import dk.aau.cs.d402f13.utilities.types.Action;
-import dk.aau.cs.d402f13.utilities.types.MoveAction;
-import dk.aau.cs.d402f13.utilities.types.Piece;
-import dk.aau.cs.d402f13.utilities.types.Square;
+import dk.aau.cs.d402f13.helpers.ActionHelper;
+import dk.aau.cs.d402f13.helpers.ResourceHelper;
+import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.utilities.gameapi.Action;
+import dk.aau.cs.d402f13.utilities.gameapi.MoveAction;
+import dk.aau.cs.d402f13.utilities.gameapi.Piece;
+import dk.aau.cs.d402f13.utilities.gameapi.Square;
+import dk.aau.cs.d402f13.utilities.gameapi.Board;
+import dk.aau.cs.d402f13.widgets.Message;
+import dk.aau.cs.d402f13.widgets.Widget;
 
 /**
  * SimulatedBoard represents and visualizes the game board and its pieces.
@@ -24,7 +28,7 @@ import dk.aau.cs.d402f13.utilities.types.Square;
  * @author Spiller
  *
  */
-public abstract class SimulatedBoard extends SceneObject {
+public abstract class BoardWidget extends Widget {
 	protected SimulatedGame game;
 	
 	protected List<Square> hintSquares = new ArrayList<Square>();
@@ -41,7 +45,7 @@ public abstract class SimulatedBoard extends SceneObject {
 	 * Constructs a SimulatedBoard
 	 * @param game SimulatedGame to visualize
 	 */
-	public SimulatedBoard( SimulatedGame game ){
+	public BoardWidget( SimulatedGame game ){
 		scaleWidth( 0 );
 		scaleHeight( 0 );
 		this.game = game;
@@ -62,18 +66,22 @@ public abstract class SimulatedBoard extends SceneObject {
 	 * @param x Horizontal absolute coordinate
 	 * @param y Vertical absolute coordinate
 	 * @return The Square on the specified position, or null if none
+	 * @throws StandardError 
 	 */
-	public abstract Square findSquare(int x, int y);
+	public abstract Square findSquare(int x, int y) throws StandardError;
 	
 	/**
 	 * Finds the square the dragged piece currently hovers on.
 	 * @return The square found
+	 * @throws StandardError 
 	 */
-	protected Square hoversOn(){
+	protected Square hoversOn() throws StandardError{
 		if( dragged == null )
 			return null;
 		return findSquare( dragStartX + dragOffsetX, dragStartY + dragOffsetY );
 	}
+	
+	protected abstract Square getSquareFromPiece( Board g, Piece p ) throws StandardError;
 
 	/**
 	 * Check if a Square is contained in the List of hints
@@ -90,12 +98,13 @@ public abstract class SimulatedBoard extends SceneObject {
 	 * @param x Horizontal position of the click
 	 * @param y Vertical position of the click
 	 * @return 
+	 * @throws StandardError 
 	 */
 	@Override
-	protected boolean handleMouseClicked( int button, int x, int y ){
+	protected boolean handleMouseClicked( int button, int x, int y ) throws StandardError{
         if( button == Input.MOUSE_LEFT_BUTTON ){
 	    	Square s = findSquare(x, y);
-	    	List<Action> actions = game.getGame().actions();
+	    	Action[] actions = game.getGame().getActions();
 	    	
 	    	if( selected != null && squareIsHinted( s ) ){
 	    		//We already have selected a piece, and we are trying to
@@ -105,24 +114,24 @@ public abstract class SimulatedBoard extends SceneObject {
 	    		List<Action> acts = new ArrayList<Action>();
 	    		if( selected == s ){
 	    			for( Action a : actions )
-	    				if( ActionHelper.isDropAction( a, s ) != null )
+	    				if( ActionHelper.isRemoveAction( a, s ) != null )
 	    					acts.add( a );
 	    		}
 	    		else{
 	    			for( Action a : actions ){
 	    				//Find actions when destination was selected
-	    				Piece p = game.getGame().board().findPieceOnSquare(s);
-    					if( ActionHelper.isMoveAction( a, selected ) != null ){
-    						if( ActionHelper.isMoveAction( a, p ) != null )
-	    						acts.add( a );
-    					}
+	    				for( Piece p : s.getPieces() )
+		    				if( ActionHelper.isMoveAction( a, selected ) != null ){
+	    						if( ActionHelper.isMoveAction( a, p ) != null )
+		    						acts.add( a );
+	    					}
     					
     					//Find actions when the piece was selected
-    					p = game.getGame().board().findPieceOnSquare(selected);
-    					if( ActionHelper.isMoveAction( a, s ) != null ){
-    						if( ActionHelper.isMoveAction( a, p ) != null )
-	    						acts.add( a );
-    					}
+    					for( Piece p : selected.getPieces() )
+	    					if( ActionHelper.isMoveAction( a, s ) != null ){
+	    						if( ActionHelper.isMoveAction( a, p ) != null )
+		    						acts.add( a );
+	    					}
 	    			}
 	    		}
 	    		
@@ -134,8 +143,8 @@ public abstract class SimulatedBoard extends SceneObject {
 		    	//Select a square if a piece is on it
 		        if( s != null ){
 		        	//Find hints for a piece on this square
-		        	Piece p = game.getGame().board().findPieceOnSquare(s);
-		        	if( p != null ){
+		        	for( Piece p : s.getPieces() ){
+		        		//TODO: handle move if multiple pieces
 		        		for( Action a : actions ){
 		        			MoveAction ma = ActionHelper.isMoveAction( a, p ); 
 		        			if( ma != null )
@@ -156,8 +165,8 @@ public abstract class SimulatedBoard extends SceneObject {
 		        	for( Action a : actions ){
 		        		MoveAction ma = ActionHelper.isMoveAction( a, s ); 
 		        		if( ma != null )
-		        			hintSquares.add( ma.getPiece().square() );
-		        		if( ActionHelper.isDropAction( a, s ) != null )
+		        			hintSquares.add( getSquareFromPiece( game.getGame().getBoard(), ma.getPiece() ) );
+		        		if( ActionHelper.isRemoveAction( a, s ) != null )
 		        			hintSquares.add( s );
 		        	}
 		        	
@@ -191,16 +200,17 @@ public abstract class SimulatedBoard extends SceneObject {
 	 * @param button Button which was released
 	 * @param x Horizontal position of mouse pointer
 	 * @param y Vertical position of mouse pointer
+	 * @throws StandardError 
 	 */
 	@Override
-	public boolean handleMouseReleased( int button, int x, int y ){
+	public boolean handleMouseReleased( int button, int x, int y ) throws StandardError{
 		if( button == Input.MOUSE_LEFT_BUTTON ){
 			if( dragged != null ){
 				Square end = findSquare( dragStartX + dragOffsetX, dragStartY + dragOffsetY );
 				if( squareIsHinted( end ) && end != selected ){
 					//end == selected is handled in mousePressed!
 					List<Action> actions = new ArrayList<Action>();
-					for( Action a : game.getGame().actions() )
+					for( Action a : game.getGame().getActions() )
 						if( ActionHelper.isMoveAction( a, end ) != null )
 							if( ActionHelper.isMoveAction( a, dragged ) != null )
 								actions.add( a );
@@ -220,14 +230,15 @@ public abstract class SimulatedBoard extends SceneObject {
 	 * Apply an action to the Game, prompt the user to select one if
 	 * ambitious.
 	 * @param actions
+	 * @throws StandardError 
 	 */
-	private void executeActions( List<Action> actions ){
+	private void executeActions( List<Action> actions ) throws StandardError{
 		//Check how many actions are found
 		if( actions.size() > 1 ){
 			System.out.println( "More than one action found: " + actions.size() );
 			//TODO: give a prompt to the user to select move
 			for( Action a : actions )
-				ActionHelper.debugAction( a );
+				System.out.println( ActionHelper.humanReadable( game.getGame(), a ) );
 		}
 		if( actions.size() == 0 ){
 			System.out.println( "No actions found !!!" );
@@ -241,7 +252,7 @@ public abstract class SimulatedBoard extends SceneObject {
     	selected = null;
     	hintSquares.clear();
     	
-    	if( game.getGame().players().get(0) == game.getGame().currentPlayer() ){
+    	if( game.getGame().getPlayers()[0] == game.getGame().getCurrentPlayer() ){
     		removeObject( waitForPlayer );
     	}
     	else{
@@ -268,10 +279,11 @@ public abstract class SimulatedBoard extends SceneObject {
 	 * @param size Square size
 	 * @param offsetX Horizontal offset of board
 	 * @param offsetY Vertical offset of board
+	 * @throws StandardError 
 	 * @throws SlickException
 	 */
-	protected void renderPiece( Graphics g, Piece p, int x, int y, int size, int offsetX, int offsetY){
-		Image img = ResourceHandler.getImage( p.getImgPath() );
+	protected void renderPiece( Graphics g, Piece p, int x, int y, int size, int offsetX, int offsetY) throws StandardError{
+		Image img = ResourceHelper.getImage( p.getImage() );
 		int imgMax = Math.max( img.getHeight(), img.getWidth() );
 		
 		int borderSize = (int) (size * 0.05);
@@ -280,7 +292,7 @@ public abstract class SimulatedBoard extends SceneObject {
 		int imgYOffset = (int) ((imgMax - img.getHeight() ) * scale / 2);
 		int imgXOffset = (int) ((imgMax - img.getWidth() ) * scale / 2);
 		
-		img = ResourceHandler.getImageScaled( p.getImgPath(), scale );
+		img = ResourceHelper.getImageScaled( p.getImage(), scale );
 
 		img.draw( x + imgXOffset + offsetX + borderSize, y + imgYOffset + offsetY + borderSize );
 	}
@@ -292,15 +304,16 @@ public abstract class SimulatedBoard extends SceneObject {
 	 * @param posX Horizontal position in pixels
 	 * @param posY Vertical position in pixels
 	 * @param size Size of Square
+	 * @throws StandardError 
 	 * @throws SlickException
 	 */
-	protected void renderSquare( Graphics g, Square s, int posX, int posY, int size ){
+	protected void renderSquare( Graphics g, Square s, int posX, int posY, int size ) throws StandardError{
 		Square hover = hoversOn();
 		
 		//Draw background for square
-		Image img = ResourceHandler.getImage( s.getImgPath() );
+		Image img = ResourceHelper.getImage( s.getImage() );
 		int imgMax = Math.max(img.getWidth(), img.getHeight());
-		img = ResourceHandler.getImageScaled( s.getImgPath(), (float)size /(float) imgMax );
+		img = ResourceHelper.getImageScaled( s.getImage(), (float)size /(float) imgMax );
 		img.draw( posX, posY );
 		
 		if( s == selected ){
@@ -324,7 +337,7 @@ public abstract class SimulatedBoard extends SceneObject {
 	}
 	
 	@Override
-	public void acceptEvent( SceneObject obj, Event event ){
+	public void acceptEvent( Widget obj, Event event ) throws StandardError{
 		if( event == Event.ACCEPT ){
 			removeObject( obj );
 		}
@@ -333,7 +346,7 @@ public abstract class SimulatedBoard extends SceneObject {
 		}
 	}
 
-	private void executeActions(Action action) {
+	private void executeActions(Action action) throws StandardError {
 		List<Action> actions = new ArrayList<Action>();
 		actions.add( action );
 		executeActions( actions );
