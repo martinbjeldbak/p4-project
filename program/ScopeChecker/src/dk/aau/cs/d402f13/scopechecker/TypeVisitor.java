@@ -30,8 +30,9 @@ public class TypeVisitor extends DefaultVisitor
   }
 
   @Override
-  protected Object visitProgram(AstNode node) {
+  protected Object visitProgram(AstNode node) throws StandardError {
    this.currentType = tt.getGlobal();
+   visitChildren(node);
    return null;
   }
   
@@ -135,7 +136,7 @@ public class TypeVisitor extends DefaultVisitor
   protected Object visitDataDef(AstNode node) throws StandardError{
     /* DATA_DEF = VAR EXPRESSION
     *  Add the variable name to the data members of the type
-    *  The UsesAreDeclaredVisitor will check that tje data member accessed
+    *  The UsesAreDeclaredVisitor will check that the data member accessed
     *  by a getter or setter actually exists
     */
     String varName = node.iterator().next().value;

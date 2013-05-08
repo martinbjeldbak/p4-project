@@ -271,6 +271,7 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
   
   @Override
   protected Object visitProgram(AstNode node) throws StandardError{
+    this.currentType = this.tt.getGlobal();
     openScope();
     visitChildren(node);
     closeScope();
