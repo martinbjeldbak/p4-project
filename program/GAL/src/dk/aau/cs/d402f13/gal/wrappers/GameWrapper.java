@@ -38,7 +38,7 @@ public class GameWrapper extends Wrapper implements Game {
   public GameWrapper(GameEnvironment env, Value object) throws StandardError {
     super(env, object);
     title = getMemberString("title");
-    title = getMemberString("description");
+    description = getMemberString("description");
     board = new GridBoardWrapper(env, getMember("currentBoard", env.gridBoardType()));
     
     Value[] players = getMemberList("players", env.playerType(), 1);

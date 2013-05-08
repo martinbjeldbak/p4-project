@@ -420,7 +420,10 @@ public class GameEnvironment extends StandardEnvironment {
     piece.addTypeMember("image", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        return new StrValue("not-implemented.png");
+        ObjectValue owner = (ObjectValue)object.getMember("owner", player);
+        String ownerName = owner.getMemberString("name");
+        String pieceName = object.getType().getName();
+        return new StrValue(ownerName + "_" + pieceName + ".png");
       }
     }));
     piece.addTypeMember("actions", new Member(1, false, new Callable() {
@@ -507,7 +510,7 @@ public class GameEnvironment extends StandardEnvironment {
     square.addTypeMember("image", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        return new StrValue("not-implemented.png");
+        return new StrValue("square.png");
       }
     }));
     square.addTypeMember("position", new Member(new ConstantCallable() {
