@@ -29,7 +29,7 @@ import dk.aau.cs.d402f13.values.Value;
 public class GameAbstractionLayer {
 
   private GameEnvironment env = new GameEnvironment();
-  private Interpreter i = new Interpreter(env);
+  private Interpreter interpreter = new Interpreter(env);
   
   public GameAbstractionLayer(InputStream input) throws Error {
     Scanner s = new Scanner(input);
@@ -42,7 +42,7 @@ public class GameAbstractionLayer {
     AstNode ast = p.parse(tokens);
     ScopeChecker scopeChecker = new ScopeChecker();
     scopeChecker.visit(ast);
-    i.visit(ast);
+    interpreter.visit(ast);
   }
   
   public GameWrapper getGame() throws StandardError {
@@ -50,7 +50,16 @@ public class GameAbstractionLayer {
     if (gameType == null) {
       return null;
     }
-    return new GameWrapper(env, gameType.getInstance(i));
+    return new GameWrapper(env, gameType.getInstance(interpreter));
+  }
+  
+  public GameWrapper[] getGameVariants() throws StandardError {
+    List<TypeValue> gameTypes = env.findGameTypes();
+    GameWrapper[] variants = new GameWrapper[gameTypes.size()];
+    for (int i = 0; i < variants.length; i++) {
+      variants[i] = new GameWrapper(env, gameTypes.get(i).getInstance(interpreter));
+    }
+    return variants;
   }
 
 }

@@ -673,5 +673,15 @@ public class GameEnvironment extends StandardEnvironment {
     }
     return null;
   }
+  
+  public List<TypeValue> findGameTypes() {
+    ArrayList<TypeValue> games = new ArrayList<TypeValue>();
+    for (Entry<String, TypeValue> e : types.entrySet()) {
+      if (e.getValue().isSubtypeOf(game) && !(e.getValue() instanceof AbstractTypeValue)) {
+        games.add(e.getValue());
+      }
+    }
+    return games;
+  }
 
 }
