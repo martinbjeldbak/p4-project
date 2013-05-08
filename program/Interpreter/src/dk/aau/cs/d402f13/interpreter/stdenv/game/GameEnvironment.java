@@ -19,6 +19,7 @@ import dk.aau.cs.d402f13.utilities.errors.ArgumentError;
 import dk.aau.cs.d402f13.values.AbstractTypeValue;
 import dk.aau.cs.d402f13.values.BoolValue;
 import dk.aau.cs.d402f13.values.CoordValue;
+import dk.aau.cs.d402f13.values.FunValue;
 import dk.aau.cs.d402f13.values.IntValue;
 import dk.aau.cs.d402f13.values.ListValue;
 import dk.aau.cs.d402f13.values.ObjectValue;
@@ -186,6 +187,12 @@ public class GameEnvironment extends StandardEnvironment {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
         return interpreter.getSymbolTable().getVariable("title");
+      }
+    }));
+    game.addTypeMember("description", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return new StrValue("A board game.");
       }
     }));
     game.addTypeMember("findSquares", new Member(1, false, new Callable() {
@@ -547,6 +554,16 @@ public class GameEnvironment extends StandardEnvironment {
         return object.endClone();
       }
     }));
+    square.addTypeMember("setPieces", new Member(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters)
+          throws StandardError {
+        Value[] pieces = ((ListValue)TypeValue.expect(actualParameters, 0, ListValue.type())).getValues();
+        TypeValue.expect(piece, pieces);
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        return object.setAttribute("pieces", actualParameters[0]);
+      }
+    }));
     square.addTypeMember("isOccupied", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
@@ -644,6 +661,52 @@ public class GameEnvironment extends StandardEnvironment {
     ////////////////////////////////////
     addType(testCase);
     
+    ////////////////////////////////////
+    // Global functions
+    ////////////////////////////////////
+    
+    addConstant("addActions", new FunValue(
+      2, false,
+      new Callable() {
+        @Override
+        public Value call(Interpreter interpreter, Value... actualParameters)
+            throws StandardError {
+          TypeValue.expect(actualParameters, 0, piece);
+          ObjectValue p = (ObjectValue)actualParameters[0];
+          Value[] positions = ((ListValue)TypeValue.expect(actualParameters, 1, ListValue.type())).getValues();
+          Value[] actions = new Value[positions.length];
+          for (int i = 0; i < positions.length; i++) {
+            Value coord = positions[i];
+            if (!coord.is(CoordValue.type())) {
+              throw new TypeError("Invalid element type in list for 'addActions', expected Coordinate");
+            }
+            actions[i] = addAction.getInstance(interpreter, p, coord);
+          }
+          return new ListValue(actions); 
+        }
+      }
+    ));
+    addConstant("moveActions", new FunValue(
+        2, false,
+        new Callable() {
+          @Override
+          public Value call(Interpreter interpreter, Value... actualParameters)
+              throws StandardError {
+            TypeValue.expect(actualParameters, 0, piece);
+            ObjectValue p = (ObjectValue)actualParameters[0];
+            Value[] positions = ((ListValue)TypeValue.expect(actualParameters, 1, ListValue.type())).getValues();
+            Value[] actions = new Value[positions.length];
+            for (int i = 0; i < positions.length; i++) {
+              Value coord = positions[i];
+              if (!coord.is(CoordValue.type())) {
+                throw new TypeError("Invalid element type in list for 'moveActions', expected Coordinate");
+              }
+              actions[i] = moveAction.getInstance(interpreter, p, coord);
+            }
+            return new ListValue(actions); 
+          }
+        }
+      ));
   }  
   
   /**
