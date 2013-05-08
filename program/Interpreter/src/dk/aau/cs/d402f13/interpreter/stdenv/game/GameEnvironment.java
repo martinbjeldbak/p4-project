@@ -296,6 +296,24 @@ public class GameEnvironment extends StandardEnvironment {
         return new ListValue(square.getInstance(interpreter));
       }
     }));
+    gridBoard.addTypeMember("squareAt", new Member(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
+        CoordValue pos = (CoordValue)TypeValue.expect(actualParameters, 0, CoordValue.type());
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        int x = pos.getX();
+        int y = pos.getY();
+        int width = object.getMemberInt("width");
+        int height = object.getMemberInt("height");
+        int size = width * height;
+        Value[] squares = object.getMemberList("squares", square, size);
+        int i = (y - 1) * width + (x - 1);
+        if (i < 0 || i >= size) {
+          throw new ArgumentError("Coordinate out of bounds");
+        }
+        return squares[(y - 1) * width + (x - 1)];
+      }
+    }));
     gridBoard.addTypeMember("addPiece", new Member(2, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
@@ -312,6 +330,9 @@ public class GameEnvironment extends StandardEnvironment {
         Value[] squares = object.getMemberList("squares", square, size);
         Value[] newList = new Value[size];
         int target = (y - 1) * width + (x - 1);
+        if (target < 0 || target >= size) {
+          throw new ArgumentError("Coordinate out of bounds");
+        }
         for (int i = 0; i < newList.length; i++) {
           if (i == target) {
             newList[i] = ((ObjectValue)squares[i])
@@ -337,10 +358,12 @@ public class GameEnvironment extends StandardEnvironment {
       public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
         TypeValue.expect(actualParameters, 0, piece);
         ObjectValue p = (ObjectValue)actualParameters[0];
-        Value[] positionValues = ((ListValue)TypeValue.expect(actualParameters, 1, ListValue.type())).getValues();
-        CoordValue[] positions = (CoordValue[])TypeValue.expect(CoordValue.type(), positionValues);
+        Value[] positions = ((ListValue)TypeValue.expect(actualParameters, 1, ListValue.type())).getValues();
         ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
-        for (CoordValue coord : positions) {
+        for (Value coord : positions) {
+          if (!coord.is(CoordValue.type())) {
+            throw new TypeError("Invalid element type in list for 'addPieces', expected Coordinate");
+          }
           object = (ObjectValue)object.callMember("addPiece", gridBoard, interpreter, p, coord);
         }
         return object;
