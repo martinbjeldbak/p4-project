@@ -420,7 +420,10 @@ public class GameEnvironment extends StandardEnvironment {
     piece.addTypeMember("image", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        return new StrValue("not-implemented.png");
+        ObjectValue owner = (ObjectValue)object.getMember("owner", player);
+        String ownerName = owner.getMemberString("name");
+        String pieceName = object.getType().getName();
+        return new StrValue(ownerName + "_" + pieceName + ".png");
       }
     }));
     piece.addTypeMember("actions", new Member(1, false, new Callable() {
@@ -507,7 +510,7 @@ public class GameEnvironment extends StandardEnvironment {
     square.addTypeMember("image", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        return new StrValue("not-implemented.png");
+        return new StrValue("square.png");
       }
     }));
     square.addTypeMember("position", new Member(new ConstantCallable() {
@@ -677,36 +680,48 @@ public class GameEnvironment extends StandardEnvironment {
           Value[] actions = new Value[positions.length];
           for (int i = 0; i < positions.length; i++) {
             Value coord = positions[i];
-            if (!coord.is(CoordValue.type())) {
-              throw new TypeError("Invalid element type in list for 'addActions', expected Coordinate");
+            if (coord.is(CoordValue.type())) {
+              actions[i] = addAction.getInstance(interpreter, p, coord);
             }
-            actions[i] = addAction.getInstance(interpreter, p, coord);
+            else if (coord.is(square)) {
+              CoordValue sqCoord = ((ObjectValue)coord).getMemberCoord("position");
+              actions[i] = addAction.getInstance(interpreter, p, sqCoord);
+            }
+            else {
+              throw new TypeError("Invalid element type in list for 'addActions', expected Coordinate or Square");
+            }
           }
           return new ListValue(actions); 
         }
       }
     ));
     addConstant("moveActions", new FunValue(
-        2, false,
-        new Callable() {
-          @Override
-          public Value call(Interpreter interpreter, Value... actualParameters)
-              throws StandardError {
-            TypeValue.expect(actualParameters, 0, piece);
-            ObjectValue p = (ObjectValue)actualParameters[0];
-            Value[] positions = ((ListValue)TypeValue.expect(actualParameters, 1, ListValue.type())).getValues();
-            Value[] actions = new Value[positions.length];
-            for (int i = 0; i < positions.length; i++) {
-              Value coord = positions[i];
-              if (!coord.is(CoordValue.type())) {
-                throw new TypeError("Invalid element type in list for 'moveActions', expected Coordinate");
-              }
+      2, false,
+      new Callable() {
+        @Override
+        public Value call(Interpreter interpreter, Value... actualParameters)
+            throws StandardError {
+          TypeValue.expect(actualParameters, 0, piece);
+          ObjectValue p = (ObjectValue)actualParameters[0];
+          Value[] positions = ((ListValue)TypeValue.expect(actualParameters, 1, ListValue.type())).getValues();
+          Value[] actions = new Value[positions.length];
+          for (int i = 0; i < positions.length; i++) {
+            Value coord = positions[i];
+            if (coord.is(CoordValue.type())) {
               actions[i] = moveAction.getInstance(interpreter, p, coord);
             }
-            return new ListValue(actions); 
+            else if (coord.is(square)) {
+              CoordValue sqCoord = ((ObjectValue)coord).getMemberCoord("position");
+              actions[i] = moveAction.getInstance(interpreter, p, sqCoord);
+            }
+            else {
+              throw new TypeError("Invalid element type in list for 'moveActions', expected Coordinate or Square");
+            }
           }
+          return new ListValue(actions); 
         }
-      ));
+      }
+    ));
   }  
   
   /**
