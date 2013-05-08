@@ -1,17 +1,16 @@
-package dk.aau.cs.d402f13.interpreter.stdenv.game.wrappers;
+package dk.aau.cs.d402f13.gal.wrappers;
 
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.gameapi.AddAction;
-import dk.aau.cs.d402f13.utilities.gameapi.MoveAction;
 import dk.aau.cs.d402f13.utilities.gameapi.Square;
 import dk.aau.cs.d402f13.values.Value;
 
-public class MoveActionWrapper extends UnitActionWrapper implements MoveAction {
+public class AddActionWrapper extends UnitActionWrapper implements AddAction {
 
   private SquareWrapper to;
   
-  public MoveActionWrapper(GameEnvironment env, Value object) throws StandardError {
+  public AddActionWrapper(GameEnvironment env, Value object) throws StandardError {
     super(env, object);
     to = new SquareWrapper(env, getMember("to", env.squareType()));
   }

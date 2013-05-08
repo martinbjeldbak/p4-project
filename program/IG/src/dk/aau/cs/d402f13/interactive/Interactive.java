@@ -11,9 +11,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import dk.aau.cs.d402f13.gal.wrappers.GameWrapper;
 import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
-import dk.aau.cs.d402f13.interpreter.stdenv.game.wrappers.GameWrapper;
 import dk.aau.cs.d402f13.parser.Parser;
 import dk.aau.cs.d402f13.scanner.Scanner;
 import dk.aau.cs.d402f13.scopechecker.ScopeChecker;

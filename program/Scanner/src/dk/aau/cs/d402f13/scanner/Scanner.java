@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
+import dk.aau.cs.d402f13.utilities.errors.InternalError;
 import dk.aau.cs.d402f13.utilities.errors.ScannerError;
 import dk.aau.cs.d402f13.utilities.errors.SyntaxError;
 import dk.aau.cs.d402f13.utilities.Token;
@@ -24,8 +25,13 @@ public class Scanner {
   private int currentChar = -1;
   private int nextChar = -1;
 
-  public Scanner(InputStream input) throws UnsupportedEncodingException {
+  public Scanner(InputStream input) throws InternalError {
+    try {
     this.input = new InputStreamReader(input, "UTF-8");
+    }
+    catch (UnsupportedEncodingException e) {
+      throw new InternalError(e);
+    }
     pop();
     pop(); // Double-pop! (To get info into currentChar and nextChar)
   }

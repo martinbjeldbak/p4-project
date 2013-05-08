@@ -1,4 +1,4 @@
-package dk.aau.cs.d402f13.interpreter.stdenv.game.wrappers;
+package dk.aau.cs.d402f13.gal.wrappers;
 
 import java.util.Arrays;
 
