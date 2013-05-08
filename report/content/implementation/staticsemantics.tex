@@ -24,9 +24,20 @@ The \classref{TypeSymbolInfo}-objects does yet only contain the name of their su
 
 \subsection{TypeMemberPropagator}
 \label{sec:TypeMemberPropagator}
-The \classref{UsesAreDeclaredVisitor} described in \secref{sec:usesaredeclaredvisitor} is quite complex. In some cases it needs to check whether a constant or a function with a specific name is visible in a given type. This requires looking in the given type and recursively in all super types. If the same is referenced many times in the one type, then the same super type chains will be searched many times. Looking through the same long chains of super types is not only inefficient, but does also make the code unnecessarily more complex. To simplify and speed up this process, the \classref{TypeMemberPropagator} ensures that all members of a type A is also present in a type C, if C is a subtype of A. When checking if a member is visible in C, it is only required to look in C instead of following the parent-chains. This propagation of members is done by first doing a topological sort on the \classref{TypeSymbolInfo}-objects, such that when iterating over the type table, any type yielded will always appear before all of its subtypes. This makes the afterwards propagation of members possible in linear time by iterating over the topological sorted types. If a type C is met, the members in its parent type B is put in C as well. If B has a parent A, we know that B has already gotten the members from A due to the topological sorting.
+Some of the later checks that will be performed requires to determine whether a type member (constant or function) with a specific name is visible in a given type. This requires looking in the given type and recursively in all super types for the member. When this kind of look up is done many times on the same member, the traversal of the same long chains of parent references becomes inefficient and gives a clumsy code. To simplify and speed up this process, the \classref{TypeMemberPropagator} ensures that all members of a type A is also present in a type C, if A is a super type of C. With this approach, checking if a member is visible in C, only requires looking in C instead of following the parent-chains. This propagation of members is done by first doing a topological sort on the \classref{TypeSymbolInfo}-objects, such that when iterating over the type table, any type yielded will always appear before all of its subtypes. This makes the afterwards propagation of members possible in linear time by iterating over the topological sorted types. If a type C is met, the members in its parent type B is put in C as well. If B has a parent A, we know that B has already gotten the members from A due to the topological sorting.
 
-The topological sorting is done using the algorithm from the AD book working on a graph $G = (V, E)$. Each type represents a vertice $v$ and an edge $e$ exist from $v_1$ to $v_2$ if the type $v_2$ is a parent of the type $v_1$. However this results in a topological order where a type always appear before its super types. This problem is quickly solved simply by reversing the list. The result is a  
+
+
+The topological sorting is done using the algorithm from the AD book working on a graph $G = (V, E)$. Each type represents a vertex $v$. An edge $e$ exist from $v_1$ to $v_2$ if the type $v_2$ is a parent of the type $v_1$. However this results in a topological order where a type always appear before its super types. This problem is quickly solved simply by reversing the list.
+
+Given the graph in \label{fig:topological}, the following sequences are examples of correct and wrong topological sorted orders after the list has been reversed:
+\begin{align}
+ Correct & : \texttt{a, d, b, e, c, f} \\
+ Correct & : \texttt{a, b, e, c, f, d} \\
+ Wrong & : \texttt{a, b, c, \textbf{f}, \textbf{e}, d} \\
+ Wrong & : \texttt{\textbf{b}, c, e, \textbf{a}, f, d}
+\end{align}
+
 \input{figures/topologicalsort}
  
 After having propagated the members, every type that contains any abstract members are marked as being abstract. This is done by changing the type of the \classref{AstNode} to an ABSTRACT\_TYPE\_DEF.
