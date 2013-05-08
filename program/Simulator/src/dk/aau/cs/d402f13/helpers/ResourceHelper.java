@@ -1,4 +1,4 @@
-package dk.aau.cs.d402f13.simulator;
+package dk.aau.cs.d402f13.helpers;
 
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -10,7 +10,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.util.ResourceLoader;
 
-public class ResourceHandler {
+public class ResourceHelper {
 	private static Hashtable<String,Image> imgCache = new Hashtable<String,Image>();
 	private static Hashtable<String,TrueTypeFont> fontCache = new Hashtable<String,TrueTypeFont>();
 
@@ -81,7 +81,7 @@ public class ResourceHandler {
 			} catch (FontFormatException | IOException e) {
 				load = new Font( "Times New Roman", Font.PLAIN, 20 ); 
 			}
-			TrueTypeFont font = new TrueTypeFont( load.deriveFont( (float)size ), false );;
+			TrueTypeFont font = new TrueTypeFont( load.deriveFont( (float)size ), true );;
 			fontCache.put( cachedName, font );
 			return font;
 		}
