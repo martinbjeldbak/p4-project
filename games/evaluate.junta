@@ -36,6 +36,7 @@ define sortDescend = [151, 157, 163, 7, 11, 19, 23, 29, 31, 37, 41, 43, 47, 53, 
                       .sort[#[$a, $b] => $b - $a]
 
 type Numbers [] extends TestCase [] {
+  define correctType = typeOf[120 + 20] == Integer
   define addition = let $d = 5 + 2 + 1 
                       in $d + $d == 8 + 8
   define subtract = let $d = 3 - 2, $e = 5 - 4 
@@ -60,13 +61,25 @@ type Numbers [] extends TestCase [] {
 }
 
 type DirectionTest [] extends TestCase [] {
+  define correctType = typeOf[ne + sw] == Direction
   
 }
 
 type CoordinateTest [] extends TestCase [] {
-  
+  define correctType = typeOf[A2 + ne] == Coordinate
 }
 
 type StringTest [] extends TestCase [] {
-  
+  data $string = "Hello, " + "my friend."
+  define correctType = typeOf[$string] == String
+  define stringSize = $string.size == 17
+  define hello = $string[0, 4] == "Hello"
+  define myFriend = $string[7, 15] == "my friend"
+}
+
+type ListTest [] extends TestCase [] {
+  data $listOne = ["hej", "farvel", "god dag", "hvemerdu?"]
+  data $listTwo = ["hello", "goodbye", "good day", "whoareyou?"]
+  define combinedSize = $listOne.size + $listTwo.size == 8
+  define listFilter = $listTwo.filter[#[$a] => $a == "god dag"] == ["god dag"]
 }
