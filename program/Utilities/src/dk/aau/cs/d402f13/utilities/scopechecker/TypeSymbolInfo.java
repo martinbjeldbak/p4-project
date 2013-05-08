@@ -52,8 +52,14 @@ public class TypeSymbolInfo extends SymbolInfo{
   public void incrArgCount(){
     this.args++;
   }
-  public void incrSuperArgCount(){
-    this.parentCallArgs++;
+  public void setSuperCallArgCount(int val){
+    this.parentCallArgs = val;
+  }
+  public void setVarArgs(boolean val){
+    this.varArgs = val;
+  }
+  public void setArgCount(int val){
+    this.args = val;
   }
 
   public void markASTnodeAsAbstract() { //the scopechecker marks abstract types for the interpreter
