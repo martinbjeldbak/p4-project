@@ -677,10 +677,16 @@ public class GameEnvironment extends StandardEnvironment {
           Value[] actions = new Value[positions.length];
           for (int i = 0; i < positions.length; i++) {
             Value coord = positions[i];
-            if (!coord.is(CoordValue.type())) {
-              throw new TypeError("Invalid element type in list for 'addActions', expected Coordinate");
+            if (coord.is(CoordValue.type())) {
+              actions[i] = addAction.getInstance(interpreter, p, coord);
             }
-            actions[i] = addAction.getInstance(interpreter, p, coord);
+            else if (coord.is(square)) {
+              CoordValue sqCoord = ((ObjectValue)coord).getMemberCoord("position");
+              actions[i] = addAction.getInstance(interpreter, p, sqCoord);
+            }
+            else {
+              throw new TypeError("Invalid element type in list for 'addActions', expected Coordinate or Square");
+            }
           }
           return new ListValue(actions); 
         }
@@ -698,10 +704,16 @@ public class GameEnvironment extends StandardEnvironment {
           Value[] actions = new Value[positions.length];
           for (int i = 0; i < positions.length; i++) {
             Value coord = positions[i];
-            if (!coord.is(CoordValue.type())) {
-              throw new TypeError("Invalid element type in list for 'moveActions', expected Coordinate");
+            if (coord.is(CoordValue.type())) {
+              actions[i] = moveAction.getInstance(interpreter, p, coord);
             }
-            actions[i] = moveAction.getInstance(interpreter, p, coord);
+            else if (coord.is(square)) {
+              CoordValue sqCoord = ((ObjectValue)coord).getMemberCoord("position");
+              actions[i] = moveAction.getInstance(interpreter, p, sqCoord);
+            }
+            else {
+              throw new TypeError("Invalid element type in list for 'moveActions', expected Coordinate or Square");
+            }
           }
           return new ListValue(actions); 
         }
