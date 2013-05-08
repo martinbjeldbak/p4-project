@@ -42,7 +42,7 @@ public class GameInfoWidget extends ScaleContainer {
 	}
 	
 	@Override
-	public void draw( Graphics g ){
+	public void draw( Graphics g ) throws StandardError{
 		Game game = this.game.getGame();
 		//Draw side bar
 		Image side = ResourceHelper.getImage( "img/book.png" );
@@ -58,8 +58,9 @@ public class GameInfoWidget extends ScaleContainer {
 
 		//Display Action history
 		List<String> historyLines = new ArrayList<String>();
-		for( Action a : game.history() )
-			historyLines.add( ActionHelper.humanReadable( game, a ) );
+		//TODO: wait on it being added to the interface again
+	//	for( Action a : game.history() )
+	//		historyLines.add( ActionHelper.humanReadable( game, a ) );
 		historyList.setLines( historyLines );
 	}
 }

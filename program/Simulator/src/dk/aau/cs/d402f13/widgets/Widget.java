@@ -134,10 +134,10 @@ public class Widget {
 	protected boolean handleMouseClicked( int button, int x, int y ) throws StandardError{
 		return false;
 	}
-	protected boolean handleMouseDragged( int oldX, int oldY, int newX, int newY ){
+	protected boolean handleMouseDragged( int oldX, int oldY, int newX, int newY ) throws StandardError{
 		return false;
 	}
-	protected boolean handleMouseReleased( int button, int x, int y ){
+	protected boolean handleMouseReleased( int button, int x, int y ) throws StandardError{
 		return false;
 	}
 	
@@ -153,7 +153,7 @@ public class Widget {
 		return false;
 	}
 	
-	final public boolean mouseDragged( int oldX, int oldY, int newX, int newY ){
+	final public boolean mouseDragged( int oldX, int oldY, int newX, int newY ) throws StandardError{
 		for( Widget o : widgets ){
 			int x1 = oldX - o.getX();
 			int y1 = oldY - o.getY();
@@ -170,7 +170,7 @@ public class Widget {
 		return false;
 	}
 	
-	final public boolean mouseReleased( int button, int x, int y ){
+	final public boolean mouseReleased( int button, int x, int y ) throws StandardError{
 		for( Widget o : widgets ){
 			boolean handled = false;
 			if( o.mouseReleased( button, x - o.getX(), y - o.getY() ) )

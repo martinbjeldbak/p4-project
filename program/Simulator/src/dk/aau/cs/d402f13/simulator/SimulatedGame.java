@@ -27,22 +27,33 @@ public class SimulatedGame extends BasicGame {
 	public SimulatedGame( String path ) throws CloneNotSupportedException {
 		super( "Junta Simulator" );
 		
-		//TODO: load from file system
-		//game = new ChessGame();
-		Object obj = game.getBoard();
-		if( obj instanceof GridBoard )
-			board = new GridBoardWidget( this, (GridBoard)obj );
-		else
-			; //TODO:
 		
-		sidebar = new GameInfoWidget( this );
-		
-		sceneHandler = new ScaleContainer( false );
-		sceneHandler.addObject( board );
-		sceneHandler.addObject( sidebar );
+		try{
+			//TODO: load from file system
+			//game = new ChessGame();
+			Object obj = game.getBoard();
+			if( obj instanceof GridBoard )
+				board = new GridBoardWidget( this, (GridBoard)obj );
+			else
+				; //TODO:
+			
+			sidebar = new GameInfoWidget( this );
+			
+			sceneHandler = new ScaleContainer( false );
+			sceneHandler.addObject( board );
+			sceneHandler.addObject( sidebar );
+		}
+		catch( StandardError err ){
+			handleStandardError( err );
+		}
 	}
 	
 	public Game getGame(){ return game; }
+	
+	private void handleStandardError( StandardError stdErr ){
+		//TODO:
+		System.out.println( "StandardError thrown, but not handled : \\" );
+	}
 	
 	@Override
 	public void render( GameContainer gc, Graphics g ){
@@ -53,22 +64,42 @@ public class SimulatedGame extends BasicGame {
 		Shape shape = new Rectangle( 0,0, gc.getWidth(), gc.getHeight() );
 		g.texture( shape, ResourceHelper.getImage( "img/wood.png" ) );
 		
-		//Draw board
-		sceneHandler.startDraw( g );
+		try{
+			//Draw board
+			sceneHandler.startDraw( g );
+		}
+		catch( StandardError err ){
+			handleStandardError( err );
+		}
 	}
 	
 	@Override
 	public void mousePressed( int button, int x, int y ){
-		sceneHandler.mouseClicked( button, x, y );
+		try{
+			sceneHandler.mouseClicked( button, x, y );
+		}
+		catch( StandardError err ){
+			handleStandardError( err );
+		}
     }
 	
 	@Override
 	public void mouseDragged( int oldx, int oldy, int newx, int newy ){
-		sceneHandler.mouseDragged( oldx, oldy, newx, newy );
+		try{
+			sceneHandler.mouseDragged( oldx, oldy, newx, newy );
+		}
+		catch( StandardError err ){
+			handleStandardError( err );
+		}
 	}
 	
 	public void mouseReleased( int button, int x, int y ){
-		sceneHandler.mouseReleased( button, x, y );
+		try{
+			sceneHandler.mouseReleased( button, x, y );
+		}
+		catch( StandardError err ){
+			handleStandardError( err );
+		}
 	}
 	
 	@Override

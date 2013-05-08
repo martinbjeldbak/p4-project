@@ -17,6 +17,7 @@ import dk.aau.cs.d402f13.utilities.gameapi.Action;
 import dk.aau.cs.d402f13.utilities.gameapi.MoveAction;
 import dk.aau.cs.d402f13.utilities.gameapi.Piece;
 import dk.aau.cs.d402f13.utilities.gameapi.Square;
+import dk.aau.cs.d402f13.utilities.gameapi.Board;
 import dk.aau.cs.d402f13.widgets.Message;
 import dk.aau.cs.d402f13.widgets.Widget;
 
@@ -79,6 +80,8 @@ public abstract class BoardWidget extends Widget {
 			return null;
 		return findSquare( dragStartX + dragOffsetX, dragStartY + dragOffsetY );
 	}
+	
+	protected abstract Square getSquareFromPiece( Board g, Piece p ) throws StandardError;
 
 	/**
 	 * Check if a Square is contained in the List of hints
@@ -95,12 +98,13 @@ public abstract class BoardWidget extends Widget {
 	 * @param x Horizontal position of the click
 	 * @param y Vertical position of the click
 	 * @return 
+	 * @throws StandardError 
 	 */
 	@Override
-	protected boolean handleMouseClicked( int button, int x, int y ){
+	protected boolean handleMouseClicked( int button, int x, int y ) throws StandardError{
         if( button == Input.MOUSE_LEFT_BUTTON ){
 	    	Square s = findSquare(x, y);
-	    	List<Action> actions = game.getGame().actions();
+	    	Action[] actions = game.getGame().getActions();
 	    	
 	    	if( selected != null && squareIsHinted( s ) ){
 	    		//We already have selected a piece, and we are trying to
@@ -161,7 +165,7 @@ public abstract class BoardWidget extends Widget {
 		        	for( Action a : actions ){
 		        		MoveAction ma = ActionHelper.isMoveAction( a, s ); 
 		        		if( ma != null )
-		        			hintSquares.add( ma.getPiece().getSquare() );
+		        			hintSquares.add( getSquareFromPiece( game.getGame().getBoard(), ma.getPiece() ) );
 		        		if( ActionHelper.isRemoveAction( a, s ) != null )
 		        			hintSquares.add( s );
 		        	}
@@ -196,16 +200,17 @@ public abstract class BoardWidget extends Widget {
 	 * @param button Button which was released
 	 * @param x Horizontal position of mouse pointer
 	 * @param y Vertical position of mouse pointer
+	 * @throws StandardError 
 	 */
 	@Override
-	public boolean handleMouseReleased( int button, int x, int y ){
+	public boolean handleMouseReleased( int button, int x, int y ) throws StandardError{
 		if( button == Input.MOUSE_LEFT_BUTTON ){
 			if( dragged != null ){
 				Square end = findSquare( dragStartX + dragOffsetX, dragStartY + dragOffsetY );
 				if( squareIsHinted( end ) && end != selected ){
 					//end == selected is handled in mousePressed!
 					List<Action> actions = new ArrayList<Action>();
-					for( Action a : game.getGame().actions() )
+					for( Action a : game.getGame().getActions() )
 						if( ActionHelper.isMoveAction( a, end ) != null )
 							if( ActionHelper.isMoveAction( a, dragged ) != null )
 								actions.add( a );
