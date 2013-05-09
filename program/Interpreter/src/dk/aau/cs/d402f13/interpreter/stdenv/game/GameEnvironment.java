@@ -235,9 +235,20 @@ public class GameEnvironment extends StandardEnvironment {
         int i = ((ObjectValue)object).getAttributeInt("currentPlayer");
         Value[] players = object.getMemberList("turnOrder", player, 1);
         if (i >= players.length || i < 0) {
-          throw new ArgumentError("Invalid player index:  + i");
+          throw new ArgumentError("Invalid player index: " + i);
         }
         return players[i];
+      }
+    }));
+    game.addTypeMember("nextTurn", new Member(0, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters)
+          throws StandardError {
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        int i = ((ObjectValue)object).getAttributeInt("currentPlayer");
+        Value[] players = object.getMemberList("turnOrder", player, 1);
+        i = (i + 1) % players.length;
+        return object.setAttribute("currentPlayer", new IntValue(i));
       }
     }));
     game.addTypeMember("currentBoard", new Member(new ConstantCallable() {
