@@ -57,13 +57,27 @@ The following is a list of reserved words which \productname{} will use to funct
 
 \begin{ebnf}
 %reserved
-\grule{shared\_operator}{\gter{*} \gor \gter{+}}
-\grule{normal\_operator}{\gter{-} \gor \gter{!=} \gor \gter{==} \gor \gter{<=} \gor \gter{>=} \gor \gter{<} \gor \gter{>}}
-\grule{operator}{shared\_operator \gor normal\_operator \gor \gter{/}}
-\grule{pattern\_operator}{\gter{?}}
+\grule{or\_operator}{\gter{or}}
+\grule{and\_operator}{\gter{and}}
+\grule{not\_operator}{\gter{not}}
+\grule{equals\_operator}{\gter{==}}
+\grule{less\_operator}{\gter{<}}
+\grule{greater\_operator}{\gter{>}}
+\grule{leoreq\_operator}{\gter{<=}}
+\grule{groreq\_operator}{\gter{>=}}
+\grule{dot\_operator}{\gter{.}}
+\grule{dotdotdot\_operator}{\gter{...}}
+\grule{is\_operator}{\gter{is}}
+\grule{plus\_operator}{\gter{+}}
+\grule{minus\_operator}{\gter{-}}
+\grule{mult\_operator}{\gter{*}}
+\grule{div\_operator}{\gter{/}}
+\grule{mod\_operator}{\gter{\%}}
+\grule{assign\_operator}{\gter{=}}
+\grule{lambda\_operator}{\gter{\#}}
+\grule{pattern\_question}{\gter{?}}
 \grule{pattern\_not}{\gter{!}}
 \grule{pattern\_or}{\gter{|}}
-\grule{pattern\_keyword}{\gter{friend} \gor \gter{foe} \gor \gter{empty}}
 \end{ebnf}
 
 \subsection{Literals}

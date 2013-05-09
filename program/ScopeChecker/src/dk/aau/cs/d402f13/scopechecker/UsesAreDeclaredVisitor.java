@@ -100,11 +100,10 @@ protected Object visitMemberAccess(AstNode node) throws StandardError {
    int argNum = -1;
    if (it.hasNext()){
      AstNode list = it.next();
-     argNum = list.size();
      visit(list);       //visit LIST to check that variables used in list have been declared
    }
    
-   foundUsedConst(name, argNum, true, node.line, node.offset);
+   foundUsedMember(name, true, node.line, node.offset);
    
    return null; 
 }
@@ -266,12 +265,13 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
   
   @Override
   protected Object visitConstant(AstNode node) throws StandardError{
-    foundUsedConst(node.value, -1, false, node.line, node.offset);
+    foundUsedMember(node.value, false, node.line, node.offset);
     return null; 
   }
   
   @Override
   protected Object visitProgram(AstNode node) throws StandardError{
+    this.currentType = this.tt.getGlobal();
     openScope();
     visitChildren(node);
     closeScope();
@@ -290,20 +290,23 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
   
   @Override
   protected Object visitCallSequence(AstNode node) throws StandardError {
-    //CALL_SEQUENCE = CONSTANT [LIST] | TYPE LIST
+    //CALL_SEQUENCE = ATOMIC {LIST}
     Iterator<AstNode> it = node.iterator();
-    AstNode temp = it.next();
-    String name = temp.value;        //CONSTANT | TYPE
-    //Remaining: [LIST]
-    int argNum = -1;                    //means no parameter list
-    if (it.hasNext()){                  
+    AstNode atomic = it.next();
+    String name = atomic.value;        
+    //Remaining: {LIST}
+    int argNum = 0; //args if it is a type call
+    while (it.hasNext()){                  
     AstNode list = it.next();           //LIST - the arguments
-    argNum = list.size();               //number of arguments
-                                        //variables that are arguments in a function call are uses
+    argNum = list.size();               //variables that are arguments in a function call are uses
     visit(list);                        //visit LIST
     }
-    if (temp.type == Type.CONSTANT){
-        foundUsedConst(name, argNum, false, node.line, node.offset);
+    
+    if (atomic.type == Type.CONSTANT){
+      foundUsedMember(name, false, node.line, node.offset);
+    }
+    else if (atomic.type == Type.VAR){
+      this.currentST.foundUsedVar(new VarSymbolInfo(name, node.line, node.offset));
     }
     else {
       foundUsedType(name, argNum, node.line, node.offset);  //check that type exists
@@ -342,10 +345,8 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
   }
   private Boolean constVisibleInAnyType(String name){
     for (TypeSymbolInfo tsi : this.tt){
-      if (tsi.name == "#GLOBAL")    //skip check in global scope
-        continue;
       for (Member m : tsi.members){
-        if (m.name.equals(name) && m.declaredInType == tsi)
+        if (m.name.equals(name))
           return true;
       }
     }
@@ -357,7 +358,7 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
     return false;
   }
   
-  public void foundUsedConst(String name, int argNum, Boolean member, int line, int offset) throws ScopeError{
+  public void foundUsedMember(String name, Boolean member, int line, int offset) throws ScopeError{
     if (member){
       if (this.accessType == AccessType.THIS){
         //accept if visible in current type
@@ -381,7 +382,7 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
         //accept if visible in any type
         if (constVisibleInAnyType(name))
           return;
-        throw new ScopeError("Member " + name + " used in type " +  this.currentType.name + " does not exist in any type ", line, offset);
+        throw new ScopeError("Member " + name + " used in type " +  this.currentType.name + " does not exist in any type", line, offset);
       }
     }
     else{
