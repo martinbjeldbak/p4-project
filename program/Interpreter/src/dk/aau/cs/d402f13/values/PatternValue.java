@@ -24,6 +24,10 @@ public class PatternValue extends Value {
     return values;
   }
 
+  public Value getValue(int index) {
+    return values[index];
+  }
+
   /**
    * Creates a new pattern from the given parameters. The method
    * checks the values to see if they're allowed in patterns, throws
