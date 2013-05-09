@@ -137,6 +137,47 @@ public class GameEnvironment extends StandardEnvironment {
     return testCase;
   }
   
+  private ObjectValue applyUnitAction(ObjectValue gameState, ObjectValue actionObject, Interpreter interpreter) throws StandardError {
+    ObjectValue pieceObject = (ObjectValue)actionObject.getMember("piece", piece);
+    ObjectValue currentBoard = (ObjectValue)gameState.getMember("currentBoard", gridBoard);
+    if (actionObject.is(addAction)) {
+      ObjectValue toObject = (ObjectValue)actionObject.getMember("to", square);
+      CoordValue position = toObject.getMemberCoord("position");
+      currentBoard = (ObjectValue)currentBoard.callMember(
+          "addPiece", gridBoard, interpreter, pieceObject, position);
+      gameState = (ObjectValue)gameState.setAttribute("currentBoard", currentBoard);
+    }
+    else if (actionObject.is(removeAction)) {
+      /** @TODO Auto-generated method stub */
+    }
+    else if (actionObject.is(moveAction)) {
+      /** @TODO Auto-generated method stub */
+    }
+    else {
+      throw new TypeError("Unknown action type: " + actionObject.getType().getName());
+    }
+    return gameState;
+  }
+  
+  private ObjectValue undoUnitAction(ObjectValue gameState, ObjectValue actionObject, Interpreter interpreter) throws StandardError {
+    ObjectValue pieceObject = (ObjectValue)actionObject.getMember("piece", piece);
+    ObjectValue currentBoard = (ObjectValue)gameState.getMember("currentBoard", gridBoard);
+    if (actionObject.is(addAction)) {
+      ObjectValue toObject = (ObjectValue)actionObject.getMember("to", square);
+      CoordValue position = toObject.getMemberCoord("position");
+    }
+    else if (actionObject.is(removeAction)) {
+      /** @TODO Auto-generated method stub */
+    }
+    else if (actionObject.is(moveAction)) {
+      /** @TODO Auto-generated method stub */
+    }
+    else {
+      throw new TypeError("Unknown action type: " + actionObject.getType().getName());
+    }
+    return gameState;
+  }
+  
   public GameEnvironment() {
     super();
 
@@ -158,6 +199,18 @@ public class GameEnvironment extends StandardEnvironment {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
         return object.getMember("board", board);
+      }
+    }));
+    board.addAttribute("history", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return new ListValue();
+      }
+    }));
+    board.addTypeMember("history", new Member(new ConstantCallable() {
+      @Override
+      public Value call(Interpreter interpreter, Value object) throws StandardError {
+        return ((ObjectValue)object).getAttribute("history");
       }
     }));
     game.addTypeMember("currentPlayer", new Member(new ConstantCallable() {
@@ -200,7 +253,55 @@ public class GameEnvironment extends StandardEnvironment {
       public Value call(Interpreter interpreter, Value... actualParameters)
           throws StandardError {
         TypeValue.expect(actualParameters, 0, PatternValue.type());
+        /** @TODO Missing patterns!!! */
         return new ListValue();
+      }
+    }));
+    game.addTypeMember("applyAction", new Member(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters)
+          throws StandardError {
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        TypeValue.expect(actualParameters, 0, action);
+        ObjectValue actionObject = (ObjectValue)actualParameters[0];
+        ListValue history = (ListValue)object.getAttributeAs("history", ListValue.type());
+        history = (ListValue)history.add(actionObject);
+        object = (ObjectValue)object.setAttribute("history", history);
+        if (actionObject.is(actionSequence)) {
+          Value[] sequence = object.getMemberList("actions", action, 1);
+          for (Value a : sequence) {
+            if (a.is(unitAction)) {
+              object = applyUnitAction(object, (ObjectValue)a, interpreter);
+            }
+            else {
+              throw new TypeError("Invalid action encountered");
+            }
+          }
+          return object;
+        }
+        else {
+          return applyUnitAction(object, actionObject, interpreter);
+        }
+      }
+    }));
+    game.addTypeMember("undoAction", new Member(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters)
+          throws StandardError {
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        TypeValue.expect(actualParameters, 0, action);
+        ObjectValue actionObject = (ObjectValue)actualParameters[0];
+        if (actionObject.is(actionSequence)) {
+          Value[] sequence = object.getMemberList("actions", action, 1);
+          for (int i = sequence.length - 1; i >= 0; i--) {
+            Value a = sequence[i];
+            object = undoUnitAction(object, (ObjectValue)a, interpreter);
+          }
+          return object;
+        }
+        else {
+          return undoUnitAction(object, actionObject, interpreter);
+        }
       }
     }));
     
@@ -434,7 +535,7 @@ public class GameEnvironment extends StandardEnvironment {
       }
     }));
     piece.addTypeMember("move", new Member(1, false, new Callable() {
-      @Override
+      @Override 
       public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
         TypeValue.expect(actualParameters, 0, CoordValue.type());
         ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
@@ -679,16 +780,12 @@ public class GameEnvironment extends StandardEnvironment {
           Value[] positions = ((ListValue)TypeValue.expect(actualParameters, 1, ListValue.type())).getValues();
           Value[] actions = new Value[positions.length];
           for (int i = 0; i < positions.length; i++) {
-            Value coord = positions[i];
-            if (coord.is(CoordValue.type())) {
-              actions[i] = addAction.getInstance(interpreter, p, coord);
-            }
-            else if (coord.is(square)) {
-              CoordValue sqCoord = ((ObjectValue)coord).getMemberCoord("position");
-              actions[i] = addAction.getInstance(interpreter, p, sqCoord);
+            Value position = positions[i];
+            if (position.is(square)) {
+              actions[i] = addAction.getInstance(interpreter, p, position);
             }
             else {
-              throw new TypeError("Invalid element type in list for 'addActions', expected Coordinate or Square");
+              throw new TypeError("Invalid element type in list for 'addActions', expected Square");
             }
           }
           return new ListValue(actions); 
@@ -706,16 +803,12 @@ public class GameEnvironment extends StandardEnvironment {
           Value[] positions = ((ListValue)TypeValue.expect(actualParameters, 1, ListValue.type())).getValues();
           Value[] actions = new Value[positions.length];
           for (int i = 0; i < positions.length; i++) {
-            Value coord = positions[i];
-            if (coord.is(CoordValue.type())) {
-              actions[i] = moveAction.getInstance(interpreter, p, coord);
-            }
-            else if (coord.is(square)) {
-              CoordValue sqCoord = ((ObjectValue)coord).getMemberCoord("position");
-              actions[i] = moveAction.getInstance(interpreter, p, sqCoord);
+            Value position = positions[i];
+            if (position.is(square)) {
+              actions[i] = moveAction.getInstance(interpreter, p, position);
             }
             else {
-              throw new TypeError("Invalid element type in list for 'moveActions', expected Coordinate or Square");
+              throw new TypeError("Invalid element type in list for 'moveActions', expected Square");
             }
           }
           return new ListValue(actions); 
