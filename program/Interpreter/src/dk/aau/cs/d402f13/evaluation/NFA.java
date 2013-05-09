@@ -1,6 +1,5 @@
 package dk.aau.cs.d402f13.evaluation;
 
-import dk.aau.cs.d402f13.values.PatternValue;
 import dk.aau.cs.d402f13.values.Value;
 
 import java.io.BufferedWriter;
@@ -112,6 +111,7 @@ public class NFA {
   public static final NFA e() {
     State entry = new State();
     State exit = new State();
+    entry.addEmptyEdge(exit);
     exit.setAccept(true);
     return new NFA(entry, exit);
   }
@@ -176,7 +176,8 @@ public class NFA {
       s.setAccept(false);
       s.addEmptyEdge(second.getEntry());
     }
-    return new NFA(this.getEntry(), second.getEntry());
+
+    return new NFA(this.getEntry(), second.getExit());
   }
 
   /**
@@ -228,7 +229,8 @@ public class NFA {
     try(BufferedWriter writer = Files.newBufferedWriter(file, Charset.defaultCharset())) {
       writeLine("digraph NFA {", writer);
 
-      writeLine("rankdir=LR;", writer);
+      //writeLine("rankdir=LR;", writer);
+      writeLine("  node[shape = circle];", writer);
 
       makeEdges(entry, 0, writer);
 
@@ -244,24 +246,32 @@ public class NFA {
     int sID = s.hashCode();
     int eID;
 
-    writeLine(sID + label(""+nodeNr) + ";", writer);
+    s.setVisited(true);
+
+    if(s.isAccept())
+      writeLine("  " + sID + label("" + nodeNr) + " [shape = doublecircle]" + ";", writer);
+    else
+      writeLine("  " + sID + label("" + nodeNr) + ";", writer);
 
     // For every valued edge leaving the state, print dot language
     for(Map.Entry<Value, State> edge : s.getValueEdges().entrySet()) {
       eID = edge.getValue().hashCode();
 
-      writeLine(sID + " -> " + eID + label(edge.getKey().toString()) + ";", writer);
+      writeLine("  " + sID + " -> " + eID + label(edge.getKey().toString()) + ";", writer);
 
       // Then for this state, make edges for its edges to other states recursively
-      makeEdges(edge.getValue(), nodeNr + 1, writer);
+      if(edge.getValue().visited() == false)
+        makeEdges(edge.getValue(), nodeNr + 1, writer);
     }
 
     // For every epsilon edge, do the same
     for(State eps : s.getEmptyEdges()) {
       eID = eps.hashCode();
 
-      writeLine(sID + " -> " + eID + ";", writer);
-      makeEdges(eps, nodeNr + 1, writer);
+      writeLine("  " + sID + " -> " + eID + label("&#949;") + ";", writer);
+
+      if(eps.visited() == false)
+        makeEdges(eps, nodeNr + 1, writer);
     }
   }
 
@@ -272,7 +282,6 @@ public class NFA {
     } catch (IOException e) {
       System.out.print("Failed to write line");
     }
-
   }
 
   private String label(String label) {

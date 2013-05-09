@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import dk.aau.cs.d402f13.evaluation.GridBoardPatternEvaluator;
 import dk.aau.cs.d402f13.gal.wrappers.GameWrapper;
 import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
@@ -25,12 +26,7 @@ import dk.aau.cs.d402f13.utilities.errors.Error;
 import dk.aau.cs.d402f13.utilities.errors.InternalError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.SyntaxError;
-import dk.aau.cs.d402f13.values.BoolValue;
-import dk.aau.cs.d402f13.values.ConstValue;
-import dk.aau.cs.d402f13.values.FunValue;
-import dk.aau.cs.d402f13.values.ObjectValue;
-import dk.aau.cs.d402f13.values.TypeValue;
-import dk.aau.cs.d402f13.values.Value;
+import dk.aau.cs.d402f13.values.*;
 
 public class Interactive {
   private Interactive() {
@@ -71,6 +67,13 @@ public class Interactive {
         Value v = interp.visit(ast);
         if (v != null) 
           System.out.println(" = " + v + " (" + v.getClass().getSimpleName() + ")");
+
+        if(v instanceof PatternValue) {
+          PatternValue pat = (PatternValue)v;
+
+          GridBoardPatternEvaluator eval = new GridBoardPatternEvaluator(pat);
+          eval.evaluate();
+        }
       }
       catch (Error e) {
         System.out.println(e.getClass().getSimpleName() + ": " + e.getMessage()
