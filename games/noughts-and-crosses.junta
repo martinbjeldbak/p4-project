@@ -17,3 +17,9 @@ type NacPlayer[$pieceType, $name] extends Player[$name] {
 }
 type Crosses[$owner] extends Piece[$owner]
 type Noughts[$owner] extends Piece[$owner]
+
+define main = let
+  $g = NacGame[],
+  $p = $g.players[0]
+  $g = $g.applyAction[AddAction[Crosses[$p], A1]
+    in $g.currentBoard == $g.board
