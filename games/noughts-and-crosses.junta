@@ -20,6 +20,9 @@ type Noughts[$owner] extends Piece[$owner]
 
 define main = let
   $g = NacGame[],
-  $p = $g.players[0]
-  $g = $g.applyAction[AddAction[Crosses[$p], A1]
-    in $g.currentBoard == $g.board
+  $p = $g.players[0],
+  $gB = $g.applyAction[AddAction[Crosses[$p], $g.currentBoard.squareAt[A1]]]
+    in [
+      $gB.undoAction[$gB.history[0]].currentBoard.squareAt[A1].pieces,
+      $gB.currentBoard.squareAt[A1].pieces
+    ]
