@@ -159,7 +159,7 @@ public class GameEnvironment extends StandardEnvironment {
     else {
       throw new TypeError("Unknown action type: " + actionObject.getType().getName());
     }
-    return (ObjectValue)gameState.setAttribute("currentBoard", currentBoard);
+    return (ObjectValue)gameState.callMember("setCurrentBoard", game, interpreter, currentBoard);
   }
   
   private ObjectValue undoUnitAction(ObjectValue gameState, ObjectValue actionObject, Interpreter interpreter) throws StandardError {
@@ -208,13 +208,16 @@ public class GameEnvironment extends StandardEnvironment {
         return object.getMember("board", board);
       }
     }));
-    board.addAttribute("history", new Member(new ConstantCallable() {
+    game.addAttribute("history", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
         return new ListValue();
       }
     }));
-    board.addTypeMember("history", new Member(new ConstantCallable() {
+    game.addSetter("currentPlayer", IntValue.type());
+    game.addSetter("currentBoard", gridBoard);
+    game.addSetter("history", ListValue.type());
+    game.addTypeMember("history", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
         return ((ObjectValue)object).getAttribute("history");
@@ -329,16 +332,17 @@ public class GameEnvironment extends StandardEnvironment {
         return ((ObjectValue)object).getAttribute("pieces");
       }
     }));
-    board.addTypeMember("setPieces", new Member(1, false, new Callable() {
-      @Override
-      public Value call(Interpreter interpreter, Value... actualParameters)
-          throws StandardError {
-        Value[] pieces = ((ListValue)TypeValue.expect(actualParameters, 0, ListValue.type())).getValues();
-        TypeValue.expect(piece, pieces);
-        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
-        return object.setAttribute("pieces", actualParameters[0]);
-      }
-    }));
+    board.addSetter("pieces", ListValue.type());
+//    board.addTypeMember("setPieces", new Member(1, false, new Callable() {
+//      @Override
+//      public Value call(Interpreter interpreter, Value... actualParameters)
+//          throws StandardError {
+//        Value[] pieces = ((ListValue)TypeValue.expect(actualParameters, 0, ListValue.type())).getValues();
+//        TypeValue.expect(piece, pieces);
+//        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+//        return object.setAttribute("pieces", actualParameters[0]);
+//      }
+//    }));
 
     
     ////////////////////////////////////
@@ -366,6 +370,7 @@ public class GameEnvironment extends StandardEnvironment {
         return new ListValue(squares);
       }
     }));
+    gridBoard.addSetter("squares", ListValue.type());
     gridBoard.addTypeMember("width", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
