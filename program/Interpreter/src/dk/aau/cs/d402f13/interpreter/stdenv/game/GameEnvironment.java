@@ -166,6 +166,9 @@ public class GameEnvironment extends StandardEnvironment {
     ObjectValue pieceObject = (ObjectValue)actionObject.getMember("piece", piece);
     ObjectValue currentBoard = (ObjectValue)gameState.getMember("currentBoard", gridBoard);
     if (actionObject.is(addAction)) {
+      ObjectValue toObject = (ObjectValue)actionObject.getMember("to", square);
+      CoordValue position = toObject.getMemberCoord("position");
+      pieceObject = (ObjectValue)pieceObject.callMember("move", piece, interpreter, position);
       currentBoard = (ObjectValue)currentBoard.callMember(
           "removePiece", gridBoard, interpreter, pieceObject);
     }
@@ -175,9 +178,12 @@ public class GameEnvironment extends StandardEnvironment {
           "addPiece", gridBoard, interpreter, pieceObject, position);
     }
     else if (actionObject.is(moveAction)) {
-      CoordValue position = pieceObject.getMemberCoord("position");
+      ObjectValue toObject = (ObjectValue)actionObject.getMember("to", square);
+      CoordValue position1 = toObject.getMemberCoord("position");
+      CoordValue position2 = pieceObject.getMemberCoord("position");
+      pieceObject = (ObjectValue)pieceObject.callMember("move", piece, interpreter, position1);
       currentBoard = (ObjectValue)currentBoard.callMember(
-          "movePiece", gridBoard, interpreter, pieceObject, position);
+          "movePiece", gridBoard, interpreter, pieceObject, position2);
     }
     else {
       throw new TypeError("Unknown action type: " + actionObject.getType().getName());
@@ -520,7 +526,7 @@ public class GameEnvironment extends StandardEnvironment {
         object = (ObjectValue)object.setAttribute("squares", new ListValue(newList));
         Value[] pieces = object.getMemberList("pieces", piece);
         newList = new Value[pieces.length - 1];
-        for  (int i = 0; i < pieces.length; i++) {
+        for  (int i = 0; i < pieces.length - 1; i++) {
           if (pieces[i].equals(p)) {
             newList[i] = p.callMember("remove", piece, interpreter);
           }
