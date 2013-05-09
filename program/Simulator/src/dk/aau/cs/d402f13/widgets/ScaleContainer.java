@@ -1,9 +1,9 @@
-package widgets;
+package dk.aau.cs.d402f13.widgets;
 
-public class ObjectContainer extends SceneObject {
+public class ScaleContainer extends Widget {
 	private Boolean dir; //true == vertical, false == horizontal
 	
-	public ObjectContainer( Boolean dir ) {
+	public ScaleContainer( Boolean dir ) {
 		this.dir = dir;
 	}
 
@@ -20,13 +20,13 @@ public class ObjectContainer extends SceneObject {
 
 	
 	//Methods to abstract away from direction
-	private int getMin( SceneObject o, Boolean dir ){
+	private int getMin( Widget o, Boolean dir ){
 		return dir ? o.getMinHeight() : o.getMinWidth();
 	}
-	private int getMax( SceneObject o, Boolean dir ){
+	private int getMax( Widget o, Boolean dir ){
 		return dir ? o.getMaxHeight() : o.getMaxWidth();
 	}
-	private Boolean isVariable( SceneObject o, Boolean dir ){
+	private Boolean isVariable( Widget o, Boolean dir ){
 		return getMin( o, dir ) != getMax( o, dir );
 	}
 	private int available( Boolean dir ){
@@ -47,12 +47,12 @@ public class ObjectContainer extends SceneObject {
 		
 		//Calculate the minimum required space
 		int minimumI = 0;
-		for( SceneObject o : objects )
+		for( Widget o : widgets )
 			minimumI += getMin( o, dir );
 		
 		//Find amount of variable height objects
 		int varAmount = 0;
-		for( SceneObject o : objects )
+		for( Widget o : widgets )
 			if( isVariable( o, dir ) )
 				varAmount++;
 		
@@ -66,7 +66,7 @@ public class ObjectContainer extends SceneObject {
 		
 		//Adjust the size of the objects
 		int top = dir ? padTop : padLeft;
-		for( SceneObject o : objects ){
+		for( Widget o : widgets ){
 			//Center in the J direction
 			int sizeJ = Math.min( getMax( o, !dir ), availableJ );
 			int offset = ( availableJ - sizeJ ) / 2;

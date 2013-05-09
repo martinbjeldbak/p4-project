@@ -14,7 +14,7 @@ public class TypeTable implements Iterable<TypeSymbolInfo> {
   public TypeTable(){
     this.typeList = new ArrayList<TypeSymbolInfo>();
     this.typeHashMap = new HashMap<String, TypeSymbolInfo>();
-    this.globalType = new TypeSymbolInfo(null, null, -1, 0);
+    this.globalType = new TypeSymbolInfo(null, "#global scope#", -1, 0);
   }
   public Boolean typeExists(String name){
     return this.typeHashMap.containsKey(name);

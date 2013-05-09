@@ -20,7 +20,7 @@ type Chess[] extends Game["Chess"]{
 type WhiteSquare[] extends Square[]
 type BlackSquare[] extends Square[]
 type ChessBoard[] extends GridBoard[ 8,8 ]{
-  define squareTypes[] = [ WhiteSquare, BlackSquare ]
+  define squareTypes = [ WhiteSquare, BlackSquare ]
 }
 
 type ChessPlayer[ $color ] extends Player[]{
