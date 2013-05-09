@@ -11,6 +11,7 @@ import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.Member;
 import dk.aau.cs.d402f13.interpreter.ParentCallable;
 import dk.aau.cs.d402f13.interpreter.Scope;
+import dk.aau.cs.d402f13.interpreter.SetterCallable;
 import dk.aau.cs.d402f13.interpreter.stdenv.constructors.DefaultConstructor;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.errors.ArgumentError;
@@ -276,5 +277,12 @@ public class TypeValue extends Value {
 
   public String getName() {
     return name;
+  }
+
+  public void addSetter(String attribute, TypeValue type) {
+    String methodName = "set";
+    methodName += Character.toUpperCase(attribute.charAt(0));
+    methodName += attribute.substring(1);
+    addTypeMember(methodName, new Member(1, false, new SetterCallable(attribute, type)));
   }
 }

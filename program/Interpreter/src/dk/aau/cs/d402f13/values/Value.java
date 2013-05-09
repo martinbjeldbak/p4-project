@@ -230,7 +230,8 @@ public abstract class Value implements Cloneable {
     if (m != null) {
       return new MemberValue(m);
     }
-    throw new NameError("Undefined member: " + member);
+    throw new NameError("Undefined member '" + member
+        + "' in object of type " + getType().getName());
   }
   
   public HashMap<String, Value> getMembers(Interpreter interpreter) throws StandardError {
