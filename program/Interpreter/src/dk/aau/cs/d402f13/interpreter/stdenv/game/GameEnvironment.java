@@ -182,7 +182,7 @@ public class GameEnvironment extends StandardEnvironment {
     else {
       throw new TypeError("Unknown action type: " + actionObject.getType().getName());
     }
-    return gameState;
+    return (ObjectValue)gameState.setAttribute("currentBoard", currentBoard);
   }
   
   public GameEnvironment() {
