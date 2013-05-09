@@ -292,8 +292,9 @@ public class GameEnvironment extends StandardEnvironment {
         TypeValue.expect(actualParameters, 0, action);
         ObjectValue actionObject = (ObjectValue)actualParameters[0];
         ListValue history = (ListValue)object.getAttributeAs("history", ListValue.type());
-        history = (ListValue)history.add(actionObject);
+        history = (ListValue)history.add(actionObject); 
         object = (ObjectValue)object.setAttribute("history", history);
+        object = (ObjectValue)object.callMember("nextTurn", game, interpreter);
         if (actionObject.is(actionSequence)) {
           Value[] sequence = object.getMemberList("actions", action, 1);
           for (Value a : sequence) {
