@@ -145,32 +145,39 @@ public class GameEnvironment extends StandardEnvironment {
       CoordValue position = toObject.getMemberCoord("position");
       currentBoard = (ObjectValue)currentBoard.callMember(
           "addPiece", gridBoard, interpreter, pieceObject, position);
-      gameState = (ObjectValue)gameState.setAttribute("currentBoard", currentBoard);
     }
     else if (actionObject.is(removeAction)) {
-      /** @TODO Auto-generated method stub */
+      currentBoard = (ObjectValue)currentBoard.callMember(
+          "removePiece", gridBoard, interpreter, pieceObject);
     }
     else if (actionObject.is(moveAction)) {
-      /** @TODO Auto-generated method stub */
+      ObjectValue toObject = (ObjectValue)actionObject.getMember("to", square);
+      CoordValue position = toObject.getMemberCoord("position");
+      currentBoard = (ObjectValue)currentBoard.callMember(
+          "movePiece", gridBoard, interpreter, pieceObject, position);
     }
     else {
       throw new TypeError("Unknown action type: " + actionObject.getType().getName());
     }
-    return gameState;
+    return (ObjectValue)gameState.setAttribute("currentBoard", currentBoard);
   }
   
   private ObjectValue undoUnitAction(ObjectValue gameState, ObjectValue actionObject, Interpreter interpreter) throws StandardError {
     ObjectValue pieceObject = (ObjectValue)actionObject.getMember("piece", piece);
     ObjectValue currentBoard = (ObjectValue)gameState.getMember("currentBoard", gridBoard);
     if (actionObject.is(addAction)) {
-      ObjectValue toObject = (ObjectValue)actionObject.getMember("to", square);
-      CoordValue position = toObject.getMemberCoord("position");
+      currentBoard = (ObjectValue)currentBoard.callMember(
+          "removePiece", gridBoard, interpreter, pieceObject);
     }
     else if (actionObject.is(removeAction)) {
-      /** @TODO Auto-generated method stub */
+      CoordValue position = pieceObject.getMemberCoord("position");
+      currentBoard = (ObjectValue)currentBoard.callMember(
+          "addPiece", gridBoard, interpreter, pieceObject, position);
     }
     else if (actionObject.is(moveAction)) {
-      /** @TODO Auto-generated method stub */
+      CoordValue position = pieceObject.getMemberCoord("position");
+      currentBoard = (ObjectValue)currentBoard.callMember(
+          "movePiece", gridBoard, interpreter, pieceObject, position);
     }
     else {
       throw new TypeError("Unknown action type: " + actionObject.getType().getName());
@@ -475,6 +482,100 @@ public class GameEnvironment extends StandardEnvironment {
           }
           object = (ObjectValue)object.callMember("addPiece", gridBoard, interpreter, p, coord);
         }
+        return object;
+      }
+    }));
+    gridBoard.addTypeMember("removePiece", new Member(1, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
+        TypeValue.expect(actualParameters, 0, piece);
+        ObjectValue p = (ObjectValue)actualParameters[0]; 
+        CoordValue pos = p.getMemberCoord("position");
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        int x = pos.getX();
+        int y = pos.getY();
+        int width = object.getMemberInt("width");
+        int height = object.getMemberInt("height");
+        int size = width * height;
+        Value[] squares = object.getMemberList("squares", square, size);
+        Value[] newList = new Value[size];
+        int target = (y - 1) * width + (x - 1);
+        if (target < 0 || target >= size) {
+          throw new ArgumentError("Coordinate out of bounds");
+        }
+        for (int i = 0; i < newList.length; i++) {
+          if (i == target) {
+            newList[i] = ((ObjectValue)squares[i])
+                .callMember("removePiece", square, interpreter, p);
+          }
+          else {
+            newList[i] = squares[i];
+          }
+        }
+        object = (ObjectValue)object.setAttribute("squares", new ListValue(newList));
+        Value[] pieces = object.getMemberList("pieces", piece);
+        newList = new Value[pieces.length - 1];
+        for  (int i = 0; i < pieces.length; i++) {
+          if (pieces[i].equals(p)) {
+            newList[i] = p.callMember("remove", piece, interpreter);
+          }
+          else {
+            newList[i] = pieces[i];
+          }
+        }
+        object = (ObjectValue)object.callMember("setPieces", gridBoard, interpreter, new ListValue(newList));
+        return object;
+      }
+    }));
+    gridBoard.addTypeMember("movePiece", new Member(2, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {
+        TypeValue.expect(actualParameters, 0, piece);
+        ObjectValue p = (ObjectValue)actualParameters[0];
+        CoordValue pos1 = p.getMemberCoord("position");
+        CoordValue pos2 = (CoordValue)TypeValue.expect(actualParameters, 1, CoordValue.type());
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        ObjectValue p2 = (ObjectValue)p.callMember("move", piece, interpreter, pos2);
+        int x1 = pos1.getX();
+        int y1 = pos1.getY();
+        int x2 = pos2.getX();
+        int y2 = pos2.getY();
+        int width = object.getMemberInt("width");
+        int height = object.getMemberInt("height");
+        int size = width * height;
+        Value[] squares = object.getMemberList("squares", square, size);
+        Value[] newList = new Value[size];
+        int target1 = (y1 - 1) * width + (x1 - 1);
+        int target2 = (y2 - 1) * width + (x2 - 1);
+        if (target1 < 0 || target1 >= size
+            || target2 < 0 || target2 >= size) {
+          throw new ArgumentError("Coordinate out of bounds");
+        }
+        for (int i = 0; i < newList.length; i++) {
+          if (i == target1) {
+            newList[i] = ((ObjectValue)squares[i])
+                .callMember("removePiece", square, interpreter, p);
+          }
+          else if (i == target2) {
+            newList[i] = ((ObjectValue)squares[i])
+                .callMember("addPiece", square, interpreter, p2);
+          }
+          else {
+            newList[i] = squares[i];
+          }
+        }
+        object = (ObjectValue)object.setAttribute("squares", new ListValue(newList));
+        Value[] pieces = object.getMemberList("pieces", piece);
+        newList = new Value[pieces.length - 1];
+        for  (int i = 0; i < pieces.length; i++) {
+          if (pieces[i].equals(p)) {
+            newList[i] = p2;
+          }
+          else {
+            newList[i] = pieces[i];
+          }
+        }
+        object = (ObjectValue)object.callMember("setPieces", gridBoard, interpreter, new ListValue(newList));
         return object;
       }
     }));
