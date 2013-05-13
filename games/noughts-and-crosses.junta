@@ -24,12 +24,12 @@ type NacTest[] extends TestCase[] {
   define testPlayersLength = $stateA.players.size == 2
   define testPlayersNotEqual = $stateA.players[0] != $stateA.players[1]
   define testCurrentPlayerA = $stateA.currentPlayer == $stateA.players[0]
-// data $stateB = $stateA.nextTurn[]
-// define testCurrentPlayerB = $stateB.currentPlayer == $stateB.players[1]
-// data $stateC = $stateB.nextTurn[]
-// define testCurrentPlayerC = $stateC.currentPlayer == $stateC.players[0]
-// define testImmutablePlayers = $stateA.players == $stateB.players and
-//                                 $stateB.players == $stateC.players
+  data $stateB = $stateA.nextTurn[]
+  define testCurrentPlayerB = $stateB.currentPlayer == $stateB.players[1]
+  data $stateC = $stateB.nextTurn[]
+  define testCurrentPlayerC = $stateC.currentPlayer == $stateC.players[0]
+  define testImmutablePlayers = $stateA.players == $stateB.players and
+                                 $stateB.players == $stateC.players
   define testEmptySquaresA = $stateA.board.emptySquares.size == 9
   define testPlayerActionsA = $stateA.players[0].actions[$stateA].size == 9
   data $stateD = $stateA.applyAction[$stateA.players[0].actions[$stateA][0]]
