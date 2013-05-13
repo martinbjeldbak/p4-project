@@ -33,31 +33,32 @@ public class NFA2 {
     this.acceptStates = newAccept;
   }
 
-  public void concat(NFA2 nfa2) {
+  public void concat(NFA2 other) {
     for(State2 s : this.acceptStates) {
-      this.transitions.add(new Transition(s, nfa2.startState, null));
+      this.transitions.add(new Transition(s, other.startState, null));
     }
 
-    this.states.addAll(nfa2.states);
-    this.transitions.addAll(nfa2.transitions);
-    this.acceptStates = nfa2.acceptStates;
+    this.states.addAll(other.states);
+    this.transitions.addAll(other.transitions);
+    this.acceptStates = other.acceptStates;
   }
 
   public void kleeneStar(){
     State2 newStart = new State2();
     this.transitions.add(new Transition(newStart, this.startState, null));
-    this.startState = newStart;
+
     for (State2 s : this.acceptStates)
-      this.transitions.add(new Transition(s, newStart, null));
+      this.transitions.add(new Transition(s, this.startState, null));
+
+    this.startState = newStart;
     this.acceptStates.add(newStart);
   }
 
   public void union(NFA2 other){
     State2 newStart = new State2();
-    for (State2 s : other.states)
-      this.states.add(s);
-    for (State2 s : other.acceptStates)
-      this.acceptStates.add(s);
+
+    this.states.addAll(other.states);
+    this.acceptStates.addAll(other.acceptStates);
     
     this.transitions.add(new Transition(newStart, this.startState, null));
     this.transitions.add(new Transition(newStart, other.startState, null));
