@@ -11,5 +11,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/slick.jar"/>
+	<classpathentry kind="src" path="/GAL"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Simulator lib"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
