@@ -49,12 +49,7 @@ public class GameInfoWidget extends ScaleContainer {
 		g.drawImage( side, 0, 0 );
 		
 		title.setString( game.getTitle() );
-		
-		int position = -1;
-		for( int i=0; i<game.getPlayers().length; i++ )
-			if( game.getPlayers()[i] == game.getCurrentPlayer() )
-				position = i;
-		player.setString( "Player " + ( position + 1) );
+		player.setString( "Player: " + game.getCurrentPlayer().getName() );
 
 		//Display Action history
 		List<String> historyLines = new ArrayList<String>();
