@@ -3,7 +3,7 @@ type NacGame[] extends Game["Noughts and Crosses"] {
     NacPlayer[Crosses, "Crosses"],
     NacPlayer[Noughts, "Noughts"]
   ]
-  define board = GridBoard[3, 3]
+  define initialBoard = GridBoard[3, 3]
 }
 type NacPlayer[$pieceType, $name] extends Player[$name] {
   define winCondition[$gameState] =
@@ -18,11 +18,28 @@ type NacPlayer[$pieceType, $name] extends Player[$name] {
 type Crosses[$owner] extends Piece[$owner]
 type Noughts[$owner] extends Piece[$owner]
 
+type NacTest[] extends TestCase[] {
+  data $stateA = NacGame[]
+  define testTitle = $stateA.title == "Noughts and Crosses"
+  define testPlayersLength = $stateA.players.size == 2
+  define testPlayersNotEqual = $stateA.players[0] != $stateA.players[1]
+  define testCurrentPlayerA = $stateA.currentPlayer == $stateA.players[0]
+// data $stateB = $stateA.nextTurn[]
+// define testCurrentPlayerB = $stateB.currentPlayer == $stateB.players[1]
+// data $stateC = $stateB.nextTurn[]
+// define testCurrentPlayerC = $stateC.currentPlayer == $stateC.players[0]
+// define testImmutablePlayers = $stateA.players == $stateB.players and
+//                                 $stateB.players == $stateC.players
+  define testEmptySquaresA = $stateA.board.emptySquares.size == 9
+  define testPlayerActionsA = $stateA.players[0].actions[$stateA].size == 9
+  data $stateD = $stateA.applyAction[$stateA.players[0].actions[$stateA][0]]
+  define testEmptySquaresB = $stateD.board.emptySquares.size == 8
+  define testPlayerActionsB = $stateD.players[1].actions[$stateD].size == 8
+}
+
+
 define main = let
   $g = NacGame[],
   $p = $g.players[0],
-  $gB = $g.applyAction[AddAction[Crosses[$p], $g.currentBoard.squareAt[A1]]]
-    in [
-      $gB.undoAction[$gB.history[0]].currentBoard.squareAt[A1].pieces,
-      $gB.currentBoard.squareAt[A1].pieces
-    ]
+  $gB = $g.applyAction[AddAction[Crosses[$p], $g.board.squareAt[A1]]]
+    in $gB.board.emptySquares.size
