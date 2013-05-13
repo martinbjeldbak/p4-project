@@ -139,7 +139,7 @@ public class GameEnvironment extends StandardEnvironment {
   
   private ObjectValue applyUnitAction(ObjectValue gameState, ObjectValue actionObject, Interpreter interpreter) throws StandardError {
     ObjectValue pieceObject = (ObjectValue)actionObject.getMember("piece", piece);
-    ObjectValue currentBoard = (ObjectValue)gameState.getMember("currentBoard", gridBoard);
+    ObjectValue currentBoard = (ObjectValue)gameState.getMember("board", gridBoard);
     if (actionObject.is(addAction)) {
       ObjectValue toObject = (ObjectValue)actionObject.getMember("to", square);
       CoordValue position = toObject.getMemberCoord("position");
@@ -159,12 +159,12 @@ public class GameEnvironment extends StandardEnvironment {
     else {
       throw new TypeError("Unknown action type: " + actionObject.getType().getName());
     }
-    return (ObjectValue)gameState.callMember("setCurrentBoard", game, interpreter, currentBoard);
+    return (ObjectValue)gameState.callMember("setBoard", game, interpreter, currentBoard);
   }
   
   private ObjectValue undoUnitAction(ObjectValue gameState, ObjectValue actionObject, Interpreter interpreter) throws StandardError {
     ObjectValue pieceObject = (ObjectValue)actionObject.getMember("piece", piece);
-    ObjectValue currentBoard = (ObjectValue)gameState.getMember("currentBoard", gridBoard);
+    ObjectValue currentBoard = (ObjectValue)gameState.getMember("board", gridBoard);
     if (actionObject.is(addAction)) {
       ObjectValue toObject = (ObjectValue)actionObject.getMember("to", square);
       CoordValue position = toObject.getMemberCoord("position");
@@ -188,7 +188,7 @@ public class GameEnvironment extends StandardEnvironment {
     else {
       throw new TypeError("Unknown action type: " + actionObject.getType().getName());
     }
-    return (ObjectValue)gameState.setAttribute("currentBoard", currentBoard);
+    return (ObjectValue)gameState.setAttribute("board", currentBoard);
   }
   
   public GameEnvironment() {
@@ -201,17 +201,17 @@ public class GameEnvironment extends StandardEnvironment {
     addType(game);
     
     game.addAbstractMember("players", new AbstractMember());
-    game.addAbstractMember("board", new AbstractMember());
+    game.addAbstractMember("initialBoard", new AbstractMember());
     game.addAttribute("currentPlayer", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
         return new IntValue(0);
       }
     }));
-    game.addAttribute("currentBoard", new Member(new ConstantCallable() {
+    game.addAttribute("board", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        return object.getMember("board", board);
+        return object.getMember("initialBoard", board);
       }
     }));
     game.addAttribute("history", new Member(new ConstantCallable() {
@@ -221,7 +221,7 @@ public class GameEnvironment extends StandardEnvironment {
       }
     }));
     game.addSetter("currentPlayer", IntValue.type());
-    game.addSetter("currentBoard", gridBoard);
+    game.addSetter("board", gridBoard);
     game.addSetter("history", ListValue.type());
     game.addTypeMember("history", new Member(new ConstantCallable() {
       @Override
@@ -251,10 +251,10 @@ public class GameEnvironment extends StandardEnvironment {
         return object.setAttribute("currentPlayer", new IntValue(i));
       }
     }));
-    game.addTypeMember("currentBoard", new Member(new ConstantCallable() {
+    game.addTypeMember("board", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        return ((ObjectValue)object).getAttribute("currentBoard");
+        return ((ObjectValue)object).getAttribute("board");
       }
     }));
     game.addTypeMember("turnOrder", new Member(new ConstantCallable() {
@@ -309,7 +309,7 @@ public class GameEnvironment extends StandardEnvironment {
           throws StandardError {
         PatternValue pattern = (PatternValue)TypeValue.expect(actualParameters, 0, PatternValue.type());
         ObjectValue gameState = (ObjectValue)interpreter.getSymbolTable().getThis();
-        ObjectValue boardState = (ObjectValue)gameState.getMember("currentBoard", board);
+        ObjectValue boardState = (ObjectValue)gameState.getMember("board", board);
         Value[] squares = boardState.getMemberList("squares", square, 1);
         List<Value> matches = new ArrayList<Value>();
         for (Value s : squares) {
@@ -330,7 +330,7 @@ public class GameEnvironment extends StandardEnvironment {
         Value[] positions = ((ListValue)TypeValue.expect(actualParameters, 0, ListValue.type())).getValues();
         PatternValue pattern = (PatternValue)TypeValue.expect(actualParameters, 1, PatternValue.type());
         ObjectValue gameState = (ObjectValue)interpreter.getSymbolTable().getThis();
-        ObjectValue boardState = (ObjectValue)gameState.getMember("currentBoard", board);
+        ObjectValue boardState = (ObjectValue)gameState.getMember("board", board);
         positions = TypeValue.expect(CoordValue.type(), positions);
         List<Value> matches = new ArrayList<Value>();
         for (Value pos : positions) {

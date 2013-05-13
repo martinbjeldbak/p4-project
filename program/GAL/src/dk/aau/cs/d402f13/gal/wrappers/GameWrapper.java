@@ -40,7 +40,7 @@ public class GameWrapper extends Wrapper implements Game {
     super(env, object);
     title = getMemberString("title");
     description = getMemberString("description");
-    board = new GridBoardWrapper(env, getMember("currentBoard", env.gridBoardType()));
+    board = new GridBoardWrapper(env, getMember("board", env.gridBoardType()));
     
     Value[] players = getMemberList("players", env.playerType(), 1);
     this.players = new PlayerWrapper[players.length];
