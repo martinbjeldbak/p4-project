@@ -17,6 +17,10 @@ public class PatternOptValue extends PatternValue {
     return type;
   }
 
+  public Value getValue() {
+    return value;
+  }
+
   public PatternOptValue(Value value) throws StandardError {
     if(isNotPatTypeCompatible(value))
       throw new TypeError("The supplied value (" + value + ") cannot be used in pattern optional");
