@@ -17,6 +17,22 @@ public class PatternOrValue extends PatternValue {
   }
 
   /**
+   * Gets the left element of the 'or' operator.
+   * @return the left element
+   */
+  public Value getLeft() {
+    return left;
+  }
+
+  /**
+   * Gets the right element of the 'or' operator.
+   * @return the right element
+   */
+  public Value getRight() {
+    return right;
+  }
+
+  /**
    * Creates a new pattern or with left and right nodes. Can be
    * seen as 'left' | 'right'
    * @param left           the left pattern value to be added

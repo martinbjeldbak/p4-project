@@ -81,9 +81,9 @@ public abstract class Wrapper {
     return object.getMemberList(name, type, minLength);
   }
   
-  protected Value callMember(String name, Value ... actualParameters) throws StandardError {
-    return object.callMember(name, interpreter, actualParameters);
-  }
+//  protected Value callMember(String name, Value ... actualParameters) throws StandardError {
+//    return object.callMember(name, interpreter, actualParameters);
+//  }
   
   protected Value callMember(String name, TypeValue type, Value ... actualParameters) throws StandardError {
     return object.callMember(name, type, interpreter, actualParameters);
