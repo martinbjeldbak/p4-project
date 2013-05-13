@@ -1,5 +1,13 @@
 package dk.aau.cs.d402f13.evaluation;
 
+import dk.aau.cs.d402f13.values.Value;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class NFA {
@@ -8,11 +16,48 @@ public class NFA {
   private ArrayList<State> acceptStates = new ArrayList<State>();
   private ArrayList<Transition> transitions = new ArrayList<Transition>();
   
-  public NFA(State startState, ArrayList<State> states, ArrayList<State> acceptStates, ArrayList<Transition> transitions){
+  private NFA(State startState, ArrayList<State> states, ArrayList<State> acceptStates, ArrayList<Transition> transitions){
     this.startState = startState;
     this.states = states;
     this.acceptStates = acceptStates;
     this.transitions = transitions;
+  }
+
+  public NFA() {
+    /*
+    // Should be like on page 6 where R = Ø
+    //http://courses.engr.illinois.edu/cs373/sp2009/lectures/lect_06.pdf
+
+    State state = new State();
+
+    this.startState = state;
+    this.states.add(state);
+    this.transitions.add(new Transition(null, state, null));
+    */
+
+    State start = new State();
+    State accept = new State();
+
+    this.states.add(start);
+    this.states.add(accept);
+
+    this.startState = start;
+    this.acceptStates.add(accept);
+
+    this.transitions.add(new Transition(start, accept, null));
+  }
+
+  public NFA(Value v) {
+    State start = new State();
+    State accept = new State();
+
+    this.states.add(start);
+    this.states.add(accept);
+
+    this.startState = start;
+    this.acceptStates.add(accept);
+
+    this.transitions.add(new Transition(start, accept, v));
   }
 
   /**
@@ -68,10 +113,77 @@ public class NFA {
 
     this.transitions.add(new Transition(newStart, this.startState, null));
     this.transitions.add(new Transition(newStart, other.startState, null));
+    this.transitions.addAll(other.transitions);
 
+    this.states.add(newStart);
     this.states.addAll(other.states);
     this.acceptStates.addAll(other.acceptStates);
 
     this.startState = newStart;
+  }
+
+  public void toDot() {
+    Path file = createFile("NFA.dot");
+
+    try(BufferedWriter writer = Files.newBufferedWriter(file, Charset.defaultCharset())) {
+      writeLine("digraph NFA {", writer);
+
+      //writeLine("rankdir=LR;", writer);
+      writeLine("  node[shape = circle];", writer);
+
+      // Print out the label for each state
+      for(int i = 0; i < this.states.size(); i++) {
+        State s = this.states.get(i);
+
+        if(this.acceptStates.contains(s))
+          writeLine("  " + s.hashCode() + label("" + i) + " [shape = doublecircle]" + ";" , writer);
+        else
+          writeLine("  " + s.hashCode() + label("" + i) + ";", writer);
+      }
+
+      writeLine("", writer);
+
+      // For every transition
+      for(Transition tra : this.transitions) {
+        State from = tra.from;
+        State to = tra.to;
+        Value v = tra.val;
+
+        if(v == null)
+          writeLine("  " + from.hashCode() + " -> " + to.hashCode() + label("&#949;") + ";", writer);
+        else
+          writeLine("  " + from.hashCode() + " -> " + to.hashCode() + label(v.toString()) + ";", writer);
+      }
+
+      writeLine("}", writer);
+      writer.close();
+    }
+    catch(IOException ex) {
+      System.out.println("Error writing to file");
+    }
+  }
+
+  private Path createFile(String fileName) {
+    Path file = Paths.get(fileName);
+    try {
+      Files.deleteIfExists(file);
+      file = Files.createFile(file);
+    } catch (IOException e) {
+      System.out.println("Error creating file");
+    }
+    return file;
+  }
+
+  private void writeLine(CharSequence s, BufferedWriter writer) {
+    try {
+      writer.append(s);
+      writer.newLine();
+    } catch (IOException e) {
+      System.out.print("Failed to write line");
+    }
+  }
+
+  private String label(String label) {
+    return " [label=\"" + label + "\"]";
   }
 }
