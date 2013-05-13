@@ -12,4 +12,5 @@ public interface Game {
   public Game applyAction(Action action) throws StandardError;
   public Game undoAction(Action action) throws StandardError;
   public Action[] getActions() throws StandardError;
+  public Action[] getHistory() throws StandardError;
 }
