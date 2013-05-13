@@ -379,6 +379,7 @@ public class GameEnvironment extends StandardEnvironment {
         int x = 0, y = 0, numTypes = types.length;
         for (int i = 0; i < size; i++) {
           squares[i] = types[(x + y) % numTypes];
+          squares[i] = squares[i].callMember("setPosition", square, interpreter, new CoordValue(x + 1, y + 1));
           x++;
           if (x >= width) {
             x = 0;
