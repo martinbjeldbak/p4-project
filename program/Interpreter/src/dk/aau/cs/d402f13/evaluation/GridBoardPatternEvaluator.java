@@ -67,7 +67,6 @@ public class GridBoardPatternEvaluator {
     // If it's just a value, return an NFA
     // with the value as a label
     //System.out.println("Concatenating NFA \n" + nfa.getEntry() + "--with NFA\n" + NFA.v(v).getEntry());
-    System.out.println(v);
     return NFA.v(v);
   }
 }
