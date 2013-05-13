@@ -54,8 +54,8 @@ public class GameInfoWidget extends ScaleContainer {
 		//Display Action history
 		List<String> historyLines = new ArrayList<String>();
 		//TODO: wait on it being added to the interface again
-	//	for( Action a : game.history() )
-	//		historyLines.add( ActionHelper.humanReadable( game, a ) );
+		for( Action a : game.getHistory() )
+			historyLines.add( ActionHelper.humanReadable( game, a ) );
 		historyList.setLines( historyLines );
 	}
 }

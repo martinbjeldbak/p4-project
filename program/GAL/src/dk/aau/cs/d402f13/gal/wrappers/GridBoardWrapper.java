@@ -44,7 +44,7 @@ public class GridBoardWrapper extends BoardWrapper implements GridBoard {
       this.squareTypes[i] = new SquareWrapper(env, squareTypes[i]);
     }
     
-    Value[] emptySquares = getMemberList("emptySquares", env.squareType(), 1);
+    Value[] emptySquares = getMemberList("emptySquares", env.squareType());
     this.emptySquares = new SquareWrapper[emptySquares.length];
     for (int i = 0; i < emptySquares.length; i++) {
       this.emptySquares[i] = new SquareWrapper(env, emptySquares[i]);

@@ -14,6 +14,7 @@ import dk.aau.cs.d402f13.helpers.ActionHelper;
 import dk.aau.cs.d402f13.helpers.ResourceHelper;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.gameapi.Action;
+import dk.aau.cs.d402f13.utilities.gameapi.AddAction;
 import dk.aau.cs.d402f13.utilities.gameapi.MoveAction;
 import dk.aau.cs.d402f13.utilities.gameapi.Piece;
 import dk.aau.cs.d402f13.utilities.gameapi.Square;
@@ -105,6 +106,11 @@ public abstract class BoardWidget extends Widget {
         if( button == Input.MOUSE_LEFT_BUTTON ){
 	    	Square s = findSquare(x, y);
 	    	Action[] actions = game.getGame().getActions();
+	    	System.out.println( "Amount of actions: " + actions.length );
+	    	for( Action a : actions ){
+	    		System.out.println( "\t" + ActionHelper.humanReadable(game.getGame(), a));
+	    	}
+	    	System.out.println( "Square: " + s.getX() + "x" + s.getY() );
 	    	
 	    	if( selected != null && squareIsHinted( s ) ){
 	    		//We already have selected a piece, and we are trying to
@@ -113,9 +119,12 @@ public abstract class BoardWidget extends Widget {
 	    		//Find the actions from the all available ones
 	    		List<Action> acts = new ArrayList<Action>();
 	    		if( selected == s ){
-	    			for( Action a : actions )
+	    			for( Action a : actions ){
 	    				if( ActionHelper.isRemoveAction( a, s ) != null )
 	    					acts.add( a );
+	    				if( ActionHelper.isAddAction( a, s ) != null )
+	    					acts.add( a );
+	    			}
 	    		}
 	    		else{
 	    			for( Action a : actions ){
@@ -168,6 +177,12 @@ public abstract class BoardWidget extends Widget {
 		        			hintSquares.add( getSquareFromPiece( game.getGame().getBoard(), ma.getPiece() ) );
 		        		if( ActionHelper.isRemoveAction( a, s ) != null )
 		        			hintSquares.add( s );
+		        		
+	        			AddAction aa = ActionHelper.isAddAction( a, s );
+	        			if( aa != null ){
+	        				hintSquares.add( s );
+	        				System.out.println("found add");
+	        			}
 		        	}
 		        	
 		        	//Select square if actions are possible
@@ -248,11 +263,11 @@ public abstract class BoardWidget extends Widget {
 		}
 		
 		//Apply the action and remove hints
-		game.getGame().applyAction( actions.get(0) );
+		game.applyAction( actions.get(0) );
     	selected = null;
     	hintSquares.clear();
     	
-    	if( game.getGame().getPlayers()[0] == game.getGame().getCurrentPlayer() ){
+    	if( game.getGame().getPlayers()[0].equals( game.getGame().getCurrentPlayer() ) ){
     		removeObject( waitForPlayer );
     	}
     	else{
