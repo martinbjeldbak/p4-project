@@ -513,6 +513,33 @@ public class GameEnvironment extends StandardEnvironment {
         return squares[(y - 1) * width + (x - 1)];
       }
     }));
+    gridBoard.addTypeMember("setSquaresAt", new Member(2, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters)
+          throws StandardError {
+        TypeValue.expect(actualParameters, 0, square);
+        ObjectValue sq = (ObjectValue)actualParameters[0];
+        Value[] positions = ((ListValue)TypeValue.expect(actualParameters, 1, ListValue.type())).getValues();
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        int width = object.getMemberInt("width");
+        int height = object.getMemberInt("height");
+        int size = width * height;
+        Value[] squares = object.getMemberList("squares", square, size);
+        for (Value coord : positions) {
+          if (!coord.is(CoordValue.type())) {
+            throw new TypeError("Invalid element type in list for 'setSquares', expected Coordinate");
+          }
+          CoordValue pos = (CoordValue)coord.as(CoordValue.type()); 
+          int x = pos.getX();
+          int y = pos.getY();
+          int i = (y - 1) * width + (x - 1);
+          sq = (ObjectValue)sq.callMember("setPosition", square, interpreter, coord);
+          squares[i] = sq;
+        }
+        object = (ObjectValue)object.setAttribute("squares", new ListValue(squares));
+        return object;
+      }
+    }));
     gridBoard.addTypeMember("addPiece", new Member(2, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters) throws StandardError {

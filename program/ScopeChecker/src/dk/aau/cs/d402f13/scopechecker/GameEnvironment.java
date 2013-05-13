@@ -39,8 +39,6 @@ public class GameEnvironment {
     //BOARD
     current = new TypeSymbolInfo(null, "Board", -1, 0);
     current.args = 0;
-    current.members.add(new FunctionMember("addPiece", 2));
-    current.members.add(new FunctionMember("addPieces", 2));
     current.members.add(new FunctionMember("setPieces", 1));
     current.members.add(new ConstantMember("pieces"));
     tt.addType(current);
@@ -50,6 +48,9 @@ public class GameEnvironment {
     current.args = 2;
     current.setParentName("Board");
     current.members.add(new FunctionMember("squareAt", 1));
+    current.members.add(new FunctionMember("addPiece", 2));
+    current.members.add(new FunctionMember("addPieces", 2));
+    current.members.add(new FunctionMember("setSquaresAt", 2));
     current.members.add(new FunctionMember("removePiece", 1));
     current.members.add(new FunctionMember("movePiece", 2));
     current.members.add(new ConstantMember("width"));

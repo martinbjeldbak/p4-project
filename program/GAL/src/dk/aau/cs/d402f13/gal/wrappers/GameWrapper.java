@@ -24,16 +24,15 @@ import dk.aau.cs.d402f13.values.StrValue;
 import dk.aau.cs.d402f13.values.Value;
 
 public class GameWrapper extends Wrapper implements Game {
-  
   private String title;
   private String description;
   private GridBoardWrapper board;
-  
+
   private PlayerWrapper[] players;
   private PlayerWrapper[] turnOrder;
-  
+
   private PlayerWrapper currentPlayer;
-  
+
   private Action[] actions;
 
   public GameWrapper(GameEnvironment env, Value object) throws StandardError {
@@ -41,7 +40,7 @@ public class GameWrapper extends Wrapper implements Game {
     title = getMemberString("title");
     description = getMemberString("description");
     board = new GridBoardWrapper(env, getMember("board", env.gridBoardType()));
-    
+
     Value[] players = getMemberList("players", env.playerType(), 1);
     this.players = new PlayerWrapper[players.length];
     for (int i = 0; i < players.length; i++) {
@@ -52,7 +51,7 @@ public class GameWrapper extends Wrapper implements Game {
     for (int i = 0; i < turnOrder.length; i++) {
       this.players[i] = new PlayerWrapper(env, turnOrder[i]);
     }
-    
+
     currentPlayer = new PlayerWrapper(env, getMember("currentPlayer", env.playerType()));
   }
 
@@ -145,10 +144,9 @@ public class GameWrapper extends Wrapper implements Game {
   public String getDescription() throws StandardError {
     return description;
   }
-  
+
   @Override
   public Action[] getHistory() throws StandardError {
     return getMemberActions("history");
   }
-
 }

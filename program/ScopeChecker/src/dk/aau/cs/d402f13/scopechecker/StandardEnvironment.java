@@ -66,6 +66,8 @@ public class StandardEnvironment {
      tt.addType(current);
     
     //GLOBAL FUNCTIONS
+     tt.getGlobal().addMember(new ConstantMember("true"));
+     tt.getGlobal().addMember(new ConstantMember("false"));
      tt.getGlobal().addMember(new FunctionMember("typeOf", 1));
      FunctionMember union = new FunctionMember("union", 1);
      union.setVarArgs(true);

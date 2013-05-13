@@ -19,22 +19,22 @@ type Crosses[$owner] extends Piece[$owner]
 type Noughts[$owner] extends Piece[$owner]
 
 type NacTest[] extends TestCase[] {
-  data $stateA = NacGame[]
-  define testTitle = $stateA.title == "Noughts and Crosses"
-  define testPlayersLength = $stateA.players.size == 2
-  define testPlayersNotEqual = $stateA.players[0] != $stateA.players[1]
-  define testCurrentPlayerA = $stateA.currentPlayer == $stateA.players[0]
-  data $stateB = $stateA.nextTurn[]
-  define testCurrentPlayerB = $stateB.currentPlayer == $stateB.players[1]
-  data $stateC = $stateB.nextTurn[]
-  define testCurrentPlayerC = $stateC.currentPlayer == $stateC.players[0]
-  define testImmutablePlayers = $stateA.players == $stateB.players and
-                                 $stateB.players == $stateC.players
-  define testEmptySquaresA = $stateA.board.emptySquares.size == 9
-  define testPlayerActionsA = $stateA.players[0].actions[$stateA].size == 9
-  data $stateD = $stateA.applyAction[$stateA.players[0].actions[$stateA][0]]
-  define testEmptySquaresB = $stateD.board.emptySquares.size == 8
-  define testPlayerActionsB = $stateD.players[1].actions[$stateD].size == 8
+  data $state1 = NacGame[]
+  define testTitle = $state1.title == "Noughts and Crosses"
+  define testPlayersLength = $state1.players.size == 2
+  define testPlayersNotEqual = $state1.players[0] != $state1.players[1]
+  define testCurrentPlayer1 = $state1.currentPlayer == $state1.players[0]
+  data $state2 = $state1.nextTurn[]
+  define testCurrentPlayer2 = $state2.currentPlayer == $state2.players[1]
+  data $state3 = $state2.nextTurn[]
+  define testCurrentPlayer3 = $state3.currentPlayer == $state3.players[0]
+  define testImmutablePlayers = $state1.players == $state2.players
+                                and $state2.players == $state3.players
+  define testEmptySquares1 = $state1.board.emptySquares.size == 9
+  define testPlayerActions1 = $state1.players[0].actions[$state1].size == 9
+  data $state4 = $state1.applyAction[$state1.players[0].actions[$state1][0]]
+  define testEmptySquares2 = $state4.board.emptySquares.size == 8
+  define testPlayerActions2 = $state4.players[1].actions[$state4].size == 8
 }
 
 
