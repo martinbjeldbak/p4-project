@@ -24,6 +24,9 @@ public class GridBoardPatternEvaluator {
 
   public boolean evaluate() {
     NFA nfa = createNFA(NFA.e(), pattern);
+    nfa.toDot();
+
+    //System.out.println(nfa.getEntry());
 
     return false;
   }
@@ -34,20 +37,37 @@ public class GridBoardPatternEvaluator {
       Value left = ((PatternOrValue) v).getLeft();
       Value right = ((PatternOrValue) v).getRight();
 
-      return NFA.concat(nfa, NFA.union(createNFA(nfa, left), createNFA(nfa, right)));
+      return NFA.union(createNFA(nfa, left), createNFA(nfa, right));
     }
     else if(v instanceof PatternMultValue) {
-      return NFA.concat(nfa, NFA.kleeneStar(createNFA(nfa, ((PatternMultValue) v).getValue())));
+      return NFA.kleeneStar(createNFA(nfa, ((PatternMultValue) v).getValue()));
     }
     else if(v instanceof PatternPlusValue) {
-      return NFA.concat(nfa, NFA.plus(createNFA(nfa, ((PatternPlusValue) v).getValue())));
+      return NFA.plus(createNFA(nfa, ((PatternPlusValue) v).getValue()));
+    }
+    else if(v instanceof PatternKeyValue) {
+      return NFA.v(v);
+    }
+    else if(v instanceof PatternNotValue) {
+      // TODO
+    }
+    else if(v instanceof PatternOptValue) {
+      // TODO
     }
     else if(v instanceof PatternValue) {
-      for(Value val : ((PatternValue) v).getValues())
-        return NFA.concat(nfa, createNFA(nfa, val));
+
+      NFA cur = nfa;
+
+      for(Value val : ((PatternValue) v).getValues()) {
+        cur = NFA.concat(cur, createNFA(cur, val));
+      }
+
+      return cur;
     }
     // If it's just a value, return an NFA
     // with the value as a label
+    //System.out.println("Concatenating NFA \n" + nfa.getEntry() + "--with NFA\n" + NFA.v(v).getEntry());
+    System.out.println(v);
     return NFA.v(v);
   }
 }
