@@ -65,7 +65,7 @@ public class ActionHelper{
 		AddAction aa = isAddAction( a );
 		if( aa == null )
 			return null;
-		if( aa.getTo() == s )
+		if( aa.getTo().equals( s ) )
 			return aa;
 		return null;
 	}
@@ -83,7 +83,7 @@ public class ActionHelper{
 		MoveAction ma = isMoveAction( a );
 		if( ma == null )
 			return null;
-		if( ma.getTo() == s )
+		if( ma.getTo().equals( s ) )
 			return ma;
 		return null;
 	}
@@ -136,7 +136,7 @@ public class ActionHelper{
 		if( adds.size() > 0 ){
 			text += "Adds ";
 			for( AddAction aa : adds ){
-				text += ActionHelper.position( aa.getPiece() );
+				text += ActionHelper.position( aa.getTo() );
 				text += " & ";
 				//TODO: write name of piece
 			}
@@ -170,7 +170,7 @@ public class ActionHelper{
 	}
 	
 	static private String position( int x, int y ) throws StandardError{
-		return (char)('A' + x) + "" + (y + 1);
+		return (char)('A' + x - 1) + "" + (y);
 	}
 	static private String position( Piece p ) throws StandardError{
 		return position( p.getX(), p.getY() );

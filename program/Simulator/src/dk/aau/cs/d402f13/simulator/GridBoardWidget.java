@@ -11,18 +11,20 @@ import dk.aau.cs.d402f13.utilities.gameapi.Square;
 import dk.aau.cs.d402f13.utilities.gameapi.Board;
 
 public class GridBoardWidget extends BoardWidget {
-	private GridBoard board;
 	private int size = 0;
 	private int offsetX = 0;
 	private int offsetY = 0; 
 	
 	private int invertY( int y ) throws StandardError{
-		return board.getHeight() - y - 1;
+		return board().getHeight() - y - 1;
 	}
 	
 	public GridBoardWidget( SimulatedGame game, GridBoard b ) {
 		super( game );
-		board = b;
+	}
+	public GridBoard board() throws StandardError{
+		return (GridBoard)game.getGame().getBoard();
+		//TODO: check?
 	}
 
 	private int pieceXCoordiate( Piece p ) throws StandardError{
@@ -47,7 +49,7 @@ public class GridBoardWidget extends BoardWidget {
 	protected void renderPieceLocal( Graphics g, Piece p
 			,	int x, int y, int size, int offsetX, int offsetY
 			) throws StandardError{
-		renderPiece( g, p, x * size, invertY(y) * size, size, offsetX, offsetY );
+		renderPiece( g, p, (x-1) * size, invertY(y-1) * size, size, offsetX, offsetY );
 	}
 	
 	/**
@@ -59,8 +61,8 @@ public class GridBoardWidget extends BoardWidget {
 	 * @throws SlickException
 	 */
 	public void drawBoard( Graphics g, int width, int height ) throws StandardError{
-		int numSquaresX = board.getWidth();
-		int numSquaresY = board.getHeight();
+		int numSquaresX = board().getWidth();
+		int numSquaresY = board().getHeight();
 		int size_x = (int) ((width) / (numSquaresX + 2.25));
 		int size_y = (int) ((height) / (numSquaresY + 2.25));
 		
@@ -80,11 +82,11 @@ public class GridBoardWidget extends BoardWidget {
 			for( int ix=0; ix<numSquaresX; ix++ ){
 				int posX = offsetX + ix * size;
 				int posY = offsetY + invertY(iy) * size;
-				renderSquare( g, board.getSquareAt( ix+1, iy+1 ), posX, posY, size );
+				renderSquare( g, board().getSquareAt( ix+1, iy+1 ), posX, posY, size );
 			}
 		
 		//Draw pieces
-		for( Piece piece : board.getPieces() )
+		for( Piece piece : board().getPieces() )
 			if( piece != dragged )
 				renderPieceLocal( g, piece
 						,	pieceXCoordiate( piece )
@@ -106,7 +108,8 @@ public class GridBoardWidget extends BoardWidget {
 	public Square findSquare(int x, int y) throws StandardError {
 		int posX = (x - offsetX) / size;
 		int posY = (y - offsetY) / size;
-		return board.getSquareAt( posX + 1, invertY(posY) + 1 );
+		System.out.println( "findSquare: " + posX + "x" + posY );
+		return board().getSquareAt( posX + 1, invertY(posY) + 1 );
 	}
 	
 	@Override
