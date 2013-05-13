@@ -116,9 +116,9 @@ The following three identifiers are used throughout this section:
 
 \begin{ebnf}
 %Identifiers
-\grule{constant}{lowercase \gcat \grep{anycase}}
-\grule{type}{uppercase \gcat \grep{anycase}}
-\grule{variable}{\gter{\$} \gcat anycase \gcat \grep{anycase}}
+\grule{constant}{lowercase \gcat \grep{alphanum}}
+\grule{type}{uppercase \gcat \grep{alphanum}}
+\grule{variable}{\gter{\$} \gcat alphanum \gcat \grep{alphanum}}
 \end{ebnf}
 
 This description means that every constant must start with a lowercase character and not uppercase. If an uppercase character begins a sequence of characters, the parser will interpret this as an type which is quite different from a constant. Furthermore, all variables begin with a dollar symbol followed by at least one character.
