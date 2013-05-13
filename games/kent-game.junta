@@ -9,24 +9,31 @@ type White[$player] extends Piece[$player] {
   define actions[$gameState] =
     union[
     // This would not work
-      $gameState.findAllMoves[this, /this e|n empty/],
-      $gameState.findAllMoves[this, /this e Black e empty/],
-      $gameState.findAllMoves[this, /this n Black n empty/]
+  //   $gameState.findAllMoves[this, /this e|n empty/],
+  //   $gameState.findAllMoves[this, /this e Black e empty/],
+  //   $gameState.findAllMoves[this, /this n Black n empty/]
     ]
 }
 type Black[$player] extends Piece[$player] {
   define actions[$gameState] =
     union[
     // This doesn't make sense
-      $gameState.findAllMoves[this, /this w|s empty/],
-      $gameState.findAllMoves[this, /this w White w empty/],
-      $gameState.findAllMoves[this, /this s White s empty/]
+  //   $gameState.findAllMoves[this, /this w|s empty/],
+  //   $gameState.findAllMoves[this, /this w White w empty/],
+  //   $gameState.findAllMoves[this, /this s White s empty/]
     ]
 }
+
+type Wall[] extends Square[] {
+  define isOccupied = true
+  define isEmpty = false
+}
+
 type KentGame[] extends Game["Kents Spil"] {
   define players = [Solo[]]
-  define board = GridBoard[5, 5]
+  define initialBoard = GridBoard[5, 5]
     .addPieces[White[players[0]], [A1, A2, A3, B1, B2, B3, C1, C2]]
     .addPieces[Black[players[0]], [C4, C5, D3, D4, D5, E3, E4, E5]]
-    // MISSING WALLS!!!
+    .setSquaresAt[Wall[], [C3, D1, D2, E1, E2, A4, A5, B4, B5]]
 }
+

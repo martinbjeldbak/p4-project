@@ -19,11 +19,18 @@ public class GameEnvironment {
     current.members.add(new FunctionMember("findSquares", 1));
     current.members.add(new FunctionMember("applyAction", 1));
     current.members.add(new FunctionMember("undoAction", 1));
+    current.members.add(new FunctionMember("matchSquare", 2));
+    current.members.add(new FunctionMember("matchSquares", 2));
+    current.members.add(new FunctionMember("findSquaresIn", 2));
+    current.members.add(new FunctionMember("setHistory", 1));
+    current.members.add(new FunctionMember("setBoard", 1));
+    current.members.add(new FunctionMember("setCurrentPlayer", 1));
+    current.members.add(new FunctionMember("nextTurn", 0));
     current.members.add(new ConstantMember("players"));
-    current.members.add(new ConstantMember("board"));
+    current.members.add(new ConstantMember("initialBoard", true, -1, 0));
     current.members.add(new ConstantMember("currentPlayer"));
     current.members.add(new ConstantMember("turnOrder"));
-    current.members.add(new ConstantMember("currentBoard"));
+    current.members.add(new ConstantMember("board"));
     current.members.add(new ConstantMember("title"));
     current.members.add(new ConstantMember("description"));
     current.members.add(new ConstantMember("history"));
@@ -32,8 +39,6 @@ public class GameEnvironment {
     //BOARD
     current = new TypeSymbolInfo(null, "Board", -1, 0);
     current.args = 0;
-    current.members.add(new FunctionMember("addPiece", 2));
-    current.members.add(new FunctionMember("addPieces", 2));
     current.members.add(new FunctionMember("setPieces", 1));
     current.members.add(new ConstantMember("pieces"));
     tt.addType(current);
@@ -43,6 +48,11 @@ public class GameEnvironment {
     current.args = 2;
     current.setParentName("Board");
     current.members.add(new FunctionMember("squareAt", 1));
+    current.members.add(new FunctionMember("addPiece", 2));
+    current.members.add(new FunctionMember("addPieces", 2));
+    current.members.add(new FunctionMember("setSquaresAt", 2));
+    current.members.add(new FunctionMember("removePiece", 1));
+    current.members.add(new FunctionMember("movePiece", 2));
     current.members.add(new ConstantMember("width"));
     current.members.add(new ConstantMember("height"));
     current.members.add(new ConstantMember("squares"));

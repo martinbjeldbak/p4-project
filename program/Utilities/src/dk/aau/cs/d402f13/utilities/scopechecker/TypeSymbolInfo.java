@@ -63,6 +63,7 @@ public class TypeSymbolInfo extends SymbolInfo{
   }
 
   public void markASTnodeAsAbstract() { //the scopechecker marks abstract types for the interpreter
-   this.node.type = Type.ABSTRACT_TYPE_DEF;
+   if (this.node != null)   //some parts of the game environment are abstract, but is not represented as an AST-node
+    this.node.type = Type.ABSTRACT_TYPE_DEF;
   }
 }

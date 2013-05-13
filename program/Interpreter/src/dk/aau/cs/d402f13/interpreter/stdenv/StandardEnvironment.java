@@ -180,6 +180,9 @@ public class StandardEnvironment extends SymbolTable {
     // Global functions
     ////////////////////////////////////
     
+    addConstant("true", BoolValue.trueValue());
+    addConstant("false", BoolValue.falseValue());
+    
     addConstant("typeOf", new FunValue(
       1, false,
       new Callable() {
