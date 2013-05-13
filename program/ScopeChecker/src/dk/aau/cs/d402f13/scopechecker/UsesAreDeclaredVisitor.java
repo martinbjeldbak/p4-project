@@ -359,6 +359,9 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
   }
   
   public void foundUsedMember(String name, Boolean member, int line, int offset) throws ScopeError{
+    int breakit;
+    if (name.equals("nextTurn"))
+      breakit = 3;
     if (member){
       if (this.accessType == AccessType.THIS){
         //accept if visible in current type
