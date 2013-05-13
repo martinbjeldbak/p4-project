@@ -81,6 +81,30 @@ public abstract class Wrapper {
     return object.getMemberList(name, type, minLength);
   }
   
+  protected Action[] getMemberActions(String name) throws StandardError {
+    Value[] list = getMemberList(name, env.actionType());
+    Action[] actions = new Action[list.length];
+    for (int i = 0; i < list.length; i++) {
+      Value action = list[i];
+      if (action.is(env.addActionType())) {
+        actions[i] = new AddActionWrapper(env, action);
+      }
+      else if (action.is(env.removeActionType())) {
+        actions[i] = new RemoveActionWrapper(env, action);
+      }
+      else if (action.is(env.moveActionType())) {
+        actions[i] = new MoveActionWrapper(env, action);
+      }
+      else if (action.is(env.actionSequenceType())) {
+        actions[i] = new ActionSequenceWrapper(env, action);
+      }
+      else {
+        throw new TypeError("Invalid action type: " + action.getType().getName());
+      }
+    }
+    return actions; 
+  }
+  
 //  protected Value callMember(String name, Value ... actualParameters) throws StandardError {
 //    return object.callMember(name, interpreter, actualParameters);
 //  }
