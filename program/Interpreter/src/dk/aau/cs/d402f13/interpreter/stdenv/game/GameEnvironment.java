@@ -735,7 +735,8 @@ public class GameEnvironment extends StandardEnvironment {
     square.addTypeMember("image", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        return new StrValue("square.png");
+        String squareName = object.getType().getName();
+        return new StrValue(squareName + ".png");
       }
     }));
     square.addTypeMember("position", new Member(new ConstantCallable() {
