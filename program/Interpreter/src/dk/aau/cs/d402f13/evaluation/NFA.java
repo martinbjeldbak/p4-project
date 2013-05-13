@@ -91,8 +91,10 @@ public class NFA {
    * Runs the kleene star operator (*) on the NFA, updating its start state,
    * accept state, and adds epsilon-transitions.
    */
-  public void kleeneStar(){
+  public void kleeneStar() {
     State newStart = new State();
+    this.states.add(newStart);
+
     this.transitions.add(new Transition(newStart, this.startState, null));
 
     for (State s : this.acceptStates)
@@ -100,6 +102,22 @@ public class NFA {
 
     this.startState = newStart;
     this.acceptStates.add(newStart);
+  }
+
+  /**
+   * The plus '+' operator. Transforms the NFA to run one-or-more times
+   * before accepting.
+   */
+  public void plus() {
+    State newStart = new State();
+    this.states.add(newStart);
+
+    this.transitions.add(new Transition(newStart, this.startState, null));
+
+    for (State s : this.acceptStates)
+      this.transitions.add(new Transition(s, this.startState, null));
+
+    this.startState = newStart;
   }
 
   /**
@@ -120,6 +138,16 @@ public class NFA {
     this.acceptStates.addAll(other.acceptStates);
 
     this.startState = newStart;
+  }
+
+  public void optional() {
+    State newState = new State();
+
+    this.states.add(newState);
+    this.transitions.add(new Transition(newState, this.startState, null));
+
+    this.acceptStates.add(newState);
+    this.startState = newState;
   }
 
   public void toDot() {

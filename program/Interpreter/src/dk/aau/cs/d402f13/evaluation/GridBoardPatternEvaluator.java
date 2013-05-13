@@ -63,13 +63,32 @@ public class GridBoardPatternEvaluator {
       n.concat(opt1);
     }
     else if(v instanceof PatternOptValue) {
+      PatternOptValue val = (PatternOptValue)v;
 
+      NFA optionalNFA = new NFA();
+
+      createNFA(optionalNFA, val.getValue());
+      optionalNFA.optional();
+
+      n.concat(optionalNFA);
     }
     else if(v instanceof PatternMultValue) {
+      PatternMultValue val = (PatternMultValue)v;
 
+      NFA mult = new NFA();
+      createNFA(mult, val.getValue());
+      mult.kleeneStar();
+
+      n.concat(mult);
     }
     else if(v instanceof PatternPlusValue) {
+      PatternPlusValue val = (PatternPlusValue)v;
 
+      NFA plus = new NFA();
+      createNFA(plus, val.getValue());
+      plus.plus();
+
+      n.concat(plus);
     }
     else if(v instanceof PatternValue) {
        for(Value val : ((PatternValue) v).getValues()) {
