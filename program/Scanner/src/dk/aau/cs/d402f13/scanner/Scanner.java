@@ -155,7 +155,7 @@ public class Scanner {
    */
   public Token scanKeyword() throws ScannerError {
     String str = "";
-    while(isAnycase()) {
+    while(isAnycase() || isDigit()) {
       str += current();
       pop();
     }
@@ -231,28 +231,23 @@ public class Scanner {
   public Token scanUppercase() throws ScannerError {
     // Can be Type or Coordinate, e.g. Int or A3
     Token t = token(Type.TYPE);
-    boolean isUppercase = true;
-    while (isAnycase()) {
-      if (isLowercase()) {
-        isUppercase = false;
-      }
+
+    while (isUppercase()) {
       t.value += current();
       pop();
     }
-    // if digit comes after the alphacharacters, it must be a
-    // coordinate, else an identifier
-    if (isDigit()) {
-      if (!isUppercase) {
-        throw new ScannerError("Invalid coordinate literal", token(Type.LIT_COORD));
-      }
+    while (isDigit()) {
       t.type = Type.LIT_COORD;
-      while (isDigit()){
-        t.value += current();
-        pop();
-      }
+      t.value += current();
+      pop();
+    }
+
+    while(isUppercase() || isLowercase() || isDigit()){
+      t.type = Type.TYPE;
+      t.value += current();
+      pop();
     }
     return t;
-
   }
   
   /**
@@ -264,10 +259,12 @@ public class Scanner {
     // called when token starts with $
     Token t = token(Type.VAR);
     pop(); // remove initial $
-    while (isAnycase()) {
+    
+    while (isAnycase() || isDigit()) {
       t.value += current();
       pop();
     }
+    
     if (t.value.length() < 0) {
       throw new ScannerError("Invalid variable: " + t.value, token(Type.EOF));
     }
