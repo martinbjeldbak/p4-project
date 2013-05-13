@@ -6,9 +6,9 @@ import java.util.*;
 import java.util.ArrayList;
 
 public class Transition {
- State from, to;
+ State2 from, to;
  Value val;
-  public Transition(State from, State to, Value val){
+  public Transition(State2 from, State2 to, Value val){
     this.from = from;
     this.to = to;
     this.val = val;
