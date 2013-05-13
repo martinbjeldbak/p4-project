@@ -647,7 +647,7 @@ public class GameEnvironment extends StandardEnvironment {
       public Value call(Interpreter interpreter, Value object) throws StandardError {
         ObjectValue owner = (ObjectValue)object.getMember("owner", player);
         String ownerName = owner.getMemberString("name");
-        String pieceName = object.getType().getName();
+        String pieceName = ((ObjectValue)object).getSubType().getName();
         return new StrValue(ownerName + "_" + pieceName + ".png");
       }
     }));
@@ -735,7 +735,7 @@ public class GameEnvironment extends StandardEnvironment {
     square.addTypeMember("image", new Member(new ConstantCallable() {
       @Override
       public Value call(Interpreter interpreter, Value object) throws StandardError {
-        String squareName = object.getType().getName();
+        String squareName = ((ObjectValue)object).getSubType().getName();
         return new StrValue(squareName + ".png");
       }
     }));
