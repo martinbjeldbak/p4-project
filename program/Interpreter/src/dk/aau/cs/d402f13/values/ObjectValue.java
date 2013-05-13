@@ -220,6 +220,13 @@ public class ObjectValue extends Value implements Cloneable {
     return type;
   }
   
+  public TypeValue getSubType() {
+    if (child == null) {
+      return type;
+    }
+    return child.getSubType();
+  }
+  
   public Value getAsSuper() throws InternalError {
     try {
       ObjectValue clone = (ObjectValue)clone();
