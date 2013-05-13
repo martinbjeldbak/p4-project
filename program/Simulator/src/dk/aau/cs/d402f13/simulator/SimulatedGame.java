@@ -17,6 +17,7 @@ import dk.aau.cs.d402f13.gal.GameAbstractionLayer;
 import dk.aau.cs.d402f13.helpers.ResourceHelper;
 import dk.aau.cs.d402f13.utilities.errors.Error;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.utilities.gameapi.Action;
 import dk.aau.cs.d402f13.utilities.gameapi.Game;
 import dk.aau.cs.d402f13.utilities.gameapi.GridBoard;
 import dk.aau.cs.d402f13.widgets.ScaleContainer;
@@ -67,6 +68,9 @@ public class SimulatedGame extends BasicGame {
 	}
 	
 	public Game getGame(){ return game; }
+	public void applyAction( Action a ) throws StandardError{
+		game = game.applyAction( a );
+	}
 	
 	private void handleStandardError( StandardError stdErr ){
 		//TODO:
