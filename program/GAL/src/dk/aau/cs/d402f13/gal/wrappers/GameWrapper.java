@@ -120,16 +120,16 @@ public class GameWrapper extends Wrapper implements Game {
       return actions;
     }
     ArrayList<Action> actionList = new ArrayList<Action>();
-    for (PlayerWrapper p : players) {
-      Action[] playerActions = p.getActions(this);
-      for (Action a : playerActions) {
-        actionList.add(a);
-      }
+    Action[] playerActions = currentPlayer.getActions(this);
+    for (Action a : playerActions) {
+      actionList.add(a);
     }
     for (PieceWrapper p : board.getPieces()) {
-      Action[] pieceActions = p.getActions(this);
-      for (Action a : pieceActions) {
-        actionList.add(a);
+      if (p.getOwner().equals(currentPlayer)) {
+        Action[] pieceActions = p.getActions(this);
+        for (Action a : pieceActions) {
+          actionList.add(a);
+        }
       }
     }
     Action[] actions = new Action[actionList.size()];
