@@ -62,7 +62,8 @@ public class ObjectValue extends Value implements Cloneable {
         }
         return parent.getMember(name);
       }
-      throw new NameError("Undefined member: " + name);
+      throw new NameError("Undefined member '" + name
+          + "' in object of type " + type.getName());
     }
     value = member.getValue(interpreter, scope);
     memberCache.put(name, value);
@@ -89,7 +90,8 @@ public class ObjectValue extends Value implements Cloneable {
   public Value getAttribute(String attribute) throws StandardError {
     Value value = attributes.get(attribute);
     if (value == null) {
-      return value;
+      throw new NameError("Undefined attribute $" + attribute
+          + " in object of type " + type.getName());
     }
     if (value instanceof MemberValue) {
       value = ((MemberValue)value).getValue(interpreter, scope);
@@ -195,7 +197,8 @@ public class ObjectValue extends Value implements Cloneable {
   
   public Value setAttribute(String attribute, Value value) throws StandardError {
     if (attributes.get(attribute) == null) {
-      throw new NameError("Undefined attribute: $" + attribute);
+      throw new NameError("Undefined attribute: $" + attribute
+          + " in object of type " + type.getName());
     }
     if (clone == null) {
       beginClone();
@@ -215,6 +218,13 @@ public class ObjectValue extends Value implements Cloneable {
   @Override
   public TypeValue getType() {
     return type;
+  }
+  
+  public TypeValue getSubType() {
+    if (child == null) {
+      return type;
+    }
+    return child.getSubType();
   }
   
   public Value getAsSuper() throws InternalError {

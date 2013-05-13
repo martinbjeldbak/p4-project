@@ -1,5 +1,8 @@
 package dk.aau.cs.d402f13.simulator;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
@@ -10,7 +13,9 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
 
+import dk.aau.cs.d402f13.gal.GameAbstractionLayer;
 import dk.aau.cs.d402f13.helpers.ResourceHelper;
+import dk.aau.cs.d402f13.utilities.errors.Error;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.gameapi.Game;
 import dk.aau.cs.d402f13.utilities.gameapi.GridBoard;
@@ -24,23 +29,36 @@ public class SimulatedGame extends BasicGame {
 	Game game;
 	
 	
-	public SimulatedGame( String path ) throws CloneNotSupportedException {
+	public SimulatedGame( String path ) throws CloneNotSupportedException{
 		super( "Junta Simulator" );
 		
+		GameAbstractionLayer gal;
+		try {
+			FileInputStream fis = new FileInputStream( path );
+			gal = new GameAbstractionLayer( fis );
+			game = gal.getGame();
+			if( game == null )
+				System.out.println( "fsdjafkldsjaklf" );
+		} catch (Error e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		try{
-			//TODO: load from file system
-			//game = new ChessGame();
 			Object obj = game.getBoard();
-			if( obj instanceof GridBoard )
+		//	if( obj instanceof GridBoard )
 				board = new GridBoardWidget( this, (GridBoard)obj );
-			else
+	//		else
 				; //TODO:
 			
 			sidebar = new GameInfoWidget( this );
 			
 			sceneHandler = new ScaleContainer( false );
-			sceneHandler.addObject( board );
+			if( board != null )
+				sceneHandler.addObject( board );
 			sceneHandler.addObject( sidebar );
 		}
 		catch( StandardError err ){
@@ -53,6 +71,7 @@ public class SimulatedGame extends BasicGame {
 	private void handleStandardError( StandardError stdErr ){
 		//TODO:
 		System.out.println( "StandardError thrown, but not handled : \\" );
+		stdErr.printStackTrace();
 	}
 	
 	@Override
@@ -107,19 +126,22 @@ public class SimulatedGame extends BasicGame {
 		try {
 			return "Junta Simulator - " + game.getTitle();
 		} catch (StandardError e) {
-			return "error in title"; //TODO:
+			handleStandardError( e );
 		}
+		return "Junta Simulator";
 	}
 
 	public static void main( String[] args ) throws SlickException, CloneNotSupportedException {
-		SimulatedGame simulator = new SimulatedGame( "chess.junta" );
+		if( args.length != 1 )
+			return;
+		
+		SimulatedGame simulator = new SimulatedGame( args[0] );
 		AppGameContainer app = new AppGameContainer( simulator );
 		//app.setDisplayMode( 1366, 768, true ); //full-screen
 		app.setDisplayMode( 1024, 600, false );
 		app.setTargetFrameRate( 60 );
 		app.setVSync( true );
 		app.start();
-		
 	}
 
 	@Override

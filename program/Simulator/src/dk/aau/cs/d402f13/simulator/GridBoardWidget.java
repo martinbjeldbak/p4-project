@@ -80,7 +80,7 @@ public class GridBoardWidget extends BoardWidget {
 			for( int ix=0; ix<numSquaresX; ix++ ){
 				int posX = offsetX + ix * size;
 				int posY = offsetY + invertY(iy) * size;
-				renderSquare( g, board.getSquareAt( ix, iy ), posX, posY, size );
+				renderSquare( g, board.getSquareAt( ix+1, iy+1 ), posX, posY, size );
 			}
 		
 		//Draw pieces
@@ -106,7 +106,7 @@ public class GridBoardWidget extends BoardWidget {
 	public Square findSquare(int x, int y) throws StandardError {
 		int posX = (x - offsetX) / size;
 		int posY = (y - offsetY) / size;
-		return board.getSquareAt(posX, invertY(posY));
+		return board.getSquareAt( posX + 1, invertY(posY) + 1 );
 	}
 	
 	@Override
