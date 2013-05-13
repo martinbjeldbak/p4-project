@@ -17,7 +17,7 @@ public class NFA2 {
   private ArrayList<State2> acceptStates = new ArrayList<State2>();
   private ArrayList<Transition> transitions = new ArrayList<Transition>();
   
-  public NFA2(State startState, ArrayList<State2> states, ArrayList<State2> acceptStates, ArrayList<Transition> transitions){
+  public NFA2(State2 startState, ArrayList<State2> states, ArrayList<State2> acceptStates, ArrayList<Transition> transitions){
     this.startState = startState;
     this.states = states;
     this.acceptStates = acceptStates;
@@ -42,5 +42,26 @@ public class NFA2 {
     this.transitions.addAll(nfa2.transitions);
     this.acceptStates = nfa2.acceptStates;
   }
- 
+
+  public void kleeneStar(){
+    State2 newStart = new State2();
+    this.transitions.add(new Transition(newStart, this.startState, null));
+    this.startState = newStart;
+    for (State2 s : this.acceptStates)
+      this.transitions.add(new Transition(s, newStart, null));
+    this.acceptStates.add(newStart);
+  }
+
+  public void union(NFA2 other){
+    State2 newStart = new State2();
+    for (State2 s : other.states)
+      this.states.add(s);
+    for (State2 s : other.acceptStates)
+      this.acceptStates.add(s);
+    
+    this.transitions.add(new Transition(newStart, this.startState, null));
+    this.transitions.add(new Transition(newStart, other.startState, null));
+    
+    this.startState = newStart;
+  }
 }

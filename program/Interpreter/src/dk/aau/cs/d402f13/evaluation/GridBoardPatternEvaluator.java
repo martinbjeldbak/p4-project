@@ -1,6 +1,6 @@
 package dk.aau.cs.d402f13.evaluation;
 
-import dk.aau.cs.d402f13.utilities.types.Game;
+import dk.aau.cs.d402f13.utilities.gameapi.Game;
 import dk.aau.cs.d402f13.values.*;
 
 import java.util.List;
