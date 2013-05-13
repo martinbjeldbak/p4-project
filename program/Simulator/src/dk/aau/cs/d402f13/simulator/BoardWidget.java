@@ -183,10 +183,10 @@ public abstract class BoardWidget extends Widget {
 	
 	/**
 	 * Handles mouse dragging
-	 * @param oldx Previous horizontal position of mouse pointer
-	 * @param oldy Previous vertical position of mouse pointer
-	 * @param newx New horizontal position of mouse pointer
-	 * @param newy New vertical position of mouse pointer
+	 * @param oldX Previous horizontal position of mouse pointer
+	 * @param oldY Previous vertical position of mouse pointer
+	 * @param newX New horizontal position of mouse pointer
+	 * @param newY New vertical position of mouse pointer
 	 */
 	@Override
 	public boolean handleMouseDragged( int oldX, int oldY, int newX, int newY ){

@@ -16,6 +16,10 @@ public class PatternPlusValue extends PatternValue {
     return type;
   }
 
+  public Value getValue() {
+    return value;
+  }
+
   public PatternPlusValue(Value value) throws StandardError {
     if(isNotPatTypeCompatible(value))
       throw new TypeError("The supplied value (" + value + ") cannot be used in pattern one-to-many");

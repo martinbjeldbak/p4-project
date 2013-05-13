@@ -17,7 +17,9 @@ public class PatternMultValue extends PatternValue {
     return type;
   }
 
-  // For the '*' operator (0-*)
+  public Value getValue() {
+    return value;
+  }
 
   /**
    * Creates a new pattern multiplication value from the input value
