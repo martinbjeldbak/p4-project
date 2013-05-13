@@ -56,7 +56,7 @@ public class StandardEnvironment {
     //String
     current = new TypeSymbolInfo(null, "String", -1, 0);
     current.args = 1;
-     tt.addType(current);
+    tt.addType(current);
     
     //Type
     current = new TypeSymbolInfo(null, "Type", -1, 0);
