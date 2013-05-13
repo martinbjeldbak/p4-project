@@ -275,13 +275,52 @@ public class GameEnvironment extends StandardEnvironment {
         return new StrValue("A board game.");
       }
     }));
+    game.addTypeMember("matchSquare", new Member(2, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters)
+          throws StandardError {
+        CoordValue position = (CoordValue)TypeValue.expect(actualParameters, 0, CoordValue.type());
+        PatternValue pattern = (PatternValue)TypeValue.expect(actualParameters, 1, PatternValue.type());
+        /** @TODO Missing patterns!!! */
+        return BoolValue.falseValue();
+      }
+    }));
+    game.addTypeMember("matchSquares", new Member(2, false, new Callable() {
+      @Override
+      public Value call(Interpreter interpreter, Value... actualParameters)
+          throws StandardError {
+        Value[] positions = ((ListValue)TypeValue.expect(actualParameters, 0, ListValue.type())).getValues();
+        PatternValue pattern = (PatternValue)TypeValue.expect(actualParameters, 1, PatternValue.type());
+        positions = TypeValue.expect(CoordValue.type(), positions);
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        for (Value pos : positions) {
+          BoolValue b = (BoolValue)object.callMemberAs(
+              "matchSquare", BoolValue.type(), interpreter, pos, pattern);
+          if (b == BoolValue.falseValue()) {
+            return BoolValue.falseValue();
+          }
+        }
+        return BoolValue.trueValue();
+      }
+    }));
     game.addTypeMember("findSquares", new Member(1, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters)
           throws StandardError {
-        TypeValue.expect(actualParameters, 0, PatternValue.type());
-        /** @TODO Missing patterns!!! */
-        return new ListValue();
+        PatternValue pattern = (PatternValue)TypeValue.expect(actualParameters, 0, PatternValue.type());
+        ObjectValue gameState = (ObjectValue)interpreter.getSymbolTable().getThis();
+        ObjectValue boardState = (ObjectValue)gameState.getMember("currentBoard", board);
+        Value[] squares = boardState.getMemberList("squares", square, 1);
+        List<Value> matches = new ArrayList<Value>();
+        for (Value s : squares) {
+          CoordValue pos = ((ObjectValue)s).getMemberCoord("position");
+          BoolValue b = (BoolValue)gameState.callMemberAs(
+              "matchSquare", BoolValue.type(), interpreter, pos, pattern);
+          if (b == BoolValue.trueValue()) {
+            matches.add(s);
+          }
+        }
+        return new ListValue(matches);
       }
     }));
     game.addTypeMember("applyAction", new Member(1, false, new Callable() {
