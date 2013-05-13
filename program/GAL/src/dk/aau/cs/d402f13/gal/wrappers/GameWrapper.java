@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
+import dk.aau.cs.d402f13.utilities.errors.InternalError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 import dk.aau.cs.d402f13.utilities.gameapi.Action;
@@ -143,6 +144,11 @@ public class GameWrapper extends Wrapper implements Game {
   @Override
   public String getDescription() throws StandardError {
     return description;
+  }
+  
+  @Override
+  public Action[] getHistory() throws StandardError {
+    return getMemberActions("history");
   }
 
 }
