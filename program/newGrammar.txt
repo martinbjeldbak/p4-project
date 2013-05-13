@@ -1,8 +1,8 @@
 // IDENTIFIERS
 
-constant          -> lowercase {anycase}
-type              -> uppercase {anycase}
-variable          -> "$" anycase {anycase}
+constant          -> lowercase {alphanum}
+type              -> uppercase {alphanum}
+variable          -> "$" alphanum {alphanum}
 
 // PROGRAM STRUCTURE
 program           -> {definition}
