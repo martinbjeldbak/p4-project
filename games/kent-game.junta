@@ -24,8 +24,8 @@ type Black[$player] extends Piece[$player] {
   define actions[$gameState] =
     moveActions[this, union[
       $gameState.findSquares[/empty w|s this/],
-      $gameState.findSquares[/empty w Black w this/],
-      $gameState.findSquares[/empty s Black s this/]
+      $gameState.findSquares[/empty w White w this/],
+      $gameState.findSquares[/empty s White s this/]
     ]]
 }
 type Wall[] extends Square[] {

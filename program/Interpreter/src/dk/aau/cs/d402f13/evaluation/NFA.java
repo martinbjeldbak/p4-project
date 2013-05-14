@@ -11,53 +11,46 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class NFA {
-  public State StartState;
-  public ArrayList<State> States = new ArrayList<State>();
-  public ArrayList<State> AcceptStates = new ArrayList<State>();
-  public ArrayList<Transition> Transitions = new ArrayList<Transition>();
+  private State startState;
+  private ArrayList<State> states = new ArrayList<State>();
+  private ArrayList<State> acceptStates = new ArrayList<State>();
+  private ArrayList<Transition> transitions = new ArrayList<Transition>();
   
   private NFA(State startState, ArrayList<State> states, ArrayList<State> acceptStates, ArrayList<Transition> transitions){
-    this.StartState = startState;
-    this.States = states;
-    this.AcceptStates = acceptStates;
-    this.Transitions = transitions;
+    this.startState = startState;
+    this.states = states;
+    this.acceptStates = acceptStates;
+    this.transitions = transitions;
   }
 
+  /**
+   * Creates an empty NFA with a start and accepting
+   * state.
+   */
   public NFA() {
-    /*
-    // Should be like on page 6 where R = Ø
-    //http://courses.engr.illinois.edu/cs373/sp2009/lectures/lect_06.pdf
-
-    State state = new State();
-
-    this.startState = state;
-    this.states.add(state);
-    this.transitions.add(new Transition(null, state, null));
-    */
-
     State start = new State();
-    State accept = new State();
 
-    this.States.add(start);
-    this.States.add(accept);
-
-    this.StartState = start;
-    this.AcceptStates.add(accept);
-
-    this.Transitions.add(new Transition(start, accept, null));
+    this.states.add(start);
+    this.startState = start;
+    this.acceptStates.add(start);
   }
 
+  /**
+   * Creates a new NFA with the value given as parameter
+   * as an edge.
+   * @param v the value to be added as an edge
+   */
   public NFA(Value v) {
     State start = new State();
     State accept = new State();
 
-    this.States.add(start);
-    this.States.add(accept);
+    this.states.add(start);
+    this.states.add(accept);
 
-    this.StartState = start;
-    this.AcceptStates.add(accept);
+    this.startState = start;
+    this.acceptStates.add(accept);
 
-    this.Transitions.add(new Transition(start, accept, v));
+    this.transitions.add(new Transition(start, accept, v));
   }
 
   /**
@@ -66,11 +59,11 @@ public class NFA {
    */
   public void not(){
     ArrayList<State> newAccept = new ArrayList<State>();
-    for (State s : this.States){
-      if (!this.AcceptStates.contains(s))
+    for (State s : this.states){
+      if (!this.acceptStates.contains(s))
         newAccept.add(s);
     }
-    this.AcceptStates = newAccept;
+    this.acceptStates = newAccept;
   }
 
   /**
@@ -78,13 +71,13 @@ public class NFA {
    * @param other the other NFA to be concatenated with
    */
   public void concat(NFA other) {
-    for(State s : this.AcceptStates) {
-      this.Transitions.add(new Transition(s, other.StartState, null));
+    for(State s : this.acceptStates) {
+      this.transitions.add(new Transition(s, other.startState, null));
     }
 
-    this.States.addAll(other.States);
-    this.Transitions.addAll(other.Transitions);
-    this.AcceptStates = other.AcceptStates;
+    this.states.addAll(other.states);
+    this.transitions.addAll(other.transitions);
+    this.acceptStates = other.acceptStates;
   }
 
   /**
@@ -93,15 +86,15 @@ public class NFA {
    */
   public void kleeneStar() {
     State newStart = new State();
-    this.States.add(newStart);
+    this.states.add(newStart);
 
-    this.Transitions.add(new Transition(newStart, this.StartState, null));
+    this.transitions.add(new Transition(newStart, this.startState, null));
 
-    for (State s : this.AcceptStates)
-      this.Transitions.add(new Transition(s, this.StartState, null));
+    for (State s : this.acceptStates)
+      this.transitions.add(new Transition(s, this.startState, null));
 
-    this.StartState = newStart;
-    this.AcceptStates.add(newStart);
+    this.startState = newStart;
+    this.acceptStates.add(newStart);
   }
 
   /**
@@ -110,18 +103,18 @@ public class NFA {
    */
   public void plus() {
     State newStart = new State();
-    this.States.add(newStart);
+    this.states.add(newStart);
 
-    this.Transitions.add(new Transition(newStart, this.StartState, null));
+    this.transitions.add(new Transition(newStart, this.startState, null));
 
-    for (State s : this.AcceptStates)
-      this.Transitions.add(new Transition(s, this.StartState, null));
+    for (State s : this.acceptStates)
+      this.transitions.add(new Transition(s, this.startState, null));
 
-    this.StartState = newStart;
+    this.startState = newStart;
   }
 
   /**
-   * The union/or operation. Adds a new start state and creates epsilon
+   * The union/or ('|') operation. Adds a new start state and creates epsilon
    * transitions from that start state to the current NFA and the NFA
    * supplied as parameter.
    * @param other the other NFA in the union
@@ -129,29 +122,39 @@ public class NFA {
   public void union(NFA other){
     State newStart = new State();
 
-    this.Transitions.add(new Transition(newStart, this.StartState, null));
-    this.Transitions.add(new Transition(newStart, other.StartState, null));
-    this.Transitions.addAll(other.Transitions);
+    this.transitions.add(new Transition(newStart, this.startState, null));
+    this.transitions.add(new Transition(newStart, other.startState, null));
+    this.transitions.addAll(other.transitions);
 
-    this.States.add(newStart);
-    this.States.addAll(other.States);
-    this.AcceptStates.addAll(other.AcceptStates);
+    this.states.add(newStart);
+    this.states.addAll(other.states);
+    this.acceptStates.addAll(other.acceptStates);
 
-    this.StartState = newStart;
+    this.startState = newStart;
   }
 
+  /**
+   * The zero-to-one ('?') operation. Adds a new accepting start state and
+   * adds epsilon edges to this NFA.
+   */
   public void optional() {
     State newState = new State();
 
-    this.States.add(newState);
-    this.Transitions.add(new Transition(newState, this.StartState, null));
+    this.states.add(newState);
+    this.transitions.add(new Transition(newState, this.startState, null));
 
-    this.AcceptStates.add(newState);
-    this.StartState = newState;
+    this.acceptStates.add(newState);
+    this.startState = newState;
   }
 
-  public void toDot() {
-    Path file = createFile("NFA.dot");
+  /**
+   * Outputs the NFA in dot-language format, where node 0
+   * is the start node.
+   * @param fileName the name given to the file representing this
+   *                 NFA
+   */
+  public void toDot(String fileName) {
+    Path file = createFile(fileName);
 
     try(BufferedWriter writer = Files.newBufferedWriter(file, Charset.defaultCharset())) {
       writeLine("digraph NFA {", writer);
@@ -160,19 +163,17 @@ public class NFA {
       writeLine("  node[shape = circle];", writer);
 
       // Print out the label for each state
-      for(int i = 0; i < this.States.size(); i++) {
-        State s = this.States.get(i);
-
-        if(this.AcceptStates.contains(s))
-          writeLine("  " + s.hashCode() + label("" + i) + " [shape = doublecircle]" + ";" , writer);
+      for(State s : this.states) {
+        if(this.acceptStates.contains(s))
+          writeLine("  " + s.hashCode() + label("" + s.getID()) + " [shape = doublecircle];", writer);
         else
-          writeLine("  " + s.hashCode() + label("" + i) + ";", writer);
+          writeLine("  " + s.hashCode() + label("" + s.getID()) + ";", writer);
       }
 
       writeLine("", writer);
 
-      // For every transition
-      for(Transition tra : this.Transitions) {
+      // For every edge
+      for(Transition tra : this.transitions) {
         State from = tra.from;
         State to = tra.to;
         Value v = tra.val;
