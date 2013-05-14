@@ -1,14 +1,15 @@
 package dk.aau.cs.d402f13.evaluation;
 
-import dk.aau.cs.d402f13.values.PatternValue;
-import dk.aau.cs.d402f13.values.Value;
-
-import java.util.*;
-import java.util.ArrayList;
-
+/*
+ * This clase only servers the purpose that both 
+ * NFAState and DFAState derives from it.
+ * Thereby, a transitions can be a triple
+ * (State from, State to, Value val)
+ * and be used by both NFA's and DFA's
+ */
 public class State {
- 
-  public State(){
-    
+  String name;
+  public String getName(){
+    return this.name;
   }
 }
