@@ -17,13 +17,13 @@ import dk.aau.cs.d402f13.values.Value;
 
 
 public class DFA {
-  public State StartState;
+  public DFAState StartState;
   public ArrayList<DFAState> States = new ArrayList<DFAState>();
   public ArrayList<DFAState> AcceptStates = new ArrayList<DFAState>();
   public ArrayList<Transition> Transitions = new ArrayList<Transition>();
 
   public DFA(NFA nfa){
-    this.StartState = new State();
+    this.StartState = new DFAState();
   }
   
   public DFA(DFAState startState, ArrayList<DFAState> states, ArrayList<DFAState> acceptStates, ArrayList<Transition> transitions){
