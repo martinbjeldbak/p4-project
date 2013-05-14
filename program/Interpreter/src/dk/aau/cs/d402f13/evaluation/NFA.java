@@ -23,30 +23,23 @@ public class NFA {
     this.transitions = transitions;
   }
 
+  /**
+   * Creates an empty NFA with a start and accepting
+   * state.
+   */
   public NFA() {
-    /*
-    // Should be like on page 6 where R = Ø
-    //http://courses.engr.illinois.edu/cs373/sp2009/lectures/lect_06.pdf
-
-    State state = new State();
-
-    this.startState = state;
-    this.states.add(state);
-    this.transitions.add(new Transition(null, state, null));
-    */
-
     State start = new State();
-    State accept = new State();
 
     this.states.add(start);
-    this.states.add(accept);
-
     this.startState = start;
-    this.acceptStates.add(accept);
-
-    this.transitions.add(new Transition(start, accept, null));
+    this.acceptStates.add(start);
   }
 
+  /**
+   * Creates a new NFA with the value given as parameter
+   * as an edge.
+   * @param v the value to be added as an edge
+   */
   public NFA(Value v) {
     State start = new State();
     State accept = new State();
@@ -121,7 +114,7 @@ public class NFA {
   }
 
   /**
-   * The union/or operation. Adds a new start state and creates epsilon
+   * The union/or ('|') operation. Adds a new start state and creates epsilon
    * transitions from that start state to the current NFA and the NFA
    * supplied as parameter.
    * @param other the other NFA in the union
@@ -140,6 +133,10 @@ public class NFA {
     this.startState = newStart;
   }
 
+  /**
+   * The zero-to-one ('?') operation. Adds a new accepting start state and
+   * adds epsilon edges to this NFA.
+   */
   public void optional() {
     State newState = new State();
 
@@ -150,8 +147,14 @@ public class NFA {
     this.startState = newState;
   }
 
-  public void toDot() {
-    Path file = createFile("NFA.dot");
+  /**
+   * Outputs the NFA in dot-language format, where node 0
+   * is the start node.
+   * @param fileName the name given to the file representing this
+   *                 NFA
+   */
+  public void toDot(String fileName) {
+    Path file = createFile(fileName);
 
     try(BufferedWriter writer = Files.newBufferedWriter(file, Charset.defaultCharset())) {
       writeLine("digraph NFA {", writer);
@@ -164,7 +167,7 @@ public class NFA {
         State s = this.states.get(i);
 
         if(this.acceptStates.contains(s))
-          writeLine("  " + s.hashCode() + label("" + i) + " [shape = doublecircle]" + ";" , writer);
+          writeLine("  " + s.hashCode() + label("" + i) + " [shape = doublecircle];", writer);
         else
           writeLine("  " + s.hashCode() + label("" + i) + ";", writer);
       }
