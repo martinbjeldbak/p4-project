@@ -16,6 +16,10 @@ public class PatternNotValue extends PatternValue {
     return type;
   }
 
+  public Value getValue() {
+    return value;
+  }
+
   /**
    * Creates a new patternNotValue with the supplied
    * value. Throws an error if that value is not allowed

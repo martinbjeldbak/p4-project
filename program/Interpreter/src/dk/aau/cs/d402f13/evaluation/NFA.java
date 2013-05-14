@@ -9,221 +9,148 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Map;
 
 public class NFA {
-  private State entry;
-  private ArrayList<State> exit = new ArrayList<>();
+  private State startState;
+  private ArrayList<State> states = new ArrayList<State>();
+  private ArrayList<State> acceptStates = new ArrayList<State>();
+  private ArrayList<Transition> transitions = new ArrayList<Transition>();
+  
+  private NFA(State startState, ArrayList<State> states, ArrayList<State> acceptStates, ArrayList<Transition> transitions){
+    this.startState = startState;
+    this.states = states;
+    this.acceptStates = acceptStates;
+    this.transitions = transitions;
+  }
 
-  /**
-   * Sets the entry point in this NFA.
-   * @param entry the new entry state to be
-   *              set in this NFA
-   */
-  public void setEntry(State entry) {
-    this.entry = entry;
+  public NFA() {
+    /*
+    // Should be like on page 6 where R = Ø
+    //http://courses.engr.illinois.edu/cs373/sp2009/lectures/lect_06.pdf
+
+    State state = new State();
+
+    this.startState = state;
+    this.states.add(state);
+    this.transitions.add(new Transition(null, state, null));
+    */
+
+    State start = new State();
+    State accept = new State();
+
+    this.states.add(start);
+    this.states.add(accept);
+
+    this.startState = start;
+    this.acceptStates.add(accept);
+
+    this.transitions.add(new Transition(start, accept, null));
+  }
+
+  public NFA(Value v) {
+    State start = new State();
+    State accept = new State();
+
+    this.states.add(start);
+    this.states.add(accept);
+
+    this.startState = start;
+    this.acceptStates.add(accept);
+
+    this.transitions.add(new Transition(start, accept, v));
   }
 
   /**
-   * Gets the entry state for this NFA.
-   * @return the entry state
+   * Runs the not operation (!) on the current NFA, updating
+   * its accept states.
    */
-  public State getEntry() {
-    return entry;
-  }
-
-  /**
-   * Gets the exit state(s) for this NFA.
-   * @return the exit state(s)
-   */
-  public ArrayList<State> getExit() {
-    return exit;
-  }
-
-  /**
-   * Sets a singular state as the exit for
-   * this NFA. It also marks the state as
-   * an accept state.
-   * @param exit the state to be marked
-   *             as an exit
-   */
-  public void addExit(State exit) {
-    exit.setAccept(true);
-    this.exit.add(exit);
-  }
-
-  /**
-   * Sets multiple exit states in this NFA,
-   * marking them all as accept states.
-   * @param exits the array of states to be added
-   */
-  public void addExit(State ... exits) {
-    for(State s : exits) {
-      s.setAccept(true);
-      this.exit.add(s);
+  public void not(){
+    ArrayList<State> newAccept = new ArrayList<State>();
+    for (State s : this.states){
+      if (!this.acceptStates.contains(s))
+        newAccept.add(s);
     }
-  }
-
-  /** Same as the method {@link #addExit(State...)} */
-  public void addExit(ArrayList<State> exits) {
-    for(State s : exits) {
-      s.setAccept(true);
-      this.exit.add(s);
-    }
-  }
-
-  private NFA(State entry, State exit) {
-    this.entry = entry;
-    addExit(exit);
-  }
-
-  private NFA(State entry, ArrayList<State> exits) {
-    this.entry = entry;
-    this.addExit(exits);
-  }
-
-  public NFA() {}
-
-  // ----- Methods to build up small expressions to larger expressions
-
-  /**
-   * A single transition from a new entry state to a new exit state
-   * with the edge v going from the entry state to the exit state.
-   * @param v the edge value
-   * @return  a construction of a new NFA
-   *          with 'v' as the edge between an
-   *          entry and exit state.
-   */
-  public static final NFA v(Value v) {
-    State entry = new State();
-    State exit = new State();
-    exit.setAccept(true);
-    entry.addValEdge(v, exit);
-    return new NFA(entry, exit);
+    this.acceptStates = newAccept;
   }
 
   /**
-   * Add an epsilon edge between two new states
-   * @return a construction of a new NFA with
-   *         an epsilon edge between the two
-   *         states
+   * Concatenates the current NFA with the NFA supplied as parameter.
+   * @param other the other NFA to be concatenated with
    */
-  public static final NFA e() {
-    State entry = new State();
-    State exit = new State();
-    entry.addEmptyEdge(exit);
-    exit.setAccept(true);
-    return new NFA(entry, exit);
-  }
-
-  /**
-   * Creates an NFA which which matches zero-or-more
-   * repetitions of the given NFA. Also known as the
-   * kleene star regular expression operation ('*').
-   * @param nfa the NFA to add a kleene star to
-   * @return    the NFA with the kleene star operator
-   */
-  public static final NFA kleeneStar(NFA nfa) {
-    for(State exit : nfa.getExit())
-      exit.addEmptyEdge(nfa.getEntry());
-
-    State entry = new State();
-    entry.setAccept(true);
-    entry.addEmptyEdge(nfa.getEntry());
-
-    return new NFA(entry, nfa.getExit());
-  }
-
-  /**
-   * Creates an NFA which matches one-to-many
-   * repetitions of the given NFA. The
-   * ('+') regular expression operation.
-   * @param nfa the NFA to add a plus operation
-   *            on
-   * @return    the NFA with the plus operation
-   */
-  public static final NFA plus(NFA nfa) {
-    for(State exit : nfa.getExit())
-      exit.addEmptyEdge(nfa.getEntry());
-
-    State entry = new State();
-    entry.addEmptyEdge(nfa.getEntry());
-
-    return new NFA(entry, nfa.getExit());
-  }
-
-  /**
-   * The concatenate operation. Adds the second
-   * NFA to the first NFA, concatenating the two.
-   * @param first  the NFA to be prepended to the second
-   * @param second the second NFA
-   * @return       a new NFA with the two NFAs
-   *               concatenated
-   */
-  public static final NFA concat(NFA first, NFA second) {
-    for(State s : first.getExit()) {
-      s.setAccept(false);
-      s.addEmptyEdge(second.getEntry());
+  public void concat(NFA other) {
+    for(State s : this.acceptStates) {
+      this.transitions.add(new Transition(s, other.startState, null));
     }
 
-    return new NFA(first.getEntry(), second.getExit());
-  }
-
-  /** Instance method identical to {@link #concat(NFA, NFA)},
-   * but uses the current NFA instead */
-  public final NFA concat(NFA second) {
-    for (State s : this.getExit()) {
-      s.setAccept(false);
-      s.addEmptyEdge(second.getEntry());
-    }
-
-    return new NFA(this.getEntry(), second.getExit());
+    this.states.addAll(other.states);
+    this.transitions.addAll(other.transitions);
+    this.acceptStates = other.acceptStates;
   }
 
   /**
-   * The union/or operation. Adds epsilon-transitions
-   * between the two NFA's given as input.
-   * @param choice1 the first NFA option
-   * @param choice2 the second NFA option
-   * @return        a new NFA with a new entry
-   *                with epsilon-transitions
-   *                to the two NFAs
+   * Runs the kleene star operator (*) on the NFA, updating its start state,
+   * accept state, and adds epsilon-transitions.
    */
-  public static final NFA union(NFA choice1, NFA choice2) {
-    State entry = new State();
+  public void kleeneStar() {
+    State newStart = new State();
+    this.states.add(newStart);
 
-    entry.addEmptyEdge(choice1.getEntry());
-    entry.addEmptyEdge(choice2.getEntry());
+    this.transitions.add(new Transition(newStart, this.startState, null));
 
-    ArrayList<State> exits = new ArrayList<>();
-    exits.addAll(choice1.getExit());
-    exits.addAll(choice2.getExit());
+    for (State s : this.acceptStates)
+      this.transitions.add(new Transition(s, this.startState, null));
 
-    return new NFA(entry, exits);
+    this.startState = newStart;
+    this.acceptStates.add(newStart);
   }
 
-  /** Same as method {@link #union(NFA, NFA)}, just
-   * accepts an array of NFA machines instead
+  /**
+   * The plus '+' operator. Transforms the NFA to run one-or-more times
+   * before accepting.
    */
-  public static final NFA union(NFA ... choices) {
-    State entry = new State();
+  public void plus() {
+    State newStart = new State();
+    this.states.add(newStart);
 
-    ArrayList<State> exits = new ArrayList<>();
+    this.transitions.add(new Transition(newStart, this.startState, null));
 
-    for(NFA machine : choices) {
-      entry.addEmptyEdge(machine.getEntry());
-      exits.addAll(machine.getExit());
-    }
-    return new NFA(entry, exits);
+    for (State s : this.acceptStates)
+      this.transitions.add(new Transition(s, this.startState, null));
+
+    this.startState = newStart;
   }
 
-  public static final NFA s(Value ... rexps) {
-    NFA exp = e();
+  /**
+   * The union/or operation. Adds a new start state and creates epsilon
+   * transitions from that start state to the current NFA and the NFA
+   * supplied as parameter.
+   * @param other the other NFA in the union
+   */
+  public void union(NFA other){
+    State newStart = new State();
 
-    return null;
+    this.transitions.add(new Transition(newStart, this.startState, null));
+    this.transitions.add(new Transition(newStart, other.startState, null));
+    this.transitions.addAll(other.transitions);
+
+    this.states.add(newStart);
+    this.states.addAll(other.states);
+    this.acceptStates.addAll(other.acceptStates);
+
+    this.startState = newStart;
   }
 
-  public final void toDot() {
+  public void optional() {
+    State newState = new State();
+
+    this.states.add(newState);
+    this.transitions.add(new Transition(newState, this.startState, null));
+
+    this.acceptStates.add(newState);
+    this.startState = newState;
+  }
+
+  public void toDot() {
     Path file = createFile("NFA.dot");
 
     try(BufferedWriter writer = Files.newBufferedWriter(file, Charset.defaultCharset())) {
@@ -232,7 +159,29 @@ public class NFA {
       //writeLine("rankdir=LR;", writer);
       writeLine("  node[shape = circle];", writer);
 
-      makeEdges(entry, 0, writer);
+      // Print out the label for each state
+      for(int i = 0; i < this.states.size(); i++) {
+        State s = this.states.get(i);
+
+        if(this.acceptStates.contains(s))
+          writeLine("  " + s.hashCode() + label("" + i) + " [shape = doublecircle]" + ";" , writer);
+        else
+          writeLine("  " + s.hashCode() + label("" + i) + ";", writer);
+      }
+
+      writeLine("", writer);
+
+      // For every transition
+      for(Transition tra : this.transitions) {
+        State from = tra.from;
+        State to = tra.to;
+        Value v = tra.val;
+
+        if(v == null)
+          writeLine("  " + from.hashCode() + " -> " + to.hashCode() + label("&#949;") + ";", writer);
+        else
+          writeLine("  " + from.hashCode() + " -> " + to.hashCode() + label(v.toString()) + ";", writer);
+      }
 
       writeLine("}", writer);
       writer.close();
@@ -242,37 +191,15 @@ public class NFA {
     }
   }
 
-  private void makeEdges(State s, Integer nodeNr, BufferedWriter writer) {
-    int sID = s.hashCode();
-    int eID;
-
-    s.setVisited(true);
-
-    if(s.isAccept())
-      writeLine("  " + sID + label("" + nodeNr) + " [shape = doublecircle]" + ";", writer);
-    else
-      writeLine("  " + sID + label("" + nodeNr) + ";", writer);
-
-    // For every valued edge leaving the state, print dot language
-    for(Map.Entry<Value, State> edge : s.getValueEdges().entrySet()) {
-      eID = edge.getValue().hashCode();
-
-      writeLine("  " + sID + " -> " + eID + label(edge.getKey().toString()) + ";", writer);
-
-      // Then for this state, make edges for its edges to other states recursively
-      if(edge.getValue().visited() == false)
-        makeEdges(edge.getValue(), nodeNr + 1, writer);
+  private Path createFile(String fileName) {
+    Path file = Paths.get(fileName);
+    try {
+      Files.deleteIfExists(file);
+      file = Files.createFile(file);
+    } catch (IOException e) {
+      System.out.println("Error creating file");
     }
-
-    // For every epsilon edge, do the same
-    for(State eps : s.getEmptyEdges()) {
-      eID = eps.hashCode();
-
-      writeLine("  " + sID + " -> " + eID + label("&#949;") + ";", writer);
-
-      if(eps.visited() == false)
-        makeEdges(eps, nodeNr + 1, writer);
-    }
+    return file;
   }
 
   private void writeLine(CharSequence s, BufferedWriter writer) {
@@ -286,16 +213,5 @@ public class NFA {
 
   private String label(String label) {
     return " [label=\"" + label + "\"]";
-  }
-
-  private Path createFile(String fileName) {
-    Path file = Paths.get(fileName);
-    try {
-      Files.deleteIfExists(file);
-      file = Files.createFile(file);
-    } catch (IOException e) {
-      System.out.println("Error creating file");
-    }
-    return file;
   }
 }
