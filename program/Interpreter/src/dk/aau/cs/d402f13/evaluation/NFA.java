@@ -163,18 +163,16 @@ public class NFA {
       writeLine("  node[shape = circle];", writer);
 
       // Print out the label for each state
-      for(int i = 0; i < this.states.size(); i++) {
-        State s = this.states.get(i);
-
+      for(State s : this.states) {
         if(this.acceptStates.contains(s))
-          writeLine("  " + s.hashCode() + label("" + i) + " [shape = doublecircle];", writer);
+          writeLine("  " + s.hashCode() + label("" + s.getID()) + " [shape = doublecircle];", writer);
         else
-          writeLine("  " + s.hashCode() + label("" + i) + ";", writer);
+          writeLine("  " + s.hashCode() + label("" + s.getID()) + ";", writer);
       }
 
       writeLine("", writer);
 
-      // For every transition
+      // For every edge
       for(Transition tra : this.transitions) {
         State from = tra.from;
         State to = tra.to;
