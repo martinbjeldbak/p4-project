@@ -11,16 +11,16 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class NFA {
-  private State startState;
-  private ArrayList<State> states = new ArrayList<State>();
-  private ArrayList<State> acceptStates = new ArrayList<State>();
-  private ArrayList<Transition> transitions = new ArrayList<Transition>();
+  public State StartState;
+  public ArrayList<State> States = new ArrayList<State>();
+  public ArrayList<State> AcceptStates = new ArrayList<State>();
+  public ArrayList<Transition> Transitions = new ArrayList<Transition>();
   
   private NFA(State startState, ArrayList<State> states, ArrayList<State> acceptStates, ArrayList<Transition> transitions){
-    this.startState = startState;
-    this.states = states;
-    this.acceptStates = acceptStates;
-    this.transitions = transitions;
+    this.StartState = startState;
+    this.States = states;
+    this.AcceptStates = acceptStates;
+    this.Transitions = transitions;
   }
 
   public NFA() {
@@ -38,26 +38,26 @@ public class NFA {
     State start = new State();
     State accept = new State();
 
-    this.states.add(start);
-    this.states.add(accept);
+    this.States.add(start);
+    this.States.add(accept);
 
-    this.startState = start;
-    this.acceptStates.add(accept);
+    this.StartState = start;
+    this.AcceptStates.add(accept);
 
-    this.transitions.add(new Transition(start, accept, null));
+    this.Transitions.add(new Transition(start, accept, null));
   }
 
   public NFA(Value v) {
     State start = new State();
     State accept = new State();
 
-    this.states.add(start);
-    this.states.add(accept);
+    this.States.add(start);
+    this.States.add(accept);
 
-    this.startState = start;
-    this.acceptStates.add(accept);
+    this.StartState = start;
+    this.AcceptStates.add(accept);
 
-    this.transitions.add(new Transition(start, accept, v));
+    this.Transitions.add(new Transition(start, accept, v));
   }
 
   /**
@@ -66,11 +66,11 @@ public class NFA {
    */
   public void not(){
     ArrayList<State> newAccept = new ArrayList<State>();
-    for (State s : this.states){
-      if (!this.acceptStates.contains(s))
+    for (State s : this.States){
+      if (!this.AcceptStates.contains(s))
         newAccept.add(s);
     }
-    this.acceptStates = newAccept;
+    this.AcceptStates = newAccept;
   }
 
   /**
@@ -78,13 +78,13 @@ public class NFA {
    * @param other the other NFA to be concatenated with
    */
   public void concat(NFA other) {
-    for(State s : this.acceptStates) {
-      this.transitions.add(new Transition(s, other.startState, null));
+    for(State s : this.AcceptStates) {
+      this.Transitions.add(new Transition(s, other.StartState, null));
     }
 
-    this.states.addAll(other.states);
-    this.transitions.addAll(other.transitions);
-    this.acceptStates = other.acceptStates;
+    this.States.addAll(other.States);
+    this.Transitions.addAll(other.Transitions);
+    this.AcceptStates = other.AcceptStates;
   }
 
   /**
@@ -93,15 +93,15 @@ public class NFA {
    */
   public void kleeneStar() {
     State newStart = new State();
-    this.states.add(newStart);
+    this.States.add(newStart);
 
-    this.transitions.add(new Transition(newStart, this.startState, null));
+    this.Transitions.add(new Transition(newStart, this.StartState, null));
 
-    for (State s : this.acceptStates)
-      this.transitions.add(new Transition(s, this.startState, null));
+    for (State s : this.AcceptStates)
+      this.Transitions.add(new Transition(s, this.StartState, null));
 
-    this.startState = newStart;
-    this.acceptStates.add(newStart);
+    this.StartState = newStart;
+    this.AcceptStates.add(newStart);
   }
 
   /**
@@ -110,14 +110,14 @@ public class NFA {
    */
   public void plus() {
     State newStart = new State();
-    this.states.add(newStart);
+    this.States.add(newStart);
 
-    this.transitions.add(new Transition(newStart, this.startState, null));
+    this.Transitions.add(new Transition(newStart, this.StartState, null));
 
-    for (State s : this.acceptStates)
-      this.transitions.add(new Transition(s, this.startState, null));
+    for (State s : this.AcceptStates)
+      this.Transitions.add(new Transition(s, this.StartState, null));
 
-    this.startState = newStart;
+    this.StartState = newStart;
   }
 
   /**
@@ -129,25 +129,25 @@ public class NFA {
   public void union(NFA other){
     State newStart = new State();
 
-    this.transitions.add(new Transition(newStart, this.startState, null));
-    this.transitions.add(new Transition(newStart, other.startState, null));
-    this.transitions.addAll(other.transitions);
+    this.Transitions.add(new Transition(newStart, this.StartState, null));
+    this.Transitions.add(new Transition(newStart, other.StartState, null));
+    this.Transitions.addAll(other.Transitions);
 
-    this.states.add(newStart);
-    this.states.addAll(other.states);
-    this.acceptStates.addAll(other.acceptStates);
+    this.States.add(newStart);
+    this.States.addAll(other.States);
+    this.AcceptStates.addAll(other.AcceptStates);
 
-    this.startState = newStart;
+    this.StartState = newStart;
   }
 
   public void optional() {
     State newState = new State();
 
-    this.states.add(newState);
-    this.transitions.add(new Transition(newState, this.startState, null));
+    this.States.add(newState);
+    this.Transitions.add(new Transition(newState, this.StartState, null));
 
-    this.acceptStates.add(newState);
-    this.startState = newState;
+    this.AcceptStates.add(newState);
+    this.StartState = newState;
   }
 
   public void toDot() {
@@ -160,10 +160,10 @@ public class NFA {
       writeLine("  node[shape = circle];", writer);
 
       // Print out the label for each state
-      for(int i = 0; i < this.states.size(); i++) {
-        State s = this.states.get(i);
+      for(int i = 0; i < this.States.size(); i++) {
+        State s = this.States.get(i);
 
-        if(this.acceptStates.contains(s))
+        if(this.AcceptStates.contains(s))
           writeLine("  " + s.hashCode() + label("" + i) + " [shape = doublecircle]" + ";" , writer);
         else
           writeLine("  " + s.hashCode() + label("" + i) + ";", writer);
@@ -172,7 +172,7 @@ public class NFA {
       writeLine("", writer);
 
       // For every transition
-      for(Transition tra : this.transitions) {
+      for(Transition tra : this.Transitions) {
         State from = tra.from;
         State to = tra.to;
         Value v = tra.val;
