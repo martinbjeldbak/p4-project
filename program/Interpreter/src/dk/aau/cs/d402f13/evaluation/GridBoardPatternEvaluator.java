@@ -1,5 +1,6 @@
 package dk.aau.cs.d402f13.evaluation;
 
+import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.gameapi.Game;
 import dk.aau.cs.d402f13.values.*;
 
@@ -20,10 +21,7 @@ public class GridBoardPatternEvaluator {
     this.game = null;
   }
 
-  public boolean evaluate() {
-    //OldNFA nfa = createOldNFA(OldNFA.e(), pattern);
-    //nfa.toDot();
-
+  public boolean evaluate() throws StandardError {
     NFA nfa = new NFA();
 
     createNFA(nfa, pattern);
@@ -31,6 +29,7 @@ public class GridBoardPatternEvaluator {
 
     DFA dfa = new DFA(nfa);
     dfa.toDot("DFA.dot");
+    dfa.recognizes(game, coord);
 
 
     return false;
