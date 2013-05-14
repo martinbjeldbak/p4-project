@@ -32,4 +32,12 @@ process of compilation, and with \figref{fig:compileroverview} we visualised
 these phases. A compiler must also begin with scanner and a parser to get a
 stream of tokens and an abstract syntax tree. These steps are the same as we
 have described in \chapref{chap:implementation}. Furthermore, the step where we
-check the different scopes
+check if the different variables are visible in their respective scopes is also
+the same as described in \chapref{chap:implementation}. When the above mentioned
+phases have been run then the compiler should compile the code to machine
+language or to an intermediate language. 
+
+According to \figref{fig:compileroverview} the result of the semantic analyser
+would be intermediate language and then the code generator would generate
+machine language which could be executed. It is possible to compile directly to
+machine language.
