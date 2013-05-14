@@ -28,6 +28,7 @@ public class GridBoardPatternEvaluator {
 
     createNFA(nfa, pattern);
     nfa.toDot();
+    new DFA(nfa).toDot();
 
     return false;
   }
