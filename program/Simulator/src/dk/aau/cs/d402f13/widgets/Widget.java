@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.newdawn.slick.Graphics;
 
+import dk.aau.cs.d402f13.utilities.errors.SimulatorError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 
 public class Widget {
@@ -103,8 +104,11 @@ public class Widget {
 	public void removeObject( Widget o ){
 		widgets.remove( o );
 	}
+	public void clearObjects(){
+		widgets.clear();
+	}
 	
-	final public void startDraw( Graphics g ) throws StandardError{
+	final public void startDraw( Graphics g ) throws StandardError, SimulatorError{
 		for( Widget o : widgets ){
 			g.translate( o.getX(), o.getY() );
 		//TODO: clip appears to use absolute coordinates
@@ -118,7 +122,7 @@ public class Widget {
 		}
 	}
 	
-	protected void draw( Graphics g ) throws StandardError{ }
+	protected void draw( Graphics g ) throws StandardError, SimulatorError{ }
 	
 	public void setSize( int newWidth, int newHeight ){
 		width = newWidth;
@@ -131,17 +135,17 @@ public class Widget {
 	}
 	
 	
-	protected boolean handleMouseClicked( int button, int x, int y ) throws StandardError{
+	protected boolean handleMouseClicked( int button, int x, int y ) throws StandardError, SimulatorError{
 		return false;
 	}
 	protected boolean handleMouseDragged( int oldX, int oldY, int newX, int newY ) throws StandardError{
 		return false;
 	}
-	protected boolean handleMouseReleased( int button, int x, int y ) throws StandardError{
+	protected boolean handleMouseReleased( int button, int x, int y ) throws StandardError, SimulatorError{
 		return false;
 	}
 	
-	final public boolean mouseClicked( int button, int x, int y ) throws StandardError{
+	final public boolean mouseClicked( int button, int x, int y ) throws StandardError, SimulatorError{
 		for( Widget o : widgets )
 			if( o.containsPoint( x, y ) ){
 				if( o.mouseClicked( button, x - o.getX(), y - o.getY() ) )
@@ -170,7 +174,7 @@ public class Widget {
 		return false;
 	}
 	
-	final public boolean mouseReleased( int button, int x, int y ) throws StandardError{
+	final public boolean mouseReleased( int button, int x, int y ) throws StandardError, SimulatorError{
 		for( Widget o : widgets ){
 			boolean handled = false;
 			if( o.mouseReleased( button, x - o.getX(), y - o.getY() ) )
