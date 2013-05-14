@@ -359,9 +359,6 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
   }
   
   public void foundUsedMember(String name, Boolean member, int line, int offset) throws ScopeError{
-    int breakit;
-    if (name.equals("nextTurn"))
-      breakit = 3;
     if (member){
       if (this.accessType == AccessType.THIS){
         //accept if visible in current type
@@ -371,7 +368,7 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
       }
       else if (this.accessType == AccessType.SUPER){
         //accept if visible in any super type of current type
-        if (this.lookInType.parent != null && constVisibleInType(name, this.currentType.parent))
+        if (this.currentType.parent != null && constVisibleInType(name, this.currentType.parent))
           return;
         throw new ScopeError("Member " + name + " used in type " + this.currentType.name + " does not exist in a super type of " + this.currentType.name, line, offset);
       }

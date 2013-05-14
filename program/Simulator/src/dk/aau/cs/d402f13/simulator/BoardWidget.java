@@ -291,6 +291,11 @@ public abstract class BoardWidget extends Widget {
     		return;
     	}
     	
+    	if( game.getGame().getActions().length == 0 ){
+    		showMessage( gameEnded, "No actions to do" );
+    		return;
+    	}
+    	
     	if( game.getGame().getPlayers()[0].equals( game.getGame().getCurrentPlayer() ) ){
     		removeObject( waitForPlayer );
     	}

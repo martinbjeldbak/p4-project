@@ -91,10 +91,12 @@ public class SimulatedGame extends BasicGame {
 	
 	private void handleStandardError( StandardError stdErr ){
 		showError( "Fatal fault in game", stdErr.getMessage() );
+		stdErr.printStackTrace();
 	}
 	
 	private void handleSimulatorError( SimulatorError stdErr ){
 		showError( "Fatal fault in simulator", stdErr.getMessage() );
+		stdErr.printStackTrace();
 	}
 	
 	@Override
