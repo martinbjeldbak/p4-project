@@ -11,10 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import dk.aau.cs.d402f13.evaluation.DFA;
 import dk.aau.cs.d402f13.evaluation.GridBoardPatternEvaluator;
-import dk.aau.cs.d402f13.evaluation.NFA;
-import dk.aau.cs.d402f13.evaluation.NFAState;
 import dk.aau.cs.d402f13.gal.wrappers.GameWrapper;
 import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
@@ -24,11 +21,9 @@ import dk.aau.cs.d402f13.scopechecker.ScopeChecker;
 import dk.aau.cs.d402f13.utilities.PrettyPrinter;
 import dk.aau.cs.d402f13.utilities.Token;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
-import dk.aau.cs.d402f13.utilities.ast.Visitor;
 import dk.aau.cs.d402f13.utilities.errors.Error;
 import dk.aau.cs.d402f13.utilities.errors.InternalError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
-import dk.aau.cs.d402f13.utilities.errors.SyntaxError;
 import dk.aau.cs.d402f13.values.*;
 
 public class Interactive {
