@@ -10,6 +10,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.util.ResourceLoader;
 
+import dk.aau.cs.d402f13.utilities.errors.SimulatorError;
+
 public class ResourceHelper {
 	private static Hashtable<String,Image> imgCache = new Hashtable<String,Image>();
 	private static Hashtable<String,TrueTypeFont> fontCache = new Hashtable<String,TrueTypeFont>();
@@ -19,26 +21,36 @@ public class ResourceHelper {
 	 * loads the image once.
 	 * @param path The file address of the Image
 	 * @return The loaded Image
-	 * @throws SlickException
+	 * @throws SimulatorError 
 	 */
-	public static Image getImage( String path ){
+	public static Image getImage( String path, String fallback ) throws SimulatorError{
 		if( imgCache.containsKey(path) ){
 			return imgCache.get( path );
 		}
 		else{
 			Image img;
 			try {
-				img = new Image( path );
-				imgCache.put(path, img);
+				try {
+					img = new Image( path );
+				} catch (java.lang.RuntimeException e){
+					//Image not found, use fall back
+					try {
+						img = new Image( fallback );
+					} catch (java.lang.RuntimeException e2) {
+						throw new SimulatorError( "Could not load fallback image: " + fallback );
+					}
+					path = fallback;
+				}
 			} catch (SlickException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				img = null;
+				throw new SimulatorError( "Could not load image: " + e.getMessage() );
 			}
+			imgCache.put(path, img);
 			return img;
 		}
-		//TODO: check if Image could not be loaded and recast exception
-		//TODO: default Images?
+	}
+	
+	public static Image getImage( String path ) throws SimulatorError{
+		return getImage( path, path );
 	}
 	
 	/**
@@ -46,10 +58,10 @@ public class ResourceHelper {
 	 * @param path The file address of the Image
 	 * @param scale The wanted scale of the Image
 	 * @return The scaled Image
-	 * @throws SlickException
+	 * @throws SimulatorError 
 	 */
-	public static Image getImageScaled( String path, float scale ){
-		Image unscaled = getImage( path );
+	public static Image getImageScaled( String path, String fallback, float scale ) throws  SimulatorError{
+		Image unscaled = getImage( path, fallback );
 
 		int width = (int)(unscaled.getWidth() * scale);
 		int height = (int)(unscaled.getHeight() * scale);
