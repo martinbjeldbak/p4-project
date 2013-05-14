@@ -29,7 +29,8 @@ public class GridBoardPatternEvaluator {
     createNFA(nfa, pattern);
     nfa.toDot("NFA.dot");
 
-    DFA dfa = new DFA(nfa);
+    NFAToDFAConverter converter = new NFAToDFAConverter();
+    DFA dfa = converter.ToDFA(nfa);
     dfa.toDot("DFA.dot");
 
 

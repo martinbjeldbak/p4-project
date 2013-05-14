@@ -9,14 +9,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
-public class NFA {
-  private State startState;
-  private ArrayList<State> states = new ArrayList<State>();
-  private ArrayList<State> acceptStates = new ArrayList<State>();
-  private ArrayList<Transition> transitions = new ArrayList<Transition>();
+public class NFA{
+  NFAState startState;
+  ArrayList<NFAState> states;
+  ArrayList<NFAState> acceptStates;
+  ArrayList<Transition> transitions;
   
-  private NFA(State startState, ArrayList<State> states, ArrayList<State> acceptStates, ArrayList<Transition> transitions){
+  public NFA(NFAState startState, ArrayList<NFAState> states, ArrayList<NFAState> acceptStates, ArrayList<Transition> transitions){
     this.startState = startState;
     this.states = states;
     this.acceptStates = acceptStates;
@@ -28,12 +31,17 @@ public class NFA {
    * state.
    */
   public NFA() {
-    State start = new State();
+    this.states = new ArrayList<NFAState>();
+    this.acceptStates = new ArrayList<NFAState>();
+    this.transitions = new ArrayList<Transition>();
+    
+    NFAState start = new NFAState();
 
     this.states.add(start);
     this.startState = start;
     this.acceptStates.add(start);
   }
+  
 
   /**
    * Creates a new NFA with the value given as parameter
@@ -41,8 +49,8 @@ public class NFA {
    * @param v the value to be added as an edge
    */
   public NFA(Value v) {
-    State start = new State();
-    State accept = new State();
+    NFAState start = new NFAState();
+    NFAState accept = new NFAState();
 
     this.states.add(start);
     this.states.add(accept);
@@ -58,8 +66,8 @@ public class NFA {
    * its accept states.
    */
   public void not(){
-    ArrayList<State> newAccept = new ArrayList<State>();
-    for (State s : this.states){
+    ArrayList<NFAState> newAccept = new ArrayList<NFAState>();
+    for (NFAState s : this.states){
       if (!this.acceptStates.contains(s))
         newAccept.add(s);
     }
@@ -71,7 +79,7 @@ public class NFA {
    * @param other the other NFA to be concatenated with
    */
   public void concat(NFA other) {
-    for(State s : this.acceptStates) {
+    for(NFAState s : this.acceptStates) {
       this.transitions.add(new Transition(s, other.startState, null));
     }
 
@@ -85,12 +93,12 @@ public class NFA {
    * accept state, and adds epsilon-transitions.
    */
   public void kleeneStar() {
-    State newStart = new State();
+    NFAState newStart = new NFAState();
     this.states.add(newStart);
 
     this.transitions.add(new Transition(newStart, this.startState, null));
 
-    for (State s : this.acceptStates)
+    for (NFAState s : this.acceptStates)
       this.transitions.add(new Transition(s, this.startState, null));
 
     this.startState = newStart;
@@ -102,12 +110,12 @@ public class NFA {
    * before accepting.
    */
   public void plus() {
-    State newStart = new State();
+    NFAState newStart = new NFAState();
     this.states.add(newStart);
 
     this.transitions.add(new Transition(newStart, this.startState, null));
 
-    for (State s : this.acceptStates)
+    for (NFAState s : this.acceptStates)
       this.transitions.add(new Transition(s, this.startState, null));
 
     this.startState = newStart;
@@ -120,7 +128,7 @@ public class NFA {
    * @param other the other NFA in the union
    */
   public void union(NFA other){
-    State newStart = new State();
+    NFAState newStart = new NFAState();
 
     this.transitions.add(new Transition(newStart, this.startState, null));
     this.transitions.add(new Transition(newStart, other.startState, null));
@@ -138,7 +146,7 @@ public class NFA {
    * adds epsilon edges to this NFA.
    */
   public void optional() {
-    State newState = new State();
+    NFAState newState = new NFAState();
 
     this.states.add(newState);
     this.transitions.add(new Transition(newState, this.startState, null));
@@ -146,13 +154,8 @@ public class NFA {
     this.acceptStates.add(newState);
     this.startState = newState;
   }
-
-  /**
-   * Outputs the NFA in dot-language format, where node 0
-   * is the start node.
-   * @param fileName the name given to the file representing this
-   *                 NFA
-   */
+  
+  
   public void toDot(String fileName) {
     Path file = createFile(fileName);
 
@@ -163,7 +166,7 @@ public class NFA {
       writeLine("  node[shape = circle];", writer);
 
       // Print out the label for each state
-      for(State s : this.states) {
+      for(NFAState s : this.states) {
         if(this.acceptStates.contains(s))
           writeLine("  " + s.hashCode() + label("" + s.getName()) + " [shape = doublecircle];", writer);
         else
@@ -215,4 +218,6 @@ public class NFA {
   private String label(String label) {
     return " [label=\"" + label + "\"]";
   }
+
+
 }
