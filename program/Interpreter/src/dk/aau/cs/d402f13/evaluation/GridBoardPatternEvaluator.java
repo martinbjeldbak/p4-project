@@ -23,7 +23,7 @@ public class GridBoardPatternEvaluator {
   public boolean evaluate() {
     //OldNFA nfa = createOldNFA(OldNFA.e(), pattern);
     //nfa.toDot();
-
+    NFAState.resetNaming();
     NFA nfa = new NFA();
 
     createNFA(nfa, pattern);
