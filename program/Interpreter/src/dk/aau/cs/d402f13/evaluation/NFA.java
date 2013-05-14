@@ -9,47 +9,36 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
-public class NFA {
-  private State startState;
-  private ArrayList<State> states = new ArrayList<State>();
-  private ArrayList<State> acceptStates = new ArrayList<State>();
-  private ArrayList<Transition> transitions = new ArrayList<Transition>();
+public class NFA{
+  NFAState startState;
+  ArrayList<NFAState> states =  new ArrayList<NFAState>();
+  ArrayList<NFAState> acceptStates =  new ArrayList<NFAState>();
+  ArrayList<Transition> transitions  = new ArrayList<Transition>();
   
-  private NFA(State startState, ArrayList<State> states, ArrayList<State> acceptStates, ArrayList<Transition> transitions){
-    this.startState = startState;
-    this.states = states;
-    this.acceptStates = acceptStates;
-    this.transitions = transitions;
-  }
-
+  /**
+   * Creates an empty NFA with a start and accepting
+   * state.
+   */
   public NFA() {
-    /*
-    // Should be like on page 6 where R = Ø
-    //http://courses.engr.illinois.edu/cs373/sp2009/lectures/lect_06.pdf
-
-    State state = new State();
-
-    this.startState = state;
-    this.states.add(state);
-    this.transitions.add(new Transition(null, state, null));
-    */
-
-    State start = new State();
-    State accept = new State();
-
+    NFAState start = new NFAState();
     this.states.add(start);
-    this.states.add(accept);
-
     this.startState = start;
-    this.acceptStates.add(accept);
-
-    this.transitions.add(new Transition(start, accept, null));
+    this.acceptStates.add(start);
   }
+  
 
+  /**
+   * Creates a new NFA with the value given as parameter
+   * as an edge.
+   * @param v the value to be added as an edge
+   */
   public NFA(Value v) {
-    State start = new State();
-    State accept = new State();
+    NFAState start = new NFAState();
+    NFAState accept = new NFAState();
 
     this.states.add(start);
     this.states.add(accept);
@@ -65,8 +54,8 @@ public class NFA {
    * its accept states.
    */
   public void not(){
-    ArrayList<State> newAccept = new ArrayList<State>();
-    for (State s : this.states){
+    ArrayList<NFAState> newAccept = new ArrayList<NFAState>();
+    for (NFAState s : this.states){
       if (!this.acceptStates.contains(s))
         newAccept.add(s);
     }
@@ -78,7 +67,7 @@ public class NFA {
    * @param other the other NFA to be concatenated with
    */
   public void concat(NFA other) {
-    for(State s : this.acceptStates) {
+    for(NFAState s : this.acceptStates) {
       this.transitions.add(new Transition(s, other.startState, null));
     }
 
@@ -92,12 +81,12 @@ public class NFA {
    * accept state, and adds epsilon-transitions.
    */
   public void kleeneStar() {
-    State newStart = new State();
+    NFAState newStart = new NFAState();
     this.states.add(newStart);
 
     this.transitions.add(new Transition(newStart, this.startState, null));
 
-    for (State s : this.acceptStates)
+    for (NFAState s : this.acceptStates)
       this.transitions.add(new Transition(s, this.startState, null));
 
     this.startState = newStart;
@@ -109,25 +98,25 @@ public class NFA {
    * before accepting.
    */
   public void plus() {
-    State newStart = new State();
+    NFAState newStart = new NFAState();
     this.states.add(newStart);
 
     this.transitions.add(new Transition(newStart, this.startState, null));
 
-    for (State s : this.acceptStates)
+    for (NFAState s : this.acceptStates)
       this.transitions.add(new Transition(s, this.startState, null));
 
     this.startState = newStart;
   }
 
   /**
-   * The union/or operation. Adds a new start state and creates epsilon
+   * The union/or ('|') operation. Adds a new start state and creates epsilon
    * transitions from that start state to the current NFA and the NFA
    * supplied as parameter.
    * @param other the other NFA in the union
    */
   public void union(NFA other){
-    State newStart = new State();
+    NFAState newStart = new NFAState();
 
     this.transitions.add(new Transition(newStart, this.startState, null));
     this.transitions.add(new Transition(newStart, other.startState, null));
@@ -140,8 +129,12 @@ public class NFA {
     this.startState = newStart;
   }
 
+  /**
+   * The zero-to-one ('?') operation. Adds a new accepting start state and
+   * adds epsilon edges to this NFA.
+   */
   public void optional() {
-    State newState = new State();
+    NFAState newState = new NFAState();
 
     this.states.add(newState);
     this.transitions.add(new Transition(newState, this.startState, null));
@@ -149,9 +142,10 @@ public class NFA {
     this.acceptStates.add(newState);
     this.startState = newState;
   }
-
-  public void toDot() {
-    Path file = createFile("NFA.dot");
+  
+  
+  public void toDot(String fileName) {
+    Path file = createFile(fileName);
 
     try(BufferedWriter writer = Files.newBufferedWriter(file, Charset.defaultCharset())) {
       writeLine("digraph NFA {", writer);
@@ -160,18 +154,16 @@ public class NFA {
       writeLine("  node[shape = circle];", writer);
 
       // Print out the label for each state
-      for(int i = 0; i < this.states.size(); i++) {
-        State s = this.states.get(i);
-
+      for(NFAState s : this.states) {
         if(this.acceptStates.contains(s))
-          writeLine("  " + s.hashCode() + label("" + i) + " [shape = doublecircle]" + ";" , writer);
+          writeLine("  " + s.hashCode() + label(s.getName()) + " [shape = doublecircle];", writer);
         else
-          writeLine("  " + s.hashCode() + label("" + i) + ";", writer);
+          writeLine("  " + s.hashCode() + label(s.getName()) + ";", writer);
       }
 
       writeLine("", writer);
 
-      // For every transition
+      // For every edge
       for(Transition tra : this.transitions) {
         State from = tra.from;
         State to = tra.to;
@@ -214,4 +206,6 @@ public class NFA {
   private String label(String label) {
     return " [label=\"" + label + "\"]";
   }
+
+
 }

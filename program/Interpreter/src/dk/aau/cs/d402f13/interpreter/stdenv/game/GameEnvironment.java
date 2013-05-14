@@ -504,6 +504,9 @@ public class GameEnvironment extends StandardEnvironment {
         int y = pos.getY();
         int width = object.getMemberInt("width");
         int height = object.getMemberInt("height");
+        if (x < 1 || x > width || y < 1 || y > height) {
+          throw new ArgumentError("Coordinate out of bounds");
+        }
         int size = width * height;
         Value[] squares = object.getMemberList("squares", square, size);
         int i = (y - 1) * width + (x - 1);
@@ -552,6 +555,9 @@ public class GameEnvironment extends StandardEnvironment {
         int y = pos.getY();
         int width = object.getMemberInt("width");
         int height = object.getMemberInt("height");
+        if (x < 1 || x > width || y < 1 || y > height) {
+          throw new ArgumentError("Coordinate out of bounds");
+        }
         int size = width * height;
         Value[] squares = object.getMemberList("squares", square, size);
         Value[] newList = new Value[size];
@@ -606,6 +612,9 @@ public class GameEnvironment extends StandardEnvironment {
         int y = pos.getY();
         int width = object.getMemberInt("width");
         int height = object.getMemberInt("height");
+        if (x < 1 || x > width || y < 1 || y > height) {
+          throw new ArgumentError("Coordinate out of bounds");
+        }
         int size = width * height;
         Value[] squares = object.getMemberList("squares", square, size);
         Value[] newList = new Value[size];
@@ -652,6 +661,12 @@ public class GameEnvironment extends StandardEnvironment {
         int y2 = pos2.getY();
         int width = object.getMemberInt("width");
         int height = object.getMemberInt("height");
+        if (x1 < 1 || x1 > width || y1 < 1 || y1 > height) {
+          throw new ArgumentError("Coordinate out of bounds");
+        }
+        if (x2 < 1 || x2 > width || y2 < 1 || y2 > height) {
+          throw new ArgumentError("Coordinate out of bounds");
+        }
         int size = width * height;
         Value[] squares = object.getMemberList("squares", square, size);
         Value[] newList = new Value[size];
