@@ -1,0 +1,31 @@
+
+\begin{figure}[ht]
+  \begin{center}
+    \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]      
+      \node [square] (a) {Compiler $1$};
+      \node [square,xshift=8em] (b) {Compiler $2$};
+      \node [square,xshift=16em] (c) {Compiler $m$};
+
+      \node [ellipse,draw,xshift=8em,yshift=-4em] (il) {Intermediate language};
+      
+      \node [square,yshift=-8em] (aa) {Platform $1$};
+      \node [square,xshift=8em,yshift=-8em] (bb) {Platform $2$};
+      \node [square,xshift=16em,yshift=-8em] (cc) {Platform $n$};
+
+      \draw[->, thick,] (a) -- (il);
+      \draw[->, thick,] (b) -- (il);
+      \draw[->, thick,] (c) -- (il);
+      
+      \draw[->, thick,] (il) -- (aa);
+      \draw[->, thick,] (il) -- (bb);
+      \draw[->, thick,] (il) -- (cc);
+      
+      \path (b)--(c) node [midway] {$\cdots$};
+      \path (bb)--(cc) node [midway] {$\cdots$};
+    \end{tikzpicture}
+  \end{center}
+  \capt{Compile to intermediate language, and then translate further from the
+    intermediate language to a specific platform.}
+  \label{fig:mtimesn}
+\end{figure}
+
