@@ -2,6 +2,8 @@ package dk.aau.cs.d402f13.simulator;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
@@ -16,10 +18,13 @@ import org.newdawn.slick.geom.Shape;
 import dk.aau.cs.d402f13.gal.GameAbstractionLayer;
 import dk.aau.cs.d402f13.helpers.ResourceHelper;
 import dk.aau.cs.d402f13.utilities.errors.Error;
+import dk.aau.cs.d402f13.utilities.errors.SimulatorError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.gameapi.Action;
 import dk.aau.cs.d402f13.utilities.gameapi.Game;
 import dk.aau.cs.d402f13.utilities.gameapi.GridBoard;
+import dk.aau.cs.d402f13.widgets.CenterContainer;
+import dk.aau.cs.d402f13.widgets.Message;
 import dk.aau.cs.d402f13.widgets.ScaleContainer;
 
 public class SimulatedGame extends BasicGame {
@@ -27,54 +32,70 @@ public class SimulatedGame extends BasicGame {
 	ScaleContainer sceneHandler = null;
 	GridBoardWidget board = null;
 	GameInfoWidget sidebar = null;
+	GameAbstractionLayer gal;
 	Game game;
+	String gameFolder;
 	
 	
 	public SimulatedGame( String path ) throws CloneNotSupportedException{
 		super( "Junta Simulator" );
+		sceneHandler = new ScaleContainer( false );
 		
-		GameAbstractionLayer gal;
 		try {
-			FileInputStream fis = new FileInputStream( path );
-			gal = new GameAbstractionLayer( fis );
+			gal = new GameAbstractionLayer( new FileInputStream( path ) );
 			game = gal.getGame();
-			if( game == null )
-				System.out.println( "fsdjafkldsjaklf" );
 		} catch (Error e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			handleSimulatorError( new SimulatorError( e.getMessage() ) );
 		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			String errorMsg = "Could not find game file: " + path;
+			handleSimulatorError( new SimulatorError( errorMsg ) );
 		}
 		
-		try{
-			Object obj = game.getBoard();
-		//	if( obj instanceof GridBoard )
+		//
+		Path filePath = Paths.get( path );
+		gameFolder = filePath.getParent().toString() + "/";
+		System.out.println( gameFolder );
+		
+		if( game != null ){
+			try{
+				Object obj = game.getBoard();
 				board = new GridBoardWidget( this, (GridBoard)obj );
-	//		else
-				; //TODO:
-			
-			sidebar = new GameInfoWidget( this );
-			
-			sceneHandler = new ScaleContainer( false );
-			if( board != null )
-				sceneHandler.addObject( board );
-			sceneHandler.addObject( sidebar );
-		}
-		catch( StandardError err ){
-			handleStandardError( err );
+				
+				sidebar = new GameInfoWidget( this );
+				
+				if( board != null )
+					sceneHandler.addObject( board );
+				sceneHandler.addObject( sidebar );
+			}
+			catch( StandardError err ){
+				handleStandardError( err );
+			}
 		}
 	}
+	
+	public String getGameFolder(){ return gameFolder; }
 	
 	public Game getGame(){ return game; }
 	public void applyAction( Action a ) throws StandardError{
 		game = game.applyAction( a );
 	}
 	
+	private void showError( String title, String error ){
+		//Clear objects, as they might be the culprit
+		sceneHandler.clearObjects();
+		
+		sceneHandler.addObject(
+				new CenterContainer( new Message( title, error, 0,0, 335,318 ) )
+			); //TODO: awfully off-center
+	}
+	
 	private void handleStandardError( StandardError stdErr ){
-		//TODO:
-		System.out.println( "StandardError thrown, but not handled : \\" );
+		showError( "Fatal fault in game", stdErr.getMessage() );
+		stdErr.printStackTrace();
+	}
+	
+	private void handleSimulatorError( SimulatorError stdErr ){
+		showError( "Fatal fault in simulator", stdErr.getMessage() );
 		stdErr.printStackTrace();
 	}
 	
@@ -85,7 +106,11 @@ public class SimulatedGame extends BasicGame {
 		//Fill background
 		g.setColor( Color.white );
 		Shape shape = new Rectangle( 0,0, gc.getWidth(), gc.getHeight() );
-		g.texture( shape, ResourceHelper.getImage( "img/wood.png" ) );
+		try {
+			g.texture( shape, ResourceHelper.getImage( "img/wood.png" ) );
+		} catch (SimulatorError e) {
+			handleSimulatorError( e );
+		}
 		
 		try{
 			//Draw board
@@ -93,6 +118,8 @@ public class SimulatedGame extends BasicGame {
 		}
 		catch( StandardError err ){
 			handleStandardError( err );
+		} catch (SimulatorError e) {
+			handleSimulatorError( e );
 		}
 	}
 	
@@ -103,6 +130,8 @@ public class SimulatedGame extends BasicGame {
 		}
 		catch( StandardError err ){
 			handleStandardError( err );
+		} catch (SimulatorError e) {
+			handleSimulatorError( e );
 		}
     }
 	
@@ -122,15 +151,19 @@ public class SimulatedGame extends BasicGame {
 		}
 		catch( StandardError err ){
 			handleStandardError( err );
+		} catch (SimulatorError e) {
+			handleSimulatorError( e );
 		}
 	}
 	
 	@Override
 	public String getTitle(){
-		try {
-			return "Junta Simulator - " + game.getTitle();
-		} catch (StandardError e) {
-			handleStandardError( e );
+		if( game != null ){
+			try {
+				return "Junta Simulator - " + game.getTitle();
+			} catch (StandardError e) {
+				handleStandardError( e );
+			}
 		}
 		return "Junta Simulator";
 	}
@@ -156,6 +189,10 @@ public class SimulatedGame extends BasicGame {
 	}
 
 	@Override
-	public void update( GameContainer arg0, int arg1 ) throws SlickException { }
+	public void update( GameContainer gc, int arg1 ) throws SlickException { }
+
+	public void restartGame() throws StandardError {
+		game = gal.getGame();
+	}
 }
 
