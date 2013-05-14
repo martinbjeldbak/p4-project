@@ -9,6 +9,7 @@ import org.newdawn.slick.Image;
 
 import dk.aau.cs.d402f13.helpers.ActionHelper;
 import dk.aau.cs.d402f13.helpers.ResourceHelper;
+import dk.aau.cs.d402f13.utilities.errors.SimulatorError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.gameapi.Action;
 import dk.aau.cs.d402f13.utilities.gameapi.Game;
@@ -36,13 +37,13 @@ public class GameInfoWidget extends ScaleContainer {
 		this.game = game;
 		
 		//Add the objects, while keeping references to them
-		addObject( title = new Label( "gtw", 32, game.getGame().getTitle() ) );
+		addObject( title = new Label( "gtw", 26, game.getGame().getTitle() ) );
 		addObject( player = new Label( "gtw", 16, "Player" ) );
 		addObject( historyList = new ScrollContainer() );
 	}
 	
 	@Override
-	public void draw( Graphics g ) throws StandardError{
+	public void draw( Graphics g ) throws StandardError, SimulatorError{
 		Game game = this.game.getGame();
 		//Draw side bar
 		Image side = ResourceHelper.getImage( "img/book.png" );
@@ -53,7 +54,6 @@ public class GameInfoWidget extends ScaleContainer {
 
 		//Display Action history
 		List<String> historyLines = new ArrayList<String>();
-		//TODO: wait on it being added to the interface again
 		for( Action a : game.getHistory() )
 			historyLines.add( ActionHelper.humanReadable( game, a ) );
 		historyList.setLines( historyLines );
