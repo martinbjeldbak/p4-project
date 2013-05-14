@@ -1,2 +1,35 @@
 \subsection{Compile to intermediate language, then translate further}
 \label{sec:compiletointermediate}
+
+In this project we decided to implement an interpreter for our programming
+language. This decision was made on the basis of our analysis chapter
+(\chapref{chap:analysis}) where we could conclude that this would be the optimal
+approach for \productname{}, but it is possible to develop a compiler instead. In
+this section we will explain what we should have done differently in terms of
+the translation method. In \secref{sec:codegenerationandinterpretation} in the
+analysis chapter we have analysed and discussed the differences between these
+translation methods. Furthermore, in \secref{sec:intermediatelanguage} we
+describe what an intermediate language is.
+
+One can compile to an intermediate language such as Java bytecode and the
+compiled code can be run on every machine that supports Java, which is very
+useful because the programmer whom is developing a compiler for the specific
+language does not have to construct a compiler for every platform; just one for
+Jave bytecode and then translate further to the platform. This way the
+programmer must only construct $m+n$ compilers. If one does not compile to an
+intermediate language, then the programmer must construct a compiler for each
+specific platform, which will be a lengthy process. If you have $m$ compilers
+and $n$ platforms, then the programmer must construct $m*n$ compilers to be able
+to compile to every platform.  Compiling to an intermediate language and then
+further translating is illustrated in \figref{fig:mtimesn}.
+
+\input{figures/compiletointermediate}
+
+\subsubsection{What should have been done differently?}
+
+In \secref{sec:compilation} we introduced and explained the phases in the
+process of compilation, and with \figref{fig:compileroverview} we visualised
+these phases. A compiler must also begin with scanner and a parser to get a
+stream of tokens and an abstract syntax tree. These steps are the same as we
+have described in \chapref{chap:implementation}. Furthermore, the step where we
+check the different scopes
