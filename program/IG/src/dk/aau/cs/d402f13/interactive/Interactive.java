@@ -14,7 +14,7 @@ import java.util.Map.Entry;
 import dk.aau.cs.d402f13.evaluation.DFA;
 import dk.aau.cs.d402f13.evaluation.GridBoardPatternEvaluator;
 import dk.aau.cs.d402f13.evaluation.NFA;
-import dk.aau.cs.d402f13.evaluation.State;
+import dk.aau.cs.d402f13.evaluation.NFAState;
 import dk.aau.cs.d402f13.gal.wrappers.GameWrapper;
 import dk.aau.cs.d402f13.interpreter.Interpreter;
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
