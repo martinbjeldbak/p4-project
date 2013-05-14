@@ -2,8 +2,8 @@ package dk.aau.cs.d402f13.simulator;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
 
+import dk.aau.cs.d402f13.utilities.errors.SimulatorError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.gameapi.GridBoard;
 import dk.aau.cs.d402f13.utilities.gameapi.Piece;
@@ -15,15 +15,18 @@ public class GridBoardWidget extends BoardWidget {
 	private int offsetX = 0;
 	private int offsetY = 0; 
 	
-	private int invertY( int y ) throws StandardError{
+	private int invertY( int y ) throws StandardError, SimulatorError{
 		return board().getHeight() - y - 1;
 	}
 	
 	public GridBoardWidget( SimulatedGame game, GridBoard b ) {
 		super( game );
 	}
-	public GridBoard board() throws StandardError{
-		return (GridBoard)game.getGame().getBoard();
+	public GridBoard board() throws StandardError, SimulatorError{
+		Board b = game.getGame().getBoard();
+		if( !(b instanceof GridBoard) )
+			throw new SimulatorError( "Not a GridBoard as expected!" );
+		return (GridBoard)b;
 		//TODO: check?
 	}
 
@@ -44,11 +47,11 @@ public class GridBoardWidget extends BoardWidget {
 	 * @param offsetX Horizontal offset of Board
 	 * @param offsetY Vertical offset of Board
 	 * @throws StandardError 
-	 * @throws SlickException
+	 * @throws SimulatorError 
 	 */
 	protected void renderPieceLocal( Graphics g, Piece p
 			,	int x, int y, int size, int offsetX, int offsetY
-			) throws StandardError{
+			) throws StandardError, SimulatorError{
 		renderPiece( g, p, (x-1) * size, invertY(y-1) * size, size, offsetX, offsetY );
 	}
 	
@@ -58,9 +61,9 @@ public class GridBoardWidget extends BoardWidget {
 	 * @param width Available width
 	 * @param height Available height
 	 * @throws StandardError 
-	 * @throws SlickException
+	 * @throws SimulatorError 
 	 */
-	public void drawBoard( Graphics g, int width, int height ) throws StandardError{
+	public void drawBoard( Graphics g, int width, int height ) throws StandardError, SimulatorError{
 		int numSquaresX = board().getWidth();
 		int numSquaresY = board().getHeight();
 		int size_x = (int) ((width) / (numSquaresX + 2.25));
@@ -105,11 +108,20 @@ public class GridBoardWidget extends BoardWidget {
 	}
 
 	@Override
-	public Square findSquare(int x, int y) throws StandardError {
-		int posX = (x - offsetX) / size;
-		int posY = (y - offsetY) / size;
-		System.out.println( "findSquare: " + posX + "x" + posY );
-		return board().getSquareAt( posX + 1, invertY(posY) + 1 );
+	public Square findSquare(int x, int y) throws StandardError, SimulatorError {
+		//We want to always run downwards, however -1/2 rounds up to 0.
+		//So we convert to floating-point division and use floor()
+		int posX = (int) Math.floor( (x - offsetX) / (double)size );
+		int posY = (int) Math.floor( (y - offsetY) / (double)size );
+		
+		if( posX >= 0
+			&&	posY >= 0
+			&&	posX < board().getWidth()
+			&&	posY < board().getHeight()
+			)
+			return board().getSquareAt( posX + 1, invertY(posY) + 1 );
+		
+		return null;
 	}
 	
 	@Override
@@ -119,7 +131,7 @@ public class GridBoardWidget extends BoardWidget {
 	}
 
 	@Override
-	public void draw(Graphics g) throws StandardError {
+	public void draw(Graphics g) throws StandardError, SimulatorError {
 		drawBoard( g, getWidth(), getHeight() );
 	}
 
