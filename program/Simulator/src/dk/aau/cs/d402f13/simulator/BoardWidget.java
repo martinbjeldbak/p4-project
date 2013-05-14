@@ -7,16 +7,17 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
 
 
 import dk.aau.cs.d402f13.helpers.ActionHelper;
 import dk.aau.cs.d402f13.helpers.ResourceHelper;
+import dk.aau.cs.d402f13.utilities.errors.SimulatorError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.gameapi.Action;
 import dk.aau.cs.d402f13.utilities.gameapi.AddAction;
 import dk.aau.cs.d402f13.utilities.gameapi.MoveAction;
 import dk.aau.cs.d402f13.utilities.gameapi.Piece;
+import dk.aau.cs.d402f13.utilities.gameapi.Player;
 import dk.aau.cs.d402f13.utilities.gameapi.Square;
 import dk.aau.cs.d402f13.utilities.gameapi.Board;
 import dk.aau.cs.d402f13.widgets.Message;
@@ -37,8 +38,9 @@ public abstract class BoardWidget extends Widget {
 	protected Piece dragged = null;
 	protected int dragOffsetX = 0;
 	protected int dragOffsetY = 0;
-	
+
 	private Message waitForPlayer = null;
+	private Message gameEnded = null;
 	private ActionSelector actionSelector = null;
 	
 	
@@ -52,8 +54,10 @@ public abstract class BoardWidget extends Widget {
 		this.game = game;
 		actionSelector = new ActionAi( game );
 		
-	//	addObject( new Message( "test", "test2", 0,0, width, height ));
+		gameEnded = new Message( "Game over", "", 0,0, getWidth(), getHeight() );
 		waitForPlayer = new Message( "Please wait...", "Opponent ponders over his move", 0,0, getWidth(), getHeight() );
+		
+		gameEnded.startListening( this );
 		waitForPlayer.startListening( this );
 	}
 	
@@ -62,21 +66,29 @@ public abstract class BoardWidget extends Widget {
 		addObject( msg );
 	}
 	
+	public void showMessage( Message m, String text ){
+		m.setSize( getWidth(), getHeight() );
+		m.setText( text );
+		addObject( m );
+	}
+	
 	/**
 	 * Find the Square at the current position in graphic coordinates.
 	 * @param x Horizontal absolute coordinate
 	 * @param y Vertical absolute coordinate
 	 * @return The Square on the specified position, or null if none
 	 * @throws StandardError 
+	 * @throws SimulatorError 
 	 */
-	public abstract Square findSquare(int x, int y) throws StandardError;
+	public abstract Square findSquare(int x, int y) throws StandardError, SimulatorError;
 	
 	/**
 	 * Finds the square the dragged piece currently hovers on.
 	 * @return The square found
 	 * @throws StandardError 
+	 * @throws SimulatorError 
 	 */
-	protected Square hoversOn() throws StandardError{
+	protected Square hoversOn() throws StandardError, SimulatorError{
 		if( dragged == null )
 			return null;
 		return findSquare( dragStartX + dragOffsetX, dragStartY + dragOffsetY );
@@ -100,17 +112,13 @@ public abstract class BoardWidget extends Widget {
 	 * @param y Vertical position of the click
 	 * @return 
 	 * @throws StandardError 
+	 * @throws SimulatorError 
 	 */
 	@Override
-	protected boolean handleMouseClicked( int button, int x, int y ) throws StandardError{
+	protected boolean handleMouseClicked( int button, int x, int y ) throws StandardError, SimulatorError{
         if( button == Input.MOUSE_LEFT_BUTTON ){
 	    	Square s = findSquare(x, y);
 	    	Action[] actions = game.getGame().getActions();
-	    	System.out.println( "Amount of actions: " + actions.length );
-	    	for( Action a : actions ){
-	    		System.out.println( "\t" + ActionHelper.humanReadable(game.getGame(), a));
-	    	}
-	    	System.out.println( "Square: " + s.getX() + "x" + s.getY() );
 	    	
 	    	if( selected != null && squareIsHinted( s ) ){
 	    		//We already have selected a piece, and we are trying to
@@ -179,10 +187,8 @@ public abstract class BoardWidget extends Widget {
 		        			hintSquares.add( s );
 		        		
 	        			AddAction aa = ActionHelper.isAddAction( a, s );
-	        			if( aa != null ){
+	        			if( aa != null )
 	        				hintSquares.add( s );
-	        				System.out.println("found add");
-	        			}
 		        	}
 		        	
 		        	//Select square if actions are possible
@@ -216,9 +222,10 @@ public abstract class BoardWidget extends Widget {
 	 * @param x Horizontal position of mouse pointer
 	 * @param y Vertical position of mouse pointer
 	 * @throws StandardError 
+	 * @throws SimulatorError 
 	 */
 	@Override
-	public boolean handleMouseReleased( int button, int x, int y ) throws StandardError{
+	public boolean handleMouseReleased( int button, int x, int y ) throws StandardError, SimulatorError{
 		if( button == Input.MOUSE_LEFT_BUTTON ){
 			if( dragged != null ){
 				Square end = findSquare( dragStartX + dragOffsetX, dragStartY + dragOffsetY );
@@ -263,9 +270,26 @@ public abstract class BoardWidget extends Widget {
 		}
 		
 		//Apply the action and remove hints
+		Player previous = game.getGame().getCurrentPlayer();
 		game.applyAction( actions.get(0) );
     	selected = null;
     	hintSquares.clear();
+    	
+    	//Check for winCondition
+    	//TODO: make sure waitForPlayer is not shown?
+    	Player current = game.getGame().getCurrentPlayer();
+    	if( previous.winCondition( game.getGame() ) ){
+    		showMessage( gameEnded, previous.getName() + " won" );
+    		return;
+    	}
+    	else if( current.winCondition( game.getGame() ) ){
+    		showMessage( gameEnded, current.getName() + " won" );
+    		return;
+    	}
+    	else if( current.tieCondition( game.getGame() ) ){
+    		showMessage( gameEnded, "It's a draw" );
+    		return;
+    	}
     	
     	if( game.getGame().getPlayers()[0].equals( game.getGame().getCurrentPlayer() ) ){
     		removeObject( waitForPlayer );
@@ -295,10 +319,13 @@ public abstract class BoardWidget extends Widget {
 	 * @param offsetX Horizontal offset of board
 	 * @param offsetY Vertical offset of board
 	 * @throws StandardError 
-	 * @throws SlickException
+	 * @throws SimulatorError 
 	 */
-	protected void renderPiece( Graphics g, Piece p, int x, int y, int size, int offsetX, int offsetY) throws StandardError{
-		Image img = ResourceHelper.getImage( p.getImage() );
+	protected void renderPiece( Graphics g, Piece p, int x, int y, int size, int offsetX, int offsetY) throws StandardError, SimulatorError{
+		String imgPath = game.getGameFolder() + p.getImage();
+		String imgFallback = "img/defaultPiece.png";
+		
+		Image img = ResourceHelper.getImage( imgPath, imgFallback );
 		int imgMax = Math.max( img.getHeight(), img.getWidth() );
 		
 		int borderSize = (int) (size * 0.05);
@@ -307,7 +334,7 @@ public abstract class BoardWidget extends Widget {
 		int imgYOffset = (int) ((imgMax - img.getHeight() ) * scale / 2);
 		int imgXOffset = (int) ((imgMax - img.getWidth() ) * scale / 2);
 		
-		img = ResourceHelper.getImageScaled( p.getImage(), scale );
+		img = ResourceHelper.getImageScaled( imgPath, imgFallback, scale );
 
 		img.draw( x + imgXOffset + offsetX + borderSize, y + imgYOffset + offsetY + borderSize );
 	}
@@ -320,15 +347,17 @@ public abstract class BoardWidget extends Widget {
 	 * @param posY Vertical position in pixels
 	 * @param size Size of Square
 	 * @throws StandardError 
-	 * @throws SlickException
+	 * @throws SimulatorError 
 	 */
-	protected void renderSquare( Graphics g, Square s, int posX, int posY, int size ) throws StandardError{
+	protected void renderSquare( Graphics g, Square s, int posX, int posY, int size ) throws StandardError, SimulatorError{
+		String imgPath = game.getGameFolder() + s.getImage();
+		String imgFallback = "img/defaultSquare.png";
 		Square hover = hoversOn();
 		
 		//Draw background for square
-		Image img = ResourceHelper.getImage( s.getImage() );
+		Image img = ResourceHelper.getImage( imgPath, imgFallback );
 		int imgMax = Math.max(img.getWidth(), img.getHeight());
-		img = ResourceHelper.getImageScaled( s.getImage(), (float)size /(float) imgMax );
+		img = ResourceHelper.getImageScaled( imgPath, imgFallback, (float)size /(float) imgMax );
 		img.draw( posX, posY );
 		
 		if( s == selected ){
@@ -354,6 +383,8 @@ public abstract class BoardWidget extends Widget {
 	@Override
 	public void acceptEvent( Widget obj, Event event ) throws StandardError{
 		if( event == Event.ACCEPT ){
+			if( obj == gameEnded )
+				game.restartGame();
 			removeObject( obj );
 		}
 		else if( event == Event.MOVE_GENERATED ){
