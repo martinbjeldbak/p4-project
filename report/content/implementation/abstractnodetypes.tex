@@ -13,7 +13,7 @@ to make this clear to the reader. Then we present a few examples of our abstract
 node types. We do not present all the ANTs in this section because they are very
 similar to each other. The rest of the ANTs are in \apref{ap:ant}.
 
-\subsection{Difference between an AST and a parse tree}
+\subsection{Difference between an abstract syntax tree and a parse tree}
 When a piece of code is parsed by a parser that understands the specific programming 
 language, the output of the parser will be an AST which consists of the abstract node 
 types of each program part. The difference between an AST and a parse tree is that a 
@@ -21,7 +21,7 @@ parse tree contains every detail of the input code. A parse tree includes for in
 the parentheses and keywords where an AST does not contain anything other than the 
 abstract node types.\cite{parsevsast}
 
-\subsection{The ANT for program}
+\subsection{The abstract node type for program}
 Every program written in \productname{} begins with an ANT which 
 we call ``program'' that consists of either zero, one, or more definitions. The 
 production for this rule was presented in \secref{sec:grammar}.
@@ -45,7 +45,7 @@ have more of these nodes following each other.
 
 This means that a program is legal if it does not contain anything at all.
 
-\subsection{ANT for operations with precedence and negation}
+\subsection{Abstract node type for operations with precedence and negation}
 In this section we introduce the five different groupings of operations such as
 logical operators, equality operators, etc., and finally we present the
 production called negation. We illustrate the five groupings of operators but we
@@ -107,7 +107,7 @@ in \secref{sec:grammar}.
 This production is not illustrated with any ANT because it is simply one root
 with one child.
 
-\subsection{ANT for assignment}
+\subsection{Abstract node type for assignment}
 The production for the assignment expression was presented in
 \secref{sec:grammar}.
 
