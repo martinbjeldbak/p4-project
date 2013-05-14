@@ -7,9 +7,6 @@ package dk.aau.cs.d402f13.evaluation;
  * (State from, State to, Value val)
  * and be used by both NFA's and DFA's
  */
-public class State {
-  String name;
-  public String getName(){
-    return this.name;
-  }
+public abstract class State {
+  public abstract String getName();
 }
