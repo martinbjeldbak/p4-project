@@ -27,11 +27,22 @@ public class GridBoardPatternEvaluator {
     NFA nfa = new NFA();
 
     createNFA(nfa, pattern);
-    nfa.toDot();
+    nfa.toDot("NFA.dot");
+
+    NFAToDFAConverter converter = new NFAToDFAConverter();
+    DFA dfa = converter.ToDFA(nfa);
+    dfa.toDot("DFA.dot");
+
 
     return false;
   }
 
+  /**
+   * Updates the NFA supplied as parameter with the value
+   * also supplied as parameter.
+   * @param n the NFA to be updated
+   * @param v the value to be added to the NFA
+   */
   private void createNFA(NFA n, Value v) {
     if(v instanceof PatternKeyValue) {
       PatternKeyValue val = (PatternKeyValue)v;
@@ -97,44 +108,5 @@ public class GridBoardPatternEvaluator {
     }
     else
       n.concat(new NFA(v));
-  }
-
-  private OldNFA createOldNFA(OldNFA nfa, Value v) {
-
-    if(v instanceof PatternOrValue) {
-      Value left = ((PatternOrValue) v).getLeft();
-      Value right = ((PatternOrValue) v).getRight();
-
-      return OldNFA.union(createOldNFA(nfa, left), createOldNFA(nfa, right));
-    }
-    else if(v instanceof PatternMultValue) {
-      return OldNFA.kleeneStar(createOldNFA(nfa, ((PatternMultValue) v).getValue()));
-    }
-    else if(v instanceof PatternPlusValue) {
-      return OldNFA.plus(createOldNFA(nfa, ((PatternPlusValue) v).getValue()));
-    }
-    else if(v instanceof PatternKeyValue) {
-      return OldNFA.v(v);
-    }
-    else if(v instanceof PatternNotValue) {
-      // TODO
-    }
-    else if(v instanceof PatternOptValue) {
-      // TODO
-    }
-    else if(v instanceof PatternValue) {
-
-      OldNFA cur = nfa;
-
-      for(Value val : ((PatternValue) v).getValues()) {
-        cur = OldNFA.concat(cur, createOldNFA(cur, val));
-      }
-
-      return cur;
-    }
-    // If it's just a value, return an OldNFA
-    // with the value as a label
-    //System.out.println("Concatenating OldNFA \n" + nfa.getEntry() + "--with OldNFA\n" + OldNFA.v(v).getEntry());
-    return OldNFA.v(v);
   }
 }
