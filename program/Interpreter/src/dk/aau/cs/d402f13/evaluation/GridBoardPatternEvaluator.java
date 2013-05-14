@@ -30,7 +30,11 @@ public class GridBoardPatternEvaluator {
     NFAToDFAConverter converter = new NFAToDFAConverter();
     DFA dfa = converter.ToDFA(nfa);
     dfa.toDot("DFA.dot");
-    dfa.recognizes(game, coord);
+
+    if(dfa.recognizes(game, coord))
+      System.out.println("WOOHOO - pattern matched :D");
+    else
+      System.out.println("Pattern not matched :(");
 
 
     return false;

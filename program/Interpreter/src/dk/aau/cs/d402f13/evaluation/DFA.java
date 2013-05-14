@@ -15,6 +15,7 @@ import java.util.Stack;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.gameapi.Game;
 import dk.aau.cs.d402f13.utilities.gameapi.Piece;
+import dk.aau.cs.d402f13.utilities.gameapi.Player;
 import dk.aau.cs.d402f13.utilities.gameapi.Square;
 import dk.aau.cs.d402f13.values.CoordValue;
 import dk.aau.cs.d402f13.values.DirValue;
@@ -24,13 +25,13 @@ import dk.aau.cs.d402f13.values.Value;
 
 
 public class DFA {
-  public State StartState;
+  public DFAState StartState;
   public ArrayList<DFAState> States = new ArrayList<DFAState>();
   public ArrayList<DFAState> AcceptStates = new ArrayList<DFAState>();
   public ArrayList<Transition> Transitions = new ArrayList<Transition>();
 
   public DFA(NFA nfa){
-    this.StartState = new State();
+    this.StartState = new DFAState();
   }
   
   public DFA(DFAState startState, ArrayList<DFAState> states, ArrayList<DFAState> acceptStates, ArrayList<Transition> transitions){
@@ -40,46 +41,64 @@ public class DFA {
     this.Transitions = transitions;
   }
 
-  public boolean recognizes(Game game, CoordValue currentCoord) throws StandardError {
-
-    State currentState = this.StartState;
-    Square currentSqaure = game.getBoard().getSquareAt(currentCoord.getX(), currentCoord.getY());
+  private ArrayList<Transition> getStateExits(DFAState state) {
+    ArrayList<Transition> exits = new ArrayList<>();
 
     for(Transition edge : this.Transitions) {
-      State from = edge.from;
-      State to = edge.to;
+      if(edge.from == state)
+        exits.add(edge);
+    }
+
+    return exits;
+  }
+
+  private boolean visitState(DFAState state, Game game, CoordValue currentCoord) throws StandardError {
+    Square currentSqaure = game.getBoard().getSquareAt(currentCoord.getX(), currentCoord.getY());
+    Player currentPlayer = game.getCurrentPlayer();
+
+    for(Transition edge : getStateExits(state)) {
+      DFAState to = (DFAState)edge.to;
       Value v = edge.val;
 
-      if(currentState == from) {
-        if(v instanceof PatternKeyValue) {
-          PatternKeyValue val = (PatternKeyValue)v;
 
+      if(v instanceof PatternKeyValue) {
+        PatternKeyValue val = (PatternKeyValue)v;
 
-          if(val.toString().toLowerCase() == "friend") {
-            if(currentSqaure.isEmpty())
-              continue;
+        // TODO: Below isn't working
+        if(val.toString().toLowerCase() == "friend") {
+          if(currentSqaure.isEmpty())
+            continue;
 
-            for (Piece piece : currentSqaure.getPieces())
-              if (game.getCurrentPlayer() == piece.getOwner()) {
-                currentState = to;
-                break;
-              }
-          }
-          else if(val.toString().toLowerCase() == "foe" ) {
-            if(currentSqaure.isEmpty())
-              continue;
-          }
-          else if(val.toString().toLowerCase() == "empty") {
-            if(currentSqaure.isEmpty())
-              currentState = to;
+          for (Piece piece : currentSqaure.getPieces())
+            if (currentPlayer == piece.getOwner()) {
+              visitState(to, game, currentCoord);
+              break;
+            }
+        }
+        else if(val.toString().toLowerCase() == "foe") {
+          if(currentSqaure.isEmpty())
+            continue;
+
+          for (Piece piece : currentSqaure.getPieces())
+            if(currentPlayer != piece.getOwner()) {
+              visitState(to, game, currentCoord);
+              break;
+            }
+        }
+        else if(val.toString().toLowerCase() == "empty") {
+          if(currentSqaure.isEmpty()) {
+            visitState(to, game, currentCoord);
+            continue;
           }
         }
-
-        // Move to that state
-        //currentState = to;
       }
     }
 
+
+    return false;
+  }
+
+  public boolean recognizes(Game game, CoordValue currentCoord) throws StandardError {
     return false;
   }
   
