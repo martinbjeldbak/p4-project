@@ -12,69 +12,94 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Stack;
 
+import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.utilities.gameapi.Game;
+import dk.aau.cs.d402f13.utilities.gameapi.Piece;
+import dk.aau.cs.d402f13.utilities.gameapi.Player;
+import dk.aau.cs.d402f13.utilities.gameapi.Square;
+import dk.aau.cs.d402f13.values.CoordValue;
+import dk.aau.cs.d402f13.values.DirValue;
+import dk.aau.cs.d402f13.values.PatternKeyValue;
 import dk.aau.cs.d402f13.values.Value;
 
 
 
 public class DFA {
-  public State StartState;
-  public ArrayList<State> States = new ArrayList<State>();
-  public ArrayList<State> AcceptStates = new ArrayList<State>();
+  public DFAState StartState;
+  public ArrayList<DFAState> States = new ArrayList<DFAState>();
+  public ArrayList<DFAState> AcceptStates = new ArrayList<DFAState>();
   public ArrayList<Transition> Transitions = new ArrayList<Transition>();
-  private HashMap<State, HashSet<Transition>> transitionsFromState;
-  
- 
-  
+
   public DFA(NFA nfa){
-    initTransitionsFromState();
-    this.StartState = new State();
+    this.StartState = new DFAState();
   }
   
-  /*
-   *initialise transitionsFromState, which given a state returns a 
-   *set of all states transitions point to from the given state
-   */
-  void initTransitionsFromState(){
-    transitionsFromState = new HashMap<State, HashSet<Transition>>();
-    for (State s : this.States){
-      transitionsFromState.put(s, new HashSet<Transition>());
-    }
-    for (Transition t : this.Transitions){
-        transitionsFromState.get(t.from).add(t);
-    }
+  public DFA(DFAState startState, ArrayList<DFAState> states, ArrayList<DFAState> acceptStates, ArrayList<Transition> transitions){
+    this.StartState = startState;
+    this.States = states;
+    this.AcceptStates = acceptStates;
+    this.Transitions = transitions;
   }
-  
-  
-  /*
-   * Returns the set of states that can be reached from the
-   * input state, using only epsilon-transitions
-   */
-  HashSet<State> epsilonClosure(State s){
-    HashSet<State> closure = new HashSet<State>();
-    Stack<State> queue = new Stack<State>();
-    
-    queue.add(s);
-    while (!queue.isEmpty()){
-      State temp = queue.pop();
-      closure.add(temp);
-      for (Transition t : this.transitionsFromState.get(temp)){
-        if (t.val == null){ //epsilon-transition
-          if (!closure.contains(t.to) && !queue.contains(t.to))
-            queue.add(t.to);
+
+  private ArrayList<Transition> getStateExits(DFAState state) {
+    ArrayList<Transition> exits = new ArrayList<>();
+
+    for(Transition edge : this.Transitions) {
+      if(edge.from == state)
+        exits.add(edge);
+    }
+
+    return exits;
+  }
+
+  private boolean visitState(DFAState state, Game game, CoordValue currentCoord) throws StandardError {
+    Square currentSqaure = game.getBoard().getSquareAt(currentCoord.getX(), currentCoord.getY());
+    Player currentPlayer = game.getCurrentPlayer();
+
+    for(Transition edge : getStateExits(state)) {
+      DFAState to = (DFAState)edge.to;
+      Value v = edge.val;
+
+
+      if(v instanceof PatternKeyValue) {
+        PatternKeyValue val = (PatternKeyValue)v;
+
+        // TODO: Below isn't working
+        if(val.toString().toLowerCase() == "friend") {
+          if(currentSqaure.isEmpty())
+            continue;
+
+          for (Piece piece : currentSqaure.getPieces())
+            if (currentPlayer == piece.getOwner()) {
+              visitState(to, game, currentCoord);
+              break;
+            }
+        }
+        else if(val.toString().toLowerCase() == "foe") {
+          if(currentSqaure.isEmpty())
+            continue;
+
+          for (Piece piece : currentSqaure.getPieces())
+            if(currentPlayer != piece.getOwner()) {
+              visitState(to, game, currentCoord);
+              break;
+            }
+        }
+        else if(val.toString().toLowerCase() == "empty") {
+          if(currentSqaure.isEmpty()) {
+            visitState(to, game, currentCoord);
+            continue;
+          }
         }
       }
     }
-    return closure;
+
+
+    return false;
   }
-  
-  Boolean hashSetEquals(HashSet<State> set1, HashSet<State> set2){
-    if (set1.size() != set2.size())
-      return false;
-    for (State s1 : set1){
-      if (!set2.contains(s1))
-        return false;
-    }
-    return true;
+
+  public boolean recognizes(Game game, CoordValue currentCoord) throws StandardError {
+    return false;
   }
   
   public void toDot(String fileName) {

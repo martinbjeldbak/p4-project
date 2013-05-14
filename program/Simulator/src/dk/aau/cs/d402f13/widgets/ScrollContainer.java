@@ -8,6 +8,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.TrueTypeFont;
 
 import dk.aau.cs.d402f13.helpers.ResourceHelper;
+import dk.aau.cs.d402f13.utilities.errors.SimulatorError;
 
 public class ScrollContainer extends Widget {
 	private List<String> lines = null;
@@ -31,7 +32,7 @@ public class ScrollContainer extends Widget {
 		return getHeight() / font.getLineHeight();
 	}
 	
-	private void drawScalable( Graphics g, int x, int y, int height , String name ){
+	private void drawScalable( Graphics g, int x, int y, int height , String name ) throws SimulatorError{
 		Image topImg = ResourceHelper.getImage( "img/" + name + "_top.png" );
 		Image middleImg = ResourceHelper.getImage( "img/" + name + "_middle.png" );
 		Image bottomImg = ResourceHelper.getImage( "img/" + name + "_bottom.png" );
@@ -54,7 +55,7 @@ public class ScrollContainer extends Widget {
 	}
 	
 	@Override
-	public void draw( Graphics g ){
+	public void draw( Graphics g ) throws SimulatorError{
 		TrueTypeFont font = ResourceHelper.getFont( "gtw", 16 );
 		int linePos = 0;
 		g.setFont( font );
