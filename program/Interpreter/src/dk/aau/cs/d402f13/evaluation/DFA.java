@@ -10,27 +10,73 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Stack;
 
 import dk.aau.cs.d402f13.values.Value;
 
 
 
-public class DFA{
-
-  DFAState startState;
-  ArrayList<DFAState> states;
-  ArrayList<DFAState> acceptStates;
-  ArrayList<Transition> transitions;
+public class DFA {
+  public State StartState;
+  public ArrayList<State> States = new ArrayList<State>();
+  public ArrayList<State> AcceptStates = new ArrayList<State>();
+  public ArrayList<Transition> Transitions = new ArrayList<Transition>();
+  private HashMap<State, HashSet<Transition>> transitionsFromState;
   
-  public DFA(DFAState startState, ArrayList<DFAState> states, ArrayList<DFAState> acceptStates, ArrayList<Transition> transitions){
-    this.startState = startState;
-    this.states = states;
-    this.acceptStates = acceptStates;
-    this.transitions = transitions;
+ 
+  
+  public DFA(NFA nfa){
+    initTransitionsFromState();
+    this.StartState = new State();
   }
-
+  
+  /*
+   *initialise transitionsFromState, which given a state returns a 
+   *set of all states transitions point to from the given state
+   */
+  void initTransitionsFromState(){
+    transitionsFromState = new HashMap<State, HashSet<Transition>>();
+    for (State s : this.States){
+      transitionsFromState.put(s, new HashSet<Transition>());
+    }
+    for (Transition t : this.Transitions){
+        transitionsFromState.get(t.from).add(t);
+    }
+  }
+  
+  
+  /*
+   * Returns the set of states that can be reached from the
+   * input state, using only epsilon-transitions
+   */
+  HashSet<State> epsilonClosure(State s){
+    HashSet<State> closure = new HashSet<State>();
+    Stack<State> queue = new Stack<State>();
+    
+    queue.add(s);
+    while (!queue.isEmpty()){
+      State temp = queue.pop();
+      closure.add(temp);
+      for (Transition t : this.transitionsFromState.get(temp)){
+        if (t.val == null){ //epsilon-transition
+          if (!closure.contains(t.to) && !queue.contains(t.to))
+            queue.add(t.to);
+        }
+      }
+    }
+    return closure;
+  }
+  
+  Boolean hashSetEquals(HashSet<State> set1, HashSet<State> set2){
+    if (set1.size() != set2.size())
+      return false;
+    for (State s1 : set1){
+      if (!set2.contains(s1))
+        return false;
+    }
+    return true;
+  }
+  
   public void toDot(String fileName) {
     Path file = createFile(fileName);
 
@@ -41,17 +87,17 @@ public class DFA{
       writeLine("  node[shape = circle];", writer);
 
       // Print out the label for each state
-      for(State s : this.states) {
-        if(this.acceptStates.contains(s))
-          writeLine("  " + s.hashCode() + label("" + s.getName()) + " [shape = doublecircle];", writer);
+      for(State s : this.States) {
+        if(this.AcceptStates.contains(s))
+          writeLine("  " + s.hashCode() + label(s.getName()) + " [shape = doublecircle];", writer);
         else
-          writeLine("  " + s.hashCode() + label("" + s.getName()) + ";", writer);
+          writeLine("  " + s.hashCode() + label(s.getName()) + ";", writer);
       }
 
       writeLine("", writer);
 
       // For every edge
-      for(Transition tra : this.transitions) {
+      for(Transition tra : this.Transitions) {
         State from = tra.from;
         State to = tra.to;
         Value v = tra.val;
@@ -93,4 +139,5 @@ public class DFA{
   private String label(String label) {
     return " [label=\"" + label + "\"]";
   }
+  
 }

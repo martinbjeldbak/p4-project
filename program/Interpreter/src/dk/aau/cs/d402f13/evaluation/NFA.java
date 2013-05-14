@@ -168,9 +168,9 @@ public class NFA{
       // Print out the label for each state
       for(NFAState s : this.states) {
         if(this.acceptStates.contains(s))
-          writeLine("  " + s.hashCode() + label("" + s.getName()) + " [shape = doublecircle];", writer);
+          writeLine("  " + s.hashCode() + label(s.getName()) + " [shape = doublecircle];", writer);
         else
-          writeLine("  " + s.hashCode() + label("" + s.getName()) + ";", writer);
+          writeLine("  " + s.hashCode() + label(s.getName()) + ";", writer);
       }
 
       writeLine("", writer);
