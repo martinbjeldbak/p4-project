@@ -12,6 +12,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Stack;
 
+import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.utilities.gameapi.Game;
+import dk.aau.cs.d402f13.utilities.gameapi.Piece;
+import dk.aau.cs.d402f13.utilities.gameapi.Square;
+import dk.aau.cs.d402f13.values.CoordValue;
+import dk.aau.cs.d402f13.values.DirValue;
+import dk.aau.cs.d402f13.values.PatternKeyValue;
 import dk.aau.cs.d402f13.values.Value;
 
 
@@ -75,6 +82,49 @@ public class DFA {
         return false;
     }
     return true;
+  }
+
+  public boolean recognizes(Game game, CoordValue currentCoord) throws StandardError {
+
+    State currentState = this.StartState;
+    Square currentSqaure = game.getBoard().getSquareAt(currentCoord.getX(), currentCoord.getY());
+
+    for(Transition edge : this.Transitions) {
+      State from = edge.from;
+      State to = edge.to;
+      Value v = edge.val;
+
+      if(currentState == from) {
+        if(v instanceof PatternKeyValue) {
+          PatternKeyValue val = (PatternKeyValue)v;
+
+
+          if(val.toString().toLowerCase() == "friend") {
+            if(currentSqaure.isEmpty())
+              continue;
+
+            for (Piece piece : currentSqaure.getPieces())
+              if (game.getCurrentPlayer() == piece.getOwner()) {
+                currentState = to;
+                break;
+              }
+          }
+          else if(val.toString().toLowerCase() == "foe" ) {
+            if(currentSqaure.isEmpty())
+              continue;
+          }
+          else if(val.toString().toLowerCase() == "empty") {
+            if(currentSqaure.isEmpty())
+              currentState = to;
+          }
+        }
+
+        // Move to that state
+        //currentState = to;
+      }
+    }
+
+    return false;
   }
   
   public void toDot(String fileName) {
