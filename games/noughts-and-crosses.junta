@@ -9,7 +9,7 @@ type NacPlayer[$pieceType, $name] extends Player[$name] {
   define winCondition[$gameState] =
     $gameState.findSquares[
       /friend (n friend n) | (e friend e) |
-		(nw friend nw) | (ne friend ne ) friend/].size != 0
+      (nw friend nw) | (ne friend ne ) friend/].size != 0
   define tieCondition[$gameState] =
     $gameState.board.isFull
   define actions[$gameState] =
