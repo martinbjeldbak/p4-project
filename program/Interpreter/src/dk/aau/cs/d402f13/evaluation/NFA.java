@@ -15,28 +15,16 @@ import java.util.List;
 
 public class NFA{
   NFAState startState;
-  ArrayList<NFAState> states;
-  ArrayList<NFAState> acceptStates;
-  ArrayList<Transition> transitions;
+  ArrayList<NFAState> states =  new ArrayList<NFAState>();
+  ArrayList<NFAState> acceptStates =  new ArrayList<NFAState>();
+  ArrayList<Transition> transitions  = new ArrayList<Transition>();
   
-  public NFA(NFAState startState, ArrayList<NFAState> states, ArrayList<NFAState> acceptStates, ArrayList<Transition> transitions){
-    this.startState = startState;
-    this.states = states;
-    this.acceptStates = acceptStates;
-    this.transitions = transitions;
-  }
-
   /**
    * Creates an empty NFA with a start and accepting
    * state.
    */
   public NFA() {
-    this.states = new ArrayList<NFAState>();
-    this.acceptStates = new ArrayList<NFAState>();
-    this.transitions = new ArrayList<Transition>();
-    
     NFAState start = new NFAState();
-
     this.states.add(start);
     this.startState = start;
     this.acceptStates.add(start);
