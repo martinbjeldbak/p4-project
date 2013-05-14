@@ -30,7 +30,7 @@ public class GridBoardPatternEvaluator {
     nfa.toDot("NFA.dot");
 
     DFA dfa = new DFA(nfa);
-
+    dfa.toDot("DFA.dot");
 
 
     return false;

@@ -26,13 +26,8 @@ public class DFA {
  
   
   public DFA(NFA nfa){
-    this.StartState = nfa.StartState;
-    this.States = nfa.States;
-    this.AcceptStates = nfa.AcceptStates;
-    this.Transitions = nfa.Transitions;
     initTransitionsFromState();
-    HashSet<State> startState = epsilonClosure(this.StartState);
-    int breakpoint = 2;
+    this.StartState = new State();
   }
   
   /*
@@ -82,8 +77,8 @@ public class DFA {
     return true;
   }
   
-  public void toDot() {
-    Path file = createFile("DFA.dot");
+  public void toDot(String fileName) {
+    Path file = createFile(fileName);
 
     try(BufferedWriter writer = Files.newBufferedWriter(file, Charset.defaultCharset())) {
       writeLine("digraph NFA {", writer);
@@ -92,18 +87,16 @@ public class DFA {
       writeLine("  node[shape = circle];", writer);
 
       // Print out the label for each state
-      for(int i = 0; i < this.States.size(); i++) {
-        State s = this.States.get(i);
-
+      for(State s : this.States) {
         if(this.AcceptStates.contains(s))
-          writeLine("  " + s.hashCode() + label("" + i) + " [shape = doublecircle]" + ";" , writer);
+          writeLine("  " + s.hashCode() + label("" + s.getName()) + " [shape = doublecircle];", writer);
         else
-          writeLine("  " + s.hashCode() + label("" + i) + ";", writer);
+          writeLine("  " + s.hashCode() + label("" + s.getName()) + ";", writer);
       }
 
       writeLine("", writer);
 
-      // For every transition
+      // For every edge
       for(Transition tra : this.Transitions) {
         State from = tra.from;
         State to = tra.to;
