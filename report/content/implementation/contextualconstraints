@@ -1,5 +1,5 @@
-\section{Static semantics}
-\label{sec:staticsemantics}
+\section{Contextual constraits}
+\label{sec:contextualconstraints}
 
 The \classref{ScopeChecker} is the class responsible for enforcing some of the
 static semantic rules of \productname{} (described in \chapref{chap:design}) at
