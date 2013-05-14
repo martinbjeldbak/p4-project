@@ -8,18 +8,14 @@ import java.util.Stack;
 public class NFAToDFAConverter {
  
   private DFAState startState;
-  private ArrayList<DFAState> states;
-  private ArrayList<DFAState> acceptStates;
-  private ArrayList<Transition> transitions;
+  private ArrayList<DFAState> states = new ArrayList<DFAState>();
+  private ArrayList<DFAState> acceptStates = new ArrayList<DFAState>();
+  private ArrayList<Transition> transitions = new ArrayList<Transition>();
  
   //Used to quickly find the transitions from a given state
   private HashMap<State, HashSet<Transition>> transitionsFromStates;
   
-  public DFA ToDFA(NFA nfa){
-    this.acceptStates = new ArrayList<DFAState>();
-    this.states = new ArrayList<DFAState>();
-    this.transitions = new ArrayList<Transition>();
-    
+  public DFA ToDFA(NFA nfa){   
     initTransitionsFromStates();
     
     DFAState startState = epsilonClosure(nfa.startState);
