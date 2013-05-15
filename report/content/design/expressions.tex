@@ -9,6 +9,69 @@
 \galt{lambda\_expr}
 \galt{\gter{not} \gcat expression}
 \galt{lo\_sequence}
+\end{ebnf}
+
+\subsection{Atomic expressions}
+
+These are the smalles possible parts of expressions in \productname{}.
+
+\begin{ebnf}
+\grule{atomic}{\gter{(} \gcat expression \gcat \gter{)}}
+\galt{variable}
+\galt{list}
+\galt{\gter{/} \gcat pattern \gcat \gter{/}}
+\galt{\gter{this}}
+\galt{\gter{super}}
+\galt{direction}
+\galt{coordinate}
+\galt{integer}
+\galt{string}
+\galt{type}
+\galt{constant}
+\end{ebnf}
+
+This group also contains $expression$ contained within parentheses.
+
+
+\subsection{Lists}
+
+\begin{ebnf}
+\grule{list}{\gter{[} \gcat \gopt{expression \gcat \grep{\gter{,} \gcat expression}} \gcat \gter{]}}
+\end{ebnf}
+
+\subsection{Let expressions}
+
+\begin{ebnf}
+\grule{expression}{\grange \gor let\_expr}
+\grule{let\_expr}{\gter{let} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression} \gnl
+\gcat \gter{in} \gcat expression}
+\end{ebnf}
+
+\subsection{Conditional expressions}
+
+\begin{ebnf}
+\grule{expression}{\grange \gor if\_expr}
+\grule{if\_expr}{\gter{if} \gcat expression \gcat \gter{then} \gcat expression \gcat \gter{else} \gcat expression}
+\end{ebnf}
+
+\subsection{Lambda expressions}
+
+\begin{ebnf}
+\grule{expression}{\grange \gor lambda\_expr}
+\grule{lambda\_expr}{\gter{\#} \gcat varlist \gcat \gter{=>} \gcat expression}
+\end{ebnf}
+
+\subsection{Set expressions}
+
+\begin{ebnf}
+\grule{expression}{\grange \gor set\_expr}
+\grule{set\_expr}{\gter{set} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression}}
+\end{ebnf}
+
+\subsection{Operators and calls}
+
+\begin{ebnf}
+\grule{expression}{\grange \gor \gter{not} \gcat expression \gor lo\_sequence}
 \grule{lo\_sequence}{eq\_sequence \gcat \grep{\ggrp{\gter{and} \gor \gter{or}} \gcat eq\_sequence}}
 \grule{eq\_sequence}{cm\_sequence \gcat \grep{\ggrp{\gter{==} \gor \gter{!=} \gor \gter{is}} \gcat cm\_sequence}}
 \grule{cm\_sequence}{as\_sequence \gcat \grep{\ggrp{\gter{<} \gor \gter{>} \gor \gter{<=} \gor \gter{>=}} \gcat as\_sequence}}
@@ -19,66 +82,4 @@
 \grule{element}{call\_sequence \gcat \grep{member\_access}}
 \grule{member\_access}{\gter{.} \gcat constant \gcat \grep{list}}
 \grule{call\_sequence}{atomic \gcat \grep{list}}
-\grule{atomic}{\gter{(} \gcat expression \gcat \gter{)}}
-\galt{variable}
-\galt{list}
-\galt{\gter{/} \gcat pattern \gcat \gter{/}}
-\galt{\gter{this}}
-\galt{\gter{super}}
-\galt{direction}
-\galt{coordinate}
-\galt{integer}
-\galt{string}
-\galt{type}
-\galt{constant}
-\grule{assignment}{\gter{let} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression} \gcat \gter{in} \gcat expression}
-\grule{if\_expr}{\gter{if} \gcat expression \gcat \gter{then} \gcat expression \gcat \gter{else} \gcat expression}
-\grule{lambda\_expr}{\gter{\#} \gcat varlist \gcat \gter{=>} \gcat expression}
-\grule{list}{\gter{[} \gcat \gopt{expression \gcat \grep{\gter{,} \gcat expression}} \gcat \gter{]}}
 \end{ebnf}
-
-\subsection{Atomic expressions}
-
-\begin{ebnf}
-\grule{atomic}{\gter{(} \gcat expression \gcat \gter{)}}
-\galt{variable}
-\galt{list}
-\galt{\gter{/} \gcat pattern \gcat \gter{/}}
-\galt{\gter{this}}
-\galt{\gter{super}}
-\galt{direction}
-\galt{coordinate}
-\galt{integer}
-\galt{string}
-\galt{type}
-\galt{constant}
-\end{ebnf}
-
-\subsection{Let expressions}
-
-\begin{ebnf}
-\grule{expression}{\grange \gor let\_expr}
-\end{ebnf}
-
-\subsection{Conditional expressions}
-
-\begin{ebnf}
-\grule{expression}{\grange \gor if\_expr}
-\end{ebnf}
-
-\subsection{Lambda expressions}
-
-\begin{ebnf}
-\grule{expression}{\grange \gor lambda\_expr}
-\end{ebnf}
-
-\subsection{Set expressions}
-
-\begin{ebnf}
-\grule{expression}{\grange \gor set\_expr}
-\end{ebnf}
-
-\subsection{Operators}
-
-
-\subsection{Lists}
