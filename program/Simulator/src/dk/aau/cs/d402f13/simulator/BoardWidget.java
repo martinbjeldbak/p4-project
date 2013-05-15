@@ -57,8 +57,8 @@ public abstract class BoardWidget extends Widget {
 		gameEnded = new Message( "Game over", "", 0,0, getWidth(), getHeight() );
 		waitForPlayer = new Message( "Please wait...", "Opponent ponders over his move", 0,0, getWidth(), getHeight() );
 		
-		gameEnded.startListening( this );
-		waitForPlayer.startListening( this );
+		gameEnded.startObserving( this );
+		waitForPlayer.startObserving( this );
 	}
 	
 	public void setError( String title, String text ){
@@ -67,7 +67,7 @@ public abstract class BoardWidget extends Widget {
 	}
 	
 	public void showMessage( Message m, String text ){
-		m.setSize( getWidth(), getHeight() );
+		m.setFixed( getWidth(), getHeight() );
 		m.setText( text );
 		addObject( m );
 	}
@@ -253,8 +253,9 @@ public abstract class BoardWidget extends Widget {
 	 * ambitious.
 	 * @param actions
 	 * @throws StandardError 
+	 * @throws SimulatorError 
 	 */
-	private void executeActions( List<Action> actions ) throws StandardError{
+	private void executeActions( List<Action> actions ) throws StandardError, SimulatorError{
 		//Check how many actions are found
 		if( actions.size() > 1 ){
 			System.out.println( "More than one action found: " + actions.size() );
@@ -262,12 +263,8 @@ public abstract class BoardWidget extends Widget {
 			for( Action a : actions )
 				System.out.println( ActionHelper.humanReadable( game.getGame(), a ) );
 		}
-		if( actions.size() == 0 ){
-			System.out.println( "No actions found !!!" );
-			//TODO: throw exception
-			setError( "No actions found!", "Something went very wrong :\\" );
-			return;
-		}
+		if( actions.size() == 0 )
+			throw new SimulatorError( "Trying to apply action, however it could not be found!" );
 		
 		//Apply the action and remove hints
 		Player previous = game.getGame().getCurrentPlayer();
@@ -386,7 +383,7 @@ public abstract class BoardWidget extends Widget {
 	}
 	
 	@Override
-	public void acceptEvent( Widget obj, Event event ) throws StandardError{
+	public void accept( Widget obj, Event event ) throws StandardError, SimulatorError{
 		if( event == Event.ACCEPT ){
 			if( obj == gameEnded )
 				game.restartGame();
@@ -397,7 +394,7 @@ public abstract class BoardWidget extends Widget {
 		}
 	}
 
-	private void executeActions(Action action) throws StandardError {
+	private void executeActions(Action action) throws StandardError, SimulatorError {
 		List<Action> actions = new ArrayList<Action>();
 		actions.add( action );
 		executeActions( actions );
