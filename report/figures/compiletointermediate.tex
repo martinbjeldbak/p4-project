@@ -3,9 +3,9 @@
   \begin{center}
     \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
       %m+n
-      \node [square] (a) {Compiler $1$};
-      \node [square,xshift=8em] (b) {Compiler $2$};
-      \node [square,xshift=16em] (c) {Compiler $m$};
+      \node [square] (a) {Language $1$};
+      \node [square,xshift=8em] (b) {Language $2$};
+      \node [square,xshift=16em] (c) {Language $m$};
 
       \node [ellipse,draw,xshift=8em,yshift=-4em] (il) {Intermediate language};
       
@@ -15,19 +15,19 @@
 
       \draw[->, thick,] (a) -- (il);
       \draw[->, thick,] (b) -- (il);
-      \draw[->, thick,] (c) -- (il);
+      \draw[->, dashed,] (c) -- (il);
       
       \draw[->, thick,] (il) -- (aa);
       \draw[->, thick,] (il) -- (bb);
-      \draw[->, thick,] (il) -- (cc);
+      \draw[->, dashed,] (il) -- (cc);
       
       \path (b)--(c) node [midway] {$\cdots$};
       \path (bb)--(cc) node [midway] {$\cdots$};
       
       %m*n
-      \node [square,xshift=23em,yshift=-1em] (x) {Compiler $1$};
-      \node [square,xshift=31em,yshift=-1em] (y) {Compiler $2$};
-      \node [square,xshift=39em,yshift=-1em] (z) {Compiler $m$};
+      \node [square,xshift=23em,yshift=-1em] (x) {Language $1$};
+      \node [square,xshift=31em,yshift=-1em] (y) {Language $2$};
+      \node [square,xshift=39em,yshift=-1em] (z) {Language $m$};
       
       \node [square,xshift=23em,yshift=-7em] (xx) {Platform $1$};
       \node [square,xshift=31em,yshift=-7em] (yy) {Platform $2$};
