@@ -5,12 +5,14 @@ dk.aau.cs.d402f13.ScannerParser.lexer
 dk.aau.cs.d402f13.ScannerParser.node
 dk.aau.cs.d402f13.ScannerParser.parser
 dk.aau.cs.d402f13.evaluation
+dk.aau.cs.d402f13.gal
+dk.aau.cs.d402f13.gal.wrappers
+dk.aau.cs.d402f13.helpers
 dk.aau.cs.d402f13.interactive
 dk.aau.cs.d402f13.interpreter
 dk.aau.cs.d402f13.interpreter.stdenv
 dk.aau.cs.d402f13.interpreter.stdenv.constructors
 dk.aau.cs.d402f13.interpreter.stdenv.game
-dk.aau.cs.d402f13.interpreter.stdenv.game.wrappers
 dk.aau.cs.d402f13.parser
 dk.aau.cs.d402f13.scanner
 dk.aau.cs.d402f13.scopechecker
@@ -20,6 +22,5 @@ dk.aau.cs.d402f13.utilities.ast
 dk.aau.cs.d402f13.utilities.errors
 dk.aau.cs.d402f13.utilities.gameapi
 dk.aau.cs.d402f13.utilities.scopechecker
-dk.aau.cs.d402f13.utilities.types
 dk.aau.cs.d402f13.values
-widgets
+dk.aau.cs.d402f13.widgets
