@@ -83,3 +83,20 @@ This group also contains $expression$ contained within parentheses.
 \grule{member\_access}{\gter{.} \gcat constant \gcat \grep{list}}
 \grule{call\_sequence}{atomic \gcat \grep{list}}
 \end{ebnf}
+
+\subsubsection{Operator precedence}
+
+\tab[\textwidth]{operatorPrecedence}{2}{The precedence of operators in \productname{}.}
+         {Operator precedence}
+  {Level}{Operator & Description}{
+    \tabrow{1}{\texttt{f[]} & Function/constructor invocation and list access}
+    \tabrow{2}{\texttt{r.m r.m[]} & Record member access and member invocation}
+    \tabrow{3}{\texttt{-} & Unary negation operation}
+    \tabrow{4}{\texttt{* / \%} & Multiplication, division, and modulo}
+    \tabrow{5}{\texttt{+ -} & Addition and subtraction}
+    \tabrow{6}{\texttt{< > <= >=} & Comparison operators}
+    \tabrow{7}{\texttt{== != is} & Equality operators and type checking}
+    \tabrow{8}{\texttt{and or} & Logical $and$ and $or$}
+    \tabrow{9}{\texttt{not} & Logical $not$}
+    \tabrow{10}{\texttt{if let \#} & if-, let-, and lambda-expressions}
+}
