@@ -8,6 +8,7 @@ import org.newdawn.slick.TrueTypeFont;
 
 import dk.aau.cs.d402f13.helpers.ResourceHelper;
 import dk.aau.cs.d402f13.helpers.TextHelper;
+import dk.aau.cs.d402f13.utilities.errors.SimulatorError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 
 
@@ -17,14 +18,21 @@ public class Message extends Widget {
 	
 	public Message( String title, String text, int x, int y, int width, int height ){
 		setPosition( x, y );
-		setFixed( width, height );
+		setFixed( width, height ); //TODO: evaluate this
 		this.title = title;
 		this.text = text;
 	}
+
+	public void setTitle( String title ){
+		this.title = title;
+	}
+	public void setText( String text ){
+		this.text = text;
+	}
 	
-	public void draw( Graphics g ){
+	public void draw( Graphics g ) throws SimulatorError{
 		Image paper = ResourceHelper.getImage( "img/message.png" );
-		TrueTypeFont big = ResourceHelper.getFont( "gtw", 32 );
+		TrueTypeFont big = ResourceHelper.getFont( "gtw", 26 );
 		TrueTypeFont small = ResourceHelper.getFont( "gtw", 16 );
 
 		int posX = ( (getWidth() - getX()) - paper.getWidth() ) / 2 + getX();

@@ -1,0 +1,84 @@
+\section{Expressions}
+\label{sec:expressions}
+
+\begin{ebnf}
+%Expressions
+\grule{expression}{assignment}
+\galt{if\_expr}
+\galt{set\_expr}
+\galt{lambda\_expr}
+\galt{\gter{not} \gcat expression}
+\galt{lo\_sequence}
+\grule{lo\_sequence}{eq\_sequence \gcat \grep{\ggrp{\gter{and} \gor \gter{or}} \gcat eq\_sequence}}
+\grule{eq\_sequence}{cm\_sequence \gcat \grep{\ggrp{\gter{==} \gor \gter{!=} \gor \gter{is}} \gcat cm\_sequence}}
+\grule{cm\_sequence}{as\_sequence \gcat \grep{\ggrp{\gter{<} \gor \gter{>} \gor \gter{<=} \gor \gter{>=}} \gcat as\_sequence}}
+\grule{as\_sequence}{md\_sequence \gcat \grep{\ggrp{\gter{+} \gor \gter{-}} \gcat md\_sequence}}
+\grule{md\_sequence}{negation \gcat \grep{\ggrp{\gter{*} \gor \gter{/} \gor{\%}} \gcat negation}}
+\grule{negation}{element}
+\galt{\gter{-} \gcat negation}
+\grule{element}{call\_sequence \gcat \grep{member\_access}}
+\grule{member\_access}{\gter{.} \gcat constant \gcat \grep{list}}
+\grule{call\_sequence}{atomic \gcat \grep{list}}
+\grule{atomic}{\gter{(} \gcat expression \gcat \gter{)}}
+\galt{variable}
+\galt{list}
+\galt{\gter{/} \gcat pattern \gcat \gter{/}}
+\galt{\gter{this}}
+\galt{\gter{super}}
+\galt{direction}
+\galt{coordinate}
+\galt{integer}
+\galt{string}
+\galt{type}
+\galt{constant}
+\grule{assignment}{\gter{let} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression} \gcat \gter{in} \gcat expression}
+\grule{if\_expr}{\gter{if} \gcat expression \gcat \gter{then} \gcat expression \gcat \gter{else} \gcat expression}
+\grule{lambda\_expr}{\gter{\#} \gcat varlist \gcat \gter{=>} \gcat expression}
+\grule{list}{\gter{[} \gcat \gopt{expression \gcat \grep{\gter{,} \gcat expression}} \gcat \gter{]}}
+\end{ebnf}
+
+\subsection{Atomic expressions}
+
+\begin{ebnf}
+\grule{atomic}{\gter{(} \gcat expression \gcat \gter{)}}
+\galt{variable}
+\galt{list}
+\galt{\gter{/} \gcat pattern \gcat \gter{/}}
+\galt{\gter{this}}
+\galt{\gter{super}}
+\galt{direction}
+\galt{coordinate}
+\galt{integer}
+\galt{string}
+\galt{type}
+\galt{constant}
+\end{ebnf}
+
+\subsection{Let expressions}
+
+\begin{ebnf}
+\grule{expression}{\grange \gor let\_expr}
+\end{ebnf}
+
+\subsection{Conditional expressions}
+
+\begin{ebnf}
+\grule{expression}{\grange \gor if\_expr}
+\end{ebnf}
+
+\subsection{Lambda expressions}
+
+\begin{ebnf}
+\grule{expression}{\grange \gor lambda\_expr}
+\end{ebnf}
+
+\subsection{Set expressions}
+
+\begin{ebnf}
+\grule{expression}{\grange \gor set\_expr}
+\end{ebnf}
+
+\subsection{Operators}
+
+
+\subsection{Lists}

@@ -1,5 +1,6 @@
-\section{Contextual constraits}
-\label{sec:contextualconstraints}
+
+\section{Contextual constraints}
+\label{sec:staticsemantics}
 
 The \classref{ScopeChecker} is the class responsible for enforcing some of the
 static semantic rules of \productname{} (described in \chapref{chap:design}) at
@@ -256,7 +257,9 @@ symbol table with a list of variable names and a reference to a parent symbol
 table.  The reference to the parent symbol table is exactly how the scopes
 inside other scopes are implemented. 
 
-Notice how the four code samples in \lstref{lst:ose} all result in the same
+\codesample{openscopeexpressions.junta}
+
+Notice how the four code samples in in the above codesample all result in the same
 scope checking routine, which can be seen in \figref{fig:scope1}; First, a new
 symbol table is instantiated in which the variables \$a and \$b are put in. The
 symbol table's parent reference is updated so it points to the current symbol
@@ -275,8 +278,8 @@ following the parent reference until a null reference is found. If a variable
 declaration with the same name as the used variable cannot be found, an error is
 generated.
 
-\fig[height=5em]{scope1}{Four different expressions that all result in the scope action
-depicted.}
+\fig[height=5em]{scope1}{Four different expressions that all result in the scope
+action depicted.}
 
 It is important to realise the reason for maintaining the stack-like structure
 of symbol tables. It might seem like a single symbol table would be enough and
@@ -284,11 +287,14 @@ that all variable declarations could just be put in there. This is indeed wrong,
 since the scope checker must also check for double declarations. A double
 declaration exists if a symbol table contains the same variable twice. Notice
 how \figref{fig:scope2} contains two symbol tables, each containing a
-declaration of \$a. This is completely valid and is caused by the code sample in
-\lstref{lst:scope2}. If only a single symbol table was used, an incorrect double
-declaration would be detected.
+declaration of \$a. 
 
 \fig[height=5em]{scope2}{The variable \$a declared in two different scopes.}
+
+This is completely valid and is caused by the following codesample. If only a
+single symbol table was used, an incorrect double declaration would be detected.
+
+\codesample{scope2.junta}
 
 \subsubsection{Data members}
 When visiting a type body a new scope is opened and the data members of

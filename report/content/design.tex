@@ -1,7 +1,16 @@
 \chapter{Design}
 \label{chap:design}
 
-\section{Code example - Naughts and Crosses}
+\productname{} is a purely functional programming language designed for creating
+board games.
+
+\todo{More introduction}
+
+\subsection*{Type system}
+
+\subsection*{Scope rules}
+
+\subsection*{Code sample}
 
 We have developed \productname{} by first brainstorming and writing a bunch of
 game implementations using a ``programming language'' which felt the most
@@ -13,17 +22,25 @@ implementation of the board game Noughts and Crosses:
 
 \codesample{noughtandcrosses.game}
 
+\todo{Describe exactly what this example does}
+
 Based on our implementations, we first define the formal grammar of
 \productname{} in \secref{sec:grammar}. Afterwards, the contextual constraints
 are informally described  in xxx. Furthermore, we describe the\dots in xxx. Lastly, the 
 \ldots are described in xxx.
 
-\input{content/design/grammar}
-\input{content/design/types}
-\input{content/design/scoping}
-\input{content/design/operators}
-\input{content/design/functions}
+\input{content/design/lexicalstructure}
+\input{content/design/expressions}
+\input{content/design/definitions}
 \input{content/design/patterns}
-\input{content/design/structuraloperationalsemantics}
-\input{content/design/abstractsyntax}
-\input{content/design/big-step-semantic}
+\input{content/design/predefined}
+
+%\input{content/design/grammar}
+%\input{content/design/types}
+%\input{content/design/scoping}
+%\input{content/design/operators}
+%\input{content/design/functions}
+%\input{content/design/patterns}
+%\input{content/design/structuraloperationalsemantics}
+%\input{content/design/abstractsyntax}
+%\input{content/design/big-step-semantic}

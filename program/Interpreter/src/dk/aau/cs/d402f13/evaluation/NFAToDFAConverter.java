@@ -8,33 +8,48 @@ import java.util.Stack;
 public class NFAToDFAConverter {
  
   private DFAState startState;
-  private ArrayList<DFAState> states;
-  private ArrayList<DFAState> acceptStates;
-  private ArrayList<Transition> transitions;
+  private ArrayList<DFAState> states = new ArrayList<DFAState>();
+  private ArrayList<DFAState> acceptStates = new ArrayList<DFAState>();
+  private ArrayList<Transition> transitions = new ArrayList<Transition>();
  
   //Used to quickly find the transitions from a given state
-  private HashMap<State, HashSet<Transition>> transitionsFromStates;
+  private HashMap<NFAState, HashSet<Transition>> transitionsFromStates;
   
-  public DFA ToDFA(NFA nfa){
-    this.acceptStates = new ArrayList<DFAState>();
-    this.states = new ArrayList<DFAState>();
-    this.transitions = new ArrayList<Transition>();
-    
+  NFA nfa;
+  
+  public DFA ToDFA(NFA nfa){  
+    //algorithm used: http://web.cecs.pdx.edu/~harry/compilers/slides/LexicalPart3.pdf
+    this.nfa = nfa;
     initTransitionsFromStates();
     
+    Stack<DFAState> stack = new Stack<DFAState>();
     DFAState startState = epsilonClosure(nfa.startState);
-    return new DFA(startState, states, acceptStates, transitions);  
+    stack.add(startState);
+    
+    while(!stack.isEmpty()){
+      DFAState temp = stack.pop();
+      for (NFAState ns : temp.states){
+        DFAState closure = epsilonClosure(ns);
+        if (!this.states.contains(closure)){
+          this.states.add(closure);
+          stack.push(closure);
+        }
+      }
+    }
+      
+    this.states.add(startState);
+    return new DFA(this.startState, this.states, this.acceptStates, this.transitions);  
   }
   
   /*
    * Returns the set of transitions starting from the given state
    */
   public void initTransitionsFromStates(){
-    this.transitionsFromStates = new HashMap<State, HashSet<Transition>>();
-    for (State s : this.states){
+    this.transitionsFromStates = new HashMap<NFAState, HashSet<Transition>>();
+    for (NFAState s : nfa.states){
       this.transitionsFromStates.put(s, new HashSet<Transition>());
     }
-    for (Transition t : this.transitions){
+    for (Transition t : nfa.transitions){
       this.transitionsFromStates.get(t.from).add(t);
     }
   };
@@ -45,21 +60,22 @@ public class NFAToDFAConverter {
    */
     private DFAState epsilonClosure(NFAState s){
     DFAState closure = new DFAState();
-    Stack<NFAState> queue = new Stack<NFAState>();
+    Stack<NFAState> stack = new Stack<NFAState>();
     
-    queue.add(s);
-    while (!queue.isEmpty()){
-      NFAState temp = queue.pop();
+    stack.add(s);
+    while (!stack.isEmpty()){
+      NFAState temp = stack.pop();
       closure.add(temp);
       for (Transition t : this.transitionsFromStates.get(temp)){
         if (t.val == null){ //epsilon-transition
-          if (!closure.contains(t.to) && !queue.contains(t.to))
-            queue.add((NFAState)t.to);
+          if (!closure.contains(t.to) && !stack.contains(t.to))
+            stack.add((NFAState)t.to);
         }
       }
     }
     return closure;
   }
-  
+    
+   
    
 }
