@@ -11,13 +11,11 @@ analysis chapter we have analysed and discussed the differences between these
 translation methods. Furthermore, in \secref{sec:intermediatelanguage} we
 describe what an intermediate language is.
 
-\subsubsection{What is a compiler?}
+\subsubsection{Where are the differences between an interpreter and a compiler?}
 
 In \secref{sec:compilation} we introduced and explained the phases in the
 process of compilation, and with \figref{fig:compileroverview} we visualised
-these phases. A compiler is simply a program that is able to transform a given
-source code written in a programming language in to another language (often
-binary code known as object code).
+these phases.
 
 The initial phases of a compiler are quite similar to the initial phases of an
 interpreter. For instance a compiler must also begin by scanning the source code
@@ -31,8 +29,10 @@ machine language or to an intermediate language.
 
 According to \figref{fig:compileroverview} the result of the semantic analyser
 would be an intermediate language and then the code generator would generate
-machine code which can be executed. It is of course also possible to compile
-directly to machine language.
+machine code which can then be executed. It is of course also possible to compile
+directly to machine language. Although, it is not the responsible choice to make 
+because it kills opportunities to e.g. optimise the code which would be possible 
+with an intermediate language.
 
 \subsubsection{What is the advantage of compiling to an intermediate language?}
 

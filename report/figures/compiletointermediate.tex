@@ -1,7 +1,8 @@
 
 \begin{figure}[ht]
   \begin{center}
-    \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]      
+    \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+      %m+n
       \node [square] (a) {Compiler $1$};
       \node [square,xshift=8em] (b) {Compiler $2$};
       \node [square,xshift=16em] (c) {Compiler $m$};
@@ -22,10 +23,33 @@
       
       \path (b)--(c) node [midway] {$\cdots$};
       \path (bb)--(cc) node [midway] {$\cdots$};
+      
+      %m*n
+      \node [square,xshift=23em,yshift=-1em] (x) {Compiler $1$};
+      \node [square,xshift=31em,yshift=-1em] (y) {Compiler $2$};
+      \node [square,xshift=39em,yshift=-1em] (z) {Compiler $m$};
+      
+      \node [square,xshift=23em,yshift=-7em] (xx) {Platform $1$};
+      \node [square,xshift=31em,yshift=-7em] (yy) {Platform $2$};
+      \node [square,xshift=39em,yshift=-7em] (zz) {Platform $n$};
+
+      \draw[->, thick,] (x) -- (xx);
+      \draw[->, thick,] (x) -- (yy);
+      \draw[->, dashed,] (x) -- (zz);
+
+      \draw[->, thick,] (y) -- (xx);
+      \draw[->, thick,] (y) -- (yy);
+      \draw[->, dashed,] (y) -- (zz);
+      
+      \draw[->, dashed,] (z) -- (xx);
+      \draw[->, dashed,] (z) -- (yy);
+      \draw[->, dashed,] (z) -- (zz);
+     
+      \path (y)--(z) node [midway] {$\cdots$};
+      \path (yy)--(zz) node [midway] {$\cdots$};
     \end{tikzpicture}
   \end{center}
-  \capt{Compile to intermediate language, and then translate further from the
-    intermediate language to a specific platform.}
+  \capt{Difference between compiling to an intermediate language.}
   \label{fig:mtimesn}
 \end{figure}
 
