@@ -44,6 +44,14 @@ type NacTest[] extends TestCase[] {
   ]
   define testBoardFull1 = $state6.board.isFull
   define testBoardFull2 = $state6.board.emptySquares == []
+  define testTieCondition = $state6.players[0].tieCondition[$state6]
+  data $state7 = $state6.applyAction[
+    RemoveAction[$state6.board.squareAt[B3].pieces[0]]
+  ]
+  define testBoardNotFull = not $state7.board.isFull
+  define testRemovedSquare = $state7.board.emptySquares[0].position == B3
+  define testHistorySize = $state7.history.size == 1
+  define testUndoFull = $state7.undoAction[$state7.history[-1]].board.isFull
 }
 
 
