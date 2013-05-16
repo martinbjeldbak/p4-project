@@ -166,13 +166,14 @@ compilers and interpreters. We have implemented an early version of
 
 \subsubsection{Choice of SableCC}
 We chose SableCC instead of various other popular tools such as
-ANTLR\cite{antlr} and JavaCC\cite{javacc}, because SableCC's parser
+ANTLR\cite{antlr} and JavaCC\cite{javacc}. Though ANTLR and JavaCC are far more
+well-documented than SableCC, we still chose this tool because it's parser
 generates a LALR($1$) parser, whereas ANTLR and JavaCC create simpler
 LL($k$) parsers, which our hand-written implementation already takes advantage of.
 Therefore, we felt LALR($1$) parsing to be more interesting, since it
 also supports more powerful grammars (such as left-recursion).
 
-SableCC outputs an abstract syntax node type for each alternation in
+SableCC outputs an abstract syntax node type fokokr each alternation in
 every rule in the grammar specifications file. It's then possible to
 iterate over these nodes via extending the visitor pattern SableCC also
 supplies, generating code or directly interpreting a syntactically
@@ -207,7 +208,7 @@ Productions
 % Pros
 This example brings out the strengths of SableCC, as it looks very
 similar to the EBNF for if-expressions, with a few additions. As long as
-you know the special syntax and how helpers, tokens, and productions, it
+you know the special syntax and how helpers, tokens, and productions works, it
 is possible to create scanners and parsers very quickly. This was not
 our case, as no one had experience with any form of compiler-compilers.
 Given that it generates a LALR parser, it grants the ability to have
@@ -216,21 +217,22 @@ there's a clear and clean separation between automated, generated code
 and user code makes the grammar and compilation/interpretation parts
 easier to maintain. When adding new features to the language, you simply
 have to update the specifications file and generate a new scanner/parser
-combination.
+combination. On the other hand when adding new features to the language while
+using a handwritten scanner and parser many lines of codes needs to be change
+in order to implement the new feature. 
 
 % Cons
 Even though SableCC looks like a prime candidate to continue
 interpretation with, we chose not to use the tool. This is because it
 took an unreasonable amount of time to figure out how to precisely
 define the grammar to keep it from being ambiguous. And with poor
-documentation, it only took longer. Also, it offers less control and
+documentation, it took even longer. Also, it offers less control and
 customizability, compared to writing our own from scratch. As an
 example, the tool offers an application-specific interface to tree
 walking the AST nodes with the visitor pattern, requiring knowledge of
-how SableCC implements it. SableCC also generates thousands of lines of
+how SableCC implements it. SableCC also generates around 17000 lines of
 Java code, even for our simple grammar, which seems superfluous compared
-to the handwritten code, consisting of less than 10\% the amount of
-lines.
+to the handwritten code, consisting of around 1500 lines of code.
 %  - Don't learn as much about different parser techniques
 %  - Old project, not as active anymore
 
@@ -239,7 +241,9 @@ lines.
 We chose not to continue using SableCC on our updated grammar, due
 to the weight of cons against pros, and the fact that the time spent
 working on implementing SableCC was also spent making the handwritten
-scanner and parsers work exactly the way we want them to. It might
-not be as efficient a solution, but since efficiency isn't rated as
-important for our project, the extra time spent scanning and parsing can
-be excused.
+scanner and parser and making them work exactly the way we want them to. It might
+not be as easy to modify our language with this solution, but the time
+spend on modifying and adding features to our language with the use of a
+handwritten scanner and parser is not wasted time, but learning time, which
+gives us better understanding of their underlying functionality.  
+
