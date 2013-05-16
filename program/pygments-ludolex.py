@@ -13,7 +13,7 @@ class LudoLexer(RegexLexer):
             (r'//.*\n', Comment),
             (r'[0-9]+', Number),
             (r'[A-Z]+[0-9]+', Generic.Subheading),
-            (r'\b(in|let|define|type|abstract|this|super|extends|if|then|else)\b', Keyword.Reserved),
+            (r'\b(in|let|set|define|type|data|abstract|this|super|extends|if|then|else)\b', Keyword.Reserved),
             (r'\b(is|not|and|or)\b', Operator.Word),
             (r'\b(friend|foe|empty)\b', Keyword.Reserved),
             (r'"([^"\\]|\\.)*"', String),
