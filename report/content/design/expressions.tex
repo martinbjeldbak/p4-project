@@ -90,13 +90,26 @@ will create new \type{List}-values, and leave the original value intact.
 
 \subsection{Let expressions}
 
+Variables in \productname{} are assigned using let expressions:
+
 \begin{ebnf}
 \grule{expression}{\grange \gor let\_expr}
 \grule{let\_expr}{\gter{let} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression} \gnl
 \gcat \gter{in} \gcat expression}
 \end{ebnf}
 
+A let expression consists of one or more assignments and an expression. Each assignments assigns
+the value of an expression to a variable name. These variables can then be used in the expression
+after the \texttt{in}-keyword. After the evaluation of the let-expression, the variables cease to
+exist.
+
+\todo{maybe the scope stuff about let expressions here}
+
 \subsection{Conditional expressions}
+
+It is often desirable to base the result of an expression on some sort of condition.
+In \productname{} this is achievable using \emph{if}-expressions, as defined by the
+following syntax:
 
 \begin{ebnf}
 \grule{expression}{\grange \gor if\_expr}
