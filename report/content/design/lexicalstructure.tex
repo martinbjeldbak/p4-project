@@ -2,20 +2,24 @@
 \label{sec:lexicalstructure}
 
 This section presents the low-level non-terminals of \productname{}.
+We begin by describing the conventions we use throughout the report. Then we
+describe the contents of the lexical structure of \productname{}, such as the
+different reserved keywrods, identifiers, and literals that \productname{} contains.
 
 \subsection{Notational Conventions}
-We use a variant of Extended Backus-Naur Form to express the context-free grammar of
-our programming language.
+We use a variant of Extended Backus-Naur Form (EBNF) to express the context-free
+grammar of our programming language.
 
 Each production rule assigns an expression of terminals, non-terminals and operations
 to a non-terminal. E.g. in the following example the non-terminal $decimal$ is assigned
-the possible terminals of $\gter{0}$ up to and including $\gter{9}$.
+the possible terminals of $\gter{0}$ up to, and including, $\gter{9}$.
 
 \begin{ebnf}
 \grule{decimal}{\gter{0} \gor \gter{1} \gor \grange \gor \gter{9}}
 \end{ebnf}
 
-The following operations are used throughout this section to describe the grammar of the programming language:
+The following operations are used throughout this section to describe the
+grammar of the programming language:
 
 \begin{center}
 \begin{tabular}{r l}
@@ -33,8 +37,14 @@ The following operations are used throughout this section to describe the gramma
 \end{tabular}
 \end{center}
 
+The left-hand side is what will be seen in the grammar, while the right-hand
+side is a description of what the operation means. For instance  a terminal will
+always consist of $\gter{ }$ around the name of the terminal.
+
 \subsection{Character Classes}
-To be able to describe which characters or symbols a non-terminal can consist of in a concise manner, we need to define some sets of symbols to specific names which we can use in the description of our grammar.
+To be able to describe which characters or symbols a non-terminal can consist of
+in a concise manner, we need to define some sets of symbols to specific names
+which we can use in the description of our grammar.
 
 The following classes of characters will be used throughout this section:
 
@@ -49,28 +59,41 @@ The following classes of characters will be used throughout this section:
 \grule{strchar}{unichar \gex quotebs}
 \end{ebnf}
 
+For instance a string character $\left(strchar\right)$ can by any
+unicode character besides a quotation mark or a backslash. 
+
 \subsection{Comments}
 
-In \productname{} a single-line comment begins with a sequence of at least two forward slashes (\texttt{//}).
-The comment ends at the next newline. Everything after the first two forward slashes and until the first next
-newline is completely ignored at the lexical analysis level.
+In \productname{} a single-line comment begins with a sequence of at least two
+forward slashes (\texttt{//}). The comment ends at the next newline. Everything
+after the first two forward slashes and until the first next newline is
+completely ignored at the leve of lexical analysis. Comments are valid
+whitespace.
 
 The following example shows a valid comment within an expression:
 
 \codesample{validcomment.junta}
 
-Unlike other programming languages \productname{} does not have support for multi-line comments (such as
-\texttt{/* */} in C-like languages).
+Unlike other programming languages, \productname{} does not have support for
+multi-line comments (such as \texttt{/* */} in C-like languages).
 
 \subsection{Reserved keywords}
 
+The following list presents the keywords which are reserved in
+\productname{}. These keywords cannot be used as identifiers in the language,
+which is apparent in the following section.
+
 \begin{ebnf}
-  \grule{reserved}{\gter{define} \gor \gter{type} \gor \gter{abstract} \gor \gter{data} \gor \gter{extends} \gor \gter{let} \gor \gter{in}}
-  \galt{\gter{set} \gor \gter{if} \gor \gter{then} \gor \gter{else} \gor \gter{not} \gor \gter{and} \gor \gter{or} \gor \gter{this} \gor \gter{super}}
+  \grule{reserved}{\gter{define} \gor \gter{type} \gor \gter{abstract} \gor
+        \gter{data} \gor \gter{extends} \gor \gter{let} \gor \gter{in}}
+  \galt{\gter{set} \gor \gter{if} \gor \gter{then} \gor \gter{else} \gor
+        \gter{not} \gor \gter{and} \gor \gter{or} \gor \gter{this} \gor \gter{super}}
   \galt{\gter{foe} \gor \gter{friend} \gor \gter{empty} \gor \gter{is}}
 \end{ebnf}
 
 \subsection{Identifiers}
+
+\productname{} has three different identifiers which are defined as follows:
 
 \begin{ebnf}
 %Identifiers
@@ -79,16 +102,28 @@ Unlike other programming languages \productname{} does not have support for mult
 \grule{variable}{\gter{\$} \gcat alphanum \gcat \grep{alphanum}}
 \end{ebnf}
 
+Constants, types, and variables cannot be defined with equal names because
+they begin with different characters. 
+
 \subsection{Literals}
+
+The following list presents the literals of \productname{}:
 
 \begin{ebnf}
 %Literals
 \grule{integer}{decimal \gcat \grep{decimal}}
-\grule{direction}{\gter{n} \gor \gter{s} \gor \gter{e} \gor \gter{w} \gor \gter{ne} \gor \gter{nw} \gor \gter{se} \gor \gter{sw}}
+\grule{direction}{\gter{n} \gor \gter{s} \gor \gter{e} \gor \gter{w} \gor
+\gter{ne} \gor \gter{nw} \gor \gter{se} \gor \gter{sw}}
 \grule{coordinate}{uppercase \gcat \grep{uppercase} \gcat decimal \gcat \grep{decimal}}
 \end{ebnf}
+
+The string literal can contain any unicode character if it is escaped. This lets
+us construct any string. For instance if one needs to use a quotation mark
+within a string, it is possible by escaping the quotation marks.
 
 \begin{ebnf}
 \grule{string}{\gtdq \gcat \grep{strchar \gor escape} \gcat \gtdq}
 \grule{escape}{\gtbs \gcat unichar}
 \end{ebnf}
+
+
