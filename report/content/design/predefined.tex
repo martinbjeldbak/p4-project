@@ -18,13 +18,13 @@ constants for working with the simple types.
 The following global constants are available:
 
 \begin{dlist}
-  \item \texttt{\constant{typeOf}[\variable{value} : \opstar] : \type{Type}}\\
-    Return the type of any value.
-  \item \texttt{\constant{union}[\variable{list} : \type{List}, ... \variable{lists} : \type{List}] : \type{Type}}\\
-    Return the union of a number of lists.
-  \item \texttt{\constant{true} : \type{Boolean}}\\
+  \item \constdef{typeOf}{[\farg{value}{\opstar}]}{Type}\\
+    A function that returns the type of any value.
+  \item \constdef{union}{[\farg{list}{List}, ... \farg{lists}{List}]}{List}\\
+    A function that returns the union of a number of lists.
+  \item \constdef{true}{}{Boolean}\\
     The boolean true value.
-  \item \texttt{\constant{false} : \type{Boolean}}\\
+  \item \constdef{false}{}{Boolean}\\
     The boolean false value.
 \end{dlist}
 
@@ -43,6 +43,11 @@ The following global constants are available:
 \subsubsection{Type}
 
 \subsubsection{Function}
+
+\begin{dlist}
+  \item \constdef{call}{[\farg{parameters}{List}]}{\opstar}\\
+    Calls the function with the specified parameter list. 
+\end{dlist}
 
 \subsubsection{Pattern}
 

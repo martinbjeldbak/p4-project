@@ -1,9 +1,11 @@
 \section{Expressions}
 \label{sec:expressions}
 
+Expressions in \productname{} is the 
+
 \begin{ebnf}
 %Expressions
-\grule{expression}{assignment}
+\grule{expression}{let\_expr}
 \galt{if\_expr}
 \galt{set\_expr}
 \galt{lambda\_expr}
@@ -11,33 +13,80 @@
 \galt{lo\_sequence}
 \end{ebnf}
 
+Two statements hold about expressions in \productname{}:
+
+\begin{nlist}
+\item An expression \textbf{always} has a value.
+\item An expression \textbf{cannot} have side effects.
+\end{nlist}
+
 \subsection{Atomic expressions}
 
-These are the smalles possible parts of expressions in \productname{}.
+These are the smallest possible parts of expressions in \productname{}, defined by
+the rule:
 
 \begin{ebnf}
 \grule{atomic}{\gter{(} \gcat expression \gcat \gter{)}}
+\galt{constant}
+\galt{type}
 \galt{variable}
-\galt{list}
-\galt{\gter{/} \gcat pattern \gcat \gter{/}}
 \galt{\gter{this}}
 \galt{\gter{super}}
-\galt{direction}
-\galt{coordinate}
 \galt{integer}
 \galt{string}
-\galt{type}
-\galt{constant}
+\galt{direction}
+\galt{coordinate}
+\galt{\gter{/} \gcat pattern \gcat \gter{/}}
+\galt{list}
 \end{ebnf}
 
-This group also contains $expression$ contained within parentheses.
+The first atomic expression is $\gter{(} \gcat expression \gcat \gter{)}$, which means
+that it is possible to embed expressions within other expressions, and manually control
+the precedence of operations. Consider the following two expressions:
 
+\codesample{parentheses1.junta}
+\codesample{parentheses2.junta}
+
+In \csref{parentheses2.junta} the parentheses are in fact unnecessary because the
+\texttt{*}-operator has precedence over the \texttt{+}-operator (see
+\secref{sec:operatorsandcalls}).
+
+Names (constants, types, and variables) are also atomic expressions, and are evaluated
+to whatever value they are associated with, based on the current scope. The keywords
+($\gter{this}$ and $\gter{super}$) are atomic, but only applicable within type
+definitions, where $\gter{this}$ refers to the current object and $\gter{super}$
+refers to the current object casted to its parent type (if it has one). \todo{casting??}
+
+The literals ($integer$, $string$, $direction$, and $coordinate$) are evaluated to their
+respective values, while patterns are evaluated to \type{Pattern}-values according to
+the grammar in \secref{sec:patterns} and lists are evaluated to \type{List}-values
+according to the grammar in \secref{sec:lists}.
 
 \subsection{Lists}
+\label{sec:lists}
+
+The \type{List}-type is one of the basic types in \productname{}. A \type{List}-value is
+created using the following syntax:
 
 \begin{ebnf}
 \grule{list}{\gter{[} \gcat \gopt{expression \gcat \grep{\gter{,} \gcat expression}} \gcat \gter{]}}
 \end{ebnf}
+
+Essentially this means that a list is created from zero or more expressions (separated
+by commas). The following statements can be made about lists:
+
+\begin{nlist}
+\item A list can be empty: \texttt{[]}
+\item Lists are ordered ($\texttt{[1, 2]} \ne \texttt{[2, 1]}$).
+\item Lists are immutable.
+\end{nlist}
+
+When a list is evaluated, each expressions is evaluated to a value (the order
+of evaluation does not matter, since no side-effects are possible, lazy-evaluation of expressions
+could even be a possibility), and all values (in the same order as the expressions) are
+added to the resulting \type{List}-value. When a \type{List}-value is created, it can't be
+altered further (because of the no-side-effects condition). All operations on that \type{List}-value
+will create new \type{List}-values, and leave the original value intact.
 
 \subsection{Let expressions}
 
@@ -69,6 +118,7 @@ This group also contains $expression$ contained within parentheses.
 \end{ebnf}
 
 \subsection{Operators and calls}
+\label{sec:operatorsandcalls}
 
 \begin{ebnf}
 \grule{expression}{\grange \gor \gter{not} \gcat expression \gor lo\_sequence}
