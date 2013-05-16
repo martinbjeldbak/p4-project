@@ -1,8 +1,5 @@
 package dk.aau.cs.d402f13.values;
 
-import java.util.Vector;
-
-import dk.aau.cs.d402f13.utilities.errors.ArgumentError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 

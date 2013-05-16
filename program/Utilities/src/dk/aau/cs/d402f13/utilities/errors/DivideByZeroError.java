@@ -1,7 +1,7 @@
 package dk.aau.cs.d402f13.utilities.errors;
 
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
-
+@SuppressWarnings("serial")
 public class DivideByZeroError extends ArgumentError {
 
   public DivideByZeroError(String arg0, AstNode node) { 
