@@ -1,5 +1,6 @@
 package dk.aau.cs.d402f13.utilities.errors;
 
+@SuppressWarnings("serial")
 public class SimulatorError extends Error {
 
 	public SimulatorError(String msg) {

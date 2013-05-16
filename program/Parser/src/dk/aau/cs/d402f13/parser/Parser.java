@@ -1,14 +1,6 @@
 package dk.aau.cs.d402f13.parser;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.Date;
 import java.util.LinkedList;
-import dk.aau.cs.d402f13.scanner.Scanner;
 import dk.aau.cs.d402f13.utilities.Token;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;

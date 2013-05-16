@@ -116,7 +116,19 @@ following syntax:
 \grule{if\_expr}{\gter{if} \gcat expression \gcat \gter{then} \gcat expression \gcat \gter{else} \gcat expression}
 \end{ebnf}
 
+Unlike in most imperative languages, the conditional construct in \productname{} is not a statement
+(\productname{} doesn't have statements) but an expression. Since all expressions must have a value,
+the \emph{else}-part of en if-expression is compulsory.
+
+The if-expression first evaluates the condition (the first expression). The resulting value must be
+of type \type{Boolean}. If the value is equal to the boolean true-value, the \emph{then}-expression
+is evaluated, and the result is returned. If the value is false, then the \emph{else}-expression
+is evaluate, and the result returned.
+
 \subsection{Lambda expressions}
+
+Lambda expressions are expressions that evaluate to anonymous functions. In \productname{} they
+are defined as:
 
 \begin{ebnf}
 \grule{expression}{\grange \gor lambda\_expr}
