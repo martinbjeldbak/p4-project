@@ -51,10 +51,23 @@ The following classes of characters will be used throughout this section:
 
 \subsection{Comments}
 
+In \productname{} a single-line comment begins with a sequence of at least two forward slashes (\texttt{//}).
+The comment ends at the next newline. Everything after the first two forward slashes and until the first next
+newline is completely ignored at the lexical analysis level.
+
+The following example shows a valid comment within an expression:
+
+\codesample{validcomment.junta}
+
+Unlike other programming languages \productname{} does not have support for multi-line comments (such as
+\texttt{/* */} in C-like languages).
+
 \subsection{Reserved keywords}
 
 \begin{ebnf}
-\grule{reserved}{\gter{define} \gor \gter{type}}
+  \grule{reserved}{\gter{define} \gor \gter{type} \gor \gter{abstract} \gor \gter{data} \gor \gter{extends} \gor \gter{let} \gor \gter{in}}
+  \galt{\gter{set} \gor \gter{if} \gor \gter{then} \gor \gter{else} \gor \gter{not} \gor \gter{and} \gor \gter{or} \gor \gter{this} \gor \gter{super}}
+  \galt{\gter{foe} \gor \gter{friend} \gor \gter{empty} \gor \gter{is}}
 \end{ebnf}
 
 \subsection{Identifiers}

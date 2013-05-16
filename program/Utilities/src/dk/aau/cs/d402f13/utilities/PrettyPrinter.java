@@ -1,7 +1,5 @@
 package dk.aau.cs.d402f13.utilities;
 
-import java.lang.reflect.Array;
-
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.ast.Visitor;
@@ -13,8 +11,6 @@ public class PrettyPrinter extends Visitor {
   private int indentationLevel = 0;
   private String indentation = "";
   
-  private int maxWidth = 50;
-  
   private boolean inPattern = false;
   
   public PrettyPrinter(String indentationString) {
@@ -23,10 +19,6 @@ public class PrettyPrinter extends Visitor {
   
   public PrettyPrinter() {
     this("  ");
-  }
-  
-  private String ind() {
-    return indentation;
   }
   
   private void incr() {
@@ -42,10 +34,10 @@ public class PrettyPrinter extends Visitor {
     }
   }
   
-  private boolean isLoSequence(AstNode node) {
-    return node.type == Type.LO_SEQUENCE ||
-        isEqSequence(node);
-  }
+//  private boolean isLoSequence(AstNode node) {
+//    return node.type == Type.LO_SEQUENCE ||
+//        isEqSequence(node);
+//  }
   
   private boolean isEqSequence(AstNode node) {
     return node.type == Type.EQ_SEQUENCE ||

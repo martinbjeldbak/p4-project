@@ -2,7 +2,6 @@ package dk.aau.cs.d402f13.interpreter;
 
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
-import dk.aau.cs.d402f13.values.ConstValue;
 import dk.aau.cs.d402f13.values.FunValue;
 import dk.aau.cs.d402f13.values.ObjectValue;
 import dk.aau.cs.d402f13.values.Value;
