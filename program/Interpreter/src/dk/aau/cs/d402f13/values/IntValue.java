@@ -1,8 +1,5 @@
 package dk.aau.cs.d402f13.values;
 
-import javax.swing.text.StyledEditorKit.BoldAction;
-
-import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.errors.DivideByZeroError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;

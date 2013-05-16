@@ -1,7 +1,11 @@
-\subsection{Dynamic and static scope rules}
+\section{consideration of scope and type systems}
 
-In this section we take a quick look at the advantages and disadvantages of
-static and dynamic scoping and compare the two types of scoping.
+In the following sections we take a quick look at the consequences of scope and
+type systems for \productname{}. We begin by introducing scope rules with a
+short discussion of the consequences of static and dynamic scoping. Afterwards,
+we introduce and discuss the consequences of static and dynamic type systems.
+
+\subsection{Which scope rules are we considering?}
 
 With static scoping the scopes of variables can be determined prior to
 execution. This means that a compiler can easily determine the type of every
@@ -43,3 +47,5 @@ scoped program will be much easier to read, more reliable, and it will execute
 much faster than the program written with dynamic scoping.
 \cite[p. xxx]{sebesta2013}
 %5.5.7, side 229 (sebesta)
+
+\input{content/analysis/typesystems}
