@@ -1,0 +1,5 @@
+type MyType[] {
+  data $myData = 15 // Default value of data-member
+  define myData = $myData // A getter
+  define setMyData[$newValue] = set $myData = $newValue // A setter
+}
