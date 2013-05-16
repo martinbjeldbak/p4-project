@@ -1,9 +1,32 @@
 \section{Predefined types and constants}
 \label{sec:predefined}
 
+In order to write programs in a programming language, it is often neccessary to use a number of built-in
+functions and types. \productname{} provides a number of built-in functions and constants, as well as 
+a number of simple types for representing values such as integers and strings. \productname{} also provides
+a type-hierachy designed for implementing and expressing board games.
+
+Since \productname{} doesn't have a module, package or namespace system, the distinction between a standard-
+and game environment doesn't actually exist in the language, and all types and constants exist in the same
+global namespace.
 
 \subsection{Standard environment}
 
+The standard environment of \productname{} provides the simple types, and related methods, functions and
+constants for working with the simple types.
+
+The following global constants are available:
+
+\begin{dlist}
+  \item \constdef{typeOf}{[\farg{value}{\opstar}]}{Type}\\
+    A function that returns the type of any value.
+  \item \constdef{union}{[\farg{list}{List}, ... \farg{lists}{List}]}{List}\\
+    A function that returns the union of a number of lists.
+  \item \constdef{true}{}{Boolean}\\
+    The boolean true value.
+  \item \constdef{false}{}{Boolean}\\
+    The boolean false value.
+\end{dlist}
 
 \subsubsection{Integer}
 
@@ -21,9 +44,16 @@
 
 \subsubsection{Function}
 
+\begin{dlist}
+  \item \constdef{call}{[\farg{parameters}{List}]}{\opstar}\\
+    Calls the function with the specified parameter list. 
+\end{dlist}
+
 \subsubsection{Pattern}
 
 \subsection{Game environment}
+
+The game environment provides a class hierachy for describing a board game in an object-oriented manner.
 
 \subsubsection{Game}
 
