@@ -1,10 +1,77 @@
 \section{Predefined types and constants}
 \label{sec:predefined}
 
+In order to write programs in a programming language, it is often neccessary to use a number of built-in
+functions and types. \productname{} provides a number of built-in functions and constants, as well as 
+a number of simple types for representing values such as integers and strings. \productname{} also provides
+a type-hierachy designed for implementing and expressing board games.
+
+Since \productname{} doesn't have a module, package or namespace system, the distinction between a standard-
+and game environment doesn't actually exist in the language, and all types and constants exist in the same
+global namespace.
 
 \subsection{Standard environment}
 
+The standard environment of \productname{} provides the simple types, and related methods, functions and
+constants for working with the simple types.
 
+The following global constants are available:
+
+\begin{dlist}
+  \item \texttt{\constant{typeOf}[\variable{value} : \opstar] : \type{Type}}\\
+    Return the type of any value.
+  \item \texttt{\constant{union}[\variable{list} : \type{List}, ... \variable{lists} : \type{List}] : \type{Type}}\\
+    Return the union of a number of lists.
+  \item \texttt{\constant{true} : \type{Boolean}}\\
+    The boolean true value.
+  \item \texttt{\constant{false} : \type{Boolean}}\\
+    The boolean false value.
+\end{dlist}
+
+\subsubsection{Integer}
+
+\subsubsection{Boolean}
+
+\subsubsection{String}
+
+\subsubsection{List}
+
+\subsubsection{Direction}
+
+\subsubsection{Coordinate}
+
+\subsubsection{Type}
+
+\subsubsection{Function}
+
+\subsubsection{Pattern}
 
 \subsection{Game environment}
 
+The game environment provides a class hierachy for describing a board game in an object-oriented manner.
+
+\subsubsection{Game}
+
+\subsubsection{Board}
+
+\subsubsection{GridBoard}
+
+\subsubsection{Square}
+
+\subsubsection{Piece}
+
+\subsubsection{Player}
+
+\subsubsection{Action}
+
+\subsubsection{ActionSequence}
+
+\subsubsection{UnitAction}
+
+\subsubsection{AddAction}
+
+\subsubsection{MoveAction}
+
+\subsubsection{RemoveAction}
+
+\subsubsection{TestCase}
