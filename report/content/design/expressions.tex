@@ -135,12 +135,34 @@ are defined as:
 \grule{lambda\_expr}{\gter{\#} \gcat varlist \gcat \gter{=>} \gcat expression}
 \end{ebnf}
 
+
+
 \subsection{Set expressions}
+
+Set expressions look a bit like let expressions, but are only applicable within type definitions:
 
 \begin{ebnf}
 \grule{expression}{\grange \gor set\_expr}
 \grule{set\_expr}{\gter{set} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression}}
 \end{ebnf}
+
+Set expressions are used to ``modify'' the value of data-members in objects (see \secref{sec:typedefinitions}
+for an explanation of data). Each variable in the set expression must exist in the current type as
+data-members. Since modifying a data-member would be a side-effect, which is not allowed, the set expression
+instead returns a clone of the object, with the specified data-members set to their respective values. This
+is useful for making setters (or something that looks like setters). Consider for example the following
+type:
+
+\codesample{setget.junta}
+
+In the example above, the method \constant{setMyData} returns a new instance of \type{MyType}, with
+the data-member \variable{myData} set to something else. The following example shows the use of
+a getter and a setter:
+
+\codesample{setget2.junta}
+
+The call to \constant{setMyData} does not change the state of the original instance of \type{MyType},
+instead it returns a new instance.
 
 \subsection{Operators and calls}
 \label{sec:operatorsandcalls}
