@@ -9,7 +9,7 @@
 \newcommand{\itemref}[1]{element \ref{#1}}
 \newcommand{\pseudoref}[1]{algorithm \ref{#1}}
 \newcommand{\capt}[1]{\caption{\emph{#1}}}
-\newcommand{\csref}[1]{codesample \ref{#1}}
+\newcommand{\csref}[1]{codesample \ref{cs:#1}}
 
 %code-like refs
 \newcommand{\tokenref}[1]{{\textbf{#1}}}
@@ -69,6 +69,9 @@
 \newcommand{\keyword}[1]{\texttt{\color[rgb]{0.000 0.529 0.000}#1}}
 
 \newcommand{\operator}[4][]{\texttt{\type{#1} \textbf{\color{nicered}#2} \type{#3} $\rightarrow$ \type{#4}}}
+
+\newcommand{\constdef}[3]{\texttt{\constant{#1}#2 : \type{#3}}}
+\newcommand{\farg}[2]{\variable{#1} : \type{#2}}
 
 \newcommand{\opstar}{$*$}
 
