@@ -1,7 +1,5 @@
 package dk.aau.cs.d402f13.interpreter.stdenv.game;
 
-import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;

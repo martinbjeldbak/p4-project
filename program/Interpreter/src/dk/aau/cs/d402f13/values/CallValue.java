@@ -1,15 +1,8 @@
 package dk.aau.cs.d402f13.values;
 
-import java.util.HashMap;
-
 import dk.aau.cs.d402f13.interpreter.Interpreter;
-import dk.aau.cs.d402f13.interpreter.Member;
-import dk.aau.cs.d402f13.interpreter.Scope;
-import dk.aau.cs.d402f13.utilities.errors.DivideByZeroError;
 import dk.aau.cs.d402f13.utilities.errors.InternalError;
-import dk.aau.cs.d402f13.utilities.errors.NameError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
-import dk.aau.cs.d402f13.utilities.errors.TypeError;
 
 public class CallValue extends Value implements Cloneable {
 
