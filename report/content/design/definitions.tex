@@ -4,8 +4,32 @@
 
 \subsection{Program structure}
 
+\begin{ebnf}
+\grule{program}{\grep{definition}}
+\end{ebnf}
 
 \subsection{Constant definitions}
 
+\begin{ebnf}
+\grule{definition}{constant\_def}
+\galt{type\_def}
+\grule{constant\_def}{\gter{define} \gcat constant \gcat \gopt{varlist} \gcat \gter{=} \gcat \gcat expression}
+\grule{type\_def}{\gter{type} \gcat type \gcat varlist \gcat \gopt{\gter{extends} \gcat type \gcat list} \gopt{type\_body}}
+\end{ebnf}
+
+\begin{ebnf}
+\grule{varlist}{\gter{[} \gcat \gopt{variable \gcat \grep{\gter{,} \gcat variable} \gcat \gopt{\gter{,} \gcat vars} \gor vars} \gcat \gter{]}}
+\grule{vars}{\gter{...} \gcat variable}
+\end{ebnf}
 
 \subsection{Type definitions}
+
+\begin{ebnf}
+\grule{type\_def}{\gter{type} \gcat type \gcat varlist \gcat \gopt{\gter{extends} \gcat type \gcat list} \gopt{type\_body}}
+\grule{type\_body}{\gter{\{} \gcat \grep{member\_def} \gcat \gter{\}}}
+\grule{member\_def}{abstract\_def}
+\galt{constant\_def}
+\galt{data\_def}
+\grule{abstract\_def}{\gter{define} \gcat \gter{abstract} \gcat constant \gcat \gopt{varlist}}
+\grule{data\_def}{\gter{data} \gcat variable \gcat \gter{=} \gcat expression}
+\end{ebnf}
