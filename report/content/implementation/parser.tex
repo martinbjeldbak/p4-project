@@ -3,7 +3,7 @@
 In this section we present our handwritten parser for our programming language.
 We have written a top-down recursive descent parser, which is within the class
 of LL(1) parsers. The grammar for \productname{} is suited for this because
-e.g.\@ it does not have left-recursive productions. This is a result of the
+e.g.\ it does not have left-recursive productions. This is a result of the
 choice of parsing technique before we started formally defining our grammar.
 
 In the end of this section we present our work with SableCC and why we chose not
@@ -188,7 +188,7 @@ quite a while to read the documentation before and during writing the
 specifications, as it simply isn't just copy/pasting EBNF grammar
 into a file. An example of the if-expression rule is seen here
 
-\begin{lstlisting}[caption=Part of the grammar specifications file of SableCC with focus on if-expressions.]
+\begin{lstlisting}[caption={Part of the grammar specifications file of SableCC, with focus on if-expressions.}]
 Tokens
   else          = 'else';
   then          = 'then';
@@ -201,7 +201,7 @@ Productions
                 | {lambda} lambda_expr
                 | {el} element list?
                 | {not} not expression;
-   if_expr = if [left]:expression then [mid]:expression else [right]:expression;
+   if_expr      = if [left]:expression then [mid]:expression else [right]:expression;
 \end{lstlisting}
 
 % Pros
