@@ -1,0 +1,55 @@
+\section{Definitions}
+\label{sec:definitions}
+
+
+\subsection{Program structure}
+
+The outermost layer of a \productname{}-program is a list of definitions:
+
+\begin{ebnf}
+\grule{program}{\grep{definition}}
+\grule{definition}{constant\_def}
+\galt{type\_def}
+\end{ebnf}
+
+A definition is either a constant definition (functions are also constants)
+or a type definition, so when a program has been run, we are left with a
+symbol table full of types and constants/functions.
+
+\subsection{Constant definitions}
+
+\begin{ebnf}
+\grule{constant\_def}{\gter{define} \gcat constant \gcat \gopt{varlist} \gcat \gter{=} \gcat \gcat expression}
+\end{ebnf}
+
+\begin{ebnf}
+\grule{varlist}{\gter{[} \gcat \gopt{variable \gcat \grep{\gter{,} \gcat variable} \gcat \gopt{\gter{,} \gcat vars} \gor vars} \gcat \gter{]}}
+\grule{vars}{\gter{...} \gcat variable}
+\end{ebnf}
+
+\todo{Old stuff:}
+
+A user can define custom functions for use in the implementation of a board game.
+This is done using the $define$-keyword. Functions can be declared to accept
+any number of parameters or none at all. An example of a function definition could
+be:
+
+\codesample{functiondef.garry}
+
+It can be used as a way of putting frequently used expressions in one place. 
+
+\productname{} supports variadic functions, which means that it is possible to define
+functions with indefinite arity.
+\subsection{Type definitions}
+\label{sec:typedefinitions}
+
+\begin{ebnf}
+\grule{type\_def}{\gter{type} \gcat type \gcat varlist \gcat \gopt{\gter{extends} \gcat type \gcat list} \gopt{type\_body}}
+\grule{type\_body}{\gter{\{} \gcat \grep{member\_def} \gcat \gter{\}}}
+\grule{member\_def}{abstract\_def}
+\galt{constant\_def}
+\galt{data\_def}
+\grule{abstract\_def}{\gter{define} \gcat \gter{abstract} \gcat constant \gcat \gopt{varlist}}
+\grule{data\_def}{\gter{data} \gcat variable \gcat \gter{=} \gcat expression}
+\end{ebnf}
+

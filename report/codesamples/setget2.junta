@@ -1,0 +1,5 @@
+let $myInstance1 = MyType[],
+    $myInstance2 = $myInstance1.setMyData[5],
+    $value1 = $myInstance1.myData, // 15
+    $value2 = $myInstance2.myData // 5
+  in $value1 != $value2 // true

@@ -2,8 +2,6 @@ package dk.aau.cs.d402f13.evaluation;
 
 import java.util.HashSet;
 
-import dk.aau.cs.d402f13.utilities.scopechecker.SymbolInfo;
-
 public class DFAState extends State {
  
   HashSet<NFAState> states;

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import dk.aau.cs.d402f13.interpreter.AbstractMember;
 import dk.aau.cs.d402f13.interpreter.Callable;
 import dk.aau.cs.d402f13.interpreter.Interpreter;
-import dk.aau.cs.d402f13.interpreter.Member;
 import dk.aau.cs.d402f13.interpreter.ParentCallable;
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;

@@ -1,0 +1,322 @@
+
+\section{Contextual constraints}
+\label{sec:staticsemantics}
+
+The \classref{ScopeChecker} is the class responsible for enforcing some of the
+static semantic rules of \productname{} (described in \chapref{chap:design}) at
+compile time. This section aims to explain how these static semantic checks
+are performed by the \classref{ScopeChecker} in simple sequential steps. Any
+error detected by the \classref{ScopeChecker} will cause a \classref{ScopeError}
+exception to be thrown. This error contains helpful information about the type
+of error and where in the input program the error is located. The checking of
+static semantics as well as the interpretation of the code both use the visitor
+pattern which is a commonly used approach for both purposes.
+
+After the AST has been created, the visitor pattern allows us to traverse the
+AST and execute encapsulated pieces of code for each specific type of
+\classref{AstNode}. 
+
+\subsection{TypeVisitor}
+The first visitor used is the \classref{TypeVisitor}. This visitor traverses the
+AST, finds all type definitions in the input program and for each type
+definition an object of class \classref{TypeSymbolInfo} is instantiated. After
+running the \classref{TypeVisitor}, each type definition in the input program
+has an associated object of class \classref{TypeSymbolInfo} which makes it easy
+to get information about any declared type in the input program by accessing the
+following members contained in the \classref{TypeSymbolInfo} object:
+
+\begin{dlist}
+  \item name (\classref{String}): The type's name
+  \item parentName (\classref{String}): The name of its super type (null if
+    not a derived type)  
+  \item args (\classref{Integer}): The number of arguments in the type's
+    constructor
+  \item parentArgs (\classref{Integer}): The number of arguments given in the
+    call to its parent constructor
+  \item data (\classref{List of Data}): Each data defined in the type body has a
+    corresponding \classref{Data} object describing its name and position in the
+    input program
+  \begin{dlist}
+    \item The input program position is stored as a line and an offset and makes
+      it possible to produce error messages with information about where in the
+      input program an error was found
+  \end{dlist}
+  \item members (\classref{List of Member}): Each constant and function defined
+    in the type body has a corresponding \classref{Member} object describing its
+    name, argument count, an abstract flag, a \classref{TypeSymbolInfo}
+    reference to the type defining the \classref{Member} and a pointer to the line
+    and offset in the code
+  \item node (\classref{AstNode}): A reference to the
+    TYPE\_DEF-\classref{AstNode} which defines the type
+  \begin{dlist}
+    \item This reference is used to get the input program position where the
+      type was defined (for generating useful error messages), but is also used
+      for marking abstract type definitions (described in detail in
+      \secref{sec:abstractTypeMarker}) 
+  \end{dlist}
+  \item parent (\classref{TypeSymbolInfo}): This will contain an object
+    reference to its parent type if it has one
+  \begin{dlist}
+    \item This is however a null pointer until running the
+      \classref{TypeTableCleaner} described in \secref{sec:typetablecleaner}
+  \end{dlist} 
+\end{dlist}
+
+All the \classref{TypeSymbolInfo} objects are kept in an object of class
+\classref{TypeTable}. The \classref{TypeTable} class is a layer of abstraction
+which provides easy and fast access information about the types contained in the
+input program. The underlying implementation is a hashmap from the type's name
+as a \classref{String} to its object reference, which provides quick lookup on
+type names, and a list of \classref{TypeSymbolInfo}, which makes iteration over the
+\classref{TypeSymbolInfo}s convenient and makes it possible to sort the types
+with a purpose described in \secref{sec:typetablecleaner}. For convenience, we
+say that a type is added to a type table which means that a
+\classref{TypeSymbolInfo} object representing the type is added to the
+\classref{TypeTable} object representing the type table.
+
+When a type is added to the type table, it is checked that no other types with
+the same name exist.
+
+\subsection{TypeParentRefMaker}
+\label{sec:TypeParentRefMaker}
+The \classref{TypeSymbolInfo} objects only contain the name of their super type
+as a \classref{String} or a null value if there is no super type. By making a
+lookup in the \classref{TypeTable} on the parent name, the real object
+references can be found and stored for faster and more convenient parent lookups
+which is used greatly by the visitor described in
+\secref{sec:usesaredeclaredvisitor}.
+
+\subsection{TypeMemberPropagator}
+\label{sec:TypeMemberPropagator}
+Some of the later checks that will be performed requires us to determine whether
+or not a type member (constant or function) with a specific name is visible in a
+given type. This requires searching in the given type and recursively in all
+super types for the member. When this kind of lookup is done many times on the
+same member, the traversal of the same long chains of parent references become
+inefficient which results in clumsy code. To simplify and speed up this process
+the \classref{TypeMemberPropagator} ensures that all members of a type A are
+also present in a type C, if A is a super type of C. With this approach,
+checking if a member is visible in type C, only requires looking in C instead of
+following the chain parent types.
+
+This propagation of members is done by first doing a topological sort on the
+\classref{TypeSymbolInfo} objects, such that when iterating over the type table,
+any type yielded will always appear before all of its subtypes. This makes the
+afterwards propagation of members possible in linear time by iterating over the
+topologically sorted types. If a type C is met, the members in its parent type B
+are put in C as well. If B has a parent A, we know that B has already the
+members from A due to the topological sorting.
+
+The topological sorting is done using the algorithm that goes by the same name, from the book Introduction
+to Algorithms \cite[p. 612]{ad} working on a graph $G = (V, E)$. Each type
+represents a vertex $v$. An edge $e$ exist from $v_1$ to $v_2$ if the type $v_2$
+is a parent of the type $v_1$. However this results in a topological order where
+a type always appears before its super types. This problem is quickly solved
+simply by reversing the list.
+
+Given the graph in \figref{fig:topological}, the following sequences are examples
+of correct and wrong topologically sorted orders after the list has been reversed:
+
+\begin{align*}
+ Correct &: \texttt{a, d, b, e, c, f} \\
+ Correct &: \texttt{a, b, e, c, f, d} \\
+ Wrong &: \texttt{a, b, c, \textbf{f}, \textbf{e}, d} \\
+ Wrong &: \texttt{\textbf{b}, c, e, \textbf{a}, f, d}
+\end{align*}
+
+\input{figures/topologicalsort}
+
+Another great advantage from topological sorting is the fact that it reveals
+cycles in the graph. A cycle in the graph means an extend cycle between types
+exists, e.g: A extends B, B extends C and C extends A, which is not accepted.
+
+\subsection{AbstractTypeMarker}
+\label{sec:abstractTypeMarker}
+The interpreter needs to know whether or not a given type contains any abstract
+members. Such a type is an abstract type and should not be allowed to be
+instantiated. Marking these abstract types is now smooth. Due to the propagated
+members it can just be checked whether or not any abstract members are present in the
+given type. This check is done by the \classref{AbstractTypeMarker}. Any type
+described by a \classref{TypeSymbolInfo} has a reference to the
+\classref{AstNode} it was defined from. If the type is found to be an abstract
+type, the type of the \classref{AstNode} is changed from TYPE\_DEF to
+ABSTRACT\_TYPE\_DEF. This is the only way to make information visible to the
+interpreter since the \classref{Interpreter} does not use the same
+\classref{TypeTable} class used by the \classref{ScopeChecker}.
+
+\subsection{TypeSuperCallChecker}
+This checker ensures that any type that extends another type provides the right
+amount of arguments when calling the parent's constructor. A constructor can have
+$x$ arguments and may or may not contain a variable amount of additional
+arguments. Consider the type constructor \texttt{Type A[\$var1, \$var2, \dots
+\$varargs]}. When calling the constructor from another type, e.g. \texttt{Type
+B[] extends A[5, 2, 7, 4]}, it must be checked that the type B provides \textit{at
+least} the number of arguments in A's constructor (not counting the variable
+amount of extra arguments). If A does not have a variable amount of additional
+arguments, the argument count must match exactly. The implemented code for doing
+this check can be seen in \lstref{lst:tscc}.
+
+\lstinputlisting[caption=How the TypeSuperCallChecker is implemented.,
+label=lst:tscc, language=Java]{listings/typeSuperCallChecker.java}
+
+\subsection{UsesAreDeclaredVisitor}
+\label{sec:usesaredeclaredvisitor}
+This visitor ensures that any use of a variable, constant, function, data
+member, or type can be bound to a declaration. The visitor uses a variable
+(\classref{TypeSymbolInfo} \varref{currentType}) which updates upon visiting a
+TYPE\_DEF or an ABSTRACT\_TYPE\_DEF \classref{AstNode}, to keep track of which
+type it is currently visiting inside. If the visitor is not traversing inside a
+type (\classref{TypeSymbolInfo} \varref{currentType}) references a special type
+called \varref{globalType}, which is used only to contain the standard- and game
+environment as well as the global constants and functions declared in a
+\productname{} game. 
+
+It is important to realise that \varref{globalType} is not a super type of all
+other types, it is a stand alone type that no type can derive from. Its name
+contains an invalid character for a type name to ensure that no type can derive
+from it. This becomes handy when checking if constants and functions used can be
+bound to a declaration.
+
+\subsubsection{Constants and functions}
+When a constant or a function is referenced it is necessary to know two things
+about the context in which it was referenced:
+
+\begin{nlist}
+  \item In what type did the reference occur?
+  \item Is the reference a member access?
+\end{nlist}
+
+The first thing is easy to check since we have the \varref{currentType}
+variable. This variable may however point to the global type. The structure of
+the AST makes it easy to determine if it was a member access, since we would
+have been visiting a MEMBER\_ACCESS \classref{AstNode} prior to the referenced
+constant or function. In the expression: \texttt{A[].B.C[2,3]}, both B and C are
+member accesses, but A is not. Given this information, a different check can be
+done regarding to the context of the reference:
+
+\begin{nlist}
+  \item Type was global and a member access
+  \begin{dlist}
+    \item Must be visible in at least one type
+  \end{dlist} 
+  \item Type was global but not a member access
+  \begin{dlist}
+    \item Must be visible in the global scope
+  \end{dlist}
+  \item Type was A and a member access
+  \begin{dlist}
+    \item If prefixed by this, it must be visible in A or any super type of A
+    \item If prefixed by super, it must be visible in any super type of A
+    \item If prefixed by a variable name, it must be visible in at least one type
+  \end{dlist}
+  \item Type was A but not a member access: Must be visible in A, a super type
+    of A or global scope
+\end{nlist}
+
+One may wonder why an accessed member is accepted if the accessed member is
+visible in at least one type. Consider the member access \texttt{randomType.B}.
+Here it is unknown in what type we shall look for the member B. The constant
+\texttt{randomType} could literally return a random type, or the type returned
+could be determined by an arbitrary complex algorithm. Therefore, we can only
+enforce the rule that the member \texttt{B} must exist in at least one type.
+
+%Skal nedenstående  afsnit med?
+
+%One may think that it is also nice to know if a referenced constant or function
+%has a number of parameters along with it and whether the actual number of
+%arguments correctly matches the formal number of arguments. This is however
+%quite hard to determine. In the example, if \texttt{randomConstant} was declared
+%as a constant, the expression \texttt{randomConstant[2]} would still make sense if
+%the constant returned a list, in which 2 was an index. This is however
+%something the scope checker cannot look into. Given a function declared as
+%\texttt{randomFunction[\$a, \$b] = \dots} the expression \texttt{let \$var =
+%randomFunction in \dots} would also be correct, in which case \texttt{\$var} is just
+%a reference to \texttt{randomFunction} in the \texttt{in}-scope. So it is valid to
+%use a constant followed by a parameter list as well as it is valid to not apply
+%a parameter list behind a function. 
+
+\subsubsection{Variables}
+For any variable, a declaration must always exist before it is used. A variable
+can only declared in four ways:
+
+\begin{dlist}
+  \item As a type constructor
+  \item As a formal parameter in a function declaration
+  \item In a lambda expression
+  \item In a \texttt{let-in} expression
+\end{dlist}
+
+In all cases the \productname{} semantics require that a new scope is opened, in
+which the declared variable is known while the body of the expression is
+executed. When the scope closes the declared variables are removed. The body of
+an expression can also contain new variable declarations, e.g. a \texttt{let-in}
+expression in the body of a \texttt{let-in} expression. 
+
+The scope checker uses a \classref{SymbolTable} class which is basically a
+symbol table with a list of variable names and a reference to a parent symbol
+table.  The reference to the parent symbol table is exactly how the scopes
+inside other scopes are implemented. 
+
+\codesample{openscopeexpressions.junta}
+
+Notice how the four code samples in in the above codesample all result in the same
+scope checking routine, which can be seen in \figref{fig:scope1}; First, a new
+symbol table is instantiated in which the variables \$a and \$b are put in. The
+symbol table's parent reference is updated so it points to the current symbol
+table, which is referred by \classref{SymbolTable} \varref{currentST}. Next, the
+current symbol table is updated to the newly created symbol table, and the body
+(the triple dots) are executed. Lastly, the current scope is closed, which
+updates the current symbol table reference to point to the parent symbol table
+of the current symbol table.  Notice that the symbol tables maintain a
+stack-like structure, where opening a scope pushes a symbol table on the stack
+and closing a scope pops one. The variable \classref{SymbolTable}
+\varref{currentST} points to the element on top of the stack.
+
+When a variable is used, it is checked that the variable exists in any of the
+symbol tables by first looking in the current symbol table and recursively
+following the parent reference until a null reference is found. If a variable
+declaration with the same name as the used variable cannot be found, an error is
+generated.
+
+\fig[height=5em]{scope1}{Four different expressions that all result in the scope
+action depicted.}
+
+It is important to realise the reason for maintaining the stack-like structure
+of symbol tables. It might seem like a single symbol table would be enough and
+that all variable declarations could just be put in there. This is indeed wrong,
+since the scope checker must also check for double declarations. A double
+declaration exists if a symbol table contains the same variable twice. Notice
+how \figref{fig:scope2} contains two symbol tables, each containing a
+declaration of \$a. 
+
+\fig[height=5em]{scope2}{The variable \$a declared in two different scopes.}
+
+This is completely valid and is caused by the following codesample. If only a
+single symbol table was used, an incorrect double declaration would be detected.
+
+\codesample{scope2.junta}
+
+\subsubsection{Data members}
+When visiting a type body a new scope is opened and the data members of
+\classref{TypeSymbolInfo} \varref{currentType} are immediately inserted into that
+scope. The children of the type body is then visited and the scope is closed.
+This ensures that the data members of a type can be used anywhere in the type
+body but in that type body only. When exiting that type body and closing the
+scope the symbol table containing the data members are no longer visible.
+
+\subsection{Evaluation}
+Many different static semantic checks are implemented in the scope checker.
+Though many other checks could have been included as well, the scope of the
+static semantics has been limited due to a few constraints. First of all, there
+is a deadline for this project, and with an almost endless set of semantic
+checks one can keep developing these checks. Furthermore, with new techniques
+being discovered once in a while, a compiler or interpreter can simply not
+include them all. A big set of the checks not included in \productname{}
+requires type checking, which is cumbersome in a dynamic programming language.
+However, it is generally possible to use type inference to find at least some of
+the types and errors associated with the use of them. It is important to realise
+that everything cannot always be inferred, for instance an algorithm could be so
+complex that it would need to be executed to determine all possible outcomes.
+Running the algorithm is not possible since you cannot know if the algorithm
+will ever halt.
+\cite[p. 173]{itttoc}

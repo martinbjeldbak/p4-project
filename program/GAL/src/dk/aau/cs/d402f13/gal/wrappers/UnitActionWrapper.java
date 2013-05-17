@@ -2,7 +2,6 @@ package dk.aau.cs.d402f13.gal.wrappers;
 
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
-import dk.aau.cs.d402f13.utilities.gameapi.Piece;
 import dk.aau.cs.d402f13.utilities.gameapi.UnitAction;
 import dk.aau.cs.d402f13.values.Value;
 

@@ -1,12 +1,7 @@
 package dk.aau.cs.d402f13.values;
 
-import java.util.HashMap;
-
-import dk.aau.cs.d402f13.utilities.ast.AstNode.Type;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
-
-import static dk.aau.cs.d402f13.values.TypeValue.expect;
 
 public class BoolValue extends Value {
   
