@@ -5,7 +5,7 @@ for a given program. This interpreter class is, like the scope checker,
 also implemented with the visitor pattern, visiting all the nodes and
 taking appropriate actions depending on what type of node is visited.
 The difference here is that values, types, and other language constructs
-are created and evaluated directly, propagating the values up the AST.
+are created and evaluated directly, propagating the results up the AST.
 
 In this section, we will look at the inner workings of the interpreter
 and see some examples of the different evaluation methods used and how
@@ -15,26 +15,70 @@ described, as they play a central role in most programs and functions
 written in \productname{}.
 
 \subsection{Symbol table and scopes}
-Symbol tables in the interpreter are used to add and get constants, variables, types, and to push and pop the scope stack.
+Symbol tables in the interpreter are used to add and get constants,
+variables, types, and to push and pop the scope stack.
 
 \subsection{Values and their operators}
-Each one of our base values is represented internally by a class used in the interpreter. These classes are all sub-classes of a general class \classref{Value}, that offers the sub-classes an interface to implement various different operations, such as comparison, addition, calling, and so on, throwing an error if trying to use the operator between incompatible values or if the operation yields an invalid result.
+Each one of our base values is represented internally by a class used in
+the interpreter. These classes are all sub-classes of a general class
+\classref{Value}, that offers the sub-classes an interface to implement
+various different operations, such as comparison, addition, calling,
+and so on, throwing an error if trying to use the operator between
+incompatible values or if the operation yields an invalid result.
 
-In the following part of this section, a few important values and their features are highlighted.
+In the following part of this section, a few important values and their
+features are highlighted. The most basic values such as integers,
+strings, directions, coordinates, and lists principally support the same
+operations, and are therefore uninteresting to discuss compared to the
+more complex values, such as types and functions. For completeness, the
+implementation of coordinates, lists, types, and functions are discussed
+below.
+
+Most properties (variables) of values are declared as Java
+\classref{final}, due to the fact that \productname{} is functional and
+that the result of an expression always results in a new instance of an
+object. This means that a simple plus operation yields a new value, so
+the interpreter constantly instantiates these new values without ever
+needing to update a specific property.
 
 \subsubsection{Coordinates}
+Coordinates are represented internally by a tuple $(x, y)$ specifying
+a coordinate on the game board. The maximum board size is limited by
+an $x$ and $y$, which are both 32-bit signed two's compliment Java
+integers\footnote{Which gives a maximum coordinate of $(2,147,483,647;
+2,147,483,647)$}. If we wished to represent larger boards, we could
+simply use a built-in larger natural number representation, or create a
+custom representation.
+
+As specified in \secref{sec:standardenvironment}, coordinates consist of
+a horizontal axis represented by letter, or multiple letters, $x$, and a
+numerical $y$, representing the vertical squares on a grid-shaped board.
+When displaying a coordinate to the user, a simple method is called to
+convert the $x$ coordinate to its alphabetical form.
+
+Coordinate values support equals comparison, done by value. It
+also allows addition with strings, directions, and lists. Subtracting
+other coordinates yields a direction vector and subtracting a direction
+yields a new coordinate with an offset defined by subtracting the
+coordinates $x$ and $y$ properties with the direction's $x$ and $y$
+properties.
+
+\lstinputlisting[caption={\emph{How subtraction of other values on \classref{Coordinate} is handled.}}, label={lst:coordSubtract}]{listings/coordSubtract.java}
+
+Listing \ref{lst:coordSubtract} shows the implementation of the subtraction operation on coordinates. This method is principally the same implementation for every mathematical operation across all the different sub-classes of \classref{Value}. Type checking is always done to see if the right-hand side of the operation is compatible before taking the correct actions. The method \methodref{is} on all \classref{Value} types checks to see if the type is the specified type or any sub-type extending the type in \productname{}. If the RHS is allowed, it's up-casted to the appropriate type if it isn't used directly, whereafter the appropriate operation is performed between the two types.
 
 \subsubsection{Lists}
+Lists 
 
 \subsubsection{Types}
 % Abstract type values are just an extension of types
 
 \subsubsection{Functions}
 
-% Our types are probably most interesting to mention here?
-
 
 \subsection{Pattern evaluation}
+% Write something about the first implementation using NFA's and why they didn't work and what limits they opposed
+% Patterns are very similar to regular expressions, but why are they different?
 
 \subsection{Evaluation of interpreter}
 It is obviously not the fastest implementation of an interpreter, but we don't see that as a hindrance, because speed is not what we're after.
