@@ -1,115 +1,194 @@
 package dk.aau.cs.d402f13.evaluation;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Stack;
+
+import dk.aau.cs.d402f13.utilities.SimpleDir;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.gameapi.Game;
+import dk.aau.cs.d402f13.utilities.gameapi.Piece;
+import dk.aau.cs.d402f13.utilities.gameapi.Player;
+import dk.aau.cs.d402f13.utilities.gameapi.Square;
 import dk.aau.cs.d402f13.values.*;
 
+
+
 public class GridBoardPatternEvaluator {
-  private final CoordValue coord;
-  private final PatternValue pattern;
-  private final Game game;
+  
+  private Game game;
 
-  public GridBoardPatternEvaluator(CoordValue coord, PatternValue pattern, Game game) {
-    this.coord = coord;
-    this.pattern = pattern;
+  public boolean doesPatternMatch(Game game, PatternValue pv, DirValue squarePos) throws StandardError{
     this.game = game;
-  }
-
-  public GridBoardPatternEvaluator(PatternValue pattern) {
-    this.pattern = pattern;
-    this.coord = null;
-    this.game = null;
-  }
-
-  public boolean evaluate() throws StandardError {
-    NFA nfa = new NFA();
-
-    createNFA(nfa, pattern);
-    nfa.toDot("NFA.dot");
-
-    NFAToDFAConverter converter = new NFAToDFAConverter();
-    DFA dfa = converter.ToDFA(nfa);
-    dfa.toDot("DFA.dot");
-
-    if(dfa.recognizes(game, coord))
-      System.out.println("WOOHOO - pattern matched :D");
-    else
-      System.out.println("Pattern not matched :(");
-
-
+    //this.dirVals = new HashSet<DirValue>();
+    HashSet<DirSeq> dirSeqs = new HashSet<DirSeq>();
+    dirSeqs.add(new DirSeq(2,2)); //start at 2,2
+    dirSeqs = evaluate(pv, dirSeqs);
+    for (DirSeq ds : dirSeqs){
+      ds.print();
+      //if (ds.checkPatternFromPos(squarePos))
+        //return true;
+    }
     return false;
   }
-
-  /**
-   * Updates the NFA supplied as parameter with the value
-   * also supplied as parameter.
-   * @param n the NFA to be updated
-   * @param v the value to be added to the NFA
-   */
-  private void createNFA(NFA n, Value v) {
-    if(v instanceof PatternKeyValue) {
-      PatternKeyValue val = (PatternKeyValue)v;
-
-      n.concat(new NFA(val));
-    }
-    else if(v instanceof PatternNotValue) {
-      PatternNotValue val = (PatternNotValue)v;
-
-      // Create the NFA for the value, then not the NFA
-      NFA not = new NFA();
-      createNFA(not, val.getValue());
-      not.not();
-
-      // Finally, add this NFA to the current NFA
-      n.concat(not);
-    }
-    else if(v instanceof PatternOrValue) {
-      PatternOrValue val = (PatternOrValue)v;
-
-      NFA opt1 = new NFA();
-      NFA opt2 = new NFA();
-
-      createNFA(opt1, val.getLeft());
-      createNFA(opt2, val.getRight());
-
-      opt1.union(opt2);
-
-      n.concat(opt1);
-    }
-    else if(v instanceof PatternOptValue) {
-      PatternOptValue val = (PatternOptValue)v;
-
-      NFA optionalNFA = new NFA();
-
-      createNFA(optionalNFA, val.getValue());
-      optionalNFA.optional();
-
-      n.concat(optionalNFA);
-    }
-    else if(v instanceof PatternMultValue) {
-      PatternMultValue val = (PatternMultValue)v;
-
-      NFA mult = new NFA();
-      createNFA(mult, val.getValue());
-      mult.kleeneStar();
-
-      n.concat(mult);
-    }
-    else if(v instanceof PatternPlusValue) {
-      PatternPlusValue val = (PatternPlusValue)v;
-
-      NFA plus = new NFA();
-      createNFA(plus, val.getValue());
-      plus.plus();
-
-      n.concat(plus);
-    }
-    else if(v instanceof PatternValue) {
-       for(Value val : ((PatternValue) v).getValues()) {
-         createNFA(n, val);
-       }
-    }
-    else
-      n.concat(new NFA(v));
+  
+  private Player currentPlayer() throws StandardError{
+    return this.game.getCurrentPlayer();
   }
+  
+  private HashSet<DirSeq> evaluate(Value v, HashSet<DirSeq> dirSeqs) throws StandardError{
+    if (v instanceof PatternOrValue)
+      return evaluatePatternOrValue((PatternOrValue)v, dirSeqs);
+    else if (v instanceof DirValue)
+      return addDirValue((DirValue)v, dirSeqs); //adds direction to all DirSeq in current set
+    else if (v instanceof PatternKeyValue)
+      return addPatternKeyValue((PatternKeyValue)v, dirSeqs, false); //adds dirValue to all dirs in current set
+    else if (v instanceof PatternNotValue)
+      return addPatternKeyValue( (PatternKeyValue)((PatternNotValue)v).getValue(), dirSeqs, true ); //PatternNotValue contains a PatternKeyValue as its value
+    //else if (v instanceof PatternPlusValue)
+      //return evaluatePatternMultValue((PatternPlusValue)v, dirSeqs);
+    else if (v instanceof PatternMultValue)
+      return evaluatePatternMultValue((PatternMultValue)v, dirSeqs);
+    else if (v instanceof PatternValue)
+      return evaluatePatternValue((PatternValue)v, dirSeqs);
+    else
+      throw new StandardError("Not intended");
+  }
+
+  private HashSet<DirSeq> evaluatePatternMultValue(PatternMultValue pmv, HashSet<DirSeq> dirSeqs) throws StandardError{
+    int oldCount;
+
+    HashSet<DirSeq> applyMultOn = dirSeqs;
+    do
+    {
+      //oldCount lets us know if any new things are added during the kleenee-star operation
+      //if no new things are added, there is no reason to keep during the operation
+      oldCount = dirSeqs.size(); 
+      
+      //Ensure that kleenee-star is not applied to all sequences but only those generated by last run
+      applyMultOn = makeClone(applyMultOn);
+      applyMultOn = evaluate(pmv.getValue(), applyMultOn);
+      
+      //add the newly found sequences to the original set
+      unionOnFirst(dirSeqs, applyMultOn);
+    }
+    //stop is something new has not been added or if anything has gone out of board
+    while (dirSeqs.size() > oldCount);
+    return dirSeqs;
+  }
+  
+  private HashSet<DirSeq> evaluatePatternOrValue(PatternOrValue v, HashSet<DirSeq> dirSeqs) throws StandardError {
+    HashSet<DirSeq> clone = makeClone(dirSeqs); //make sure the side effects from evaluating the left side is not visible when evaluating the right side of or
+    HashSet<DirSeq> leftOr = evaluate(v.getLeft(), dirSeqs);
+    HashSet<DirSeq> rightOr = evaluate(v.getRight(), clone);
+    unionOnFirst(leftOr, rightOr);
+    return leftOr;
+  }
+ 
+  private HashSet<DirSeq> evaluatePatternValue(PatternValue pv, HashSet<DirSeq> dirSeqs) throws StandardError{
+    for (Value v : pv.getValues()){
+      dirSeqs = evaluate(v, dirSeqs);
+    }
+    return dirSeqs;
+  }
+  private HashSet<DirSeq> makeClone(HashSet<DirSeq> set) throws StandardError{
+    HashSet<DirSeq> result = new HashSet<DirSeq>();
+    for (DirSeq ds : set)
+      result.add(ds.makeClone());
+    return result;
+  }
+  
+  private HashSet<DirSeq> union (HashSet<DirSeq> setLeft, HashSet<DirSeq> setRight){
+    //setLeft = {n, w, ee}
+    //setRight = {e, s, w}
+    //returns {n, w, ee, e, s}
+    HashSet<DirSeq> result = new HashSet<DirSeq>();
+    for (DirSeq ds : setLeft)
+      result.add(ds);
+    for (DirSeq ds : setRight)
+      result.add(ds);
+    return result;
+  }
+  
+  private void unionOnFirst (HashSet<DirSeq> first, HashSet<DirSeq> second){
+    //adds all elements in the second second set to the first set  
+    //setLeft = {n, w, ee}
+    //setRight = {e, s, w}
+    //modifies setRight to {n, w, ee, e, s}
+    for (DirSeq ds : second)
+      first.add(ds);
+  }
+  
+  private HashSet<DirSeq> addDirValue(DirValue dirVal, HashSet<DirSeq> dirSeqs) throws StandardError{
+    
+    HashSet<DirSeq> newSet = new HashSet<DirSeq>(); //when changing the offset of a DirSeq, it must be reinserted into a hashset since its hashcode changes
+    
+    for (DirSeq ds : dirSeqs){
+      ds.addOffset(dirVal.getX(), dirVal.getY());
+      if (!outOfBoard(ds.offset)) //also sets a flag if out of board which makes kleenee-start and + operation stop.
+        newSet.add(ds);      
+    }
+    
+   return newSet;
+  }
+  private boolean outOfBoard(SimpleDir val) throws StandardError{
+    //if (val.x < 1 || val.y < 1 || val.x > this.game.getBoard().getWidth() || val.y > this.game.getBoard().getHeight())
+    if (val.x < 1 || val.y < 1 || val.x > 5 || val.y > 5){
+      return true;
+    }
+    return false;
+  }
+  
+  private HashSet<DirSeq> addPatternKeyValue(PatternKeyValue keyVal, HashSet<DirSeq> dirSeqs, boolean negate) throws StandardError{
+    HashSet<DirSeq> newSet = new HashSet<DirSeq>();
+    for (DirSeq ds : dirSeqs){
+        ds.addKeyVal((negate ? "!" : "") + keyVal);
+        newSet.add(ds);
+    }
+    return newSet;
+  }
+  
+
+  /*
+  private boolean keyIsOk(PatternKeyValue pv) throws StandardError{
+    Square foundSquare = this.game.getBoard().getSquareAt(this.currentPos().getX(), this.currentPos().getY());
+    switch (pv.toString()){
+      case "friend":
+        if (!friend(foundSquare))
+          return false;
+        break;
+      case "foe":
+        if (!foe(foundSquare))
+          return false;
+        break;
+      case "empty":
+        if (!empty(foundSquare))
+          return false;
+        break;
+      default:
+        throw new StandardError("Unrecognised pattern keyword: " + pv.toString());
+    }
+    System.out.println(pv + " accepted at position " + this.currentPos().getX() +","+this.currentPos().getY());
+    return true;
+  }
+  
+  private boolean friend(Square s) throws StandardError{
+    for (Piece p : s.getPieces()){
+      if (p.getOwner().equals(currentPlayer()))
+        return true;
+    }
+    return false;
+  }
+  private boolean foe(Square s) throws StandardError{
+    for (Piece p : s.getPieces()){
+      if (!p.getOwner().equals(currentPlayer()))
+        return true;
+    }
+    return false;
+  }
+  private boolean empty(Square s) throws StandardError{
+    return s.getPieces().length == 0;
+  }
+  */
 }
