@@ -2,7 +2,7 @@ package dk.aau.cs.d402f13.utilities.errors;
 
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 
-
+@SuppressWarnings("serial")
 public class InternalError extends StandardError {
   
   private Exception e;

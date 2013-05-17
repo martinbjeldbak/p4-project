@@ -9,7 +9,7 @@
 \newcommand{\itemref}[1]{element \ref{#1}}
 \newcommand{\pseudoref}[1]{algorithm \ref{#1}}
 \newcommand{\capt}[1]{\caption{\emph{#1}}}
-\newcommand{\csref}[1]{codesample \ref{#1}}
+\newcommand{\csref}[1]{codesample \ref{cs:#1}}
 
 %code-like refs
 \newcommand{\tokenref}[1]{{\textbf{#1}}}
@@ -20,7 +20,22 @@
 
 \newcommand{\todo}[1]{\colorbox{yellow}{\color{red}\textbf{TODO:} \hspace{1ex} #1}}
 
-\newcommand{\codesample}[1]{\input{codesamples/#1}}
+\newcommand{\codesample}[1]{
+  \vspace{-0.6cm}
+  \begin{center}
+  \begin{tabularx}{0.9\textwidth}{m{10cm} X m{1cm} }
+  \parbox[t]{8cm}{
+    \vspace{-0.1cm}
+    \input{codesamples/#1}}
+    & &
+    \parbox{1cm}{\hfill
+      \begin{equation}\label{cs:#1}
+      \end{equation}
+    } 
+  \end{tabularx}
+  \end{center}
+  \vspace{-0.4cm}
+}
 
 %big-step-semantic
 \newcommand{\infrule}[2]
@@ -55,15 +70,10 @@
 
 \newcommand{\operator}[4][]{\texttt{\type{#1} \textbf{\color{nicered}#2} \type{#3} $\rightarrow$ \type{#4}}}
 
-\newcommand{\opstar}{$*$}
+\newcommand{\constdef}[3]{\texttt{\constant{#1}#2 : \type{#3}}}
+\newcommand{\farg}[2]{\variable{#1} : \type{#2}}
 
-\newenvironment{ebnf} {
-  \begin{center}
-    \begin{tabular}{>{\hfill}p{3cm} c p{7cm}}
-}{
-  \end{tabular}
-\end{center}
-}
+\newcommand{\opstar}{$*$}
 
 \newcommand{\fig}[3][scale=1.0]{\begin{figure}[ht]
   \center
@@ -72,8 +82,17 @@
   \label{fig:#2}
 \end{figure}}
 
+\newenvironment{ebnf} {
+  \begin{center}
+    \begin{tabular}{>{\hfill}p{2.5cm} c p{9cm}}
+}{
+  \end{tabular}
+\end{center}
+}
+
 %rules for ebnf
-\newcommand{\grule}[2]{$#1$ & $\rightarrow$ & $#2$ \\}
+\newcommand{\grule}[2]{$#1$ & $\rightarrow$ & \parbox[t]{9cm}{$#2$} \\}
+\newcommand{\gnl}{$\\$}
 \newcommand{\galt}[1]{& | & $#1$ \\}
 \newcommand{\grange}{\cdots}
 \newcommand{\gcomment}[1]{\textrm{#1}}
@@ -86,7 +105,7 @@
 \newcommand{\ggrp}[1]{(\: #1 \:) \: }
 \newcommand{\gter}[1]{\texttt{"#1"}}
 \newcommand{\gex}{\: - \:}
-\newcommand{\gcat}{ \: }
+\newcommand{\gcat}{ \; }
 
 %rules for formation rules
 \newcommand{\for}{ \: | \: }

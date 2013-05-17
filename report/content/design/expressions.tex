@@ -1,84 +1,211 @@
 \section{Expressions}
 \label{sec:expressions}
 
+Expressions in \productname{} is the 
+
 \begin{ebnf}
 %Expressions
-\grule{expression}{assignment}
+\grule{expression}{let\_expr}
 \galt{if\_expr}
 \galt{set\_expr}
 \galt{lambda\_expr}
 \galt{\gter{not} \gcat expression}
 \galt{lo\_sequence}
+\end{ebnf}
+
+Two statements hold about expressions in \productname{}:
+
+\begin{nlist}
+\item An expression \textbf{always} has a value.
+\item An expression \textbf{cannot} have side effects.
+\end{nlist}
+
+\subsection{Atomic expressions}
+
+These are the smallest possible parts of expressions in \productname{}, defined by
+the rule:
+
+\begin{ebnf}
+\grule{atomic}{\gter{(} \gcat expression \gcat \gter{)}}
+\galt{constant}
+\galt{type}
+\galt{variable}
+\galt{\gter{this}}
+\galt{\gter{super}}
+\galt{integer}
+\galt{string}
+\galt{direction}
+\galt{coordinate}
+\galt{\gter{/} \gcat pattern \gcat \gter{/}}
+\galt{list}
+\end{ebnf}
+
+The first atomic expression is $\gter{(} \gcat expression \gcat \gter{)}$, which means
+that it is possible to embed expressions within other expressions, and manually control
+the precedence of operations. Consider the following two expressions:
+
+\codesample{parentheses1.junta}
+\codesample{parentheses2.junta}
+
+In \csref{parentheses2.junta} the parentheses are in fact unnecessary because the
+\texttt{*}-operator has precedence over the \texttt{+}-operator (see
+\secref{sec:operatorsandcalls}).
+
+Names (constants, types, and variables) are also atomic expressions, and are evaluated
+to whatever value they are associated with, based on the current scope. The keywords
+($\gter{this}$ and $\gter{super}$) are atomic, but only applicable within type
+definitions, where $\gter{this}$ refers to the current object and $\gter{super}$
+refers to the current object casted to its parent type (if it has one). \todo{casting??}
+
+The literals ($integer$, $string$, $direction$, and $coordinate$) are evaluated to their
+respective values, while patterns are evaluated to \type{Pattern}-values according to
+the grammar in \secref{sec:patterns} and lists are evaluated to \type{List}-values
+according to the grammar in \secref{sec:lists}.
+
+\subsection{Lists}
+\label{sec:lists}
+
+The \type{List}-type is one of the basic types in \productname{}. A \type{List}-value is
+created using the following syntax:
+
+\begin{ebnf}
+\grule{list}{\gter{[} \gcat \gopt{expression \gcat \grep{\gter{,} \gcat expression}} \gcat \gter{]}}
+\end{ebnf}
+
+Essentially this means that a list is created from zero or more expressions (separated
+by commas). The following statements can be made about lists:
+
+\begin{nlist}
+\item A list can be empty: \texttt{[]}
+\item Lists are ordered ($\texttt{[1, 2]} \ne \texttt{[2, 1]}$).
+\item Lists are immutable.
+\end{nlist}
+
+When a list is evaluated, each expressions is evaluated to a value (the order
+of evaluation does not matter, since no side-effects are possible, lazy-evaluation of expressions
+could even be a possibility), and all values (in the same order as the expressions) are
+added to the resulting \type{List}-value. When a \type{List}-value is created, it can't be
+altered further (because of the no-side-effects condition). All operations on that \type{List}-value
+will create new \type{List}-values, and leave the original value intact.
+
+\subsection{Let expressions}
+
+Variables in \productname{} are assigned using let expressions:
+
+\begin{ebnf}
+\grule{expression}{\grange \gor let\_expr}
+\grule{let\_expr}{\gter{let} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression} \gnl
+\gcat \gter{in} \gcat expression}
+\end{ebnf}
+
+A let expression consists of one or more assignments and an expression. Each assignments assigns
+the value of an expression to a variable name. These variables can then be used in the expression
+after the \texttt{in}-keyword. After the evaluation of the let-expression, the variables cease to
+exist.
+
+\todo{maybe the scope stuff about let expressions here}
+
+\subsection{Conditional expressions}
+
+It is often desirable to base the result of an expression on some sort of condition.
+In \productname{} this is achievable using \emph{if}-expressions, as defined by the
+following syntax:
+
+\begin{ebnf}
+\grule{expression}{\grange \gor if\_expr}
+\grule{if\_expr}{\gter{if} \gcat expression \gcat \gter{then} \gcat expression \gcat \gter{else} \gcat expression}
+\end{ebnf}
+
+Unlike in most imperative languages, the conditional construct in \productname{} is not a statement
+(\productname{} doesn't have statements) but an expression. Since all expressions must have a value,
+the \emph{else}-part of en if-expression is compulsory.
+
+The if-expression first evaluates the condition (the first expression). The resulting value must be
+of type \type{Boolean}. If the value is equal to the boolean true-value, the \emph{then}-expression
+is evaluated, and the result is returned. If the value is false, then the \emph{else}-expression
+is evaluate, and the result returned.
+
+\subsection{Lambda expressions}
+
+Lambda expressions are expressions that evaluate to anonymous functions. In \productname{} they
+are defined as:
+
+\begin{ebnf}
+\grule{expression}{\grange \gor lambda\_expr}
+\grule{lambda\_expr}{\gter{\#} \gcat varlist \gcat \gter{=>} \gcat expression}
+\end{ebnf}
+
+\todo{}
+
+\subsection{Set expressions}
+
+Set expressions look a bit like let expressions, but are only applicable within type definitions:
+
+\begin{ebnf}
+\grule{expression}{\grange \gor set\_expr}
+\grule{set\_expr}{\gter{set} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression}}
+\end{ebnf}
+
+Set expressions are used to ``modify'' the value of data-members in objects (see \secref{sec:typedefinitions}
+for an explanation of data). Each variable in the set expression must exist in the current type as
+data-members. Since modifying a data-member would be a side-effect, which is not allowed, the set expression
+instead returns a clone of the object, with the specified data-members set to their respective values. This
+is useful for making setters (or something that looks like setters). Consider for example the following
+type:
+
+\codesample{setget.junta}
+
+In the example above, the method \constant{setMyData} returns a new instance of \type{MyType}, with
+the data-member \variable{myData} set to something else. The following example shows the use of
+a getter and a setter:
+
+\codesample{setget2.junta}
+
+The call to \constant{setMyData} does not change the state of the original instance of \type{MyType},
+instead it returns a new instance.
+
+\subsection{Operators and calls}
+\label{sec:operatorsandcalls}
+
+Operators are useful for doing calculations, and \productname{} supports the basic
+mathematical operators and precedence. In order to prevent left-recursion (\todo{why?}),
+but keep left-associativity, the grammar for the operators of \productname{} are
+described using operator sequences. A sequence is essentially just a list of
+operations on that particular precedence level. In this way all the precedence levels
+of \productname{} are described formally:
+
+\begin{ebnf}
+\grule{expression}{\grange \gor \gter{not} \gcat expression \gor lo\_sequence}
 \grule{lo\_sequence}{eq\_sequence \gcat \grep{\ggrp{\gter{and} \gor \gter{or}} \gcat eq\_sequence}}
 \grule{eq\_sequence}{cm\_sequence \gcat \grep{\ggrp{\gter{==} \gor \gter{!=} \gor \gter{is}} \gcat cm\_sequence}}
 \grule{cm\_sequence}{as\_sequence \gcat \grep{\ggrp{\gter{<} \gor \gter{>} \gor \gter{<=} \gor \gter{>=}} \gcat as\_sequence}}
 \grule{as\_sequence}{md\_sequence \gcat \grep{\ggrp{\gter{+} \gor \gter{-}} \gcat md\_sequence}}
-\grule{md\_sequence}{negation \gcat \grep{\ggrp{\gter{*} \gor \gter{/} \gor{\%}} \gcat negation}}
+\grule{md\_sequence}{negation \gcat \grep{\ggrp{\gter{*} \gor \gter{/} \gor \gter{\%}} \gcat negation}}
 \grule{negation}{element}
 \galt{\gter{-} \gcat negation}
 \grule{element}{call\_sequence \gcat \grep{member\_access}}
 \grule{member\_access}{\gter{.} \gcat constant \gcat \grep{list}}
 \grule{call\_sequence}{atomic \gcat \grep{list}}
-\grule{atomic}{\gter{(} \gcat expression \gcat \gter{)}}
-\galt{variable}
-\galt{list}
-\galt{\gter{/} \gcat pattern \gcat \gter{/}}
-\galt{\gter{this}}
-\galt{\gter{super}}
-\galt{direction}
-\galt{coordinate}
-\galt{integer}
-\galt{string}
-\galt{type}
-\galt{constant}
-\grule{assignment}{\gter{let} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression} \gcat \gter{in} \gcat expression}
-\grule{if\_expr}{\gter{if} \gcat expression \gcat \gter{then} \gcat expression \gcat \gter{else} \gcat expression}
-\grule{lambda\_expr}{\gter{\#} \gcat varlist \gcat \gter{=>} \gcat expression}
-\grule{list}{\gter{[} \gcat \gopt{expression \gcat \grep{\gter{,} \gcat expression}} \gcat \gter{]}}
 \end{ebnf}
 
-\subsection{Atomic expressions}
+\tab[\textwidth]{operatorPrecedence}{2}{The precedence of operators in \productname{}.}
+         {Operator precedence}
+  {Level}{Operator & Description}{
+    \tabrow{1}{\texttt{f[]} & Function/constructor invocation and list access}
+    \tabrow{2}{\texttt{r.m r.m[]} & Record member access and member invocation}
+    \tabrow{3}{\texttt{-} & Unary negation operation}
+    \tabrow{4}{\texttt{* / \%} & Multiplication, division, and modulo}
+    \tabrow{5}{\texttt{+ -} & Addition and subtraction}
+    \tabrow{6}{\texttt{< > <= >=} & Comparison operators}
+    \tabrow{7}{\texttt{== != is} & Equality operators and type checking}
+    \tabrow{8}{\texttt{and or} & Logical $and$ and $or$}
+    \tabrow{9}{\texttt{not} & Logical $not$}
+    \tabrow{10}{\texttt{if let set \#} & if-, let-, set-, and lambda-expressions}
+}
 
-\begin{ebnf}
-\grule{atomic}{\gter{(} \gcat expression \gcat \gter{)}}
-\galt{variable}
-\galt{list}
-\galt{\gter{/} \gcat pattern \gcat \gter{/}}
-\galt{\gter{this}}
-\galt{\gter{super}}
-\galt{direction}
-\galt{coordinate}
-\galt{integer}
-\galt{string}
-\galt{type}
-\galt{constant}
-\end{ebnf}
+In order to completely understand this grammar, we should first take a look at the list of
+operators ordered by precedence. The precedence of operators is presented in
+\tableref{table:operatorPrecedence}. Each precedence level will correspond to a certain rule
+in the grammar. For instance the fifth precedence level for addition and subtraction is expressed
+using the $as\_sequence$-rule
 
-\subsection{Let expressions}
-
-\begin{ebnf}
-\grule{expression}{\grange \gor let\_expr}
-\end{ebnf}
-
-\subsection{Conditional expressions}
-
-\begin{ebnf}
-\grule{expression}{\grange \gor if\_expr}
-\end{ebnf}
-
-\subsection{Lambda expressions}
-
-\begin{ebnf}
-\grule{expression}{\grange \gor lambda\_expr}
-\end{ebnf}
-
-\subsection{Set expressions}
-
-\begin{ebnf}
-\grule{expression}{\grange \gor set\_expr}
-\end{ebnf}
-
-\subsection{Operators}
-
-
-\subsection{Lists}
