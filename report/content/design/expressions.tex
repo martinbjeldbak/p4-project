@@ -21,6 +21,7 @@ Two statements hold about expressions in \productname{}:
 \end{nlist}
 
 \subsection{Atomic expressions}
+\label{sec:atomicexpressions}
 
 These are the smallest possible parts of expressions in \productname{}, defined by
 the rule:
@@ -89,6 +90,7 @@ altered further (because of the no-side-effects condition). All operations on th
 will create new \type{List}-values, and leave the original value intact.
 
 \subsection{Let expressions}
+\label{sec:letexpressions}
 
 Variables in \productname{} are assigned using let expressions:
 
@@ -106,6 +108,7 @@ exist.
 \todo{maybe the scope stuff about let expressions here}
 
 \subsection{Conditional expressions}
+\label{sec:conditionalexpressions}
 
 It is often desirable to base the result of an expression on some sort of condition.
 In \productname{} this is achievable using \emph{if}-expressions, as defined by the
