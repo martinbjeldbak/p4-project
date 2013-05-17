@@ -58,7 +58,7 @@ following members contained in the \classref{TypeSymbolInfo} object:
     reference to its parent type if it has one
   \begin{dlist}
     \item This is however a null pointer until running the
-      \classref{TypeTableCleaner} described in \secref{sec:typetablecleaner}
+      \classref{TypeParentRefMaker} described in \secref{sec:TypeParentRefMaker}
   \end{dlist} 
 \end{dlist}
 
@@ -156,7 +156,7 @@ amount of extra arguments). If A does not have a variable amount of additional
 arguments, the argument count must match exactly. The implemented code for doing
 this check can be seen in \lstref{lst:tscc}.
 
-\lstinputlisting[caption=How the TypeSuperCallChecker is implemented.,
+\lstinputlisting[caption={\emph{How the TypeSuperCallChecker is implemented.}},
 label=lst:tscc, language=Java]{listings/typeSuperCallChecker.java}
 
 \subsection{UsesAreDeclaredVisitor}
