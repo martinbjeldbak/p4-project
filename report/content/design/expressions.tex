@@ -135,7 +135,7 @@ are defined as:
 \grule{lambda\_expr}{\gter{\#} \gcat varlist \gcat \gter{=>} \gcat expression}
 \end{ebnf}
 
-
+\todo{}
 
 \subsection{Set expressions}
 
@@ -167,21 +167,26 @@ instead it returns a new instance.
 \subsection{Operators and calls}
 \label{sec:operatorsandcalls}
 
+Operators are useful for doing calculations, and \productname{} supports the basic
+mathematical operators and precedence. In order to prevent left-recursion (\todo{why?}),
+but keep left-associativity, the grammar for the operators of \productname{} are
+described using operator sequences. A sequence is essentially just a list of
+operations on that particular precedence level. In this way all the precedence levels
+of \productname{} are described formally:
+
 \begin{ebnf}
 \grule{expression}{\grange \gor \gter{not} \gcat expression \gor lo\_sequence}
 \grule{lo\_sequence}{eq\_sequence \gcat \grep{\ggrp{\gter{and} \gor \gter{or}} \gcat eq\_sequence}}
 \grule{eq\_sequence}{cm\_sequence \gcat \grep{\ggrp{\gter{==} \gor \gter{!=} \gor \gter{is}} \gcat cm\_sequence}}
 \grule{cm\_sequence}{as\_sequence \gcat \grep{\ggrp{\gter{<} \gor \gter{>} \gor \gter{<=} \gor \gter{>=}} \gcat as\_sequence}}
 \grule{as\_sequence}{md\_sequence \gcat \grep{\ggrp{\gter{+} \gor \gter{-}} \gcat md\_sequence}}
-\grule{md\_sequence}{negation \gcat \grep{\ggrp{\gter{*} \gor \gter{/} \gor{\%}} \gcat negation}}
+\grule{md\_sequence}{negation \gcat \grep{\ggrp{\gter{*} \gor \gter{/} \gor \gter{\%}} \gcat negation}}
 \grule{negation}{element}
 \galt{\gter{-} \gcat negation}
 \grule{element}{call\_sequence \gcat \grep{member\_access}}
 \grule{member\_access}{\gter{.} \gcat constant \gcat \grep{list}}
 \grule{call\_sequence}{atomic \gcat \grep{list}}
 \end{ebnf}
-
-\subsubsection{Operator precedence}
 
 \tab[\textwidth]{operatorPrecedence}{2}{The precedence of operators in \productname{}.}
          {Operator precedence}
@@ -197,3 +202,10 @@ instead it returns a new instance.
     \tabrow{9}{\texttt{not} & Logical $not$}
     \tabrow{10}{\texttt{if let set \#} & if-, let-, set-, and lambda-expressions}
 }
+
+In order to completely understand this grammar, we should first take a look at the list of
+operators ordered by precedence. The precedence of operators is presented in
+\tableref{table:operatorPrecedence}. Each precedence level will correspond to a certain rule
+in the grammar. For instance the fifth precedence level for addition and subtraction is expressed
+using the $as\_sequence$-rule
+
