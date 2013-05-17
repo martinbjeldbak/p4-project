@@ -1,4 +1,21 @@
 \section{Patterns}
+\label{sec:patterns}
 
 This section should cover how to use patterns and what to use them for. For instance there 
 should be a list of operators and a comparison to regular expressions.
+
+\begin{ebnf}
+\grule{pattern}{pattern\_expr \gcat \grep{pattern\_expr}}
+\grule{pattern\_expr}{pattern\_val \gcat \gopt{\gter{*} \gor \gter{?} \gor \gter{+}}}
+\galt{pattern\_val \gcat \gter{|} \gcat pattern\_expr}
+\grule{pattern\_val}{direction}
+\galt{variable}
+\galt{pattern\_check}
+\galt{\gter{!} \gcat pattern\_check}
+\galt{\gter{(} \gcat pattern \gcat \gter{)} \gcat \gopt{integer}}
+\grule{pattern\_check}{\gter{friend}}
+\galt{\gter{foe}}
+\galt{\gter{empty}}
+\galt{\gter{this}}
+\galt{type}
+\end{ebnf}

@@ -2,6 +2,7 @@ package dk.aau.cs.d402f13.utilities.errors;
 
 import dk.aau.cs.d402f13.utilities.ast.AstNode;
 
+@SuppressWarnings("serial")
 public class TypeError extends StandardError {
 
   public TypeError(String arg0, AstNode node) {

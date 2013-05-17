@@ -6,7 +6,6 @@ import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 import dk.aau.cs.d402f13.utilities.gameapi.ActionSequence;
 import dk.aau.cs.d402f13.utilities.gameapi.UnitAction;
-import dk.aau.cs.d402f13.values.ObjectValue;
 import dk.aau.cs.d402f13.values.Value;
 
 public class ActionSequenceWrapper extends Wrapper implements ActionSequence {

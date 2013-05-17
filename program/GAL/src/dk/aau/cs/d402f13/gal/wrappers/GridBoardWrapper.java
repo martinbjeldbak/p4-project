@@ -1,17 +1,11 @@
 package dk.aau.cs.d402f13.gal.wrappers;
 
-import java.util.Arrays;
-
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
 import dk.aau.cs.d402f13.utilities.errors.ArgumentError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
-import dk.aau.cs.d402f13.utilities.gameapi.Board;
 import dk.aau.cs.d402f13.utilities.gameapi.GridBoard;
-import dk.aau.cs.d402f13.utilities.gameapi.Piece;
-import dk.aau.cs.d402f13.utilities.gameapi.Square;
 import dk.aau.cs.d402f13.values.CoordValue;
 import dk.aau.cs.d402f13.values.ListValue;
-import dk.aau.cs.d402f13.values.ObjectValue;
 import dk.aau.cs.d402f13.values.Value;
 
 public class GridBoardWrapper extends BoardWrapper implements GridBoard {
