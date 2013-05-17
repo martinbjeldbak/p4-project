@@ -1,11 +1,97 @@
 \section{Definitions}
 \label{sec:definitions}
+In this section we present how programs written in \productname{} can be
+structured with definitions og constant, types and abstract types.
 
+We begin by presenting what a program can consist of and then we further specify
+how these different definitions are built. We present constant definitions
+followed by type definitions.
 
 \subsection{Program structure}
 
+The outermost layer of a \productname{} program is a list of definitions:
+
+\begin{ebnf}
+\grule{program}{\grep{definition}}
+\grule{definition}{constant\_def}
+\galt{type\_def}
+\end{ebnf}
+
+A definition is either a constant definition or a type definition. So, when a
+program has been run, we are left with a symbol table full of types and
+constants.
+
+As the above grammar shows, an empty program is valid in \productname{}, because
+it is possible to have zero, one, or more definitions in the outermost layer of
+the structuring og programs.
 
 \subsection{Constant definitions}
 
+Functions are also constants and are defined with the the following definition:
+
+\begin{ebnf}
+\grule{constant\_def}{\gter{define} \gcat constant \gcat \gopt{varlist} \gcat
+\gter{=} \gcat \gcat expression}
+\end{ebnf}
+
+A definition of a constants can contain a list of variables as the following
+grammar rule:
+
+\begin{ebnf}
+\grule{varlist}{\gter{[} \gcat \gopt{variable \gcat \grep{\gter{,} \gcat
+variable} \gcat \gopt{\gter{,} \gcat vars} \gor vars} \gcat \gter{]}}
+\grule{vars}{\gter{...} \gcat variable}  
+\end{ebnf}
+
+A user can define custom constants for use in e.g. the implementation of a board game.
+This is done using the $\gter{define}$-keyword. Functions can be declared to accept
+any number of parameters or none at all. An example of a function definition could
+be:
+
+\codesample{functiondef.garry}
+
+It can be used as a way of putting frequently used expressions in one definition
+of a constants and call that specific definition when it is needed instead of
+writing (or pasting) the code every time it is needed. 
+
+\productname{} supports variadic functions, which means that it is possible to define
+functions with indefinite arity.
+
+\todo{Example of indefinite arity (vars)}
 
 \subsection{Type definitions}
+\label{sec:typedefinitions}
+
+The following grammar rules present how defining a type is done followed by the
+associated definitions which can be used within a type definition. A type are
+similar to what we normally call classes in object-oriented programming
+languages. We wish to call them types in \productname{}.
+
+\begin{ebnf}
+\grule{type\_def}{\gter{type} \gcat type \gcat varlist \gcat
+\gopt{\gter{extends} \gcat type \gcat list} \gopt{type\_body}}
+\grule{type\_body}{\gter{\{} \gcat \grep{member\_def} \gcat \gter{\}}}
+\grule{member\_def}{abstract\_def}
+\galt{constant\_def}
+\galt{data\_def}
+\grule{abstract\_def}{\gter{define} \gcat \gter{abstract} \gcat constant \gcat
+\gopt{varlist}} \grule{data\_def}{\gter{data} \gcat variable \gcat \gter{=}
+\gcat expression}
+\end{ebnf}
+
+The keyword $\gter{type}$ is not the same as the identifier $type$, which was
+presented in \secref{sec:identifiers}. All definitions of types must begin with
+the keyword followed by the identifier.
+
+\todo{Niels: Instantiering af superklassen.}
+
+It is optional to include a body for a type, wherein further definitions can be
+defined. These definitions must be encircled with a beginning and an ending brace. 
+
+When defining an abstract constant it must be overridden before it can be used.
+This is done by simply redefining the constant exactly as it was defined in the
+definition of the abstract (with variables and such). So, a constants definition
+with the same $constant$ and $varlist$ as an abstract constant, will override
+the abstract constant.
+
+\todo{Niels: Forklar data-begrebet.}

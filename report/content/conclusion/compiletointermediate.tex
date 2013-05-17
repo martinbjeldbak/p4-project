@@ -1,4 +1,4 @@
-\subsection{Compile to intermediate language, then translate further}
+\subsection{Compilation to intermediate language, then further translation}
 \label{sec:compiletointermediate}
 
 In this project we decided to implement an interpreter for our programming
@@ -11,51 +11,26 @@ analysis chapter we have analysed and discussed the differences between these
 translation methods. Furthermore, in \secref{sec:intermediatelanguage} we
 describe what an intermediate language is.
 
-\subsubsection{What is a compiler?}
-
-In \secref{sec:compilation} we introduced and explained the phases in the
-process of compilation, and with \figref{fig:compileroverview} we visualised
-these phases. A compiler is simply a program that is able to transform a given
-source code written in a programming language in to another language (often
-binary code known as object code).
-
-The initial phases of a compiler are quite similar to the initial phases of an
-interpreter. For instance a compiler must also begin by scanning the source code
-followed by parsing the source code to get a stream of tokens and an abstract
-syntax tree, respectively. These steps are the same as we have described in
-\chapref{chap:implementation}. Furthermore, the step where we check if the
-different variables are visible in their respective scopes (scope checking) is
-also the same as described in \chapref{chap:implementation}. When the above
-mentioned phases have been run then the compiler should compile the code to
-machine language or to an intermediate language.
-
-According to \figref{fig:compileroverview} the result of the semantic analyser
-would be an intermediate language and then the code generator would generate
-machine code which can be executed. It is of course also possible to compile
-directly to machine language.
-
-\subsubsection{What is the advantage of compiling to an intermediate language?}
-
-When compiling to an intermediate language before compiling to the target
-language (often the object code), it is possible to make optimisations on the
-intermediate code. This is one advantage of compiling to an intermediate
-language and results in more efficient executable code.
-
-Furthermore, one can compile to an intermediate language such as Java bytecode
-and the compiled code can be run on every machine that supports Java, which is
-very useful because the programmer whom is developing a compiler for the
-specific language does not have to construct a compiler for every platform; just
-one for Jave bytecode and then translate further to the platform. This way the
-programmer must only construct $m+n$ compilers. If one does not compile to an
-intermediate language, then the programmer must construct a compiler for each
-specific platform, which will be a lengthy process. If you have $m$ compilers
-and $n$ platforms, then the programmer must construct $m*n$ compilers to be able
-to compile to every platform.  Compiling to an intermediate language and then
-further translating is illustrated in \figref{fig:mtimesn}.
-
-\input{figures/compiletointermediate}
-
-Now it is alsp possible to optimise the compiled source code before further
-translation. So, we can combine these two advantages by developing an optimiser
-for the intermediate language. This way all code that has been compiled can be
-optimised, which gives better efficiency.
+%\subsubsection{Where are the differences between an interpreter and a compiler?}
+%
+%In \secref{sec:compilation} we introduced and explained the phases in the
+%process of compilation, and with \figref{fig:compileroverview} we visualised
+%these phases.
+%
+%The initial phases of a compiler are quite similar to the initial phases of an
+%interpreter. For instance a compiler must also begin by scanning the source code
+%followed by parsing the source code to get a stream of tokens and an abstract
+%syntax tree, respectively. These steps are the same as we have described in
+%\chapref{chap:implementation}. Furthermore, the step where we check if the
+%different variables are visible in their respective scopes (scope checking) is
+%also the same as described in \chapref{chap:implementation}. When the above
+%mentioned phases have been run, then the compiler should compile the code to
+%machine language or to an intermediate language.
+%
+%According to \figref{fig:compileroverview}, the result of the semantic
+%analyser would be an intermediate language and then the code generator
+%would generate machine code, which can then be executed. It is of course
+%also possible to compile directly to machine language. Although, it is
+%not the responsible choice to make because it kills opportunities to
+%e.g.\ optimise the code and support multiple platforms, which would be
+%possible with an intermediate language.

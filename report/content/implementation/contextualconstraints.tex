@@ -4,7 +4,7 @@
 
 The \classref{ScopeChecker} is the class responsible for enforcing some of the
 static semantic rules of \productname{} (described in \chapref{chap:design}) at
-compile time. This section aimes to explain how these static semantics checks
+compile time. This section aims to explain how these static semantic checks
 are performed by the \classref{ScopeChecker} in simple sequential steps. Any
 error detected by the \classref{ScopeChecker} will cause a \classref{ScopeError}
 exception to be thrown. This error contains helpful information about the type
@@ -22,7 +22,7 @@ AST, finds all type definitions in the input program and for each type
 definition an object of class \classref{TypeSymbolInfo} is instantiated. After
 running the \classref{TypeVisitor}, each type definition in the input program
 has an associated object of class \classref{TypeSymbolInfo} which makes it easy
-to get information about any type in the input program by accessing the
+to get information about any declared type in the input program by accessing the
 following members contained in the \classref{TypeSymbolInfo} object:
 
 \begin{dlist}
@@ -107,7 +107,7 @@ topologically sorted types. If a type C is met, the members in its parent type B
 are put in C as well. If B has a parent A, we know that B has already the
 members from A due to the topological sorting.
 
-The topological sorting is done using the algorithm from the book Introduction
+The topological sorting is done using the algorithm that goes by the same name, from the book Introduction
 to Algorithms \cite[p. 612]{ad} working on a graph $G = (V, E)$. Each type
 represents a vertex $v$. An edge $e$ exist from $v_1$ to $v_2$ if the type $v_2$
 is a parent of the type $v_1$. However this results in a topological order where
@@ -156,7 +156,7 @@ amount of extra arguments). If A does not have a variable amount of additional
 arguments, the argument count must match exactly. The implemented code for doing
 this check can be seen in \lstref{lst:tscc}.
 
-\lstinputlisting[caption=How the TypeSuperCallChecker is implemented.,
+\lstinputlisting[caption={\emph{How the TypeSuperCallChecker is implemented.}},
 label=lst:tscc, language=Java]{listings/typeSuperCallChecker.java}
 
 \subsection{UsesAreDeclaredVisitor}
@@ -207,7 +207,7 @@ done regarding to the context of the reference:
   \begin{dlist}
     \item If prefixed by this, it must be visible in A or any super type of A
     \item If prefixed by super, it must be visible in any super type of A
-    \item If not prefixed, it must be visible in at least one type
+    \item If prefixed by a variable name, it must be visible in at least one type
   \end{dlist}
   \item Type was A but not a member access: Must be visible in A, a super type
     of A or global scope

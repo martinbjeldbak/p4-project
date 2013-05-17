@@ -1,26 +1,12 @@
 package dk.aau.cs.d402f13.gal.wrappers;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
 import dk.aau.cs.d402f13.utilities.errors.InternalError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
-import dk.aau.cs.d402f13.utilities.errors.TypeError;
 import dk.aau.cs.d402f13.utilities.gameapi.Action;
-import dk.aau.cs.d402f13.utilities.gameapi.ActionSequence;
-import dk.aau.cs.d402f13.utilities.gameapi.AddAction;
 import dk.aau.cs.d402f13.utilities.gameapi.Game;
-import dk.aau.cs.d402f13.utilities.gameapi.MoveAction;
-import dk.aau.cs.d402f13.utilities.gameapi.Piece;
 import dk.aau.cs.d402f13.utilities.gameapi.Player;
-import dk.aau.cs.d402f13.utilities.gameapi.RemoveAction;
-import dk.aau.cs.d402f13.utilities.gameapi.Square;
-import dk.aau.cs.d402f13.utilities.gameapi.UnitAction;
-import dk.aau.cs.d402f13.values.ListValue;
-import dk.aau.cs.d402f13.values.ObjectValue;
-import dk.aau.cs.d402f13.values.TypeValue;
-import dk.aau.cs.d402f13.values.StrValue;
 import dk.aau.cs.d402f13.values.Value;
 
 public class GameWrapper extends Wrapper implements Game {

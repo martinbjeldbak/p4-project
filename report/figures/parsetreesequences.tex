@@ -1,0 +1,66 @@
+\begin{figure}[ht]
+  \begin{center}
+      \begin{tikzpicture}[]
+	%the nodes
+     	\node[square,xshift=4em]      			    (as)     {as\_sequence};
+     	\node[circle,draw,yshift=-3em] 		    (plus1)  {$+$};
+     	\node[circle,draw,yshift=-3em,xshift=8em]   (minus1) {$-$};
+     	\node[circle,draw,yshift=-3em,xshift=16em]  (plus2)  {$+$};
+     	\node[square,yshift=-3em,xshift=-8em]       (int1)   {integer $\left(2\right)$};
+     	\node[square,yshift=-6em]      		    (md1)    {md\_sequence};
+	\node[square,yshift=-6em,xshift=8em]        (int2)   {integer $\left(3\right)$};
+     	\node[square,yshift=-6em,xshift=16em]       (md2)    {md\_sequence};
+     	\node[square,yshift=-9em,xshift=-4em]      (int3)   {integer $\left(3\right)$};
+     	\node[circle,draw,yshift=-9em,xshift=4em]  (mult1)  {$*$};
+     	\node[square,yshift=-9em,xshift=12em]      (int4)   {integer $\left(2\right)$};
+     	\node[circle,draw,yshift=-9em,xshift=20em] (div1)   {$/$};
+     	\node[square,yshift=-12em,xshift=4em]       (int5)   {integer $\left(5\right)$};
+     	\node[square,yshift=-12em,xshift=20em]      (int6)   {integer $\left(3\right)$};
+
+	%the solution
+	\node[rectangle,yshift=-14.5em,xshift=-8em] (a) {$2$};
+     	\node[rectangle,yshift=-14.5em,xshift=-6em]     {$+$};
+     	\node[rectangle,yshift=-14.5em,xshift=-4em] (b) {$3$};
+     	\node[rectangle,yshift=-14.5em]                 {$*$};
+     	\node[rectangle,yshift=-14.5em,xshift=4em]  (c) {$5$};
+     	\node[rectangle,yshift=-14.5em,xshift=6em]      {$-$};
+	\node[rectangle,yshift=-14.5em,xshift=8em]  (d) {$3$};
+     	\node[rectangle,yshift=-14.5em,xshift=10em]     {$+$};
+     	\node[rectangle,yshift=-14.5em,xshift=12em] (e) {$2$};
+     	\node[rectangle,yshift=-14.5em,xshift=16em]     {$/$};
+	\node[rectangle,yshift=-14.5em,xshift=20em] (f) {$3$};
+
+	%first level
+	\draw[-,-|,-,thin,] (as.south) |-+(0,-0.75em)-| (int1.north);
+	\draw[-,-|,-,thin,] (as.south) |-+(0,-0.75em)-| (plus1.north);
+	\draw[-,-|,-,thin,] (as.south) |-+(0,-0.75em)-| (minus1.north);
+	\draw[-,-|,-,thin,] (as.south) |-+(0,-0.75em)-| (plus2.north);
+
+	%second level
+	\draw[-,thin,] (plus1.south) -- (md1.north);
+	\draw[-,thin,] (minus1.south) -- (int2.north);
+	\draw[-,thin,] (plus2.south) -- (md2.north);
+
+	%third level
+	\draw[-,-|,-,thin,] (md1.south) |-+(0,-0.75em)-| (int3.north);
+	\draw[-,thin,] (md1.south) |-+(0,-0.75em)-| (mult1.north);
+	\draw[-,-|,-,thin,] (md2.south) |-+(0,-0.75em)-| (int4.north);
+	\draw[-,thin,] (md2.south) |-+(0,-0.75em)-| (div1.north);
+
+	%fourth level
+	\draw[-,thin,] (mult1.south) -- (int5.north);
+	\draw[-,thin,] (div1.south) -- (int6.north);
+
+	%solution level
+	\draw[-,dashed,] (int1) -- (a);
+	\draw[-,dashed,] (int2) -- (d);
+	\draw[-,dashed,] (int3) -- (b);
+	\draw[-,dashed,] (int4) -- (e);
+	\draw[-,dashed,] (int5) -- (c);
+	\draw[-,dashed,] (int6) -- (f);
+
+    \end{tikzpicture}
+  \end{center}
+  \capt{A parsetree.}
+  \label{fig:parsetreesequences}
+\end{figure}
