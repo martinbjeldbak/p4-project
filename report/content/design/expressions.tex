@@ -172,7 +172,7 @@ instead it returns a new instance.
 
 Operators are useful for doing calculations, and \productname{} supports the basic
 mathematical operators and precedence. In order to prevent left-recursion (\todo{why?}),
-but keep left-associativity, the grammar for the operators of \productname{} are
+but preserve left-associativity, the grammar for the operators of \productname{} are
 described using operator sequences. A sequence is essentially just a list of
 operations on that particular precedence level. In this way all the precedence levels
 of \productname{} are described formally:
@@ -210,5 +210,122 @@ In order to completely understand this grammar, we should first take a look at t
 operators ordered by precedence. The precedence of operators is presented in
 \tableref{table:operatorPrecedence}. Each precedence level will correspond to a certain rule
 in the grammar. For instance the fifth precedence level for addition and subtraction is expressed
-using the $as\_sequence$-rule
+using the $as\_sequence$-rule. Combined with some multiplication an expression making use of
+the $as\_sequence$- and $md\_sequence$-rules could look like \csref{asandmd.junta}:
+
+\codesample{asandmd.junta}
+
+The resulting parse tree, using the grammar of \productname{}, could look somwhat
+like the tree in \figref{fig:parsetreesequences}.
+
+\input{figures/parsetreesequences}
+
+\subsubsection{Valid operands}
+\subsubsection{Boolean operators}
+
+These operators only accept boolean operands and only return boolean values.
+\begin{dlist}
+  \item \operator[Boolean]{and}{Boolean}{Boolean}\\
+    Returns true when both operands are true and false otherwise. 
+  \item \operator[Boolean]{or}{Boolean}{Boolean}\\
+    Returns true when at least one of the operands are true and false otherwise.
+  \item \operator{not}{Boolean}{Boolean}\\
+    Returns true if the single operand is false and false otherwise.
+\end{dlist}
+
+\subsubsection{Comparison operators}
+
+These operators are used when comparing two values, they will always return
+boolean values.
+\begin{dlist}
+  \item \operator[Integer]{<}{Integer}{Boolean}\\
+    Returns true if the left operand is less than the right one.
+  \item \operator[Integer]{>}{Integer}{Boolean}\\
+    Returns true if the left operand is greater than the right one.
+  \item \operator[Integer]{<=}{Integer}{Boolean}\\
+    Returns true if the left operand is less than or equal to the right one.
+  \item \operator[Integer]{>=}{Integer}{Boolean}\\
+    Returns true if the left operand is greater than or equal to the right one.
+  \item \operator[\opstar]{==}{\opstar}{Boolean}\\
+    Returns true if the left operand is equal to the right one.
+  \item \operator[\opstar]{!=}{\opstar}{Boolean}\\
+    Returns true if the left operand is not equal to the right one.
+  \item \operator[\opstar]{is}{Type}{Boolean}\\
+    Returns true if the type of the first operand is equal to or inherits from
+    the type operand.
+\end{dlist}
+
+\subsubsection{Integer operators}
+
+The following operations are possible on integers:
+\begin{dlist}
+  \item \operator{-}{Integer}{Integer} \\
+    Integer negation.
+  \item \operator[Integer]{+}{Integer}{Integer} \\
+    Integer addition.
+  \item \operator[Integer]{-}{Integer}{Integer} \\
+    Integer subtraction.
+  \item \operator[Integer]{*}{Integer}{Integer} \\
+    Integer multiplication.
+  \item \operator[Integer]{/}{Integer}{Integer} \\
+    Integer division.
+  \item \operator[Integer]{\%}{Integer}{Integer} \\
+    Integer modulo operation.
+\end{dlist}
+
+\subsubsection{String operators}
+
+It is possible to concatenate strings:
+\begin{dlist}
+  \item \operator[String]{+}{String}{String} \\
+    Returns the concatenation of two strings.
+  \item \operator[String]{+}{\opstar}{String} \\
+   \operator[\opstar]{+}{String}{String} \\
+    Returns the concatenation of a string and the string-representation of another type
+\end{dlist}
+
+\subsubsection{List operators}
+
+Some operators are available for list values as well:
+\begin{dlist}
+\item \operator[List]{+}{List}{List} \\
+  Returns a list containing all elements from the first list followed
+  by all elements from the second list.
+\item \operator[List]{-}{List}{List} \\
+  Returns a list containing all the elements from the first list that
+  do not exist in the second list.
+\item \operator[List]{+}{\opstar}{List} \\
+  Appends any element on to the end of a list, and returns the resulting list.
+\item \operator[List]{-}{\opstar} \\
+  Returns a list containing the elements that do not match the right operand.
+\item \operator[\opstar]{+}{List}{List} \\
+  Prepends any element on to the start of a list, and returns the resulting list.
+\end{dlist}
+
+\subsubsection{Direction and coordinate operators}
+
+It is possible to manipulate directions and coordinates using the following operator:
+\begin{dlist}
+  \item \operator[Direction]{+}{Direction}{Direction} \\
+    Add a direction (vector) to another direction.
+  \item \operator[Direction]{-}{Direction}{Direction} \\
+    Subtract a direction from another direction.
+  \item \operator[Direction]{+}{Coordinate}{Coordinate} \\
+    Add a coordinate to a direction.
+  \item \operator{-}{Direction}{Direction} \\
+    Negate a direction.
+  \item \operator[Coordinate]{-}{Coordinate}{Direction} \\
+    Returns the distance between two coordinates as a direction.
+  \item \operator[Coordinate]{+}{Direction}{Coordinate} \\
+    Add a direction to a coordinate. 
+  \item \operator[Coordinate]{-}{Direction}{Coordinate} \\
+    Subtract a direction from a coordinate.
+\end{dlist}
+For instance adding the directions \texttt{n} and \texttt{e} produces a
+direction equivalent with the direction \texttt{ne}. Adding a coordinate and direction (and visa versa) gives a coordinate. As an example, $\texttt{A2} \verb!+! \texttt{e}$ gives \texttt{B2}. More information
+about the coordinate and direction types is available in \secref{sec:types}.
+
+
+
+
 
