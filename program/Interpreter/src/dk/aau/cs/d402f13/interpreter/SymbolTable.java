@@ -13,8 +13,6 @@ import dk.aau.cs.d402f13.values.*;
 /**
  * Symbol table for the interpreter. Keeps track of scopes and all functions,
  * variables, and identifiers existing within all open scopes. 
- * @author Martin
- *
  */
 public class SymbolTable {
   
