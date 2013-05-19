@@ -1,10 +1,6 @@
 package dk.aau.cs.d402f13.evaluation;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
-import java.util.Stack;
-
 import dk.aau.cs.d402f13.utilities.SimpleDir;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.gameapi.Game;
@@ -13,146 +9,162 @@ import dk.aau.cs.d402f13.utilities.gameapi.Player;
 import dk.aau.cs.d402f13.utilities.gameapi.Square;
 import dk.aau.cs.d402f13.values.*;
 
-
-
 public class GridBoardPatternEvaluator {
   
   private Game game;
+  private boolean  squareVisited[][];
 
   public boolean doesPatternMatch(Game game, PatternValue pv, DirValue squarePos) throws StandardError{
     this.game = game;
-    //this.dirVals = new HashSet<DirValue>();
-    HashSet<DirSeq> dirSeqs = new HashSet<DirSeq>();
-    dirSeqs.add(new DirSeq(2,2)); //start at 2,2
-    dirSeqs = evaluate(pv, dirSeqs);
-    for (DirSeq ds : dirSeqs){
-      ds.print();
-      //if (ds.checkPatternFromPos(squarePos))
-        //return true;
+    this.squareVisited = new boolean[game.getBoard().getWidth()][];
+    for (int i = 0; i < game.getBoard().getWidth(); i++)
+    	this.squareVisited[i] = new boolean[game.getBoard().getHeight()];
+    HashSet<SimpleDir> workingSet = new HashSet<SimpleDir>();
+    workingSet.add(new SimpleDir(2,2)); //start at 2,2
+    workingSet = evaluate(pv, workingSet);
+    if (workingSet.size() == 0){
+    	return false;	
     }
-    return false;
+    else{
+    	return true;
+    }
   }
   
   private Player currentPlayer() throws StandardError{
     return this.game.getCurrentPlayer();
   }
   
-  private HashSet<DirSeq> evaluate(Value v, HashSet<DirSeq> dirSeqs) throws StandardError{
+  private HashSet<SimpleDir> evaluate(Value v, HashSet<SimpleDir> workingSet) throws StandardError{
     if (v instanceof PatternOrValue)
-      return evaluatePatternOrValue((PatternOrValue)v, dirSeqs);
+      return evaluatePatternOrValue((PatternOrValue)v, workingSet);
     else if (v instanceof DirValue)
-      return addDirValue((DirValue)v, dirSeqs); //adds direction to all DirSeq in current set
+      return addDirValue((DirValue)v, workingSet); //adds direction to all SimpleDir in current set
     else if (v instanceof PatternKeyValue)
-      return addPatternKeyValue((PatternKeyValue)v, dirSeqs, false); //adds dirValue to all dirs in current set
+      return addPatternKeyValue((PatternKeyValue)v, workingSet, false); //adds dirValue to all dirs in current set
     else if (v instanceof PatternNotValue)
-      return addPatternKeyValue( (PatternKeyValue)((PatternNotValue)v).getValue(), dirSeqs, true ); //PatternNotValue contains a PatternKeyValue as its value
-    //else if (v instanceof PatternPlusValue)
-      //return evaluatePatternMultValue((PatternPlusValue)v, dirSeqs);
+      return addPatternKeyValue( (PatternKeyValue)((PatternNotValue)v).getValue(), workingSet, true ); //PatternNotValue contains a PatternKeyValue as its value
+    else if (v instanceof PatternPlusValue)
+      return evaluatePatternPlusValue((PatternPlusValue)v, workingSet);
     else if (v instanceof PatternMultValue)
-      return evaluatePatternMultValue((PatternMultValue)v, dirSeqs);
+      return evaluatePatternMultValue((PatternMultValue)v, workingSet);
+    else if (v instanceof PatternOptValue)
+        return evaluatePatternOptValue((PatternOptValue)v, workingSet);
     else if (v instanceof PatternValue)
-      return evaluatePatternValue((PatternValue)v, dirSeqs);
+      return evaluatePatternValue((PatternValue)v, workingSet);
     else
       throw new StandardError("Not intended");
   }
-
-  private HashSet<DirSeq> evaluatePatternMultValue(PatternMultValue pmv, HashSet<DirSeq> dirSeqs) throws StandardError{
+  private HashSet<SimpleDir> evaluatePatternOptValue(PatternOptValue pov, HashSet<SimpleDir> workingSet) throws StandardError{
+	  //PatternOptValue contains only 1 value
+	  
+	  //evaluate the value once on a clone, so it does not effect the set containing no evaluation 
+	  HashSet<SimpleDir> evluatedOnce = evaluatePatternValue(new PatternValue(pov.getValue()), makeClone(workingSet));
+	  //return the set obtained after evaluating once united with the original set.
+	  unionOnFirst(workingSet, evluatedOnce);
+	  return workingSet;
+  }
+  private HashSet<SimpleDir> evaluatePatternPlusValue(PatternPlusValue pmv, HashSet<SimpleDir> workingSet) throws StandardError{
+	  //PatternPlusValue contains only 1 value
+	  
+	  //evaluate the value once
+	  workingSet = evaluatePatternValue(new PatternValue(pmv.getValue()), workingSet);
+	  //evaluate the value 0 to many times
+	  return evaluatePatternMultValue(new PatternMultValue(pmv.getValue()), workingSet);
+  }
+  private HashSet<SimpleDir> evaluatePatternMultValue(PatternMultValue pmv, HashSet<SimpleDir> workingSet) throws StandardError{
     int oldCount;
 
-    HashSet<DirSeq> applyMultOn = dirSeqs;
+    HashSet<SimpleDir> applyMultOn = workingSet;
     do
     {
       //oldCount lets us know if any new things are added during the kleenee-star operation
       //if no new things are added, there is no reason to keep during the operation
-      oldCount = dirSeqs.size(); 
+      oldCount = workingSet.size(); 
       
       //Ensure that kleenee-star is not applied to all sequences but only those generated by last run
       applyMultOn = makeClone(applyMultOn);
       applyMultOn = evaluate(pmv.getValue(), applyMultOn);
       
       //add the newly found sequences to the original set
-      unionOnFirst(dirSeqs, applyMultOn);
+      unionOnFirst(workingSet, applyMultOn);
     }
     //stop is something new has not been added or if anything has gone out of board
-    while (dirSeqs.size() > oldCount);
-    return dirSeqs;
+    while (workingSet.size() > oldCount);
+    return workingSet;
   }
   
-  private HashSet<DirSeq> evaluatePatternOrValue(PatternOrValue v, HashSet<DirSeq> dirSeqs) throws StandardError {
-    HashSet<DirSeq> clone = makeClone(dirSeqs); //make sure the side effects from evaluating the left side is not visible when evaluating the right side of or
-    HashSet<DirSeq> leftOr = evaluate(v.getLeft(), dirSeqs);
-    HashSet<DirSeq> rightOr = evaluate(v.getRight(), clone);
+  private HashSet<SimpleDir> evaluatePatternOrValue(PatternOrValue v, HashSet<SimpleDir> workingSet) throws StandardError {
+    HashSet<SimpleDir> clone = makeClone(workingSet); //make sure the side effects from evaluating the left side is not visible when evaluating the right side of or
+    HashSet<SimpleDir> leftOr = evaluate(v.getLeft(), workingSet);
+    HashSet<SimpleDir> rightOr = evaluate(v.getRight(), clone);
     unionOnFirst(leftOr, rightOr);
     return leftOr;
   }
  
-  private HashSet<DirSeq> evaluatePatternValue(PatternValue pv, HashSet<DirSeq> dirSeqs) throws StandardError{
+  private HashSet<SimpleDir> evaluatePatternValue(PatternValue pv, HashSet<SimpleDir> workingSet) throws StandardError{
     for (Value v : pv.getValues()){
-      dirSeqs = evaluate(v, dirSeqs);
+      workingSet = evaluate(v, workingSet);
     }
-    return dirSeqs;
+    return workingSet;
   }
-  private HashSet<DirSeq> makeClone(HashSet<DirSeq> set) throws StandardError{
-    HashSet<DirSeq> result = new HashSet<DirSeq>();
-    for (DirSeq ds : set)
-      result.add(ds.makeClone());
+  private HashSet<SimpleDir> makeClone(HashSet<SimpleDir> set) throws StandardError{
+    HashSet<SimpleDir> result = new HashSet<SimpleDir>();
+    for (SimpleDir ds : set)
+      result.add(new SimpleDir(ds.x, ds.y));
     return result;
   }
   
-  private HashSet<DirSeq> union (HashSet<DirSeq> setLeft, HashSet<DirSeq> setRight){
-    //setLeft = {n, w, ee}
-    //setRight = {e, s, w}
-    //returns {n, w, ee, e, s}
-    HashSet<DirSeq> result = new HashSet<DirSeq>();
-    for (DirSeq ds : setLeft)
-      result.add(ds);
-    for (DirSeq ds : setRight)
-      result.add(ds);
-    return result;
-  }
-  
-  private void unionOnFirst (HashSet<DirSeq> first, HashSet<DirSeq> second){
+  private void unionOnFirst (HashSet<SimpleDir> first, HashSet<SimpleDir> second){
     //adds all elements in the second second set to the first set  
     //setLeft = {n, w, ee}
     //setRight = {e, s, w}
     //modifies setRight to {n, w, ee, e, s}
-    for (DirSeq ds : second)
+    for (SimpleDir ds : second)
       first.add(ds);
   }
   
-  private HashSet<DirSeq> addDirValue(DirValue dirVal, HashSet<DirSeq> dirSeqs) throws StandardError{
-    
-    HashSet<DirSeq> newSet = new HashSet<DirSeq>(); //when changing the offset of a DirSeq, it must be reinserted into a hashset since its hashcode changes
-    
-    for (DirSeq ds : dirSeqs){
-      ds.addOffset(dirVal.getX(), dirVal.getY());
-      if (!outOfBoard(ds.offset)) //also sets a flag if out of board which makes kleenee-start and + operation stop.
-        newSet.add(ds);      
-    }
-    
+  private HashSet<SimpleDir> addDirValue(DirValue dirVal, HashSet<SimpleDir> workingSet) throws StandardError{
+    HashSet<SimpleDir> newSet = new HashSet<SimpleDir>(); 
+    for (SimpleDir ds : workingSet){
+    	ds.x += dirVal.getX();
+    	ds.y += dirVal.getY();
+		if (!outOfBoard(ds.x, ds.y)){ 
+			//if (!this.squareVisited[ds.x-1][ds.y-1]){ //board starts at 1, array at 0
+				newSet.add(ds);
+			//	this.squareVisited[ds.x-1][ds.y-1] = true;
+			//}
+		}
+	}
    return newSet;
   }
-  private boolean outOfBoard(SimpleDir val) throws StandardError{
+  
+  private boolean outOfBoard(int x, int y) throws StandardError{
     //if (val.x < 1 || val.y < 1 || val.x > this.game.getBoard().getWidth() || val.y > this.game.getBoard().getHeight())
-    if (val.x < 1 || val.y < 1 || val.x > 5 || val.y > 5){
+    if (x < 1 || y < 1 || x > 5 || y > 5){
       return true;
     }
     return false;
   }
   
-  private HashSet<DirSeq> addPatternKeyValue(PatternKeyValue keyVal, HashSet<DirSeq> dirSeqs, boolean negate) throws StandardError{
-    HashSet<DirSeq> newSet = new HashSet<DirSeq>();
-    for (DirSeq ds : dirSeqs){
-        ds.addKeyVal((negate ? "!" : "") + keyVal);
-        newSet.add(ds);
+  private HashSet<SimpleDir> addPatternKeyValue(PatternKeyValue keyVal, HashSet<SimpleDir> workingSet, boolean negate) throws StandardError{
+    
+	  HashSet<SimpleDir> newSet = new HashSet<SimpleDir>();
+    for (SimpleDir ds : workingSet){
+    	
+        if (keyIsOk(keyVal, ds) != negate){
+        	newSet.add(ds);
+        	System.out.println("Found " + (negate? "not " : "") + keyVal + " at (" +ds.x+","+ds.y+")");
+        }
+        else
+        	System.out.println("Dit not find " + (negate? "not " : "") + keyVal + " at (" +ds.x+","+ds.y+")");
     }
     return newSet;
   }
   
 
-  /*
-  private boolean keyIsOk(PatternKeyValue pv) throws StandardError{
-    Square foundSquare = this.game.getBoard().getSquareAt(this.currentPos().getX(), this.currentPos().getY());
+
+  private boolean keyIsOk(PatternKeyValue pv, SimpleDir position) throws StandardError{
+    Square foundSquare = this.game.getBoard().getSquareAt(position.x, position.y);
     switch (pv.toString()){
       case "friend":
         if (!friend(foundSquare))
@@ -169,7 +181,6 @@ public class GridBoardPatternEvaluator {
       default:
         throw new StandardError("Unrecognised pattern keyword: " + pv.toString());
     }
-    System.out.println(pv + " accepted at position " + this.currentPos().getX() +","+this.currentPos().getY());
     return true;
   }
   
@@ -190,5 +201,5 @@ public class GridBoardPatternEvaluator {
   private boolean empty(Square s) throws StandardError{
     return s.getPieces().length == 0;
   }
-  */
+
 }
