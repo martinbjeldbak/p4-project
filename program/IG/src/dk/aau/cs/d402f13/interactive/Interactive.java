@@ -69,9 +69,7 @@ public class Interactive {
           System.out.println(" = " + v + " (" + v.getClass().getSimpleName() + ")");
 
         if(v instanceof PatternValue) {
-          savedPattern = (PatternValue)v;
-          GridBoardPatternEvaluator gbpe = new GridBoardPatternEvaluator();
-          gbpe.doesPatternMatch(null, savedPattern, null);
+          savedPattern = (PatternValue)v;     
         }
       }
       catch (Error e) {
