@@ -260,7 +260,7 @@ inside other scopes are implemented.
 
 \codesample{openscopeexpressions.junta}
 
-Notice how the four code samples in in the above codesample all result in the same
+Notice how the four code samples in in the above code sample all result in the same
 scope checking routine, which can be seen in \figref{fig:scope1}; First, a new
 symbol table is instantiated in which the variables \$a and \$b are put in. The
 symbol table's parent reference is updated so it points to the current symbol
@@ -292,7 +292,7 @@ declaration of \$a.
 
 \fig[height=5em]{scope2}{The variable \$a declared in two different scopes.}
 
-This is completely valid and is caused by the following codesample. If only a
+This is completely valid and is caused by the following code sample. If only a
 single symbol table was used, an incorrect double declaration would be detected.
 
 \codesample{scope2.junta}
@@ -305,7 +305,7 @@ This ensures that the data members of a type can be used anywhere in the type
 body but in that type body only. When exiting that type body and closing the
 scope the symbol table containing the data members are no longer visible.
 
-\subsection{Evaluation}
+\subsection{Summary of scope checking}
 Many different static semantic checks are implemented in the scope checker.
 Though many other checks could have been included as well, the scope of the
 static semantics has been limited due to a few constraints. First of all, there
