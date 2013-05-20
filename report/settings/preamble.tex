@@ -56,37 +56,38 @@
 \usepackage{color}
 \usepackage{multicol}
 \usepackage{array}
-\usepackage{hyperref}
 \usepackage{listings}	%for code examples
 \usepackage{microtype}
- \lstset{ % http://stackoverflow.com/questions/741985/latex-source-code-listing-like-in-professional-books
-%         basicstyle=\footnotesize\ttfamily,% the size of the fonts
-                                % that are used for the code
-        basicstyle=\footnotesize\ttfamily,% the size of the fonts that are used for the code
-         numbers=left,                     % where to put the line-numbers
-         numberstyle=\tiny,                % the size of the fonts that are used for the line-numbers
-         stepnumber=1,                     % line numbering steps
-         numbersep=5pt,                    % how far the line-numbers are from the code
-         tabsize=2,                        % sets default tabsize to 2 spaces
-         breaklines=true,                  % sets automatic line breaking
-         keywordstyle=\color{shkeyword},        % language function text color
-                frame=b,
- %        keywordstyle=[1]\textbf,    % Stil der Keywords
- %        keywordstyle=[2]\textbf,    %
- %        keywordstyle=[3]\textbf,    %
- %        keywordstyle=[4]\textbf,   \sqrt{\sqrt{}} %
-         stringstyle=\color{shstring}, % string text color
-%         stringstyle=\color{red},
-        commentstyle=\color{shcomment},
-         showspaces=false,           % show spaces adding particular underscores
-         showtabs=false,             % show tabs within strings adding particular underscores   
-         showstringspaces=false,     % underline spaces within strings
-         xleftmargin=17pt,
-         framexleftmargin=17pt,
-         framexrightmargin=5pt,
-         framexbottommargin=4pt,
-         language=Java
- }
+\usepackage{caption}
+\usepackage{hyperref}
+
+%---- CODE LISTING STYLING
+% Taken from: http://stackoverflow.com/questions/741985/latex-source-code-listing-like-in-professional-books
+\lstset{
+  basicstyle=\footnotesize\ttfamily, 
+  numbers=left,              
+  numberstyle=\tiny,        
+  numbersep=5pt,
+  tabsize=2,
+  extendedchars=true,
+  breaklines=true,
+  keywordstyle=\color{red},
+  frame=b,         
+  stringstyle=\color{cyan}\ttfamily,
+  showspaces=false,
+  showtabs=false,
+  xleftmargin=17pt,
+  framexleftmargin=17pt,
+  framexrightmargin=5pt,
+  framexbottommargin=4pt,
+         backgroundcolor=\color{lightgray},
+  showstringspaces=false,
+  language=Java
+}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox[cmyk]{0.43, 0.35, 0.35,0.01}{\parbox{\textwidth}{\hspace{15pt}#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white, singlelinecheck=false, margin=0pt, font={bf,footnotesize}}
+%----
 
 % grammar stuff
 

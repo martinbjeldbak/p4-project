@@ -9,7 +9,7 @@
 \newcommand{\itemref}[1]{element \ref{#1}}
 \newcommand{\pseudoref}[1]{algorithm \ref{#1}}
 \newcommand{\capt}[1]{\caption{\emph{#1}}}
-\newcommand{\csref}[1]{codesample \ref{cs:#1}}
+\newcommand{\csref}[1]{code sample (\ref{cs:#1})}
 
 %code-like refs
 \newcommand{\tokenref}[1]{{\textbf{#1}}}
@@ -23,12 +23,12 @@
 \newcommand{\codesample}[1]{
   \vspace{-0.6cm}
   \begin{center}
-  \begin{tabularx}{0.9\textwidth}{m{10cm} X m{1cm} }
+  \begin{tabularx}{0.9\textwidth}{m{9cm} X m{2cm} }
   \parbox[t]{8cm}{
     \vspace{-0.1cm}
     \input{codesamples/#1}}
     & &
-    \parbox{1cm}{\hfill
+    \parbox{2cm}{\hfill
       \begin{equation}\label{cs:#1}
       \end{equation}
     } 
