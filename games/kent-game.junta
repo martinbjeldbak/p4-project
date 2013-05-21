@@ -15,17 +15,17 @@ type Solo[] extends Player["Solo"] {
 type White[$player] extends Piece[$player] {
   define actions[$gameState] =
     moveActions[this, union[
-      $gameState.findSquares[/empty e|n this/],
-      $gameState.findSquares[/empty e Black e this/],
-      $gameState.findSquares[/empty n Black n this/]
+      $gameState.findSquares[/empty !Wall w|s this/],
+      $gameState.findSquares[/empty !Wall w Black w this/],
+      $gameState.findSquares[/empty !Wall s Black s this/]
     ]]
 }
 type Black[$player] extends Piece[$player] {
   define actions[$gameState] =
     moveActions[this, union[
-      $gameState.findSquares[/empty w|s this/],
-      $gameState.findSquares[/empty w White w this/],
-      $gameState.findSquares[/empty s White s this/]
+      $gameState.findSquares[/empty !Wall e|n this/],
+      $gameState.findSquares[/empty !Wall e White e this/],
+      $gameState.findSquares[/empty !Wall n White n this/]
     ]]
 }
 type Wall[] extends Square[] {
