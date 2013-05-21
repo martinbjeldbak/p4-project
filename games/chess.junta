@@ -1,7 +1,7 @@
 type Chess[] extends Game["Chess"]{
-  define players = [ ChessPlayer[ "Black" ], ChessPlayer[ "White" ] ]
+  define players = [ Black[], White[] ]
     define board = let $black = players[0], $white = players[1] in
-    ChessBoard[]
+    GridBoard[ 8,8 ]
     .addPieces[ Pawn[ $black, s ], [ A7, B7, C7, D7, E7, F7, G7, H7 ] ]
     .addPieces[ Rook[ $black ],    [ A8, H8 ] ]
     .addPieces[ Knight[ $black ],  [ B8, G8 ] ]
@@ -23,47 +23,57 @@ type ChessBoard[] extends GridBoard[ 8,8 ]{
   define squareTypes = [ WhiteSquare, BlackSquare ]
 }
 
-type ChessPlayer[ $color ] extends Player[]{
+type ChessPlayer[ $color ] extends Player[ $color ]{
 
   //	define winCondition[$game] = findSquares[ /King !isSecure/ ] // questionable!	
 }
 
+type White[] extends ChessPlayer[ "White" ]{ }
+type Black[] extends ChessPlayer[ "Black" ]{ }
+
+define moveAndCapture[ $piece, $to ] =
+  if $to.isOccupied then
+    RemoveAction[ $to.pieces[0] ]//ActionSequence[ RemoveAction[ $to.pieces[0] ], MoveAction[ $piece, $to ] ]
+  else
+    MoveAction[ $piece, $to ]
+
+
 type ChessPiece[ $player ] extends Piece[ $player ]{
   define slide[ $game, $patterns ] =
-    toActions[ union[ map[ $patterns, #[$pattern] =>
-    findSquares[ / this ($pattern empty)* $pattern !friend/ ]
+    toActions[ union[ $patterns.map[ #[$pattern] =>
+    $game.findSquares[ / this ($pattern empty)* $pattern !friend/ ]
     ] ] ]
 
     define toActions[ $list ] =
-    map[ $list, #[$item] =>
+    $list.map[ #[$item] =>
     moveAndCapture[ this, $item ]
     ]
 }
 
 type Pawn[ $player, $dir ] extends ChessPiece[ $player ]{
   define actions[$game] =
-    if isFirstMove[this] then
-      toActions[ findSquares[ / this ($dir empty)2 / ] ]
-    else
-      []
-        +	map[ findSquares[ / this ($dir empty) | (($dir e)|($dir w) foe) / ],
-#[ $square ] =>
-        //Is it possible to move further one up on the board?
-        if size[ findSquares[ $board, / $square $dir / ] ] == 0 then
-          sequence[ moveAndCapture[ this, $square ], promote[ this, Queen ] ] //TODO: make it a user choice
-        else
-          moveAndCapture[ this, $square ]
-            ]
-            //En pasant
-            +	map[ filter[ / this e|w foe Pawn /, #[$square] =>
-            let $foe = piecesOnSquare[$square][0],
-                $turn = currentTurn[$game]
-                  in
-                  lastTurn[$foe] == $turn - 1 
-                  and history[ $turn ] == moveEx[ $foe, / $square $dir $dir /, $square ]
-                  ],
-#[$square] => sequence[ move[ this, findSquares[/ $square $dir /][0] ], remove[ $foe ] ]
-                ]
+   // if isFirstMove[this] then
+      toActions[ $game.findSquares[ / (empty $dir)2 this / ] ]
+   // else
+   //   []
+        // +	map[ findSquares[ / foe (empty $dir) | ((w $dir)|(e $dir) this) / ],
+// #[ $square ] =>
+        // //Is it possible to move further one up on the board?
+        // if size[ findSquares[ $board, / $square $dir / ] ] == 0 then
+          // sequence[ moveAndCapture[ this, $square ], promote[ this, Queen ] ] //TODO: make it a user choice
+        // else
+          // moveAndCapture[ this, $square ]
+            // ]
+            // //En pasant
+            // +	map[ filter[ / this e|w foe Pawn /, #[$square] =>
+            // let $foe = piecesOnSquare[$square][0],
+                // $turn = currentTurn[$game]
+                  // in
+                  // lastTurn[$foe] == $turn - 1 
+                  // and history[ $turn ] == moveEx[ $foe, / $square $dir $dir /, $square ]
+                  // ],
+// #[$square] => sequence[ move[ this, findSquares[/ $square $dir /][0] ], remove[ $foe ] ]
+                // ]
 }
 
 type Rook[ $player ] extends ChessPiece[ $player ]{
@@ -73,7 +83,7 @@ type Rook[ $player ] extends ChessPiece[ $player ]{
 
 type Knight[ $player ] extends ChessPiece[ $player ]{
   define actions[ $game ] =
-    findMoveActions[ $game, this, /this (n ne|nw) | (s se|sw) | (e nw|se) | (w nw|sw) !friend/ ]
+    moveActions[ this, /this (n ne|nw) | (s se|sw) | (e nw|se) | (w nw|sw) !friend/ ]
 }
 
 type Bishop[ $player ] extends ChessPiece[ $player ]{
@@ -88,5 +98,5 @@ type Queen[ $player ] extends ChessPiece[ $player ]{
 
 type King[ $player ] extends ChessPiece[ $player ]{
   define actions[ $game ] =
-    findMoveActions[ $game, this, /this e|n|s|w|ne|nw|se|sw !friend/ ]
+    moveActions[ $game, this, /this e|n|s|w|ne|nw|se|sw !friend/ ]
 }
