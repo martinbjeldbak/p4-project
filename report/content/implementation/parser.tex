@@ -196,13 +196,13 @@ Tokens
   if            = 'if';
 
 Productions
-   expression   = {elopexp} element operator expression
-                | {assign} assignment
-                | {if} if_expr
-                | {lambda} lambda_expr
-                | {el} element list?
-                | {not} not expression;
-   if_expr      = if [left]:expression then [mid]:expression else [right]:expression;
+  expression   = {elopexp} element operator expression
+               | {assign} assignment
+               | {if} if_expr
+               | {lambda} lambda_expr
+               | {el} element list?
+               | {not} not expression;
+  if_expr      = if [left]:expression then [mid]:expression else [right]:expression;
 \end{lstlisting}
 
 % Pros
