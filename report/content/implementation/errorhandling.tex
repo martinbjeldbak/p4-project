@@ -1,10 +1,64 @@
 \section{Error handling}
 
-In all of the different phases of the interpreter lots of errors can occur. In the scanning phase
+In the interpretation phases lots of different errors can occur. In the scanning phase
 a scanning error can occur if the scanner detects a string, which doesn't correspond to one of our language's specified tokens.
 This is a lexical error, but we refer to it as a scanning error. In the parsing phase a syntax error can occur if two or more
 tokens are not set up syntactically correct according to our grammar. We have created an error hierarchy in order to give an
-overview of our different errors, which is illustrated in 
+overview of our different errors, which is illustrated in \figref{ast:errorhierarchy}. The function of an error is to give the
+programmer of junta games a better chance of figuring out what he has done wrong and make it easier for him to correct the errors 
+by for instance referring to where in the source code and error has occurred.   
+
+\begin{figure}[ht]
+	\begin{center}
+		\begin{tikzpicture}
+			\node [square] (a) {Exception}
+  				child {node [square,xshift=0cm] (b) {Error}
+  					child {node [square,xshift=-4.5cm] (c) {syntaxError}
+  						child {node [square,xshift=0.0cm] (d) {ScannerError}}
+  					}
+  					child {node [square,xshift=0cm] (e) {StandardError}
+  						child {node [square,xshift=-0.5cm] (f) {ScopeError}}
+  						child {node [square,xshift=0.5cm] (g) {InternalError}}
+  						child {node [square,xshift=1.5cm] (h) {TypeError}}
+  						child {node [square,xshift=2.5cm] (i) {ArgumentError}
+  							child {node [square,xshift=0.0cm] (j) {DivideByZeroError}}
+  						}
+  						child {node [square,xshift=3.5cm] (k) {NameError}}
+  					}
+  					child {node [square,xshift=4.5cm] (l) {SimulatorError}}
+  				};
+  			\draw[<-, thick,] (a) -- (b);
+    		\draw[<-, thick,] (b) -- (c);
+    		\draw[<-, thick,] (c) -- (d);
+    		\draw[<-, thick,] (b) -- (e);
+    		\draw[<-, thick,] (e) -- (f);
+    		\draw[<-, thick,] (e) -- (g);
+    		\draw[<-, thick,] (e) -- (h);
+    		\draw[<-, thick,] (e) -- (i);
+    		\draw[<-, thick,] (e) -- (k);
+    		\draw[<-, thick,] (i) -- (j);
+    		\draw[<-, thick,] (b) -- (l);
+		\end{tikzpicture}
+	\end{center}
+	\capt{An illustration of the error hierarchy as it is implemented in the interpreter}
+	\label{ast:errorhierarchy}
+\end{figure}
+
+\begin{dlist}
+	\item[\textbf{Exception}] At the top of the error hierarchy Java's integrated error handling concept is located, which is called Exception (java.lang.Exception). This
+	\item[\textbf{Error}]
+	\item[\textbf{SyntaxError}] Inherits from Error and is used in the parser to catch syntactic errors. A syntactic error occurs if a token doesn't correspond to the currently expected token according to the grammar. SyntaxError outputs a message like ``Unexpected token, expected X'' where X is the expected token according to the grammar also it outputs at which line and offset the token which caused the error is located. 
+	\item[\textbf{ScannerError}] Inherits from SyntaxError and is used in the scanner to catch lexical errors. A lexical error occurs if the programmer 
+	\item[\textbf{StandardError}]
+	\item[\textbf{ScopeError}]
+	\item[\textbf{InternalError}]
+	\item[\textbf{TypeError}]
+	\item[\textbf{ArgumentError}]
+	\item[\textbf{NameError}]
+	\item[\textbf{DivideByZeroError}]
+	\item[\textbf{SimulatorError}]
+\end{dlist}
+
 
     
 % Talk about how, where, and why errors are thrown in the different packages
