@@ -74,7 +74,7 @@ public class ActionHelper{
 		MoveAction ma = isMoveAction( a );
 		if( ma == null )
 			return null;
-		if( ma.getPiece() == p )
+		if( ma.getPiece().equals( p ) )
 			return ma;
 		return null;
 	}

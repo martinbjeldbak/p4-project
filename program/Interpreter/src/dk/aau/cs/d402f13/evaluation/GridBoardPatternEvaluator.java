@@ -1,9 +1,12 @@
 package dk.aau.cs.d402f13.evaluation;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
 import dk.aau.cs.d402f13.gal.wrappers.GameWrapper;
+import dk.aau.cs.d402f13.gal.wrappers.PieceWrapper;
+import dk.aau.cs.d402f13.gal.wrappers.SquareWrapper;
 import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
 import dk.aau.cs.d402f13.utilities.SimpleDir;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
@@ -16,19 +19,23 @@ import dk.aau.cs.d402f13.values.*;
 public class GridBoardPatternEvaluator {
   
   private GameWrapper game;
-
+  private boolean negate; //when using a '!' in a pattern, this is changed
 
   public boolean doesPatternMatch(GameWrapper game, PatternValue pv, CoordValue squarePos) throws StandardError{
+    this.negate = false;
     this.game = game;
     HashSet<SimpleDir> workingSet = new HashSet<SimpleDir>();
     workingSet.add(new SimpleDir(squarePos.getX(),squarePos.getY()));
     evaluate(pv, workingSet);
     if (workingSet.size() == 0){
+      System.out.println("Pattern does not match");
     	return false;	
     }
     else{
+      System.out.println("Pattern matches (" + squarePos.getX() + "," + squarePos.getY()+") " + pv);
     	return true;
     }
+    
   }
   
   private Player currentPlayer() throws StandardError{
@@ -41,9 +48,12 @@ public class GridBoardPatternEvaluator {
     else if (v instanceof DirValue)
       addDirValue((DirValue)v, workingSet); //adds direction to all SimpleDir in current set
     else if (v instanceof PatternKeyValue)
-      addPatternKeyValue((PatternKeyValue)v, workingSet, false); //adds dirValue to all dirs in current set
-    else if (v instanceof PatternNotValue)
-      addPatternKeyValue( (PatternKeyValue)((PatternNotValue)v).getValue(), workingSet, true ); //PatternNotValue contains a PatternKeyValue as its value
+      foundPatternKeyValue((PatternKeyValue)v, workingSet); //adds dirValue to all dirs in current set
+    else if (v instanceof PatternNotValue){
+      this.negate = true;
+      evaluate(((PatternNotValue)v).getValue(), workingSet);
+      this.negate = false;
+    }
     else if (v instanceof PatternPlusValue)
       evaluatePatternPlusValue((PatternPlusValue)v, workingSet);
     else if (v instanceof PatternMultValue)
@@ -52,8 +62,12 @@ public class GridBoardPatternEvaluator {
       evaluatePatternOptValue((PatternOptValue)v, workingSet);
     else if (v instanceof PatternValue)
       evaluatePatternValue((PatternValue)v, workingSet);
+    else if (v instanceof TypeValue)
+      foundTypeValue((TypeValue)v, workingSet);
+    else if (v instanceof ObjectValue)
+      foundObjectValue((ObjectValue)v, workingSet);
     else
-      throw new StandardError("Not intended");
+      throw new StandardError("Not intended PatternValue");
   }
   private HashSet<SimpleDir> evaluatePatternOptValue(PatternOptValue pov, HashSet<SimpleDir> workingSet) throws StandardError{
 	  //PatternOptValue contains only 1 value
@@ -136,42 +150,88 @@ public class GridBoardPatternEvaluator {
   }
   
   private void addDirValue(DirValue dirVal, HashSet<SimpleDir> workingSet) throws StandardError{
-    Iterator<SimpleDir> it = workingSet.iterator();
-    while (it.hasNext()){
-      SimpleDir ds = it.next();
-      if (outOfBoard(ds.x + dirVal.getX(), ds.y + dirVal.getY())){ 
-		it.remove(); //removes the last returned element (ds)
-      }
-      else{
-        ds.x += dirVal.getX();
-        ds.y += dirVal.getY();
+    //when changing the x and y coord of a simpledir, it must be reinserted into the HashSet so the hashValues are mapped correct
+    ArrayList<SimpleDir> insertAgain = new ArrayList<SimpleDir>();
+    for (SimpleDir sd : workingSet){
+      sd.x += dirVal.getX();
+      sd.y += dirVal.getY();
+      if (!outOfBoard(sd.x, sd.y)){ 
+		 insertAgain.add(sd);
       }
 	}
+    workingSet.clear();
+    workingSet.addAll(insertAgain);
   }
   
   private boolean outOfBoard(int x, int y) throws StandardError{
     //if (val.x < 1 || val.y < 1 || val.x > this.game.getBoard().getWidth() || val.y > this.game.getBoard().getHeight())
-    if (x < 1 || y < 1 || x > 5 || y > 5){
+    if (x < 1 || y < 1 || x > this.game.getBoard().getWidth() || y > this.game.getBoard().getHeight()){
       return true;
     }
     return false;
   }
   
-  private HashSet<SimpleDir> addPatternKeyValue(PatternKeyValue keyVal, HashSet<SimpleDir> workingSet, boolean negate) throws StandardError{
-    
-	  HashSet<SimpleDir> newSet = new HashSet<SimpleDir>();
-    for (SimpleDir ds : workingSet){
-    	
-        if (keyIsOk(keyVal, ds) != negate){
-        	newSet.add(ds);
-        	System.out.println("Found " + (negate? "not " : "") + keyVal + " at (" +ds.x+","+ds.y+")");
+  private void foundPatternKeyValue(PatternKeyValue keyVal, HashSet<SimpleDir> workingSet) throws StandardError{
+    Iterator<SimpleDir> it = workingSet.iterator();
+    while (it.hasNext()){   	
+        if (keyIsOk(keyVal, it.next()) == this.negate){
+        	it.remove();    
         }
-        else
-        	System.out.println("Dit not find " + (negate? "not " : "") + keyVal + " at (" +ds.x+","+ds.y+")");
     }
-    return newSet;
   }
   
+  private void foundTypeValue(TypeValue typeVal, HashSet<SimpleDir> workingSet) throws StandardError{
+    //Can be a Piece type or a Square type
+    Iterator<SimpleDir> it = workingSet.iterator();
+    while (it.hasNext()){       
+      if (typeIsOk(typeVal, it.next()) == this.negate){
+        it.remove();    
+      }
+    }
+  }
+  
+  private void foundObjectValue(ObjectValue objectVal, HashSet<SimpleDir> workingSet) throws StandardError{
+    //Returns a specific Object, e.g. a specific piece by using this
+    Iterator<SimpleDir> it = workingSet.iterator();
+    while (it.hasNext()){       
+      if (objectIsOk(objectVal, it.next()) == this.negate){
+        it.remove();    
+      }
+    }
+  }
+  
+  private boolean objectIsOk(ObjectValue objectVal, SimpleDir position) throws StandardError{
+    //A specific object, e.g. a Piece or a Square. 
+    //Occurs when using the 'this' keyword inside a specific object
+    SquareWrapper foundSquare = this.game.getBoard().getSquareAt(position.x, position.y);
+    if (foundSquare.equals(objectVal)){
+      return true;
+    }
+    for (Piece p : foundSquare.getPieces()){
+      if (((PieceWrapper)p).getObject().equals(objectVal)){
+        return true;
+      }
+    }
+    
+    return false;
+  }
+
+  private boolean typeIsOk(TypeValue tv, SimpleDir position) throws StandardError{
+    //can both mean that the current Square is a given TypeValue or that the current Square
+    //contains a Piece of the given TypeValue
+    SquareWrapper foundSquare = this.game.getBoard().getSquareAt(position.x, position.y);
+    if (foundSquare.getObject().is(tv)){
+      return true;
+    }
+    else{
+      for (Piece p : foundSquare.getPieces()){
+        if (((PieceWrapper)p).getObject().is(tv)){
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
 
   private boolean keyIsOk(PatternKeyValue pv, SimpleDir position) throws StandardError{
