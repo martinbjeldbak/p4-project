@@ -16,10 +16,10 @@ public class GridBoardPatternEvaluator {
   private Game game;
 
 
-  public boolean doesPatternMatch(Game game, PatternValue pv, DirValue squarePos) throws StandardError{
+  public boolean doesPatternMatch(Game game, PatternValue pv, CoordValue squarePos) throws StandardError{
     this.game = game;
     HashSet<SimpleDir> workingSet = new HashSet<SimpleDir>();
-    workingSet.add(new SimpleDir(2,2)); //start at 2,2
+    workingSet.add(new SimpleDir(squarePos.getX(),squarePos.getY()));
     evaluate(pv, workingSet);
     if (workingSet.size() == 0){
     	return false;	
