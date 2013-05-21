@@ -31,8 +31,6 @@ public class Interactive {
     // TODO Auto-generated constructor stub
   }
   
-  private static PatternValue savedPattern;
-  
   public static void expressionI(BufferedReader reader) throws IOException, StandardError {
     Interpreter interp = new Interpreter();
     while (true) {
@@ -67,10 +65,6 @@ public class Interactive {
         Value v = interp.visit(ast);
         if (v != null) 
           System.out.println(" = " + v + " (" + v.getClass().getSimpleName() + ")");
-
-        if(v instanceof PatternValue) {
-          savedPattern = (PatternValue)v;     
-        }
       }
       catch (Error e) {
         System.out.println(e.getClass().getSimpleName() + ": " + e.getMessage()
@@ -214,10 +208,6 @@ public class Interactive {
                         System.out.println("Found game: " + gameType.getName());
                         GameWrapper game = new GameWrapper(env, gameType.getInstance(i));
                         System.out.println("Title: " + game.getTitle());
-               
-                        GridBoardPatternEvaluator gbpe = new GridBoardPatternEvaluator();
-                        boolean result = gbpe.doesPatternMatch(game, savedPattern, new DirValue(2,2));
-                        System.out.println(result ? "Pattern MATCHES" : "Pattern does not match");
                       }
                       Value main = env.getConstant("main"); 
                       if (main != null) {
