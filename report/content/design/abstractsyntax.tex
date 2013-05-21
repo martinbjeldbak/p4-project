@@ -22,21 +22,22 @@ Table \ref{table:syn-cat} shows the syntactic cateogries for
   \begin{center}
     \begin{tabular}{rl}
       \hline
-      $n \in$ & $\mathbf{Integer}$       \\
-      $x \in$ & $\mathbf{Variable}$      \\
-      $s \in$ & $\mathbf{String}$        \\
-      $E \in$ & $\mathbf{Expression}$    \\
-      $P \in$ & $\mathbf{Pattern}$       \\
-      $L \in$ & $\mathbf{List}$          \\
-      $X \in$ & $\mathbf{Variable list}$ \\
-      $Y \in$ & $\mathbf{Coordinate}$    \\
-      $Z \in$ & $\mathbf{Direction}$     \\
-      $C \in$ & $\mathbf{Constant}$      \\
-      $T \in$ & $\mathbf{Type}$          \\
-      $D \in$ & $\mathbf{Definitions}$   \\
+      $n \in$ & \textbf{Integer}       \\
+      $x \in$ & \textbf{Variable}      \\
+      $s \in$ & \textbf{String}        \\
+      $E \in$ & \textbf{Expression}    \\
+      $P \in$ & \textbf{Pattern}       \\
+      $L \in$ & \textbf{List}          \\
+      $X \in$ & \textbf{Variable list} \\
+      $Y \in$ & \textbf{Coordinate}    \\
+      $Z \in$ & \textbf{Direction}     \\
+      $C \in$ & \textbf{Constant}      \\
+      $T \in$ & \textbf{Type}          \\
+      $D_{G} \in$ & \textbf{Global definition}   \\
+      $D_{M} \in$ & \textbf{Member definition}   \\
       \hline
     \end{tabular}  
-    \capt{The syntactic categories of \productname{}.}
+    \capt{The syntactic categories of \hspace{0.02cm} \productname{}.}
     \label{table:syn-cat}
   \end{center}
 \end{table}
@@ -44,6 +45,50 @@ Table \ref{table:syn-cat} shows the syntactic cateogries for
 In \tableref{table:syn-cat} we have one letter that defines one syntactic
 category. For instance we have $n \in \mathbf{Integer}$, which means that when
 we see a $n$ in the formulation rules this is actually an integer value.
+
+\subsubsection{Definitions}
+
+The type environment is defined by:
+
+\[
+  \mathbf{EnvT} = \mathbf{TypeNames} \rightharpoonup \mathbf{TypeValues}
+\]
+
+The constant environment is defined by:
+
+\[
+  \mathbf{EnvC} = \mathbf{ConstantNames} \rightharpoonup \mathbf{Expression}
+  \times \mathbf{VarList}
+\]
+
+The variable environment is defined by:
+
+\[
+  \mathbf{EnvV} = \mathbf{Variable} \rightharpoonup \mathbf{Values}
+\]
+
+\begin{align*}
+ \mathbf{Values} = \mathbf{Integers} \cup \mathbf{Strings} \cup \mathbf{Lists}
+ \cup \mathbf{Patterns} \cup \mathbf{Coordinates} \cup \mathbf{Directions}\\ 
+ \cup\; \mathbf{TypeValues} \cup \mathbf{FunctionValues} \cup \mathbf{ObjectValues} 
+ \cup \mathbf{Booleans}
+\end{align*}
+ 
+\[
+  \mathbf{FunctionValue} = \mathbf{VarLists} \times \mathbf{Expressions} \times
+  \mathbf{EnvV} \times \mathbf{EnvC}
+\]
+
+\[
+  \mathbf{TypeValues} = \mathbf{TypeNames} \times \mathbf{VarLists} \times
+  \mathbf{D_{M}} \times \mathbf{List} \times \mathbf{TypeValues }
+\]
+
+\[
+  \mathbf{ObjectValues} = \mathbf{TypeValues} \times \mathbf{EnvC} \times
+  \mathbf{EnvV}
+\]
+
 
 \subsubsection{Formulation rules}
 Each syntactic category is used in one or more of the formulation rules
@@ -53,34 +98,51 @@ sides.
 
 \begin{figure}[ht]
   \begin{center}
-    \begin{tabular}[ht]{r p{10cm}}
+    \begin{tabular}[ht]{r l}
       $E\; \mathbf{::=}$ & $n$ \for $x$ \for $s$ \for $Y$ \for $Z$ \for $T$ \for
-      $C$ \for $L$ \for $\texttt{-} E$ \for $\texttt{(}\; E\; \texttt{)}$ \for
-      $\texttt{/}\; P\; \texttt{/}$ \for $E_{1}\; L$ \for $E_{1}\texttt{.}C$
-      \for $\texttt{\#}\; X\; \texttt{=>}\; E$ \for $\texttt{if}\; E_{1}\;
-      \texttt{then}\; E_{2}\; \texttt{else}\; E3$ \for $E_{1}\; \texttt{is}\;
-      E_{2}$ \for $\texttt{not}\; E$ \for $E_{1}\; \texttt{and}\; E_{2}$ \for
+      $C$ \for $L$ \for $\texttt{-} E$ \for $\left(\; E\; \right)$ \for
+      $\texttt{/}\; P\; \texttt{/}$\\ 
+      \for & $E_{1}\; L$ \for $E_{1}\texttt{.}C$ \for $\texttt{\#}\; X\;
+      \texttt{=>}\; E$ \for $\texttt{if}\; E_{1}\; \texttt{then}\; E_{2}\;
+      \texttt{else}\; E3$ \for $E_{1}\; \texttt{is}\; E_{2}$ \for
+      $\texttt{not}\; E$\\ 
+      \for & $E_{1}\; \texttt{and}\; E_{2}$ \for
       $E_{1} \;\texttt{or}\; E_{2}$ \for $E_{1}\; \texttt{==}\; E_{2}$ \for
       $E_{1}\; \texttt{!=}\; E_{2}$ \for $E_{1}\; \texttt{<}\; E_{2}$ \for
-      $E_{1}\; \texttt{>}\; E_{2}$ \for $E_{1}\; \texttt{<=}\; E_{2}$ \for
+      $E_{1}\; \texttt{>}\; E_{2}$\\ 
+      \for & $E_{1}\; \texttt{<=}\; E_{2}$ \for
       $E_{1}\; \texttt{>=}\; E_{2}$ \for $E_{1}\; \texttt{+}\; E_{2}$ \for
       $E_{1}\; \texttt{-}\; E_{2}$ \for $E_{1}\; \texttt{*}\; E_{2}$ \for
-      $E_{1}\; \texttt{/}\; E_{2}$ \for $E_{1}\; \texttt{\%}\; E_{2}$ \for
-      \texttt{this} \for \texttt{super} \for $\texttt{let}\; x_{1}\;
-      \texttt{=}\; E_{1},\; x_{2}\; \texttt{=}\; E_{2},\; \cdots,\; x_{k}\;
-      \texttt{=}\; E_{k}\; \texttt{in}\; E_{k+1}$ \\
+      $E_{1}\; \texttt{/}\; E_{2}$\\ 
+      \for & $E_{1}\; \texttt{\%}\; E_{2}$ \for \texttt{this} \for \texttt{super}
+      \for $\texttt{let}\; x_{1}\; \texttt{=}\; E_{1},\; x_{2}\; \texttt{=}\;
+      E_{2},\; \cdots,\; x_{k}\; \texttt{=}\; E_{k}\; \texttt{in}\; E_{k+1}$\\ 
+      \for & $\texttt{set}\; x_{1}\; \texttt{=}\; E_{1},\; x_{2}\; \texttt{=}\;
+      E_{2},\; \cdots,\; x_{k}\; \texttt{=}\; E_{k}$ \\
+      
       $L\; ::=$ & $\texttt{[} E_{1},\; \cdots, E_{k} \texttt{]}$ \\
+      
       $X\; ::=$ & $\texttt{[} x_{1},\; \cdots,\; x_{k} \texttt{]}$ \for
       $\texttt{[} x_{1},\; \cdots,\; \dots x_{k} \texttt{]}$ \for $\texttt{[}
       \dots x \texttt{]}$ \\
-      $D\; ::=$ & $\texttt{define}\; C\; \texttt{=}\; E$ \for $\texttt{define}\;
-      C\; X\; \texttt{=}\; E$ \for $\texttt{type}\; T\; X$ \for
-      $\texttt{define}\; \texttt{abstract}\; C\; X$ \for $\texttt{define}\;
-      \texttt{abstract}\; T\;  X\; \texttt{extends}\; T\;  L$ \for
-      $\texttt{define}\; \texttt{abstract}\; T\;  X\; \texttt{extends}\; T\; L\;
-      D$ \for $\texttt{define}\; \texttt{abstract}\; C$ 
+      
+      $D_{G}\; ::=$ & $\texttt{define}\; C\; \texttt{=}\; E\; D_{G}$ \for
+      $\texttt{define}\; C\; X\; \texttt{=}\; E\; D_{G}$ \for $\texttt{type}\;
+      T\; X\; D_{G}$\\ 
+      \for & $\texttt{type}\; T\; X\; \texttt{extends}\; T\; L\; D_{G}$ \for
+      $\texttt{type}\; T\; X\; \left\{D_{M}\right\}\; D_{G}$\\
+      \for & $\texttt{type}\; T\; X\; \texttt{extends}\; T\; L\;
+      \left\{D_{M}\right\} D_{G}$ \for $\varepsilon$ \\
+
+      $D_{M} ::=$ & $\texttt{define}\; C\; \texttt{=}\; E\; D_{M}$ \for
+      $\texttt{define}\; C\; X\; \texttt{=}\; E\; D_{M}$ \for $\texttt{define}\;
+      \texttt{abstract}\; C\; D_{M}$\\ 
+      \for & $\texttt{define}\; \texttt{abstract}\; C\; X\; D_{M}$ \for
+      $\texttt{data}\; x\; \texttt{=}\; E\; D_{M}$ \for $\varepsilon$ \\
+
     \end{tabular}  
-    \capt{The formulation rules for the syntactic categories of \productname{}.}
+    \capt{The formulation rules for the syntactic categories of \hspace{0.02cm}
+    \productname{}.}
     \label{fig:form-rules} 
   \end{center}
 \end{figure}

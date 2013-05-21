@@ -13,15 +13,9 @@ big-step semantics by showing the transition rules for each construct.
 \begin{table}[ht]
   \begin{center}
     \begin{tabular*}{\textwidth}{lc}
-      $[\mbox{PLUS}_{\mbox{INT}}]$ & \infrule{env_{V}, sto \vdash E_{1} \ra
-      v_{1} \quad env_{V}, sto \vdash E_{2} \ra
-      v_{2}}{env_{V}, sto \vdash E_{1} + E_{2} \ra v} \\ 
-      & where $v=v_{1}+v_{2}$ \\
-      & \\
-      $[\mbox{PLUS}_{\mbox{STR}}]$ & \infrule{s \vdash E_{1} \ra v_{1} \: s \vdash E_{2} \ra
-      v_{2}}{s \vdash E_{1} + E_{2} \ra v} \\
-      & where $v=v_{1}+v_{2}$ \\
-      & \\
+      $[\mbox{LET}]$ & \infrule{env_{V} \vdash E_{1} \ra
+      v_{1} \quad env_{V}\left[x \mapsto v_{1}\right] \vdash E_{2} \ra
+      v_{2}}{env_{V} \vdash \texttt{let} x = E_{1} \texttt{in} E_{2} \ra v_{2}}
     \end{tabular*}
   \end{center}
 \end{table}
@@ -37,48 +31,48 @@ big-step semantics by showing the transition rules for each construct.
  %     $[\mbox{MODULO}]$ & \infrule{s \vdash E_{1} \ra v_{1} \: s \vdash E_{2} \ra
  %     v_{2}}{s \vdash E_{1} \% E_{2} \ra v} & where $ $ \\
 
-\begin{table}[ht]
-  \begin{center}
-    \begin{tabular*}{\textwidth}{lc}
-      $[\mbox{RULE}]$ & \infrule{\lag Something, Something \rag \ra
-      something}{\lag something, something, something \rag \ra something } \\
-    \end{tabular*}
-  \end{center}
-\end{table}
+%\begin{table}[ht]
+%  \begin{center}
+%    \begin{tabular*}{\textwidth}{lc}
+%      $[\mbox{RULE}]$ & \infrule{\lag Something, Something \rag \ra
+%      something}{\lag something, something, something \rag \ra something } \\
+%    \end{tabular*}
+%  \end{center}
+%\end{table}
 
 
-\subsection{Lists}
+%\subsection{Lists}
 
-\begin{table}[ht]
-  \begin{center}
-    \begin{tabular*}{\textwidth}{lc}
-      $[\mbox{RULE}]$ & \infrule{\lag Something, Something \rag \ra
-      something}{\lag something, something, something \rag \ra something } \\
-    \end{tabular*}
-  \end{center}
-\end{table}
-
-
-\subsection{Variable lists}
-
-\begin{table}[ht]
-  \begin{center}
-    \begin{tabular*}{\textwidth}{lc}
-      $[\mbox{RULE}]$ & \infrule{\lag Something, Something \rag \ra
-      something}{\lag something, something, something \rag \ra something } \\
-    \end{tabular*}
-  \end{center}
-\end{table}
+%\begin{table}[ht]
+%  \begin{center}
+%    \begin{tabular*}{\textwidth}{lc}
+%     $[\mbox{RULE}]$ & \infrule{\lag Something, Something \rag \ra
+%      something}{\lag something, something, something \rag \ra something } \\
+%    \end{tabular*}
+%  \end{center}
+%\end{table}
 
 
-\subsection{Definitions}
+%\subsection{Variable lists}
 
-\begin{table}[ht]
-  \begin{center}
-    \begin{tabular*}{\textwidth}{lc}
-      $[\mbox{RULE}]$ & \infrule{\lag Something, Something \rag \ra
-      something}{\lag something, something, something \rag \ra something } \\
-    \end{tabular*}
-  \end{center}
-\end{table}
+%\begin{table}[ht]
+%  \begin{center}
+%    \begin{tabular*}{\textwidth}{lc}
+%      $[\mbox{RULE}]$ & \infrule{\lag Something, Something \rag \ra
+%      something}{\lag something, something, something \rag \ra something } \\
+%    \end{tabular*}
+%  \end{center}
+%\end{table}
+
+
+%\subsection{Definitions}
+
+%\begin{table}[ht]
+%  \begin{center}
+%    \begin{tabular*}{\textwidth}{lc}
+%      $[\mbox{RULE}]$ & \infrule{\lag Something, Something \rag \ra
+%      something}{\lag something, something, something \rag \ra something } \\
+%    \end{tabular*}
+%  \end{center}
+%\end{table}
 
