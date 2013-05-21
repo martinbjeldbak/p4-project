@@ -1,12 +1,8 @@
 \section{Error handling}
 
-In the interpretation phases lots of different errors can occur. In the scanning phase
-a scanning error can occur if the scanner detects a string, which doesn't correspond to one of our language's specified tokens.
-This is a lexical error, but we refer to it as a scanning error. In the parsing phase a syntax error can occur if two or more
-tokens are not set up syntactically correct according to our grammar. We have created an error hierarchy in order to give an
-overview of our different errors, which is illustrated in \figref{ast:errorhierarchy}. The function of an error is to give the
-programmer of junta games a better chance of figuring out what he has done wrong and make it easier for him to correct the errors 
-by for instance referring to where in the source code and error has occurred.   
+In the different phases of the interpreter lots of errors can occur. In the scanning phase for instance,
+a scanning error can occur if the scanner detects a string, which doesn't correspond to one of our language's specified lexemes. In the parsing phase a syntax error can occur if two or more tokens are not set up syntactically correct according to our grammar. In order to catch these errors we have implemented error handlers, which extends the build-in Java class Exception (Java.lang.Exception). An error can be of big annoyance for a programmer if no information of what caused it is provided. So the function of the error handlers are to give the programmer of junta games a better chance for figuring out what he has done wrong and make it easier for him to correct the errors by for instance referring to where in the source code and error has occurred and what caused it. We have created an error hierarchy in order to give an overview of our different error handlers. The hierarchy is illustrated in \figref{ast:errorhierarchy}. 
+
 
 \begin{figure}[ht]
 	\begin{center}
@@ -44,20 +40,31 @@ by for instance referring to where in the source code and error has occurred.
 	\label{ast:errorhierarchy}
 \end{figure}
 
-\begin{dlist}
-	\item[\textbf{Exception}] At the top of the error hierarchy Java's integrated error handling concept is located, which is called Exception (java.lang.Exception). This
-	\item[\textbf{Error}]
-	\item[\textbf{SyntaxError}] Inherits from Error and is used in the parser to catch syntactic errors. A syntactic error occurs if a token doesn't correspond to the currently expected token according to the grammar. SyntaxError outputs a message like ``Unexpected token, expected X'' where X is the expected token according to the grammar also it outputs at which line and offset the token which caused the error is located. 
-	\item[\textbf{ScannerError}] Inherits from SyntaxError and is used in the scanner to catch lexical errors. A lexical error occurs if the programmer 
-	\item[\textbf{StandardError}]
-	\item[\textbf{ScopeError}]
-	\item[\textbf{InternalError}]
-	\item[\textbf{TypeError}]
-	\item[\textbf{ArgumentError}]
-	\item[\textbf{NameError}]
-	\item[\textbf{DivideByZeroError}]
-	\item[\textbf{SimulatorError}]
-\end{dlist}
+\begin{description}
+\item[\textbf{Exception}] At the top of the error hierarchy Java's standard error handling concept is located, which is called Exception (java.lang.Exception). Exception is a build-in Java class that extends the Throwable class which is the superclass of all errors and exceptions in Java. Only Throwable or subclasses of Throwable can be the argument type in a catch clause and only objects that are instances of this class or it's subclasses can be thrown by the Java throw statement. (kilde: http://docs.oracle.com/javase/6/docs/api/java/lang/Throwable.html).  
+
+\item[\textbf{Error}] Extends the Exception class. Error is an abstract class which contains two abstract methods: GetColumn() and GetLine().
+
+\item[\textbf{SyntaxError}] Extends the Error class and is used in the parser to handle syntactic errors. A syntactic error occurs if a token doesn't correspond to the currently expected token according to the grammar. SyntaxError outputs a message and information about the line and offset of the token that caused the error. 
+
+\item[\textbf{ScannerError}] Extends the SyntaxError class and is used in the scanner to handle lexical errors. A lexical error occurs if the programmer makes a typo, e.g. writes ``defin'' instead of ``define'' or if he/she in other ways doesn't follow the regulations of Junta's lexemes e.g. writes the first letter in a type name in lower case letters. Like syntaxError, ScannerError outputs a message and information about the line and offset of the token that cause the error.  
+
+\item[\textbf{StandardError}] Extends the Error class. The StandardError class is used in the interpretation phase to handle errors with nodes in the Abstract syntax tree.  
+
+\item[\textbf{ScopeError}] Extends the StandardError class
+
+\item[\textbf{InternalError}]
+
+\item[\textbf{TypeError}]
+
+\item[\textbf{ArgumentError}]
+
+\item[\textbf{NameError}]
+
+\item[\textbf{DivideByZeroError}]
+
+\item[\textbf{SimulatorError}]
+\end{description}
 
 
     
