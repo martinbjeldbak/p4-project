@@ -3,6 +3,8 @@ package dk.aau.cs.d402f13.evaluation;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import dk.aau.cs.d402f13.gal.wrappers.GameWrapper;
+import dk.aau.cs.d402f13.interpreter.stdenv.game.GameEnvironment;
 import dk.aau.cs.d402f13.utilities.SimpleDir;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.gameapi.Game;
@@ -13,10 +15,10 @@ import dk.aau.cs.d402f13.values.*;
 
 public class GridBoardPatternEvaluator {
   
-  private Game game;
+  private GameWrapper game;
 
 
-  public boolean doesPatternMatch(Game game, PatternValue pv, CoordValue squarePos) throws StandardError{
+  public boolean doesPatternMatch(GameWrapper game, PatternValue pv, CoordValue squarePos) throws StandardError{
     this.game = game;
     HashSet<SimpleDir> workingSet = new HashSet<SimpleDir>();
     workingSet.add(new SimpleDir(squarePos.getX(),squarePos.getY()));
