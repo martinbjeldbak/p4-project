@@ -1,40 +1,38 @@
 \section{Abstract syntax}
-Before we can describe the behaviour of programs written in
-\productname{}, we must first present the syntax of programs. At this point, we 
-are only interested in a notion of abstract syntax because we do not need to
-concern ourselves with operator precedence and so forth.
+Before we can describe the behaviour of programs written in \productname{} and
+their lexical structure, we must first present the syntax of programs. At this
+point, we are only interested in a notion of abstract syntax because we do not
+need to concern ourselves with operator precedence and so forth.
 
 \subsubsection{Syntactic categories}
-The abstract syntax of programming languages is defined as
-follows\cite[p. 27]{tt-hh}:
+The abstract syntax of programming languages is defined as follows\cite[p.
+27]{tt-hh}:
 
 \begin{dlist}
   \item A collection of syntactic categories
   \item For each syntactic category we have a finite set of formulation rules
-    that define how the elements of the given category can be built and
-    combined
+    that define how the elements of the given category can be built and combined
 \end{dlist}
 
-Table \ref{table:syn-cat} shows the syntactic cateogries for
-\productname{}.
+Table \ref{table:syn-cat} presents the syntactic cateogries for \productname{}.
 
 \begin{table}[ht]
   \begin{center}
     \begin{tabular}{rl}
       \hline
-      $n \in$ & \textbf{Integer}       \\
-      $x \in$ & \textbf{Variable}      \\
-      $s \in$ & \textbf{String}        \\
-      $E \in$ & \textbf{Expression}    \\
-      $P \in$ & \textbf{Pattern}       \\
-      $L \in$ & \textbf{List}          \\
-      $X \in$ & \textbf{VarList}       \\
-      $Y \in$ & \textbf{Coordinate}    \\
-      $Z \in$ & \textbf{Direction}     \\
-      $C \in$ & \textbf{ConstantNames}      \\
-      $T \in$ & \textbf{TypeNames}          \\
-      $D_{G} \in$ & \textbf{Global definition}   \\
-      $D_{M} \in$ & \textbf{Member definition}   \\
+      $n \in$ & \textbf{Integer}         \\
+      $x \in$ & \textbf{Variable}        \\
+      $s \in$ & \textbf{String}          \\
+      $E \in$ & \textbf{Expression}      \\
+      $P \in$ & \textbf{Pattern}         \\
+      $L \in$ & \textbf{List}            \\
+      $X \in$ & \textbf{VarList}         \\
+      $Y \in$ & \textbf{Coordinate}      \\
+      $Z \in$ & \textbf{Direction}       \\
+      $C \in$ & \textbf{ConstantNames}   \\
+      $T \in$ & \textbf{TypeNames}       \\
+      $D_{G} \in$ & \textbf{GlobalDef}   \\
+      $D_{M} \in$ & \textbf{MemberDef}   \\
       \hline
     \end{tabular}  
     \capt{The syntactic categories of \hspace{0.02cm} \productname{}.}
@@ -42,38 +40,61 @@ Table \ref{table:syn-cat} shows the syntactic cateogries for
   \end{center}
 \end{table}
 
-In \tableref{table:syn-cat} we have one letter that defines one syntactic
+In \tableref{table:syn-cat} we have letters that define one syntactic
 category. For instance we have $n \in \mathbf{Integer}$, which means that when
-we see a $n$ in the formulation rules this is actually an integer value.
+we see a $n$ in the formulation rules this is actually an integer value. There
+are two types of lists; \textbf{VarList} and \textbf{List}. These differ in that
+a variable list is used as formal parameters for types and the list is the
+sequence of parameters for a super type. 
+
+Furhtermore, we have defined two definitions; \textbf{GlobalDef} and
+\textbf{MemberDef}. These are the set of definitions in their respective scopes.
+E.g. a in the global scope we can define differnet constants and types. In the
+member scope we can also define different constants, and also the abstract
+definitions and the notion of data definitions. This will become very apparent
+in \secref{sec:definitions} where we present the grammar of program structures.
 
 \subsubsection{Definitions}
+\label{sec:abstractdefinitions}
 
-The type environment is defined by:
+In this section we present the definitions which will be used throughout the
+construction of semantics for \productname{}. In the following definitions we
+use the syntactic categories presented in \tableref{table:syn-cat}. For some of
+the definitions we define arbitrary members which will be used in the semantics
+of the constructs of the language.
+
+\textbf{Definition} (Type environment) \hspace{0.5cm} The set of type environments is the set of
+partial functions from type names to type values:
 
 \[
   \mathbf{EnvT} = \mathbf{TypeNames} \rightharpoonup \mathbf{TypeValues}
 \]
 
-A concrete member is defined as $env_{T} \in \mathbf{EnvT}$.
+An arbitrary member is defined as $env_{T} \in \mathbf{EnvT}$.
 
 
-The constant environment is defined by:
+\textbf{Definition} (Constant environment) \hspace{0.5cm} The set of constant environments is the set
+of partial functions from constant names to expressions and variable lists:
 
 \[
   \mathbf{EnvC} = \mathbf{ConstantNames} \rightharpoonup \mathbf{Expression}
   \times \mathbf{VarList}
 \]
 
-A concrete member is defined as $env_{C} \in \mathbf{EnvC}$.
+An arbitrary member is defined as $env_{C} \in \mathbf{EnvC}$.
 
-The variable environment is defined by:
+\textbf{Definition} (Variable environment) \hspace{0.5cm} The set of variable environments is the set
+of partial functions from variables to values:
 
 \[
   \mathbf{EnvV} = \mathbf{Variable} \rightharpoonup \mathbf{Values}
 \]
 
 
-A concrete member is defined as $env_{V} \in \mathbf{EnvV}$.
+An arbitrary member is defined as $env_{V} \in \mathbf{EnvV}$.
+
+\textbf{Definition} (Values) \hspace{0.5cm} The set of values can contain many
+different values, and is defined as follows:
 
 \begin{align*}
  \mathbf{Values} = \mathbf{Integers} \cup \mathbf{Strings} \cup \mathbf{Lists}
@@ -82,60 +103,100 @@ A concrete member is defined as $env_{V} \in \mathbf{EnvV}$.
  \cup \mathbf{Booleans}
 \end{align*}
 
+\textbf{Definition} (List values) \hspace{0.5cm} The values of lists is
+defined as follows:
+
 \[
   \mathbf{ListValues} = \mathbf{Integers} \times \mathbf{Elements}
 \]
 
+The length of a list is an arbitrary member of $l \in \mathbf{Integer}$.
+
+\textbf{Definition} (List elements) \hspace{0.5cm} The set of elements in
+lists is the set of partial functions from integers to values:
+
 \[
   \mathbf{Elements} = \mathbf{Integers} \rightharpoonup \mathbf{Values}
 \]
+
+An arbitrary member is defined as $elem \in \mathbf{Elements}$.
+
+\textbf{Definition} (Function values) \hspace{0.5cm} The set of function values
+is defined as follows:
  
 \[
   \mathbf{FunctionValues} = \mathbf{VarLists} \times \mathbf{Expressions} \times
   \mathbf{EnvV} \times \mathbf{EnvC}
 \]
 
+A function value consists of variable lists, expressions and the set of variable
+and constant environments.
+
+\textbf{Definition} (Type values) \hspace{0.5cm} The set of type values is
+defined as follows:
+
 \[
   \mathbf{TypeValues} = \mathbf{TypeNames} \times \mathbf{VarLists} \times
   \mathbf{D_{M}} \times \mathbf{List} \times \mathbf{TypeValues }
 \]
 
-A concrete member is defined as $t \in \mathbf{TypeValues}$.
+An arbitrary member is defined as $t \in \mathbf{TypeValues}$.
+
+A type value consists of type names, variable lists, the member definitions,
+lists and the type value. A type value is recursively defined since
+$\mathbf{TypeValues}$ is defined in terms of itself. This is not a problematic
+definition because these must be considered as values for two different types.
+The $\mathbf{TypeValues}$ on the right-hand side is in fact the super type's set
+of values whereas the $\mathbf{TypeValues}$ on the left-hand side is the current
+type's set of values.  The list in the definition is in fact the super type's
+parameters whereas the variable list is the current type's formal parameters.
+
+\textbf{Definition} (Object values) \hspace{0.5cm} The set of object values is
+defined as follows:
 
 \[
   \mathbf{ObjectValues} = \mathbf{TypeValues} \times \mathbf{EnvC} \times
   \mathbf{EnvV} \times \mathbf{ObjectValues}
 \]
 
+An object value consists of the set of type values, the set of constant
+environment, the set of variable environments and the set of object values. This
+is yet another recursively defined definition.  \todo{And why is that? :)}
+
 
 \subsubsection{Formulation rules}
 Each syntactic category is used in one or more of the formulation rules
-presented in \figref{fig:form-rules}. The $\mathbf{::=}$ means that the
-left-hand side of the rule can be any one of the $\for$-separated right-hand
-sides.
+presented in \figref{fig:form-rules}. The formulation rules define the structure
+of the members og the syntactic categories. 
+
+Not all of the constiuents of the formulation rules are syntactic categories. We
+for instance see different parentheses, forwardslashes, different operators, and
+words like $\texttt{this}$ and $\texttt{define}$. These are part of the
+construction of the given formulation rule. If they are omitted from a rule then
+it is not valid in \productname{}.
 
 \begin{figure}[ht]
   \begin{center}
     \begin{tabular}[ht]{r l}
       $E\; \mathbf{::=}$ & $n$ \for $x$ \for $s$ \for $Y$ \for $Z$ \for $T$ \for
       $C$ \for $L$ \for $\texttt{-} E$ \for $\left(\; E\; \right)$ \for
-      $\texttt{/}\; P\; \texttt{/}$\\ 
-      \for & $E_{1}\; L$ \for $E_{1}\texttt{.}C$ \for $\texttt{\#}\; X\;
+      $\texttt{/}\; P\; \texttt{/}$ \for \\ 
+      & $E_{1}\; L$ \for $E_{1}\texttt{.}C$ \for $\texttt{\#}\; X\;
       \texttt{=>}\; E$ \for $\texttt{if}\; E_{1}\; \texttt{then}\; E_{2}\;
       \texttt{else}\; E3$ \for $E_{1}\; \texttt{is}\; E_{2}$ \for
-      $\texttt{not}\; E$\\ 
-      \for & $E_{1}\; \texttt{and}\; E_{2}$ \for
+      $\texttt{not}\; E$ \for \\ 
+      & $E_{1}\; \texttt{and}\; E_{2}$ \for
       $E_{1} \;\texttt{or}\; E_{2}$ \for $E_{1}\; \texttt{==}\; E_{2}$ \for
       $E_{1}\; \texttt{!=}\; E_{2}$ \for $E_{1}\; \texttt{<}\; E_{2}$ \for
-      $E_{1}\; \texttt{>}\; E_{2}$\\ 
-      \for & $E_{1}\; \texttt{<=}\; E_{2}$ \for
+      $E_{1}\; \texttt{>}\; E_{2}$ \for \\ 
+      & $E_{1}\; \texttt{<=}\; E_{2}$ \for
       $E_{1}\; \texttt{>=}\; E_{2}$ \for $E_{1}\; \texttt{+}\; E_{2}$ \for
       $E_{1}\; \texttt{-}\; E_{2}$ \for $E_{1}\; \texttt{*}\; E_{2}$ \for
-      $E_{1}\; \texttt{/}\; E_{2}$\\ 
-      \for & $E_{1}\; \texttt{\%}\; E_{2}$ \for \texttt{this} \for \texttt{super}
+      $E_{1}\; \texttt{/}\; E_{2}$ \for \\ 
+      & $E_{1}\; \texttt{\%}\; E_{2}$ \for \texttt{this} \for \texttt{super}
       \for $\texttt{let}\; x_{1}\; \texttt{=}\; E_{1},\; x_{2}\; \texttt{=}\;
-      E_{2},\; \cdots,\; x_{k}\; \texttt{=}\; E_{k}\; \texttt{in}\; E_{k+1}$\\ 
-      \for & $\texttt{set}\; x_{1}\; \texttt{=}\; E_{1},\; x_{2}\; \texttt{=}\;
+      E_{2},\; \cdots,\; x_{k}\; \texttt{=}\; E_{k}\; \texttt{in}\; E_{k+1}$ \for \\ 
+      & $\texttt{set}\; x_{1}\; \texttt{=}\; E_{1},\; x_{2}\; \texttt{=}\;
       E_{2},\; \cdots,\; x_{k}\; \texttt{=}\; E_{k}$ \\
       
       $L\; ::=$ & $\texttt{[} E_{1},\; \cdots, E_{k} \texttt{]}$ \\
@@ -146,16 +207,16 @@ sides.
       
       $D_{G}\; ::=$ & $\texttt{define}\; C\; \texttt{=}\; E\; D_{G}$ \for
       $\texttt{define}\; C\; X\; \texttt{=}\; E\; D_{G}$ \for $\texttt{type}\;
-      T\; X\; D_{G}$\\ 
-      \for & $\texttt{type}\; T\; X\; \texttt{extends}\; T\; L\; D_{G}$ \for
-      $\texttt{type}\; T\; X\; \left\{D_{M}\right\}\; D_{G}$\\
-      \for & $\texttt{type}\; T\; X\; \texttt{extends}\; T\; L\;
+      T\; X\; D_{G}$ \for \\ 
+      & $\texttt{type}\; T\; X\; \texttt{extends}\; T\; L\; D_{G}$ \for
+      $\texttt{type}\; T\; X\; \left\{D_{M}\right\}\; D_{G}$ \for \\
+      & $\texttt{type}\; T\; X\; \texttt{extends}\; T\; L\;
       \left\{D_{M}\right\} D_{G}$ \for $\varepsilon$ \\
 
       $D_{M} ::=$ & $\texttt{define}\; C\; \texttt{=}\; E\; D_{M}$ \for
       $\texttt{define}\; C\; X\; \texttt{=}\; E\; D_{M}$ \for $\texttt{define}\;
-      \texttt{abstract}\; C\; D_{M}$\\ 
-      \for & $\texttt{define}\; \texttt{abstract}\; C\; X\; D_{M}$ \for
+      \texttt{abstract}\; C\; D_{M}$ \for \\ 
+      & $\texttt{define}\; \texttt{abstract}\; C\; X\; D_{M}$ \for
       $\texttt{data}\; x\; \texttt{=}\; E\; D_{M}$ \for $\varepsilon$ \\
 
     \end{tabular}  
@@ -165,9 +226,11 @@ sides.
   \end{center}
 \end{figure}
 
-In \figref{fig:form-rules} we have used ``$\cdots$'' to illustrate a repetition
-of some element in the rule. We have also used the slightly different
-$``\dots''$ to illustrate the three dots that precede a variable argument (vars)
-which we present in \secref{sec:constantdefinitions}. It should be clear from
-the context which of the two is beeing used.
+The $\mathbf{::=}$ means that the left-hand side of the rule can be any one of
+the $\for$-separated right-hand sides. Furthermmore, we use ``$\cdots$'' to
+illustrate a repetition of some element in the rule. We have also used the
+slightly different ``$\dots$'' to illustrate the three dots that precede a
+variable argument (vars) which we present in \secref{sec:constantdefinitions}.
+It should be clear from the context which of the two is being used.
 
+The $\varepsilon$ represents an empty definition.
