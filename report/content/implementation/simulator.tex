@@ -1,0 +1,107 @@
+\section{Simulator}
+
+The Simulator is to provide a visual interface to the API provided by GAL. The interface should give a visual representation of the board and pieces similar to how the board game would look in real life. Furthermore it should provide an easy way to interact with the game, sufficient enough to be able to play it.
+
+The result is a Java application with a graphical user interface, which takes a \productname code file and makes it playable by the use of GAL.
+
+
+\subsection{Overview}
+
+The implementation is based around Widget, which simplifies the process of distrubiting drawing and handling input. Some widgets manages other widgets, while others provide visual and interactive content. The game widgets provide visual and interactive intefaces to GAL.
+
+To work with graphics and input, the game framework slick2d is used. SimulatedGame is used to bind slick2d, widgets and GAL together to provide a complete system.
+
+Figure \todo{ insert figure } shows all these components and their most important relationships.
+
+
+\subsection{Widget}
+
+Widget specifies a object which can have a size and position, be drawn, take mouse input, and send messages to eachother. The most important property of Widget however is that a Widget can contain several sub-Widgets, and that drawing and mouse input is handled according to this heiriacy.
+
+
+\subsubsection{Placement}
+
+A Widget has a position specified with a (x,y) coordinate. Its position is relative to its parent, so if a Widget has position (7,10) and its parent has (23,50), its absolute position is (30,60).
+
+Furthermore, a Widget has a size specified with a width and height, but it also contains an allowed range of for each dimention. This allows us to specify that a Widget might be dynamic in size and can be adjusted if wanted.
+
+
+\subsubsection{Automatic placement and sizing}
+
+Instead of setting sizes and positions manually, we create Container classes which manages the position and size of it sub-widgets. By using Widgets which are dynamic in size, we can create a layout which works independant of the window size.
+
+ScaleContainer is such a Container Widget and positions Widgets along an axis. For Widgets which size is dynamic, the remaining available space is distrubted evenly amoung them. An example is shown in \todo{ figref }. The top-level Widget is a ScaleContainer set to position Widgets in the vertical direction. It does not affect its own size, only its sub-Widgets. The second ScaleContainer (containing two buttons, to be positioned horizontally) is thus resized by the first ScaleContainer. The ordering of the sub-Widgets determines the sequence they are positioned in the ScaleContainer.
+
+\todo{ add image of scalecontainer }
+\todo{ How ScaleContainers (marked with color) affects the positioning and sizing of sub-Widgets. }
+
+Creating an layout is now only a matter of building a heiriacy of Widgets, not deciding the exact position and size of each and every single Widget.
+
+
+\subsection{Propagated actions}
+
+Drawing a Widget should not only draw the Widget, but also all its sub-Widget and theirs sub-Widgets. To do this, Widget has two methods, draw() and handleDraw(). handleDraw() needs to be overwritten in sub-Widgets which wants to provide a custom drawing method. draw() handles all the logic for drawing sub-Widgets so the inheriated class only needs to worry about itself. An overview of draw() is given in \todo{ codelisting }.
+
+	final public void draw(){
+		for( Widget o : widgets ){
+			g.translate( o.getX(), o.getY() );
+			g.setClip( o.getX(), o.getY(), o.getWidth(), o.getHeight() );
+			
+			o.handleDraw();
+			o.draw();
+			
+			g.clearClip();
+			g.translate( -o.getX(), -o.getY() );
+		}
+	}
+	\todo{ looks wrong, draw() will never be called on the top-level Widget. Secondly, draw() should be called before handleDraw() }
+	Pseudocode for the draw() method.
+
+To futher ease development, the coordinate-system is translated so handleDraw() will be done using local coordinates instead of absolute coordinates. Furthermore we apply clipping, so that any drawing outside the Widget will be clipped and not displayed. This way we can ensure Widgets can't mess with other Widgets.
+
+We enforce this by making draw() final so it can't be overwritten, and handleDraw() is protected, so the calling class can't call handleDraw() instead of draw() by accident.
+
+
+\subsubsection{Mouse input}
+
+The samme pattern is used for mouse input, but here we use it to determine which Widget is responsible for handling it. An overview is given in \todo{ codelisting }
+
+	final public boolean mouseClicked( int button, int x, int y ){
+		for( Widget o : widgets )
+			if( o.containsPoint( x, y ) )
+				if( o.mouseClicked( button, x - o.getX(), y - o.getY() ) )
+					return true;
+		return handleMouseClicked( button, x, y );
+	}
+
+Like with drawing, we translate coordinates into local coordinates, however notice that it returns a boolean which is used to determine if the event was handled, and it will stop as soon any callee returns true. A second difference is that in constrast to drawing, input is handled bottom up. The reasoning is that the lower we get in the heraicy, the more specific the behaviour of each Widget is. Thus, we try to see if the more specific Widgets will handle the input and if not, less and less specific Widgets are tried.
+
+For mouse presses and releases, it will only try Widgets which contains the position the mouse is currently pointing. For mouse dragging the situation is different, it will try any Widget which has initiated a drag, even if the mouse has moved outside it. If this was not the case, a scrollbar for example would only move if keep the mouse exactly on it, which usually is tricky as they are long and slim.
+
+
+\subsection{Communication between Widgets}
+
+Consider the case where a Widget represent a button. The user might click on it, but the button by itself is not interested in what this should signify. Thus, we need some way of notifying Widgets that some events have happened inside other Widgets. For this, the Observer design pattern is used in Widget.
+
+
+\subsection{Making games interactive}
+
+Two "game Widgets" which interacts with GAL are used to present the game to the user. They are GameInfoWidget which provides information like move history, and BoardWidget which displays an interactive board with pieces based on GAL.
+
+\subsubsection{BoardWidget}
+
+For interaction, BoardWidget support selecting Actions by the use of either Drag\&Drop or click and select. While Drag\&Drop only allows you to move a Piece from one Square to another, click and select will work on any two Squares whether or not it contains any Pieces. It will go through all available Actions and find the ones which are related to those Squares. To help ease this process, usable Squares are hinted as shown in \todo{ add screenshot }.
+
+In reality we have two Widgets, BoardWidget and GridBoardWidget which is a specialization of BoardWidget. While it is not necessary at this point of time, it is an attempt to generalize GirdBoard so that a future addition with new Board types will be easier to implement.
+
+
+\subsection{Binding everything together}
+
+The class SimulatedGame has the responsibility to connect slick2d with the Widget structure, and GAL with the game Widgets.
+
+SimulatedGame contains one ScaleContainer, which it sizes to fit the whole window and tells it to adjust the sizes of its sub-Widgets. Secondly, it sends all mouse-events to this Widget and draws it whenever slick2d wants to be redrawed.
+
+On construction of SimulatedGame, it reads the \productname codefile and attempts to load it through GAL. It then goes on and creates the game Widgets, but it does not pass a reference to the game directly. As the game object changes each time an Action is applied this would require us to update it in every game object each time. Instead we pass a reference to this instance of SimulatedGame and the game Widgets must then access the game 
+object though its accessor methods directly, without caching it.
+
+One final task of SimulatedGame is to handle any exceptions in GAL or the Simulator and show them to the user, without the application crashing.
