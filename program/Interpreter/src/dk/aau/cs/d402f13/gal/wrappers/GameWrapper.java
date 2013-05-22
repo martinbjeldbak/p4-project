@@ -69,6 +69,11 @@ public class GameWrapper extends Wrapper implements Game {
   public Player[] getTurnOrder() throws StandardError {
     return turnOrder;
   }
+  
+  @Override
+  public GameWrapper nextTurn() throws StandardError {
+    return new GameWrapper(env, callMember("nextTurn", env.gameType()));
+  }
 
   @Override
   public GameWrapper applyAction(Action action) throws StandardError {
