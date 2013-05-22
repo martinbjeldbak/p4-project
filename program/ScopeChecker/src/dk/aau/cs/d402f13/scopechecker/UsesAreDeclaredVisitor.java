@@ -330,8 +330,13 @@ protected Object visitTypeDef(AstNode node) throws StandardError{
     if (tsi == null){
      throw new ScopeError("Type " + name + " is used but not declared", line, offset);
     }
+    if (tsi.varArgs){//if type constructor has varargs
+      if (argNum < tsi.args){
+        throw new ScopeError("Number of constructor arguments for type " + name + " mismatches. Received " + argNum + ", expected " + tsi.args +" or more.", line, offset);
+      }
+    }
     else if (tsi.args != argNum){
-      throw new ScopeError("Number of constructor arguments for type " + name + " mismatches. Received " + argNum + ", expected " + tsi.args, line, offset);
+      throw new ScopeError("Number of constructor arguments for type " + name + " mismatches. Received " + argNum + ", expected " + tsi.args +".", line, offset);
     }
   }
   
