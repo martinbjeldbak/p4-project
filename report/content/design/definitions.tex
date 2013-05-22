@@ -60,11 +60,25 @@ functions with indefinite arity.
 
 \todo{Example of indefinite arity (vars)}
 
+\subsubsection{Scope rules for functions and constants}
+
+Consider a function definition such as:
+
+\codesample{functiondef.garry}
+
+The variables \variable{a} and \variable{b} only exist within the function \function{max}.
+When calling the function:
+
+\codesample{functioncall.garry}
+
+A new scope will be created and the values $5$ and $23$
+are assigned to \variable{a} and \variable{b}, respectively.
+
 \subsection{Type definitions}
 \label{sec:typedefinitions}
 
 The following grammar rules present how defining a type is done followed by the
-associated definitions which can be used within a type definition. A type are
+associated definitions which can be used within a type definition. Types are
 similar to what we normally call classes in object-oriented programming
 languages. We wish to call them types in \productname{}.
 
@@ -96,3 +110,80 @@ with the same $constant$ and $varlist$ as an abstract constant, will override
 the abstract constant.
 
 \todo{Niels: Forklar data-begrebet.}
+\subsubsection{Inheritance}
+
+\productname{} supports single inheritance between types. An inheriting type, will
+inherit all the members of its super type(s) (if \type{C} extends \type{B}, which
+extends \type{A}, then \type{C} inherits all members from both \type{B} and \type{A}).
+This also introduces the \keyword{super}-keyword, which can be used to access members
+in superclasses. The following example shows how inheritance works:
+
+\codesample{typescope2.junta}
+
+\productname{} doesn't have an \keyword{abstract}-keyword for type definitions, only
+for constant/function definitions. A type is implicitly marked as abstract if it has
+unimplemented abstract members. In the above example the type \type{A} is abstract,
+since because it's member, \constant{constantA}, is abstract. Likewise, the type
+\type{B} is abstract because it extends \type{A}, but doesn't implement the abstract
+member of \type{A}. The type \type{C} on the other hand is not abstract, since it
+implements the abstract constant. Abstract types can't be constructed, albeit the
+constructor for an abstract type has to be used when extending the type (after the
+\keyword{extends}-keyword).
+
+
+\subsubsection{Big-step semantics}
+
+The semantics presented in \tableref{semantic:typedef} are the transition rules for type definitions.
+These type definitions have some optional arguments which correspond with the
+written grammar for these definitions, and this is why there are four transition
+rules described.
+
+\begin{table}[ht]
+    \begin{tabular*}{\textwidth}{l l}
+      \hline \\
+      \hspace{0.4cm} $\left[\mbox{TYPEDEF}\right]$ & \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T \mapsto
+      \left(T, X, \varepsilon, \varepsilon, \varepsilon \right)] \rag \ra env_{T}'}
+      {env_{C} \vdash \lag \texttt{type}\; T\; X\; D_{G},\; env_{T} \rag \ra env_{T}'} 
+      \\
+
+      \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{BODY}}\right]$ & \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T \mapsto
+      \left(T, X, D_{M}, \varepsilon, \varepsilon \right)] \rag \ra env_{T}'}
+      {env_{C} \vdash \lag \texttt{type}\; T\; X\; \left\{D_{M}\right\}\;
+      D_{G},\; env_{T} \rag \ra env_{T}'} 
+      \\
+
+      \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{EXTEND}}\right]$ & \infrule{env_{C} \vdash \lag D_{G},
+      env_{T}[T_{1} \mapsto \left(T_{1}, X, \varepsilon, L, T_{2} \right)] \rag
+      \ra env_{T}'}
+      {env_{C} \vdash \lag \texttt{type}\; T_{1}\; X\; \texttt{extends}\;
+      T_{2}\; L\; D_{G},\; env_{T} \rag \ra env_{T}'} 
+      \\
+
+      \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{EXTEND-BODY}}\right]$ & \infrule{env_{C} \vdash \lag D_{G},
+      env_{T}[T_{1} \mapsto \left(T_{1}, X, D_{M}, L, T_{2} \right)] \rag
+      \ra env_{T}'}
+      {env_{C} \vdash \lag \texttt{type}\; T_{1}\; X\; \texttt{extends}\;
+      T_{2}\; L\; \left\{D_{M}\right\}\; D_{G},\; env_{T} \rag \ra env_{T}'} 
+      \\
+      \hline \\
+    \end{tabular*}
+    \capt{Transition rules for type definitions.}
+    \label{semantic:typedef}
+\end{table}
+
+In the premises of the rules we present a 5-tuple where $env_{T}$ is updated
+according to the rule. In three of the four 5-tuples we include the symbol
+$\varepsilon$, which denotes that the given position of the symbol is an empty
+slot. This is again due to the fact that we have some optional arguments.
+
+The 5-tuple is ordered as follows:
+
+\begin{nlist}
+\item $\mathbf{T_{k}}$ - current type
+  \item $\mathbf{X}$ - current type's formal parameters
+  \item $\mathbf{D_{M}}$ - member definitions
+  \item $\mathbf{L}$ - super type's parameters
+  \item $\mathbf{T_{k+1}}$ - super type
+\end{nlist}
+
+Throughout the transition rules we use the 5-tuple to update the type environment.

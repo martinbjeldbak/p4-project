@@ -250,6 +250,39 @@ public class ObjectValue extends Value implements Cloneable {
     return obj;
   }
   
+  private BoolValue equalsParentTree(ObjectValue other) throws StandardError {
+    if (other == null) {
+      return BoolValue.falseValue();
+    }
+    if (other == this) {
+      return BoolValue.trueValue();
+    }
+    if (other.type != type) {
+      return BoolValue.falseValue();
+    }
+    if (parameters.length != other.parameters.length) {
+      return BoolValue.falseValue();
+    }
+    if (attributes.size() != other.attributes.size()) {
+      return BoolValue.falseValue();
+    }
+    if (!Arrays.equals(parameters, other.parameters)) {
+      return BoolValue.falseValue();
+    }
+    for (String att : attributes.keySet()) {
+      if (!getAttribute(att).equals(other.getAttribute(att))) {
+        return BoolValue.falseValue();
+      }
+    }
+    if (parent == null) {
+      return BoolValue.trueValue();
+    }
+    if (parent instanceof ObjectValue && other.parent instanceof ObjectValue) {
+      return ((ObjectValue) parent).equalsParentTree((ObjectValue)other.parent);
+    }
+    return parent.equalsOp(other.parent);
+  }
+  
   /**
    * The most inefficient equals operation in the world...
    */
@@ -261,31 +294,16 @@ public class ObjectValue extends Value implements Cloneable {
     if (other == this) {
       return BoolValue.trueValue();
     }
+    if (child != null) {
+      return other.equalsOp(child);
+    }
     if (!(other instanceof ObjectValue)) {
       return BoolValue.falseValue();
     }
-    ObjectValue otherObject = (ObjectValue)other;
-    if (otherObject.type != type) {
-      return BoolValue.falseValue();
+    if (((ObjectValue)other).child != null) {
+      return this.equalsOp(((ObjectValue)other).child);
     }
-    if (parameters.length != otherObject.parameters.length) {
-      return BoolValue.falseValue();
-    }
-    if (attributes.size() != otherObject.attributes.size()) {
-      return BoolValue.falseValue();
-    }
-    if (!Arrays.equals(parameters, otherObject.parameters)) {
-      return BoolValue.falseValue();
-    }
-    for (String att : attributes.keySet()) {
-      if (!getAttribute(att).equals(otherObject.getAttribute(att))) {
-        return BoolValue.falseValue();
-      }
-    }
-    if (parent == null) {
-      return BoolValue.trueValue();
-    }
-    return parent.equalsOp(otherObject.parent);
+    return equalsParentTree((ObjectValue)other);
   }
   
   /** {@inheritDoc}  */

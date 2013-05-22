@@ -55,7 +55,7 @@ public class ScrollContainer extends Widget {
 	}
 	
 	@Override
-	public void draw( Graphics g ) throws SimulatorError{
+	public void handleDraw( Graphics g ) throws SimulatorError{
 		TrueTypeFont font = ResourceHelper.getFont( "gtw", 16 );
 		int linePos = 0;
 		g.setFont( font );

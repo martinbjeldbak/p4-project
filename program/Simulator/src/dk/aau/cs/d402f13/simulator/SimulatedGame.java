@@ -10,6 +10,7 @@ import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
@@ -27,6 +28,18 @@ import dk.aau.cs.d402f13.widgets.CenterContainer;
 import dk.aau.cs.d402f13.widgets.Message;
 import dk.aau.cs.d402f13.widgets.ScaleContainer;
 
+/**
+ * SimulatedGame is the glue which binds GAL, slick2d and widgets together.
+ * It has the following responsibilities:
+ * -  Load the game file
+ * -  Make sure all get the correct state of the game
+ * -  Glue slick2d drawing with widgets drawing
+ * -  Glue slick2d input with widgets input
+ * -  Handle exceptions thrown by GAL or widgets
+ * 
+ * @author spiller
+ *
+ */
 public class SimulatedGame extends BasicGame {
 	//Game mechanics stuff
 	ScaleContainer sceneHandler = null;
@@ -37,13 +50,16 @@ public class SimulatedGame extends BasicGame {
 	String gameFolder;
 	
 	
-	public SimulatedGame( String path ) throws CloneNotSupportedException{
+	public SimulatedGame( String path ){
 		super( "Junta Simulator" );
 		sceneHandler = new ScaleContainer( false );
 		
+		//Load the game from the file system
 		try {
 			gal = new GameAbstractionLayer( new FileInputStream( path ) );
 			game = gal.getGame();
+			if( game == null )
+				handleSimulatorError( new SimulatorError( "GAL did not give us a game..." ) );
 		} catch (Error e) {
 			handleSimulatorError( new SimulatorError( e.getMessage() ) );
 		} catch (FileNotFoundException e1) {
@@ -51,12 +67,12 @@ public class SimulatedGame extends BasicGame {
 			handleSimulatorError( new SimulatorError( errorMsg ) );
 		}
 		
-		//
+		//Get the folder the game resides in
 		Path filePath = Paths.get( path );
 		gameFolder = filePath.getParent().toString() + "/";
-		System.out.println( gameFolder );
 		
 		if( game != null ){
+			//Setup widgets
 			try{
 				Object obj = game.getBoard();
 				board = new GridBoardWidget( this, (GridBoard)obj );
@@ -75,9 +91,23 @@ public class SimulatedGame extends BasicGame {
 	
 	public String getGameFolder(){ return gameFolder; }
 	
+	/**
+	 * Access to the Game object, all must use this, without caching it
+	 * @return The current Game object
+	 */
 	public Game getGame(){ return game; }
+	
+	/**
+	 * Apply an Action to the game and update the Game reference
+	 * @param a The Action to apply
+	 * @throws StandardError
+	 */
 	public void applyAction( Action a ) throws StandardError{
 		game = game.applyAction( a );
+	}
+	
+	public void nextTurn() throws StandardError{
+		game = game.nextTurn();
 	}
 	
 	private void showError( String title, String error ){
@@ -95,7 +125,10 @@ public class SimulatedGame extends BasicGame {
 	}
 	
 	private void handleSimulatorError( SimulatorError stdErr ){
-		showError( "Fatal fault in simulator", stdErr.getMessage() );
+		String msg = "At: " + stdErr.getLine() + ":" + stdErr.getColumn();
+		msg += "\n" + stdErr.getMessage();
+		
+		showError( "Fatal fault in simulator", msg );
 		stdErr.printStackTrace();
 	}
 	
@@ -114,7 +147,7 @@ public class SimulatedGame extends BasicGame {
 		
 		try{
 			//Draw board
-			sceneHandler.startDraw( g );
+			sceneHandler.draw( g );
 		}
 		catch( StandardError err ){
 			handleStandardError( err );
@@ -158,12 +191,11 @@ public class SimulatedGame extends BasicGame {
 	
 	@Override
 	public String getTitle(){
-		if( game != null ){
-			try {
+		try {
+			if( game != null )
 				return "Junta Simulator - " + game.getTitle();
-			} catch (StandardError e) {
-				handleStandardError( e );
-			}
+		} catch (StandardError e) {
+			handleStandardError( e );
 		}
 		return "Junta Simulator";
 	}
@@ -183,14 +215,27 @@ public class SimulatedGame extends BasicGame {
 
 	@Override
 	public void init( GameContainer gc ) throws SlickException {
+		//Update the sizes of ScaleContainers
 		sceneHandler.setPosition( 0, 0 ); //OCD
 		sceneHandler.setSize( gc.getWidth(), gc.getHeight() );
 		sceneHandler.adjustSizes();
 	}
 
 	@Override
-	public void update( GameContainer gc, int arg1 ) throws SlickException { }
+	public void update( GameContainer gc, int arg1 ) throws SlickException {
+		Input in = new Input(arg1); //TODO: what in constructor?
+		if( in.isKeyDown(Input.KEY_F5) )
+			try {
+				restartGame();
+			} catch (StandardError e) {
+				handleStandardError( e );
+			}
+	}
 
+	/**
+	 * Remove all progress and start at the beginning of the game
+	 * @throws StandardError
+	 */
 	public void restartGame() throws StandardError {
 		game = gal.getGame();
 	}
