@@ -16,7 +16,7 @@
   \PY{k+kr}{define} \PY{n+nf}{tieCondition}[\PY{n+nv}{\PYZdl{}gameState}] =
     \PY{n+nv}{\PYZdl{}gameState}.\PY{n+nf}{board}.\PY{n+nf}{isFull}
   \PY{k+kr}{define} \PY{n+nf}{actions}[\PY{n+nv}{\PYZdl{}gameState}] =
-    \PY{n+nf}{addActions}[\PY{n+nv}{\PYZdl{}pieceType[this}], \PY{n+nv}{\PYZdl{}gameState}.\PY{n+nf}{board}.\PY{n+nf}{emptySquares}]
+    \PY{n+nf}{addActions}[\PY{n+nv}{\PYZdl{}pieceType}[\PY{k+kr}{this}], \PY{n+nv}{\PYZdl{}gameState}.\PY{n+nf}{board}.\PY{n+nf}{emptySquares}]
 \PYZcb{}
 \PY{k+kr}{type} \PY{n+no}{Crosses}[\PY{n+nv}{\PYZdl{}owner}] \PY{k+kr}{extends} \PY{n+no}{Piece}[\PY{n+nv}{\PYZdl{}owner}]
 \PY{k+kr}{type} \PY{n+no}{Noughts}[\PY{n+nv}{\PYZdl{}owner}] \PY{k+kr}{extends} \PY{n+no}{Piece}[\PY{n+nv}{\PYZdl{}owner}]
