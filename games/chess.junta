@@ -1,7 +1,7 @@
 type Chess[] extends Game["Chess"]{
   define players = [ Black[], White[] ]
-    define board = let $black = players[0], $white = players[1] in
-    GridBoard[ 8,8 ]
+    define initialBoard = let $black = players[0], $white = players[1] in
+    ChessBoard[]
     .addPieces[ Pawn[ $black, s ], [ A7, B7, C7, D7, E7, F7, G7, H7 ] ]
     .addPieces[ Rook[ $black ],    [ A8, H8 ] ]
     .addPieces[ Knight[ $black ],  [ B8, G8 ] ]
@@ -20,7 +20,7 @@ type Chess[] extends Game["Chess"]{
 type WhiteSquare[] extends Square[]
 type BlackSquare[] extends Square[]
 type ChessBoard[] extends GridBoard[ 8,8 ]{
-  define squareTypes = [ WhiteSquare, BlackSquare ]
+  define squareTypes = [ WhiteSquare[], BlackSquare[] ]
 }
 
 type ChessPlayer[ $color ] extends Player[ $color ]{
@@ -33,7 +33,7 @@ type Black[] extends ChessPlayer[ "Black" ]{ }
 
 define moveAndCapture[ $piece, $to ] =
   if $to.isOccupied then
-    RemoveAction[ $to.pieces[0] ]//ActionSequence[ RemoveAction[ $to.pieces[0] ], MoveAction[ $piece, $to ] ]
+    ActionSequence[ RemoveAction[ $to.pieces[0] ], MoveAction[ $piece, $to ] ]
   else
     MoveAction[ $piece, $to ]
 
