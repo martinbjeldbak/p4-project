@@ -78,6 +78,7 @@ public class ResourceHelper {
 	}
 
 	public static TrueTypeFont getFont( String name, int size ){
+		//TODO: use UnicodeFont, as TrueTypeFont is deprecated
 		String cachedName = name + ":" + size;
 		if( fontCache.containsKey( cachedName ) ){
 			return fontCache.get( cachedName );
