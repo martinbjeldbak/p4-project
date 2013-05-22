@@ -33,9 +33,9 @@ public class GameWrapper extends Wrapper implements Game {
       this.players[i] = new PlayerWrapper(env, players[i]);
     }
     Value[] turnOrder = getMemberList("turnOrder", env.playerType(), 1);
-    this.turnOrder = new PlayerWrapper[players.length];
+    this.turnOrder = new PlayerWrapper[turnOrder.length];
     for (int i = 0; i < turnOrder.length; i++) {
-      this.players[i] = new PlayerWrapper(env, turnOrder[i]);
+      this.turnOrder[i] = new PlayerWrapper(env, turnOrder[i]);
     }
 
     currentPlayer = new PlayerWrapper(env, getMember("currentPlayer", env.playerType()));
@@ -68,6 +68,11 @@ public class GameWrapper extends Wrapper implements Game {
   @Override
   public Player[] getTurnOrder() throws StandardError {
     return turnOrder;
+  }
+  
+  @Override
+  public GameWrapper nextTurn() throws StandardError {
+    return new GameWrapper(env, callMember("nextTurn", env.gameType()));
   }
 
   @Override
@@ -111,7 +116,7 @@ public class GameWrapper extends Wrapper implements Game {
       actionList.add(a);
     }
     for (PieceWrapper p : board.getPieces()) {
-      if (p.getOwner().equals(currentPlayer)) {
+      if (p.getOwner().object.equals(currentPlayer.object)) {
         Action[] pieceActions = p.getActions(this);
         for (Action a : pieceActions) {
           actionList.add(a);

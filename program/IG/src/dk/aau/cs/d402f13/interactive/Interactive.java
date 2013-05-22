@@ -24,6 +24,8 @@ import dk.aau.cs.d402f13.utilities.ast.AstNode;
 import dk.aau.cs.d402f13.utilities.errors.Error;
 import dk.aau.cs.d402f13.utilities.errors.InternalError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
+import dk.aau.cs.d402f13.utilities.gameapi.Action;
+import dk.aau.cs.d402f13.utilities.gameapi.Piece;
 import dk.aau.cs.d402f13.values.*;
 
 public class Interactive {
@@ -208,6 +210,13 @@ public class Interactive {
                         System.out.println("Found game: " + gameType.getName());
                         GameWrapper game = new GameWrapper(env, gameType.getInstance(i));
                         System.out.println("Title: " + game.getTitle());
+                        System.out.println("Actions before: " + game.getActions().length);
+                        Action a = game.getActions()[2];
+                        game = game.applyAction(a);
+                        game = game.nextTurn();
+                        System.out.println("Actions after: " + game.getActions().length);
+                        Piece piece = game.getBoard().getPieces()[1];
+                        System.out.println("Piece actions: " + piece.getActions(game).length);
                       }
                       Value main = env.getConstant("main"); 
                       if (main != null) {
