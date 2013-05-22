@@ -6,7 +6,7 @@ board games.
 
 \todo{More introduction}
 
-\subsection*{Code sample}
+\subsection*{Code example}
 \label{codesample}
 
 We have developed \productname{} by first brainstorming and writing a bunch of
@@ -19,9 +19,20 @@ implementation of the board game Noughts and Crosses:
 
 \codesample{noughtandcrosses.game}
 
-\todo{Describe exactly what this example does}
+We will now go through the code sample briefly and introduce some of the important concepts
+of the \productname{}-language, which will be further described in the rest of this chapter and in \chapref{chap:implementation}.
+The first thing that happens is a type \keyword{type} \type{NacGame}[] is declared. The types of \productname{} can be compared 
+to classes as seen in other object oriented programming languages. The square brackets in \productname{} are used to encapsulate parameters and to encapsulate the members of lists. \keyword{type} \type{NacGame}[] extends the \type{Game} type which
+is a build-in type in Junta. \type{Game}'s constructor takes the title of the game as input and it
+contains lots of useful constants and functions which are described in \secref{sec:predefined}. One of the build-in constants is \constant{players} which contains a list of players. When a game created in \productname{} is played, the turn is shifted between each of the players in the list provided by the 
+\constant{players} constant. This is unless the turn order is specifically modified by the constant \constant{turnOrder}, which is another build-in
+constant in the \type{Game} type. This however is not necessary in a Noughts and Crosses games, since the turn order is very simple. Also \type{Game} contains the constant \constant{initialBoard} which in this case is assigned a grid board of $3 \times 3$ squares. In other languages the override keyword is used when implementing methods from a super-class but in our case when implementing a constant/function from a super-type this is not used, since the override functionality already exists in the define keyword.
 
-%In this chapter we define the formal grammar of \productname{}. Etc..
+A second type, \type{NacPlayer}, is declared which extends the build-in \productname{}-type \type{Player}. The Player type
+takes as input the name of the player and contains three important functions: \function{winCondition}, \function{tieCondition} and 
+\function{actions}. As the name indicate the \function{winCondition} function checks if the current player is in a win condition and returns
+a boolean value: true or false. \function{winCondition} takes a game-object as input. In Noughts and Crosses the win condition is obtained if a player has three pieces in a row, in either a vertical, horizontal or diagonal line. This is in \productname{} specified using ``patterns'' which is explained in \secref{sec:patterns} in the implementation chapter. The \function{tieCondition} function checks if a tie condition is obtained and returns a boolean value: true or false. The tie condition is achieved whenever the board is full. This is specified using the build-in function \function{isFull}. The last function \function{actions} also takes as input a game object
+
 
 \subsection*{Type system}
 
@@ -30,20 +41,11 @@ We chose the dynamic type system due to the fact that it increases the writabili
 above code example \secref{codesample} a Noughts and Crosses game can be created in only approximately 20 lines
 of code. The types of variables, lists etc. are determined at compile time
 
-We have the following primitive data types:
-\begin{dlist}
-\item \textbf{Integer}:
-\end{dlist}
-
 %dynamic (why?)
-
-inheritance
-
-members: constants/functions
-
-visibility (data)
-
-casting (super?)
+%inheritance
+%members: constants/functions
+%visibility (data)
+%casting (super?)
 
 
 \subsection*{Scope rules}
