@@ -132,40 +132,6 @@ implements the abstract constant. Abstract types can't be constructed, albeit th
 constructor for an abstract type has to be used when extending the type (after the
 \keyword{extends}-keyword).
 
-\subsubsection{Lambda expression scope}
-
-When a lambda expression is created, a reference to the scope it was created in
-is saved with it. This is known as a closure, and means that a lambda
-expression may access variables outside of its own scope. The accessible
-variables are the variables that were available at the time of the creation of
-the lambda expression.
-
-Consider the following example:
-
-\codesample{closuredef.garry}
-
-A function \function{getAdder}, which takes one argument (\variable{a}) and
-returns a lambda expression, is defined. Notice how \variable{a} is used within
-the lambda expression. This means that when the lambda expression is created, it
-must remember the value of the variables that exist in the scope, in which it is
-created. The use of the \function{getAdder}-function could look like this:
-
-\codesample{closureuse.garry}
-
-In the first line \function{getAdder} is called with the argument, $25$. A new scope, $A$,
-is created, in which the variable \variable{a} is assigned the value $25$. Then the function
-expression is evaluated, which results in a new lambda expression (with a reference to scope $A$).
-This is returned and assigned to \variable{adder} in line 1 of the above example.
-
-In the second line the \variable{adder} is called as a function, which means that a new scope, $B$,
-is created, in which the variable \variable{b} is assigned the value $5$. The important part is
-that $B$'s parent scope is set to $A$ (which is saved with the lambda expression). The expression
-(the right side of the lambda expression) is then evaluated. First the \variable{a}-variable is
-encountered. The interpreter first searches the $B$-scope for \variable{a}, and when unsuccessful,
-searches the parent-scope, $A$, for \variable{a}. In $A$ the variable \variable{a} holds the value
-$25$, and this is returned. Then the $B$-scope is searched for the \variable{b}-variable, and the value
-$5$ is returned. The two integers are added, and the final return-value of the lambda-expression
-ends up being $30$.
 
 \subsubsection{Let-expressions}
 
