@@ -123,7 +123,10 @@ public class SimulatedGame extends BasicGame {
 	}
 	
 	private void handleSimulatorError( SimulatorError stdErr ){
-		showError( "Fatal fault in simulator", stdErr.getMessage() );
+		String msg = "At: " + stdErr.getLine() + ":" + stdErr.getColumn();
+		msg += "\n" + stdErr.getMessage();
+		
+		showError( "Fatal fault in simulator", msg );
 		stdErr.printStackTrace();
 	}
 	

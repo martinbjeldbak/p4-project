@@ -35,8 +35,8 @@ public class Message extends Widget {
 		TrueTypeFont big = ResourceHelper.getFont( "gtw", 26 );
 		TrueTypeFont small = ResourceHelper.getFont( "gtw", 16 );
 
-		int posX = ( (getWidth() - getX()) - paper.getWidth() ) / 2 + getX();
-		int posY = ( (getHeight() - getY()) - paper.getHeight() ) / 2 + getY();
+		int posX = (getWidth() - paper.getWidth() ) / 2;
+		int posY = (getHeight() - paper.getHeight() ) / 2;
 		
 		g.drawImage( paper, posX, posY );
 		
