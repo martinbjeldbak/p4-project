@@ -270,7 +270,7 @@ public class GridBoardPatternEvaluator {
     return false;
   }
   private boolean empty(Square s) throws StandardError{
-    return s.getPieces().length == 0;
+    return s.isEmpty();
   }
 
 }
