@@ -103,6 +103,10 @@ public class SimulatedGame extends BasicGame {
 		game = game.applyAction( a );
 	}
 	
+	public void nextTurn() throws StandardError{
+		game = game.nextTurn();
+	}
+	
 	private void showError( String title, String error ){
 		//Clear objects, as they might be the culprit
 		sceneHandler.clearObjects();
