@@ -48,6 +48,13 @@ public class TextHelper {
 		
 		String line = "";
 		for( String word : words ){
+			//Make line breaks on "\n"
+			int pos = word.indexOf( "\n" );
+			if( pos != -1 ){
+				line += " " + word.substring( 0, pos );
+				break;
+			}
+			
 			if( font.getWidth( line + " " + word ) < width )
 				line += " " + word;
 			else
