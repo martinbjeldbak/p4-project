@@ -30,7 +30,7 @@ public class Message extends Widget {
 		this.text = text;
 	}
 	
-	public void draw( Graphics g ) throws SimulatorError{
+	public void handleDraw( Graphics g ) throws SimulatorError{
 		Image paper = ResourceHelper.getImage( "img/message.png" );
 		TrueTypeFont big = ResourceHelper.getFont( "gtw", 26 );
 		TrueTypeFont small = ResourceHelper.getFont( "gtw", 16 );
@@ -58,8 +58,8 @@ public class Message extends Widget {
 	}
 
 	@Override
-	protected boolean handleMouseClicked( int button, int x, int y ) throws StandardError{
-		createEvent( Event.ACCEPT );
+	protected boolean handleMouseClicked( int button, int x, int y ) throws StandardError, SimulatorError{
+		notify( Event.ACCEPT );
 		return true;
 	}
 	@Override
