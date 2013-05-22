@@ -1,5 +1,6 @@
 package dk.aau.cs.d402f13.simulator;
 
+import dk.aau.cs.d402f13.utilities.errors.SimulatorError;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.gameapi.Action;
 import dk.aau.cs.d402f13.widgets.Widget;
@@ -13,13 +14,13 @@ public class ActionAi extends ActionSelector {
 	}
 
 	@Override
-	public void retriveAction( Widget callback ) throws StandardError{
+	public void retriveAction( Widget callback ) throws StandardError, SimulatorError{
 		Action[] actions = game.getGame().getActions();
 		
 		int index = (int)( Math.random() * actions.length );
 		calculatedAction = actions[ index ];
 		
-		callback.acceptEvent( null, Event.MOVE_GENERATED );
+		callback.accept( null, Event.MOVE_GENERATED );
 	}
 
 	@Override

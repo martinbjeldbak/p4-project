@@ -131,7 +131,7 @@ public class GridBoardWidget extends BoardWidget {
 	}
 
 	@Override
-	public void draw(Graphics g) throws StandardError, SimulatorError {
+	public void handleDraw(Graphics g) throws StandardError, SimulatorError {
 		drawBoard( g, getWidth(), getHeight() );
 	}
 

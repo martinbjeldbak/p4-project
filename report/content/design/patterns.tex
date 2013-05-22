@@ -1,8 +1,7 @@
 \section{Patterns}
 \label{sec:patterns}
 
-This section should cover how to use patterns and what to use them for. For instance there 
-should be a list of operators and a comparison to regular expressions.
+This section covers how to use patterns and what to use them for. The operators of a pattern looks like and behaves a little like regular expressions. This EBNF-grammar shows how a pattern is constructed:
 
 \begin{ebnf}
 \grule{pattern}{pattern\_expr \gcat \grep{pattern\_expr}}
@@ -19,3 +18,40 @@ should be a list of operators and a comparison to regular expressions.
 \galt{\gter{this}}
 \galt{type}
 \end{ebnf}
+
+
+A pattern is checked on a particular square, and returns either true or false. An example of a pattern is \text{/n n e empty/}. This pattern can be checked on the board seen in \figref{patternboard} on the field \textbf{A1}. The pattern says ``go one square north, go one square north, go one square east, check if square is empty''. This means that the square \textbf{B3} will be checked for emptiness. Since the square is occupied by a piece, the pattern will return false if checked on \textbf{A1}. However, the same pattern checked on \textbf{C1} will return true since the square at \textbf{D3} is empty.
+\fig[scale=2]{patternboard}{A simple 4 X 4 board with 3 pieces}
+
+With this basic introduction to a simple pattern check, the table (insert ref and convert list below to a table) describes briefly how the different pattern operators work. For each operator, an example of the use in a context are given in \secref{sec:patternexamples}. Note that the description of patterns assumes a minor understanding of regular expressions, see (ref http://www.regular-expressions.info/).
+
+n : north \\
+e : east \\
+s : south \\
+w : west \\
+* : zero-to-many times\\
++ : one-to-many times\\
+? : zero-or-one time\\
+| : or\\
+! : not\\
+( \textit{pattern} ) : encapsulation\\
+empty : square contains no pieces\\
+friend :  square contains at least one friendly piece of the current player\\
+foe : square contains at least one enemy piece of the current player\\
+this : square contains the piece for which the check is being performed\\ 
+
+\subsection{Pattern examples}
+\label{sec:patternexamples}
+All these examples of pattern checks are performed on the board and pieces seen in \figref{patternboard}. For each operator, two examples of a pattern check on a particular square is given. The first check returns true and the second check false.
+
+on A1, the pattern \text{/n empty/} returns true because A2 is empty\\
+on B1, the pattern \text{/n empty/} returns false because B2 is not empty\\
+on C3, the pattern \text{/e empty/} returns true because C4 is empty\\
+on C4, the pattern \text{/e empty/} returns false because C5 is out of board\\
+on C3, the pattern \text{/n* n e empty/} returns true because moving north 2 times then north and east hits an empty square on B4\\
+
+Notice that the *-operator causes many branches to be made. In the previous pattern-example, \text{/n* n e empty/}, the branch north zero times, north, east empty is a false branch. If just one of the branches returns true, the entire pattern does as well. The same counts for the +, ? and | operator. When a branch moves out of board it returns false immediately.
+
+on C3, the pattern \text{/n* s s !empty/} returns false because neither A1 nor A2 contains a piece\\
+on A1, the pattern \text{/n+ e empty/} returns true only because B4 is empty\\
+on A1, the pattern \text{/n+ e empty/} returns true only because B4 is empty\\
