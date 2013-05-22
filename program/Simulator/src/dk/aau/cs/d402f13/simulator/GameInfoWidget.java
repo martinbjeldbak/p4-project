@@ -43,7 +43,7 @@ public class GameInfoWidget extends ScaleContainer {
 	}
 	
 	@Override
-	public void draw( Graphics g ) throws StandardError, SimulatorError{
+	public void handleDraw( Graphics g ) throws StandardError, SimulatorError{
 		Game game = this.game.getGame();
 		//Draw side bar
 		Image side = ResourceHelper.getImage( "img/book.png" );

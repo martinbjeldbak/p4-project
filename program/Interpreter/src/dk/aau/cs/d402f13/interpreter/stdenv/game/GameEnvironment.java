@@ -360,7 +360,7 @@ public class GameEnvironment extends StandardEnvironment {
         ListValue history = (ListValue)object.getAttributeAs("history", ListValue.type());
         history = (ListValue)history.add(actionObject); 
         object = (ObjectValue)object.setAttribute("history", history);
-        object = (ObjectValue)object.callMember("nextTurn", game, interpreter);
+//        object = (ObjectValue)object.callMember("nextTurn", game, interpreter);
         if (actionObject.is(actionSequence)) {
           Value[] sequence = object.getMemberList("actions", action, 1);
           for (Value a : sequence) {

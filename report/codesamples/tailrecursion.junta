@@ -1,0 +1,7 @@
+define recsum[$x, $runningTotal] =
+  if $x == 0 then
+    $runningTotal
+  else
+    recsum[$x - 1, $runningTotal + $x]
+
+recsum[5, 0] // returns 1 + 2 + 3 + 4 + 5 = 15
