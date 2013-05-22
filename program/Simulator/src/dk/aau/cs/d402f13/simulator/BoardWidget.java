@@ -114,6 +114,9 @@ public abstract class BoardWidget extends Widget {
         if( button == Input.MOUSE_LEFT_BUTTON ){
 	    	Square s = findSquare(x, y);
 	    	Action[] actions = game.getGame().getActions();
+	    	System.out.println("Amount: " + actions.length);
+	    	for(Action a : actions )
+	    	  System.out.println(ActionHelper.humanReadable(game.getGame(), a));
 	    	
 	    	if( selected != null && squareIsHinted( s ) ){
 	    		//We already have selected a piece, and we are trying to
