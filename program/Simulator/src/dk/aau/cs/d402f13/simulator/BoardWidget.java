@@ -61,11 +61,6 @@ public abstract class BoardWidget extends Widget {
 		waitForPlayer.startObserving( this );
 	}
 	
-	public void setError( String title, String text ){
-		Message msg = new Message( title, text, 0,0, getWidth(), getHeight() ); 
-		addObject( msg );
-	}
-	
 	public void showMessage( Message m, String text ){
 		m.setFixed( getWidth(), getHeight() );
 		m.setText( text );
