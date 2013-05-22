@@ -5,38 +5,219 @@ for a given program. This interpreter class is, like the scope checker,
 also implemented with the visitor pattern, visiting all the nodes and
 taking appropriate actions depending on what type of node is visited.
 The difference here is that values, types, and other language constructs
-are created and evaluated directly, propagating the values up the AST.
+are created and evaluated directly, propagating the results up the AST,
+and that every type of node is visited, as each node is significant in
+that they carry important information about the written program.
 
 In this section, we will look at the inner workings of the interpreter
 and see some examples of the different evaluation methods used and how
 they're created. We also see how the symbol table keeps track of scopes
 and the different values. Thereafter the implementation of patterns is
-described, as they play a central role in most programs and functions
-written in \productname{}.
+described, as they play a central role in most programs written in our
+language.
+
+% To add (maybe a section here about how the interpreter behaves?):
+% The game env is loaded on startup
+% Methods are created for each type of node, possibly visiting other nodes and passing values around
 
 \subsection{Symbol table and scopes}
-Symbol tables in the interpreter are used to add and get constants, variables, types, and to push and pop the scope stack.
+Symbol tables in the interpreter are used to add and get constants,
+variables, types, and to push and pop scopes. The interpreter keeps a
+single, global instance of a root symbol table which it calls methods
+upon when needed. This symbol table is unaffiliated with the scope
+checker's symbol table, which is built differently up, and hence does
+not share any information with it at all.
+
+As an example of how the symbol table is operated, an example of
+visiting an assignment (let-in) node, which utilizes some of these
+features, is shown below:
+
+\lstinputlisting[caption={\emph{Code taken from the interpreter to
+show how the symbol table is used when visiting let--expressions.}},
+label={lst:let}, language=Java]{listings/visitAssignment.java}
+
+Listing \ref{lst:let} shows how ``let-in'' expressions are evaluated
+when the abstract node type shown in \secref{sec:letexpressions} is
+visited. A new scope is pushed onto the current stack of scopes,
+whereafter the variables are hereafter pushed into the scope that was
+just opened. Because let-in expressions, like all \productname{}'s
+expressions, return a \classref{Value}, this value is retrieved after
+the body of the assignment is computed but before the scope is closed,
+as we will most likely need the values of the different variables.
 
 \subsection{Values and their operators}
-Each one of our base values is represented internally by a class used in the interpreter. These classes are all sub-classes of a general class \classref{Value}, that offers the sub-classes an interface to implement various different operations, such as comparison, addition, calling, and so on, throwing an error if trying to use the operator between incompatible values or if the operation yields an invalid result.
+Each one of the base values offered by \productname{} is represented
+internally by a class written in the interpreter. These classes are
+all sub-classes of a general class \classref{Value}, that offers the
+sub-classes an interface to implement various different operations, such
+as comparison, addition, calling, and so on, throwing an error if trying
+to use the operator between incompatible values or if the operation
+yields an invalid result.
 
-In the following part of this section, a few important values and their features are highlighted.
+In the following part of this section, a few important values and their
+features are highlighted. The most basic values such as integers,
+strings, directions, coordinates, and lists principally support the
+same operations, and are therefore relatively uninteresting to discuss
+compared to the more complex values, such as types and functions. For
+completeness, the implementation of coordinates, types, and
+functions are discussed below.
+
+Most properties (variables) of values are declared as Java
+\classref{final}, due to the fact that \productname{} is functional and
+that the result of an expression always results in a new instance of an
+object. This means that a simple plus operation yields a new value, so
+the interpreter constantly instantiates these new values without ever
+needing to update a specific property, possibly leaving many young, dead
+objects on the heap for Java's garbage collection to deallocate.
 
 \subsubsection{Coordinates}
+Coordinates are represented internally by a tuple $(x, y)$ specifying
+a coordinate on the game board. The maximum board size is limited by
+an $x$ and $y$, which are both 32-bit signed two's compliment Java
+integers\footnote{Which gives a maximum coordinate of $(2,147,483,647;
+2,147,483,647)$, much more than any realistically imaginable board
+game!}. If we wished to represent larger boards, we could simply use
+a built-in larger natural number representation, or create a custom
+representation.
 
-\subsubsection{Lists}
+As specified in \secref{sec:standardenvironment}, coordinates consist of
+a horizontal axis represented by letter, or multiple letters, $x$, and a
+numerical $y$, representing the vertical squares on a grid-shaped board.
+When displaying a coordinate to the user, a simple method is called to
+convert the $x$ coordinate to its alphabetical form.
+
+Coordinate values support equals comparison, done by value. It
+also allows addition with strings, directions, and lists. Subtracting
+other coordinates yields a direction vector and subtracting a direction
+yields a new coordinate with an offset defined by subtracting the
+coordinates $x$ and $y$ properties with the direction's $x$ and $y$
+properties, as seen in the following listing.
+
+\lstinputlisting[caption={\emph{How subtraction of other values on \classref{Coordinate} is handled.}}, label={lst:coordSubtract}, language=Java]{listings/coordSubtract.java}
+
+Listing \ref{lst:coordSubtract} shows the implementation of the
+subtraction operation on coordinates. This method is principally the
+same implementation for every mathematical operation across all the
+different above-mentioned sub-classes of \classref{Value}. Type checking
+is always done to see if the right-hand side of the operation is
+compatible before taking the correct actions. The method \methodref{is}
+on all \classref{Value} types checks to see if the type is the specified
+type or any sub-type extending the type in \productname{}. If the RHS
+is allowed, it's up-casted to the appropriate type if it isn't used
+directly, whereafter the appropriate operation is performed between the
+two types.
+
+%\subsubsection{Lists}
+%Lists are implemented very much like Coordinates, supporting comparison,
+%addition with other lists and any singular \classref{Value}-type,
+%subtraction also with other lists and singular \classref{Value}-types
+%existing in the current \classref{List} being subtracted from.
+%
+%The most interesting feature of \classref{List} types is that they take
+%an optional list of one to two parameters, allowing access to an element
+%at a specific index in the list, or defining a range of indexes desired
+%in the list, resulting in a new list containing the elements between the
+%two indexes.
+
 
 \subsubsection{Types}
-% Abstract type values are just an extension of types
+\classref{Type} values are one of the more complex sub-classes of
+\classref{Value}, as they, when defined, can have formal parameters, a
+parent \classref{Type}, and a complex body. These are all represented
+and stored internally in a class \classref{Type}, instantiated when
+visiting a type definition node (defined in \apref{ap:typedef}).
+
+% Declaring
+There are a handful of different ways to instantiate a \classref{Type},
+all depending on the contents of the type definition node visited.
+If a type is declared to have a parent, a \classref{Value} of type
+\classref{Type} is simply instantiated by the interpreter with the
+appropriate constructor, saving the nodes for the parent and the parents
+formal parameters. If the type declaration also has a body, then each
+declaration is added to the newly instantiated type by the interpreter.
+Finally, the type is added to the symbol table, so it can be called and
+instantiated at a later point in the program.
+
+% Instantiating
+Types are implemented to allow instantiating the type, returning an
+\classref{ObjectValue} sub-class with the actual parameters bound to the
+formal parameters, scope bindings, and a reference to the interpreter
+so it can evaluate the methods in its body (if one exists) when called.
+This instantiating is done when the interpreter visits an actual type,
+where it looks up the type's name in the symbol table, returning it if
+found, or an error if not.
+
+% Abstract types
+Abstract type values are merely an extension of \classref{Type}, but only
+consisting of abstract members, and do not allow instantiating, throwing
+a \classref{TypeError} if attempted.
+
+% Quick mini-summary
+Unfortunately the methods that make up the interface to the
+\classref{Type} class are too large to be shown in this section,
+therefore we refer to the \classref{TypeValue} class in the source code
+for a quick overview.
+
+The body of types can consist of constants and functions, where the
+implementation of functions is described blow.
 
 \subsubsection{Functions}
 
-% Our types are probably most interesting to mention here?
-
 
 \subsection{Pattern evaluation}
+Patterns in \productname{} are a very important feature, being used
+in pretty much every one of our test programs to evaluate winning
+conditions, find squares or actions that have a specific property, and
+various other constructs.
+
+We looked at other languages in an attempt to find an existing solution
+to a similar problem and quickly found that patterns should be very
+similar to regular expressions. Unfortunately, regular expressions are
+actually do not share the same properties as our patterns, ending up
+giving us quite a headache when trying to use automaton to describe
+patterns.
+
+\todo{Keeent}
+
+\subsubsection{Implementation with finite automaton}
+Our first intuition was to draw inspiration from implementations
+of regular expressions. These implementations use nondeterministic
+finite automaton (NFAs) to represent the traversal of the expression,
+having different constructs of automata nodes for the different logic
+operations, such as Kleene star, union, concatenation, among others. An
+NFA is constructed for each part of the expression, as they concatenated
+together represent the entire regular expression, only accepting strings
+in the alphabet that fulfill the desired properties. These NFAs are then
+converted to deterministic finite automaton, which can be traversed much
+faster than NFAs.
+
+But this implementation caused some problems, because regular
+expressions are described as a 4-tuple with an input string, which our
+patterns don't require. Patterns are used in function parameters and to
+evaluate different conditions. These conditions don't necessarily have
+an input, but are based on the current game's state, such as which piece
+and player is currently being taken into account.
+
+Therefore we needed another solution, because as practical as
+representing patterns as automaton is, they're not a valid solution.
+So we went back to the drawing board and thought of a different,
+nondeterministic implementation.
 
 \subsection{Evaluation of interpreter}
-It is obviously not the fastest implementation of an interpreter, but we don't see that as a hindrance, because speed is not what we're after.
+We have implemented a complete interpreter with semantics for every
+single node type, allowing us to explore and demonstrate every feature
+of \productname{} without many limits.
 
-Under development, we have kept flexibility in mind, allowing us to easily add new base values and extend and maintain the feature set and semantics of our language, without having to change any existing code.
+Under development, we have kept flexibility in mind, allowing us to
+easily add new base values and extend and maintain the feature set and
+semantics of our language, without having to change any existing code.
+If we wanted to add an addition operation between coordinates, it's only
+a matter of adding a few lines of code to the coordinate value class.
+
+It is obviously not the fastest implementation of an interpreter, but we
+don't see that as a hindrance, because speed is not what we're after.
+
+There are a few optimizations that can be taken into account when
+writing an interpreter to make it run faster, such as detecting tail
+recursion. Since \productname{} has no loop-constructs, recursive
+functions are the only way to repeatedly run through some code.
