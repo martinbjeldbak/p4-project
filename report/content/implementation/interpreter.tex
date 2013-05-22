@@ -9,6 +9,11 @@ are created and evaluated directly, propagating the results up the AST,
 and that every type of node is visited, as each node is significant in
 that they carry important information about the written program.
 
+The implementation of the interpreter consists of $40$ visitor methods,
+excluding private helper methods, each providing a specific behaviour
+depending on the type of node visited, possibly calling other visit
+methods on the node to evaluate to get a \classref{Value}.
+
 In this section, we will look at the inner workings of the interpreter
 and see some examples of the different evaluation methods used and how
 they're created. We also see how the symbol table keeps track of scopes
@@ -148,7 +153,7 @@ where it looks up the type's name in the symbol table, returning it if
 found, or an error if not.
 
 % Abstract types
-Abstract type values are merely an extension of \classref{Type}, but only
+Abstract type values are an extension of \classref{Type}, but only
 consisting of abstract members, and do not allow instantiating, throwing
 a \classref{TypeError} if attempted.
 
@@ -156,13 +161,57 @@ a \classref{TypeError} if attempted.
 Unfortunately the methods that make up the interface to the
 \classref{Type} class are too large to be shown in this section,
 therefore we refer to the \classref{TypeValue} class in the source code
-for a quick overview.
-
-The body of types can consist of constants and functions, where the
-implementation of functions is described blow.
+for a quick overview. The body of types can consist of constants and
+functions, where the implementation of functions is described blow.
 
 \subsubsection{Functions}
+Functions are yet another sub-class of the \classref{Value} type,
+though only supporting the addition operation to store the function in
+a \classref{ListValue} (letting functions be first class citizens).
+Functions are represented internally as constants, and can therefore be
+defined in the global scope or within any sub-scope that may exist, each
+updating the symbol table's current scope's constant declarations.
 
+% Creating function values 
+Functions are created with the AST node expression body, which is
+stored and not evaluated until the function is called. They do not keep
+track of their names, as that's the symbol table's job (allowing lambda
+expressions to also have the \classref{FunValue} type), so functions
+merely incorporate formal parameters and an expression. Functions also
+allow the ability to have a variable list of formal parameters. If the
+function is a lambda expression, then the current scope is passed to the
+\classref{FunValue} when instantiating. On the other hand, if a function
+is defined with a name identifying it, the interpreter adds it to the
+symbol table's constant table, instantiating a \classref{FunValue} with
+the AST node expression and AST node formal parameters.
+
+% Calling a function
+When a function is called, it is called with a reference to the
+interpreter and the actual parameters passed to the function. The
+interpreter is needed to evaluate the body, and is used for access
+to the symbol table for scopes, adding variables, and so forth.
+For optimization, an error is thrown if the length of the actual
+parameters does not match the length of the formal parameters, already
+short-circuiting the call if attempted. Else the function body is
+evaluated with the actual parameters in a new, temporary scope that only
+exists while the call is running. This scope has the previous scope as a
+parent, giving it complete access to all the existing, declared members
+outside the function's body inside the function's body.
+
+% Tail recursion detection
+Special action is taken during the call when tail recursion is
+detected. An example of a tail recursive function, a small method
+\methodref{recsum} that makes use of it, is seen below:
+
+\todo{Pygmentize below (commented out) code sample}
+%\codesample{tailrecursion.junta}
+
+This simple function adds the first $N$ integers, where $N$ is defined as the first parameter to the function. The tail recursion optimizer converts the recursive function into a loop if it detects a trail recursion construction, guaranteeing stack overflow prevention when using tail recursion. How tail recursion is detected by the function when it is called is shown by the pseudocode below:
+
+\input{figures/tailrecursionalgorithm}
+
+Here it is important to note that the type \classref{CallValue} is an internal \classref{Value}
+\todo{Finish this\ldots}
 
 \subsection{Pattern evaluation}
 Patterns in \productname{} are a very important feature, being used
@@ -179,7 +228,7 @@ patterns.
 
 \todo{Keeent}
 
-\subsubsection{Implementation with finite automaton}
+\subsubsection{Failed implementation with finite automaton}
 Our first intuition was to draw inspiration from implementations
 of regular expressions. These implementations use nondeterministic
 finite automaton (NFAs) to represent the traversal of the expression,

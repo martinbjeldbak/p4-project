@@ -1,27 +1,34 @@
 \chapter{Design}
 \label{chap:design}
 
-\productname{} is a purely functional object-oriented programming language designed for creating
-board games.
 
-\todo{More introduction}
-
-\subsection*{Code sample}
+\subsection*{Code example}
 \label{codesample}
 
-We have developed \productname{} by first brainstorming and writing a bunch of
-game implementations using a ``programming language'' which felt the most
-natural to us. By this we mean that we were actually using the programming
-language before we had even constructed it. We began by writing programs in the
-unfinished language to try to find out how it should be built and what would be
-the easiest to write. The following is a result of this and it is an example of an
-implementation of the board game Noughts and Crosses:
+We start out by giving an example of a game implemented in \productname{}. \productname{} is a purely functional object-oriented programming language designed explicitly for creating board games. We have developed \productname{} by first brainstorming and writing a bunch of
+game implementations using a ``programming language'' which felt the most natural to us. By this we mean that we were actually using the programming
+language before we had even constructed it. We began by writing programs in the unfinished language to try to find out how it should be built and what would be the easiest to write. The following is a result of this and it is an example of an implementation of the board game Noughts and Crosses:
 
 \codesample{noughtandcrosses.game}
 
-\todo{Describe exactly what this example does}
+We will now go through the code sample briefly and introduce some of the important concepts
+of the \productname{}-language, which will be further described in the rest of this chapter and in \chapref{chap:implementation}.
+The first thing that happens is a type \keyword{type} \type{NacGame}[] is declared. The types of \productname{} can be compared 
+to classes as seen in other object oriented programming languages. The square brackets in \productname{} are used to encapsulate parameters and to encapsulate the members of lists. \keyword{type} \type{NacGame}[] extends the \type{Game} type which
+is a build-in type in Junta. The extends keyword is similar to the extends keyword of Java, and means the  \type{NacGame}[] type inherits members of the \type{Game} type. \type{Game}'s constructor takes the title of the game as input and it contains lots of useful constants and functions which are described in \secref{sec:predefined}. Constants and functions can be seen as sub-programs similar to methods. They distinguish themselves from each other by the fact that constants can't take any parameters but functions can. Functions and constants are further explained in \secref{sec:constantdefinitions}.  One of the build-in constants is \constant{players} which contains a list of players. When a game created in \productname{} is played, the turn is shifted between each of the players in the list provided by the 
+\constant{players} constant. This is unless the turn order is specifically modified by the constant \constant{turnOrder}, which is another build-in
+constant in the \type{Game} type. This however is not necessary in a Noughts and Crosses games, since the turn order is very simple. Also \type{Game} contains the constant \constant{initialBoard} which in this case is assigned a grid board of $3 \times 3$ squares. In other languages the override keyword is used when implementing methods from a super-class but in our case when implementing a constant/function from a super-type this is not used, since the override functionality already exists in the define keyword.
 
-%In this chapter we define the formal grammar of \productname{}. Etc..
+A second type, \type{NacPlayer}, is declared which extends the build-in \productname{}-type \type{Player}. The Player type
+takes as input the name of the player and contains three important functions: \function{winCondition}, \function{tieCondition} and 
+\function{actions}. As the name indicate the \function{winCondition} function checks if the current player is in a win condition and returns
+a boolean value: true or false. \function{winCondition} takes a game-object as input. In Noughts and Crosses the win condition is obtained if a player has three pieces in a row, in either a vertical, horizontal or diagonal line. This is in \productname{} specified using ``patterns'' which is explained in \secref{sec:patterns}. The \function{tieCondition} function checks if a tie condition is obtained and returns a boolean value: true or false. The tie condition is achieved whenever the board is full. This is specified using the build-in function \function{isFull}. The last function \function{actions} also takes as input a game object and contains a list of actions. In this case the only possible action is the \function(addAction) function which makes it possible to add a piece type of type this, which is the current player's piece type (crosses or noughts), to an empty square on the board.
+
+At first peek the code example might seem blurry and complicated. This is mostly due to the great use of build-in
+types, functions and constants. These build-in's however are implemented to make the life of the programmer easier, since 
+he doesn't have to implement all the functionality himself. In the following chapter, we are going to describe the design of \productname{} in a
+more detailed manner.  
+
 
 \subsection*{Type system}
 
@@ -30,184 +37,101 @@ We chose the dynamic type system due to the fact that it increases the writabili
 above code example \secref{codesample} a Noughts and Crosses game can be created in only approximately 20 lines
 of code. The types of variables, lists etc. are determined at compile time
 
-We have the following primitive data types:
-\begin{dlist}
-\item \textbf{Integer}:
-\end{dlist}
-
 %dynamic (why?)
-
-inheritance
-
-members: constants/functions
-
-visibility (data)
-
-casting (super?)
+%inheritance
+%members: constants/functions
+%visibility (data)
+%casting (super?)
 
 
 \subsection*{Scope rules}
 
 A scope is the context in which one or more variables exist.
-There are five types of scopes in \productname{}. The global scope,
-function scopes, type scopes, lambda scopes, and ``let''-scopes.
 
-\subsubsection{The global scope}
-
-All named constants/functions defined outside of types exist in the global scope.
-Also, it is not necessary to define a function before use, so something
-like the following is valid:
-
-\codesample{usebeforedefinition.junta}
-
-All types also exist in the global scope, and again it isn't necessary to define
-a type before using (extending or constructing):
-
-\codesample{typebeforetype.junta}
-
-\subsubsection{Function scope}
-Consider a function definition such as:
-
-\codesample{functiondef.garry}
-
-The variables \variable{a} and \variable{b} only exist within the function \function{max}.
-When calling the function:
-
-\codesample{functioncall.garry}
-
-A new scope will be created and the values $5$ and $23$
-are assigned to \variable{a} and \variable{b}, respectively.
+%\subsubsection{The global scope}
+%
+%All named constants/functions defined outside of types exist in the global scope.
+%Also, it is not necessary to define a function before use, so something
+%like the following is valid:
+%
+%\codesample{usebeforedefinition.junta}
+%
+%All types also exist in the global scope, and again it isn't necessary to define
+%a type before using (extending or constructing):
+%
+%\codesample{typebeforetype.junta}
+%
+%\subsubsection{Function scope}
+%Consider a function definition such as:
+%
+%\codesample{functiondef.garry}
+%
+%The variables \variable{a} and \variable{b} only exist within the function \function{max}.
+%When calling the function:
+%
+%\codesample{functioncall.garry}
+%
+%A new scope will be created and the values $5$ and $23$
+%are assigned to \variable{a} and \variable{b}, respectively.
 
 %Named functions defined outside of type definitions (such as \function{max})
 %always exist in the global scope.
 
-\subsubsection{Type scope}
+%\subsubsection{Type scope}
+%
+%A type consists of a number of members, these can be either functions or constants.
+%Consider the following type definition:
+%
+%\codesample{typescope1.junta}
+%
+%In the first line a type, \type{MyType}, is defined, with a constructor taking one
+%argument, \variable{a}. \type{MyType} has three members, a constant (\constant{aConstant})
+%and two methods (\constant{aMethodA} and \constant{aMethodB}). Unlike constants defined
+%outside of types, which exist in the global scope, type members can only be accessed by
+%using the dot-operator on an instance of that type.
+%
+%When constructing the type in the last line (\texttt{\type{MyType}[\literal{5}]})
+%an instance is returned, in which the value $5$ is assigned to \variable{a}.
+%At construction all constants are evaluated, meaning that in the example
+%the constant \constant{aConstant} is evaluated to $15 / \variable{a} = 15 / 5 = 3$.
+%
+%Using the dot-operator, the method \constant{aMethodB} is called on the instance of
+%\type{MyType} with $2$ as an argument. In the definition of this method, we use the
+%\keyword{this}-keyword to refer to the current instance, in order to call another
+%method, \constant{aMethodA}. This is in fact unnecessary, since the
+%\constant{aMethodB}-method is freely accessible within the type scope anyway. The
+%\keyword{this}-keyword has other more useful uses, such as passing the current
+%instance to other functions or constructors. In the \constant{aMethodA}-method
+%the sum of the constant \constant{aConstant} (this time accessed without the
+%\keyword{this}-keyword), the constructor parameter \variable{a}, and the function
+%parameter \variable{b} is evaluated and returned.
+%
+%Each type method can be thought of as having a reference to the type scope of an
+%instance, so that when the method is called, it has access to the constructor 
+%parameters along with type members.
 
-A type consists of a number of members, these can be either functions or constants.
-Consider the following type definition:
 
-\codesample{typescope1.junta}
+%\subsubsection{Let-expressions}
+%
+%\productname{} only supports \emph{single assignment}. Single assignment is not assignment
+%in the traditional imperative sense, but rather a way of binding a value to a symbol in a
+%certain scope. This is done using \emph{let-expressions}. Using a let-expression creates a
+%new scope in which the declared variables are accessible. When leaving the scope the
+%variables are destroyed.
+%
+%The basic format of a let-expression is:
+%
+%\texttt{let VARIABLE1 = EXPRESSION1 in EXPRESSION2}
+%
+%In the example, the value of \texttt{EXPRESSION1} is assigned to \texttt{VARIABLE1}, which
+%is available in \texttt{EXPRESSION2}. Another example could be:
+%
+%\texttt{let VARIABLE1 = EXPRESSION1, VARIABLE2 = EXPRESSION2 in EXPRESSION3}
+%
+%In this example, the value of \texttt{EXPRESSION1} is assigned to \texttt{VARIABLE1}, and
+%the value of \texttt{EXPRESSION2} is assigned to \texttt{VARIABLE2}. Both \texttt{VARIABLE1}
+%and \texttt{VARIABLE2} are available in \texttt{EXPRESSION3} and only in \texttt{EXPRESSION3}.
 
-In the first line a type, \type{MyType}, is defined, with a constructor taking one
-argument, \variable{a}. \type{MyType} has three members, a constant (\constant{aConstant})
-and two methods (\constant{aMethodA} and \constant{aMethodB}). Unlike constants defined
-outside of types, which exist in the global scope, type members can only be accessed by
-using the dot-operator on an instance of that type.
-
-When constructing the type in the last line (\texttt{\type{MyType}[\literal{5}]})
-an instance is returned, in which the value $5$ is assigned to \variable{a}.
-At construction all constants are evaluated, meaning that in the example
-the constant \constant{aConstant} is evaluated to $15 / \variable{a} = 15 / 5 = 3$.
-
-Using the dot-operator, the method \constant{aMethodB} is called on the instance of
-\type{MyType} with $2$ as an argument. In the definition of this method, we use the
-\keyword{this}-keyword to refer to the current instance, in order to call another
-method, \constant{aMethodA}. This is in fact unnecessary, since the
-\constant{aMethodB}-method is freely accessible within the type scope anyway. The
-\keyword{this}-keyword has other more useful uses, such as passing the current
-instance to other functions or constructors. In the \constant{aMethodA}-method
-the sum of the constant \constant{aConstant} (this time accessed without the
-\keyword{this}-keyword), the constructor parameter \variable{a}, and the function
-parameter \variable{b} is evaluated and returned.
-
-Each type method can be thought of as having a reference to the type scope of an
-instance, so that when the method is called, it has access to the constructor 
-parameters along with type members.
-
-\subsubsection{Inheritance}
-
-\productname{} supports single inheritance between types. An inheriting type, will
-inherit all the members of its super type(s) (if \type{C} extends \type{B}, which
-extends \type{A}, then \type{C} inherits all members from both \type{B} and \type{A}).
-This also introduces the \keyword{super}-keyword, which can be used to access members
-in superclasses. The following example shows how inheritance works:
-
-\codesample{typescope2.junta}
-
-\productname{} doesn't have an \keyword{abstract}-keyword for type definitions, only
-for constant/function definitions. A type is implicitly marked as abstract if it has
-unimplemented abstract members. In the above example the type \type{A} is abstract,
-since because it's member, \constant{constantA}, is abstract. Likewise, the type
-\type{B} is abstract because it extends \type{A}, but doesn't implement the abstract
-member of \type{A}. The type \type{C} on the other hand is not abstract, since it
-implements the abstract constant. Abstract types can't be constructed, albeit the
-constructor for an abstract type has to be used when extending the type (after the
-\keyword{extends}-keyword).
-
-\subsubsection{Lambda expression scope}
-
-When a lambda expression is created, a reference to the scope it was created in
-is saved with it. This is known as a closure, and means that a lambda
-expression may access variables outside of its own scope. The accessible
-variables are the variables that were available at the time of the creation of
-the lambda expression.
-
-Consider the following example:
-
-\codesample{closuredef.garry}
-
-A function \function{getAdder}, which takes one argument (\variable{a}) and
-returns a lambda expression, is defined. Notice how \variable{a} is used within
-the lambda expression. This means that when the lambda expression is created, it
-must remember the value of the variables that exist in the scope, in which it is
-created. The use of the \function{getAdder}-function could look like this:
-
-\codesample{closureuse.garry}
-
-In the first line \function{getAdder} is called with the argument, $25$. A new scope, $A$,
-is created, in which the variable \variable{a} is assigned the value $25$. Then the function
-expression is evaluated, which results in a new lambda expression (with a reference to scope $A$).
-This is returned and assigned to \variable{adder} in line 1 of the above example.
-
-In the second line the \variable{adder} is called as a function, which means that a new scope, $B$,
-is created, in which the variable \variable{b} is assigned the value $5$. The important part is
-that $B$'s parent scope is set to $A$ (which is saved with the lambda expression). The expression
-(the right side of the lambda expression) is then evaluated. First the \variable{a}-variable is
-encountered. The interpreter first searches the $B$-scope for \variable{a}, and when unsuccessful,
-searches the parent-scope, $A$, for \variable{a}. In $A$ the variable \variable{a} holds the value
-$25$, and this is returned. Then the $B$-scope is searched for the \variable{b}-variable, and the value
-$5$ is returned. The two integers are added, and the final return-value of the lambda-expression
-ends up being $30$.
-
-\subsubsection{Let-expressions}
-
-\productname{} only supports \emph{single assignment}. Single assignment is not assignment
-in the traditional imperative sense, but rather a way of binding a value to a symbol in a
-certain scope. This is done using \emph{let-expressions}. Using a let-expression creates a
-new scope in which the declared variables are accessible. When leaving the scope the
-variables are destroyed.
-
-The basic format of a let-expression is:
-
-\texttt{let VARIABLE1 = EXPRESSION1 in EXPRESSION2}
-
-In the example, the value of \texttt{EXPRESSION1} is assigned to \texttt{VARIABLE1}, which
-is available in \texttt{EXPRESSION2}. Another example could be:
-
-\texttt{let VARIABLE1 = EXPRESSION1, VARIABLE2 = EXPRESSION2 in EXPRESSION3}
-
-In this example, the value of \texttt{EXPRESSION1} is assigned to \texttt{VARIABLE1}, and
-the value of \texttt{EXPRESSION2} is assigned to \texttt{VARIABLE2}. Both \texttt{VARIABLE1}
-and \texttt{VARIABLE2} are available in \texttt{EXPRESSION3} and only in \texttt{EXPRESSION3}.
-
-Destructive assignments are not possible \productname{}, meaning that it isn't possible to 
-reassign a variable. It is however possible to hide a variable.
-Consider the following expression:
-
-\codesample{lethiding.garry}
-
-The value of this expression is $13$. This is because within the \texttt{\variable{x} + 2}-expression
-the \variable{x}-variable evaluates to $6$. But in the outer expression \variable{x} evaluates to
-$5$.
-
-Nested \emph{let}-scopes are possible. Consider for instance:
-
-\codesample{nestedlet.garry}
-
-In the inner scope, both \variable{x} and \variable{y} are available. This is of course equivalent
-to:
-
-\codesample{nestedlet2.garry}
 
 
 \input{content/design/abstractsyntax}

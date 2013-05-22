@@ -6,7 +6,7 @@ concern ourselves with operator precedence and so forth.
 
 \subsubsection{Syntactic categories}
 The abstract syntax of programming languages is defined as
-follows\cite[pg. 27]{tt-hh}:
+follows\cite[p. 27]{tt-hh}:
 
 \begin{dlist}
   \item A collection of syntactic categories
@@ -28,11 +28,11 @@ Table \ref{table:syn-cat} shows the syntactic cateogries for
       $E \in$ & \textbf{Expression}    \\
       $P \in$ & \textbf{Pattern}       \\
       $L \in$ & \textbf{List}          \\
-      $X \in$ & \textbf{Variable list} \\
+      $X \in$ & \textbf{VarList}       \\
       $Y \in$ & \textbf{Coordinate}    \\
       $Z \in$ & \textbf{Direction}     \\
-      $C \in$ & \textbf{Constant}      \\
-      $T \in$ & \textbf{Type}          \\
+      $C \in$ & \textbf{ConstantNames}      \\
+      $T \in$ & \textbf{TypeNames}          \\
       $D_{G} \in$ & \textbf{Global definition}   \\
       $D_{M} \in$ & \textbf{Member definition}   \\
       \hline
@@ -54,6 +54,9 @@ The type environment is defined by:
   \mathbf{EnvT} = \mathbf{TypeNames} \rightharpoonup \mathbf{TypeValues}
 \]
 
+A concrete member is defined as $env_{T} \in \mathbf{EnvT}$.
+
+
 The constant environment is defined by:
 
 \[
@@ -61,11 +64,16 @@ The constant environment is defined by:
   \times \mathbf{VarList}
 \]
 
+A concrete member is defined as $env_{C} \in \mathbf{EnvC}$.
+
 The variable environment is defined by:
 
 \[
   \mathbf{EnvV} = \mathbf{Variable} \rightharpoonup \mathbf{Values}
 \]
+
+
+A concrete member is defined as $env_{V} \in \mathbf{EnvV}$.
 
 \begin{align*}
  \mathbf{Values} = \mathbf{Integers} \cup \mathbf{Strings} \cup \mathbf{Lists}
@@ -73,9 +81,17 @@ The variable environment is defined by:
  \cup\; \mathbf{TypeValues} \cup \mathbf{FunctionValues} \cup \mathbf{ObjectValues} 
  \cup \mathbf{Booleans}
 \end{align*}
+
+\[
+  \mathbf{ListValues} = \mathbf{Integers} \times \mathbf{Elements}
+\]
+
+\[
+  \mathbf{Elements} = \mathbf{Integers} \rightharpoonup \mathbf{Values}
+\]
  
 \[
-  \mathbf{FunctionValue} = \mathbf{VarLists} \times \mathbf{Expressions} \times
+  \mathbf{FunctionValues} = \mathbf{VarLists} \times \mathbf{Expressions} \times
   \mathbf{EnvV} \times \mathbf{EnvC}
 \]
 
@@ -84,9 +100,11 @@ The variable environment is defined by:
   \mathbf{D_{M}} \times \mathbf{List} \times \mathbf{TypeValues }
 \]
 
+A concrete member is defined as $t \in \mathbf{TypeValues}$.
+
 \[
   \mathbf{ObjectValues} = \mathbf{TypeValues} \times \mathbf{EnvC} \times
-  \mathbf{EnvV}
+  \mathbf{EnvV} \times \mathbf{ObjectValues}
 \]
 
 

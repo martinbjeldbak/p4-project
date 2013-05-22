@@ -35,7 +35,7 @@ public class Label extends Widget{
 	public int getMaxHeight(){ return getMinHeight(); }
 	
 	@Override
-	public void draw( Graphics g ){
+	public void handleDraw( Graphics g ){
 		g.setFont( font() );
 		g.setColor( Color.black );
 		g.drawString( text, 0, 0 );
