@@ -206,7 +206,12 @@ detected. An example of a tail recursive function, a small method
 \todo{Pygmentize below (commented out) code sample}
 %\codesample{tailrecursion.junta}
 
-This simple function adds the first $N$ integers, where $N$ is defined as the first parameter to the function. The tail recursion optimizer converts the recursive function into a loop if it detects a trail recursion construction, guaranteeing stack overflow prevention when using tail recursion.
+This simple function adds the first $N$ integers, where $N$ is defined as the first parameter to the function. The tail recursion optimizer converts the recursive function into a loop if it detects a trail recursion construction, guaranteeing stack overflow prevention when using tail recursion. How tail recursion is detected by the function when it is called is shown by the pseudocode below:
+
+\input{figures/tailrecursionalgorithm}
+
+Here it is important to note that the type \classref{CallValue} is an internal \classref{Value}
+\todo{Finish this\ldots}
 
 \subsection{Pattern evaluation}
 Patterns in \productname{} are a very important feature, being used
