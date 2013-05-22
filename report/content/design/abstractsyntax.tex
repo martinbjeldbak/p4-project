@@ -152,7 +152,7 @@ of values whereas the $\mathbf{TypeValues}$ on the left-hand side is the current
 type's set of values.  The list in the definition is in fact the super type's
 parameters whereas the variable list is the current type's formal parameters.
 
-\textbf{Definition} (Object values) \hspace{0.5cm} The set of object values is
+\textbf{Definition} (Object values) \hspace{0.5cm} The set of object values (an instantiated $\mathbf{TypeValue}$) is
 defined as follows:
 
 \[
@@ -162,7 +162,7 @@ defined as follows:
 
 An object value consists of the set of type values, the set of constant
 environment, the set of variable environments and the set of object values. This
-is yet another recursively defined definition.  \todo{And why is that? :)}
+is yet another recursively defined definition, because an object value can have a parent object value, this is the case when an object value extends another object value. 
 
 
 \subsubsection{Formulation rules}
