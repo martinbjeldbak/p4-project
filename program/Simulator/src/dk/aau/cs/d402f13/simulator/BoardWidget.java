@@ -269,12 +269,14 @@ public abstract class BoardWidget extends Widget {
     	
     	//Check for winCondition
     	//TODO: make sure waitForPlayer is not shown?
-    	Player current = game.getGame().getCurrentPlayer();
     	if( previous.winCondition( game.getGame() ) ){
     		showMessage( gameEnded, previous.getName() + " won" );
     		return;
     	}
-    	else if( current.winCondition( game.getGame() ) ){
+    	
+    	game.nextTurn();
+    	Player current = game.getGame().getCurrentPlayer();
+		if( current.winCondition( game.getGame() ) ){
     		showMessage( gameEnded, current.getName() + " won" );
     		return;
     	}
@@ -282,6 +284,7 @@ public abstract class BoardWidget extends Widget {
     		showMessage( gameEnded, "It's a draw" );
     		return;
     	}
+		
     	
     	if( game.getGame().getActions().length == 0 ){
     		showMessage( gameEnded, "No actions to do" );
