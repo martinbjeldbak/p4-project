@@ -1,41 +1,118 @@
 \chapter{Design}
 \label{chap:design}
 
+In this chapter we present the design of our programming language
+(\productname{}). The abstract syntax of \productname{} will be presented in
+\secref{sec:abstractsyntax} followed by the lexical structure of programs in
+\secref{sec:lexicalstructure}. We also present the different expressions and
+their grammar in \secref{sec:expressions} followed by the different definitions
+and their grammar in \secref{sec:definitions}. Futhermore, we introduce patterns
+in \secref{sec:patterns} which are very important in \productname{}.  Finally,
+we present the predefined types and constants of \productname{} in
+\secref{sec:predefined} where the standard and game environments are presented.
+
+We begin this chapter by giving an example of a game implemented in
+\productname{}:
 
 \subsection*{Code example}
 \label{codesample}
 
-We start out by giving an example of a game implemented in \productname{}. \productname{} is a purely functional object-oriented programming language designed explicitly for creating board games. We have developed \productname{} by first brainstorming and writing a bunch of
-game implementations using a ``programming language'' which felt the most natural to us. By this we mean that we were actually using the programming
-language before we had even constructed it. We began by writing programs in the unfinished language to try to find out how it should be built and what would be the easiest to write. The following is a result of this and it is an example of an implementation of the board game Noughts and Crosses:
+The following is an example of how a program is written in \productname{}. It is
+an implementation of the board game Noughts and Crosses:
 
 \codesample{noughtandcrosses.game}
 
-We will now go through the code sample briefly and introduce some of the important concepts
-of the \productname{}-language, which will be further described in the rest of this chapter and in \chapref{chap:implementation}.
-The first thing that happens is a type \keyword{type} \type{NacGame}[] is declared. The types of \productname{} can be compared 
-to classes as seen in other object oriented programming languages. The square brackets in \productname{} are used to encapsulate parameters and to encapsulate the members of lists. \keyword{type} \type{NacGame}[] extends the \type{Game} type which
-is a build-in type in Junta. The extends keyword is similar to the extends keyword of Java, and means the  \type{NacGame}[] type inherits members of the \type{Game} type. \type{Game}'s constructor takes the title of the game as input and it contains lots of useful constants and functions which are described in \secref{sec:predefined}. Constants and functions can be seen as sub-programs similar to methods. They distinguish themselves from each other by the fact that constants can't take any parameters but functions can. Functions and constants are further explained in \secref{sec:constantdefinitions}.  One of the build-in constants is \constant{players} which contains a list of players. When a game created in \productname{} is played, the turn is shifted between each of the players in the list provided by the 
-\constant{players} constant. This is unless the turn order is specifically modified by the constant \constant{turnOrder}, which is another build-in
-constant in the \type{Game} type. This however is not necessary in a Noughts and Crosses games, since the turn order is very simple. Also \type{Game} contains the constant \constant{initialBoard} which in this case is assigned a grid board of $3 \times 3$ squares. In other languages the override keyword is used when implementing methods from a super-class but in our case when implementing a constant/function from a super-type this is not used, since the override functionality already exists in the define keyword.
+\productname{} is a purely functional object-oriented programming language
+designed explicitly for creating board games. We have developed \productname{}
+by first brainstorming and writing a bunch of game implementations using a
+``programming language'' which felt the most natural to us. This means that we 
+were actually using the programming language before we had even constructed
+it. We began by writing programs in the unfinished language to try to find out
+how it should be built and what would be the easiest to write. 
 
-A second type, \type{NacPlayer}, is declared which extends the build-in \productname{}-type \type{Player}. The Player type
-takes as input the name of the player and contains three important functions: \function{winCondition}, \function{tieCondition} and 
-\function{actions}. As the name indicate the \function{winCondition} function checks if the current player is in a win condition and returns
-a boolean value: true or false. \function{winCondition} takes a game-object as input. In Noughts and Crosses the win condition is obtained if a player has three pieces in a row, in either a vertical, horizontal or diagonal line. This is in \productname{} specified using ``patterns'' which is explained in \secref{sec:patterns}. The \function{tieCondition} function checks if a tie condition is obtained and returns a boolean value: true or false. The tie condition is achieved whenever the board is full. This is specified using the build-in function \function{isFull}. The last function \function{actions} also takes as input a game object and contains a list of actions. In this case the only possible action is the \function(addAction) function which makes it possible to add a piece type of type this, which is the current player's piece type (crosses or noughts), to an empty square on the board.
+In the following we will go through the \csref{noughtandcrosses.game}
+and introduce some of the important concepts of \productname{}. These will be
+further described in the rest of this chapter and in
+\chapref{chap:implementation}.
 
-At first peek the code example might seem blurry and complicated. This is mostly due to the great use of build-in
-types, functions and constants. These build-in's however are implemented to make the life of the programmer easier, since 
-he doesn't have to implement all the functionality himself. In the following chapter, we are going to describe the design of \productname{} in a
-more detailed manner.  
+The very first thing that is visible in \csref{noughtandcrosses.game} are the
+two lines of comments. Comments are made with two forwardslashes. Comments are
+described further in \secref{sec:comments}.
 
+The next thing that happens is the declaration of a type \keyword{type}
+\type{NacGame}[].  The types of \productname{} can be compared to classes as
+seen in other object-oriented programming languages. The square brackets in
+\productname{} are used to encapsulate parameters and to encapsulate the members
+of lists.  \keyword{type} \type{NacGame}[] extends the super type \type{Game}
+which is a built-in type in \productname{}. The \keyword{extends} keyword is
+similar to the extends keyword of Java, and means the \type{NacGame}[] type
+inherits members of the \type{Game} type.  \type{Game}'s constructor takes the
+title of the game as input and it contains many useful constants and
+functions which are described further in \secref{sec:predefined}. 
+
+Constants and functions can be thought of as subprograms similar to methods.
+They distinguish themselves from each other by the fact that constants cannot
+take any parameters whereas functions can. Functions and constants are further
+explained in \secref{sec:constantdefinitions}. One of the built-in constants is
+\constant{players} which contains a list of players. In the code sample at line
+four we see how the constant is defined. When a game, created in
+\productname{}, is played, the turn is shifted between each of the players in
+the list provided by the \constant{players} constant. This is true, unless the turn
+order is specifically modified by the constant \constant{turnOrder}, which is
+another built-in constant in the \type{Game} type. This however is not necessary
+in a Noughts and Crosses game, since the turn order is very simple. For instance
+if the first player must be able to make three turns before the second player
+can make one, that would be defined in the \constant{turnOrder}.
+
+Furthermore, \type{Game} contains the constant \constant{initialBoard} which in
+this case is assigned a grid board (another built-in type that takes the height
+and width of the board as parameters) of $3 \times 3$ squares. In other
+programming languages the override keyword is used when implementing methods
+from a super class but in \productname{} the override functionality
+already exists in the define keyword. For instance in
+\csref{noughtandcrosses.game} \constant{players} and \constant{initialBoard} are
+overridden in line four and eight, respectively.
+
+%A second type \type{NacPlayer}, is declared which extends the built-in
+%\productname{} type \type{Player}. The \type{Player} type takes as input the name of
+%the player and contains three important functions: \function{winCondition},
+
+The next thing that is important in the code sample are the three functions: 
+\function{winCondition}, \function{tieCondition} and \function{actions}. 
+
+As the name indicates the \function{winCondition} checks if the current player
+is in a winning state and returns a boolean value; true or false.
+\function{winCondition} takes a game object as input. In Noughts and Crosses the
+win condition is obtained if a player has three of his pieces in a row, in
+either a vertical, horizontal or diagonal line. In \productname{} this is
+specified by using what we call ``patterns'' which are explained in
+\secref{sec:patterns}. Patterns begin and end with forwardslashes. A pattern for
+\function{winCondition} can be seen through line 13 and 14.
+
+The \function{tieCondition} function checks if a tie condition is obtained and
+returns a boolean value; true or false. The tie condition is achieved whenever
+the board is full. This is specified using the built-in function;
+\function{isFull}. 
+
+The last function \function{actions} also takes as input a game object and
+contains a list of actions. In this case the only possible action is the
+\function{addAction} function which makes it possible to add a piece to the
+board of type \keyword{this}, which is the current player's piece type (crosses
+or noughts), to an empty square on the board.
+
+At first sight the code sample will look complicated. This is mostly due to the
+overwhelming use of built-in functionality. This is however implemented to make
+it easier and faster for programmers to write code in \productname{}, since they
+don't have to implement all the functionality themselves.
 
 \subsection*{Type system}
 
-In \secref{sec:typesystemanalysis} we analysed the two main type system approaches. 
-We chose the dynamic type system due to the fact that it increases the writability of our programming language. As seen in the
-above code example \secref{codesample} a Noughts and Crosses game can be created in only approximately 20 lines
-of code. The types of variables, lists etc. are determined at compile time
+In \secref{sec:typesystemanalysis} we analysed the two main type system
+approaches.  We chose the dynamic type system due to the fact that it increases
+the writability of our programming language. As seen in the above code example
+\secref{codesample} a Noughts and Crosses game can be created in only
+approximately 20 lines of code. The types of variables, lists etc. are
+determined at compile time
 
 %dynamic (why?)
 %inheritance
@@ -43,96 +120,16 @@ of code. The types of variables, lists etc. are determined at compile time
 %visibility (data)
 %casting (super?)
 
-
 \subsection*{Scope rules}
 
-A scope is the context in which one or more variables exist.
+A scope is the context in which one or more variables or constants exist. In
+\productname{} we for instance have different expressions with their own scopes
+where their variables live and die. By this we mean that when the scope of the
+expression ends, the variables within the scope cannot be accessed anymore.
+These expressions with scopes will be defined in \secref{sec:expressions}.
 
-%\subsubsection{The global scope}
-%
-%All named constants/functions defined outside of types exist in the global scope.
-%Also, it is not necessary to define a function before use, so something
-%like the following is valid:
-%
-%\codesample{usebeforedefinition.junta}
-%
-%All types also exist in the global scope, and again it isn't necessary to define
-%a type before using (extending or constructing):
-%
-%\codesample{typebeforetype.junta}
-%
-%\subsubsection{Function scope}
-%Consider a function definition such as:
-%
-%\codesample{functiondef.garry}
-%
-%The variables \variable{a} and \variable{b} only exist within the function \function{max}.
-%When calling the function:
-%
-%\codesample{functioncall.garry}
-%
-%A new scope will be created and the values $5$ and $23$
-%are assigned to \variable{a} and \variable{b}, respectively.
-
-%Named functions defined outside of type definitions (such as \function{max})
-%always exist in the global scope.
-
-%\subsubsection{Type scope}
-%
-%A type consists of a number of members, these can be either functions or constants.
-%Consider the following type definition:
-%
-%\codesample{typescope1.junta}
-%
-%In the first line a type, \type{MyType}, is defined, with a constructor taking one
-%argument, \variable{a}. \type{MyType} has three members, a constant (\constant{aConstant})
-%and two methods (\constant{aMethodA} and \constant{aMethodB}). Unlike constants defined
-%outside of types, which exist in the global scope, type members can only be accessed by
-%using the dot-operator on an instance of that type.
-%
-%When constructing the type in the last line (\texttt{\type{MyType}[\literal{5}]})
-%an instance is returned, in which the value $5$ is assigned to \variable{a}.
-%At construction all constants are evaluated, meaning that in the example
-%the constant \constant{aConstant} is evaluated to $15 / \variable{a} = 15 / 5 = 3$.
-%
-%Using the dot-operator, the method \constant{aMethodB} is called on the instance of
-%\type{MyType} with $2$ as an argument. In the definition of this method, we use the
-%\keyword{this}-keyword to refer to the current instance, in order to call another
-%method, \constant{aMethodA}. This is in fact unnecessary, since the
-%\constant{aMethodB}-method is freely accessible within the type scope anyway. The
-%\keyword{this}-keyword has other more useful uses, such as passing the current
-%instance to other functions or constructors. In the \constant{aMethodA}-method
-%the sum of the constant \constant{aConstant} (this time accessed without the
-%\keyword{this}-keyword), the constructor parameter \variable{a}, and the function
-%parameter \variable{b} is evaluated and returned.
-%
-%Each type method can be thought of as having a reference to the type scope of an
-%instance, so that when the method is called, it has access to the constructor 
-%parameters along with type members.
-
-
-%\subsubsection{Let-expressions}
-%
-%\productname{} only supports \emph{single assignment}. Single assignment is not assignment
-%in the traditional imperative sense, but rather a way of binding a value to a symbol in a
-%certain scope. This is done using \emph{let-expressions}. Using a let-expression creates a
-%new scope in which the declared variables are accessible. When leaving the scope the
-%variables are destroyed.
-%
-%The basic format of a let-expression is:
-%
-%\texttt{let VARIABLE1 = EXPRESSION1 in EXPRESSION2}
-%
-%In the example, the value of \texttt{EXPRESSION1} is assigned to \texttt{VARIABLE1}, which
-%is available in \texttt{EXPRESSION2}. Another example could be:
-%
-%\texttt{let VARIABLE1 = EXPRESSION1, VARIABLE2 = EXPRESSION2 in EXPRESSION3}
-%
-%In this example, the value of \texttt{EXPRESSION1} is assigned to \texttt{VARIABLE1}, and
-%the value of \texttt{EXPRESSION2} is assigned to \texttt{VARIABLE2}. Both \texttt{VARIABLE1}
-%and \texttt{VARIABLE2} are available in \texttt{EXPRESSION3} and only in \texttt{EXPRESSION3}.
-
-
+Furthermore, it is important to know that \productname{} uses statical scoping.
+Scope rules where described in \secref{sec:anal-scoperules}.
 
 \input{content/design/abstractsyntax}
 \input{content/design/lexicalstructure}
@@ -141,11 +138,3 @@ A scope is the context in which one or more variables exist.
 \input{content/design/patterns}
 \input{content/design/predefined}
 
-%\input{content/design/grammar}
-%\input{content/design/types}
-%\input{content/design/scoping}
-%\input{content/design/operators}
-%\input{content/design/functions}
-%\input{content/design/patterns}
-%\input{content/design/structuraloperationalsemantics}
-%\input{content/design/big-step-semantic}
