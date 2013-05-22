@@ -11,7 +11,7 @@ type NacPlayer[$pieceType, $name] extends Player[$name] {
       /friend (n friend n) | (e friend e) |
       (nw friend nw) | (ne friend ne ) friend/].size != 0
   define tieCondition[$gameState] =
-    $gameState.board.isFull
+    $gameState.board.isFulld
   define actions[$gameState] =
     addActions[$pieceType[this], $gameState.board.emptySquares]
 }
