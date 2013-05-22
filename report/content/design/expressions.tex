@@ -89,6 +89,61 @@ added to the resulting \type{List}-value. When a \type{List}-value is created, i
 altered further (because of the no-side-effects condition). All operations on that \type{List}-value
 will create new \type{List}-values, and leave the original value intact.
 
+\subsubsection{Big-step semantics}
+
+The semantics presented in \tableref{semantic:lists} are the transition rules
+for lists.
+
+\begin{table}[ht]
+  \begin{center}
+    \begin{tabular*}{\textwidth}{l p{\textwidth}}
+      \hline \\
+      \hspace{0.5cm} $[\mbox{LIST}_{\mbox{ACCESS-1}}]$ & \infrule{env_{T}, env_{C}, env_{V} \vdash
+      E\; \ra v_2  \qquad env_{T}, env_{C}, env_{V} \vdash L\; \ra v_3}
+      {env_{T}, env_{C}, env_{V} \vdash E\; L\; \ra v_1} \\
+       & where $v_2 = \left(l_1, elem_1\right)$ \\
+       & and $v_3 = (l_2,elem_2)$ \\
+       & and $l_2 = 1$ \\
+       & and $i = elem_2 =0$ \vspace{0.1cm} \\
+       & and $v_1 = \left\{
+	 \begin{array}{l l}
+           elem_1\; i         & \quad \text{if $i \geq 0$}\\
+           elem_1\; (l_1 + i) & \quad \text{if $i \geq 0$}
+	 \end{array} \right.$ \\
+	 
+      \hspace{0.5cm} $[\mbox{LIST}_{\mbox{ACCESS-2}}]$ & \infrule{env_{T}, env_{C}, env_{V} \vdash
+      E\; \ra v_2  \qquad env_{T}, env_{C}, env_{V} \vdash L\; \ra v_3}
+      {env_{T}, env_{C}, env_{V} \vdash E\; L\; \ra v_1} \\
+       & where $v_2 = \left(l_1, elem_1\right)$ \\
+       & and $v_3 = (l_2,elem_2)$ \\
+       & and $l_2 = 2$ \vspace{0.1cm} \\
+       & and $i = \left\{
+	 \begin{array}{l l}
+           elem_2\; 0         & \quad \text{if $elem_2\; 0 \geq 0$}\\
+           l_1 + elem_2\; 0   & \quad \text{if $elem_2\; 0 < 0$}
+	 \end{array} \right.$ \vspace{0.1cm} \\
+       & and $j = \left\{
+	 \begin{array}{l l}
+           elem_2\; 1         & \quad \text{if $elem_2\; 1 \geq 0$}\\
+           l_1 + elem_2\; 1   & \quad \text{if $elem_2\; 1 < 0$}
+	 \end{array} \right.$ \vspace{0.1cm} \\
+       & and $elem_3\; z = \left\{
+	 \begin{array}{l l}
+           elem_1\; i+1       & \quad \text{if $z = 0$}\\
+	   \hspace{1cm} \vdots &   \\
+           elem_1\; i+n-1     & \quad \text{if $z = n-1$}
+	 \end{array} \right.$ \vspace{0.1cm} \\
+       & and $v_1 = (n=j-i+1, elem_3)$ \\
+       & \\
+       \hline \\
+    \end{tabular*}
+    \capt{Transition rules for let expressions.}
+    \label{semantic:lists}
+  \end{center}
+\end{table}
+
+\todo{explain semantics for lists.}
+
 \subsection{Let expressions}
 \label{sec:letexpressions}
 
@@ -105,37 +160,55 @@ assignments assigns the value of an expression to a variable name. These
 variables can then be used in the expression after the \texttt{in}-keyword.
 After the evaluation of the let-expression, the variables cease to exist.
 
-\todo{maybe the scope stuff about let expressions here}
+\subsubsection{Informal scope rules for let expressions}
+
+Destructive assignments are not possible \productname{}, meaning that it isn't possible to 
+reassign a variable. It is however possible to hide a variable.
+Consider the following expression:
+
+\codesample{lethiding.garry}
+
+The value of this expression is $13$. This is because within the \texttt{\variable{x} + 2}-expression
+the \variable{x}-variable evaluates to $6$. But in the outer expression \variable{x} evaluates to
+$5$.
+
+Nested \emph{let}-scopes are possible. Consider for instance:
+
+\codesample{nestedlet.garry}
+
+In the inner scope, both \variable{x} and \variable{y} are available. This is of course equivalent
+to:
+
+\codesample{nestedlet2.garry}
 
 \subsubsection{Big-step semantics}
 
-The semantics presented in \tableref{semantic:let} are the transition rules for the let expression.
-This is transition rule is defined recursively to best illustrate the functionality of the expression.
+The semantics presented in \tableref{semantic:let} are the transition rules for
+the let expression.  This is transition rule is defined recursively to best
+illustrate the functionality of the expression.
 
 \begin{table}[ht]
-  \begin{center}
-    \begin{tabular*}{\textwidth}{l l}
-      \hline \\
-      $[\mbox{LET-1}]$ & \infrule{env_{T}, env_{C}, env_{V}[x_{1} \mapsto v_{1}] \vdash
-      \texttt{let}\; x_{2} = E_{2}, \cdots,\; x_{k} = E_{k}\; \texttt{in}\;
-      E_{k+1} \ra v_{k+1}}
-      {env_{T}, env_{C}, env_{V} \vdash \texttt{let}\; x_{1} = E_{1},\; x_{2} = E_{2},
-      \cdots, x_{k} = E_{k}\; \texttt{in}\; E_{k+1} \ra v_{k+1}} \\
-       & where $env_{T}, env_{C}, env_{V} \vdash E_{1} \ra v_{1}$\\
-       & and $k \geq 2$ \\
-      
-       $[\mbox{LET-2}]$ & \infrule{env_{T}, env_{C}, env_{V}[x_{1} \mapsto v_{1}] 
-      \vdash E_{2} \ra v_{2}}
-      {env_{T}, env_{C}, env_{V} \vdash \texttt{let}\; x_{1} = E_{1}\; \texttt{in}\; E_{2} \ra
-      v_{2}} \\
-       & where $env_{T}, env_{C}, env_{V} \vdash E_{1} \ra v_{1}$ \\
-       & and $k < 2$ \\
-       & \\
-       \hline \\
-    \end{tabular*}
-    \capt{Transition rules for let expressions.}
-    \label{semantic:let}
-  \end{center}
+  \begin{tabular*}{\textwidth}{l l}
+    \hline \\
+    \hspace{1.2cm} $[\mbox{LET-1}]$ & \infrule{env_{T}, env_{C}, env_{V}[x_{1} \mapsto v_{1}] \vdash
+    \texttt{let}\; x_{2} = E_{2}, \cdots,\; x_{k} = E_{k}\; \texttt{in}\;
+    E_{k+1} \ra v_{k+1}}
+    {env_{T}, env_{C}, env_{V} \vdash \texttt{let}\; x_{1} = E_{1},\; x_{2} = E_{2},
+    \cdots, x_{k} = E_{k}\; \texttt{in}\; E_{k+1} \ra v_{k+1}} \\
+    & where $env_{T}, env_{C}, env_{V} \vdash E_{1} \ra v_{1}$\\
+    & and $k \geq 2$ \\
+    
+    \hspace{1.2cm} $[\mbox{LET-2}]$ & \infrule{env_{T}, env_{C}, env_{V}[x_{1} \mapsto v_{1}] 
+    \vdash E_{2} \ra v_{2}}
+    {env_{T}, env_{C}, env_{V} \vdash \texttt{let}\; x_{1} = E_{1}\; \texttt{in}\; E_{2} \ra
+    v_{2}} \\
+    & where $env_{T}, env_{C}, env_{V} \vdash E_{1} \ra v_{1}$ \\
+    & and $k < 2$ \\
+    & \\
+    \hline \\
+  \end{tabular*}
+  \capt{Transition rules for let expressions.}
+  \label{semantic:let}
 \end{table}
 
 The transition rules for $[\mbox{LET-1}]$ is recursively because we must
@@ -186,24 +259,53 @@ Lambda expressions are expressions that evaluate to anonymous functions. In
 \grule{lambda\_expr}{\gter{\#} \gcat varlist \gcat \gter{=>} \gcat expression}
 \end{ebnf}
 
-\todo{!!!!!!}
+When a lambda expression is created, a reference to the scope it was created in
+is saved with it. This is known as a closure, and means that a lambda
+expression may access variables outside of its own scope. The accessible
+variables are the variables that were available at the time of the creation of
+the lambda expression.
+
+Consider the following example:
+
+\codesample{closuredef.garry}
+
+A function \function{getAdder}, which takes one argument (\variable{a}) and
+returns a lambda expression, is defined. Notice how \variable{a} is used within
+the lambda expression. This means that when the lambda expression is created, it
+must remember the value of the variables that exist in the scope, in which it is
+created. The use of the \function{getAdder}-function could look like this:
+
+\codesample{closureuse.garry}
+
+In the first line \function{getAdder} is called with the argument, $25$. A new scope, $A$,
+is created, in which the variable \variable{a} is assigned the value $25$. Then the function
+expression is evaluated, which results in a new lambda expression (with a reference to scope $A$).
+This is returned and assigned to \variable{adder} in line 1 of the above example.
+
+In the second line the \variable{adder} is called as a function, which means that a new scope, $B$,
+is created, in which the variable \variable{b} is assigned the value $5$. The important part is
+that $B$'s parent scope is set to $A$ (which is saved with the lambda expression). The expression
+(the right side of the lambda expression) is then evaluated. First the \variable{a}-variable is
+encountered. The interpreter first searches the $B$-scope for \variable{a}, and when unsuccessful,
+searches the parent-scope, $A$, for \variable{a}. In $A$ the variable \variable{a} holds the value
+$25$, and this is returned. Then the $B$-scope is searched for the \variable{b}-variable, and the value
+$5$ is returned. The two integers are added, and the final return-value of the lambda-expression
+ends up being $30$.
 
 \subsubsection{Big-step semantics}
 
 The semantics presented in \tableref{semantic:lambda} is the transition rule for the lambda expression. 
 
 \begin{table}[ht]
-  \begin{center}
-    \begin{tabular*}{\textwidth}{l l c}
-      \hline \\
-      $[\mbox{LAMBDA}]$ & $env_{T}, env_{C}, env_{V} \vdash \texttt{\#} \; X\;
-      \texttt{=>}\; E \ra v$ & \hspace{1cm} where $v = \left(X, E, env_{V}, env_{C}\right)$ \\
-      & & \\
-      \hline
-    \end{tabular*}
-    \capt{Transition rules for lambda expressions.}
-    \label{semantic:lambda}
-  \end{center}
+  \begin{tabular*}{\textwidth}{l l c}
+    \hline \\
+    \hspace{0.5cm} $[\mbox{LAMBDA}]$ & $env_{T}, env_{C}, env_{V} \vdash \texttt{\#} \; X\;
+    \texttt{=>}\; E \ra v$ & \hspace{1cm} where $v = \left(X, E, env_{V}, env_{C}\right)$ \\
+    & & \\
+    \hline
+  \end{tabular*}
+  \capt{Transition rules for lambda expressions.}
+  \label{semantic:lambda}
 \end{table}
 
 The three environments ($env_{T}, env_{C}, env_{V}$) must be known before it is
@@ -239,6 +341,30 @@ a getter and a setter:
 
 The call to \constant{setMyData} does not change the state of the original instance of \type{MyType},
 instead it returns a new instance.
+
+\subsubsection{Big-step semantics}
+
+The semantics presented in \tableref{semantic:set} is the transition rules for
+set expressions.
+
+\begin{table}[ht]
+  \begin{tabular*}{\textwidth}{l l}
+    \hline \\
+    \hspace{1.5cm} $[\mbox{SET}]$ & \infrule{env_C, env_V, env_T \vdash E_1 \ra u_1 \quad
+    \ldots \quad env_C, env_V, env_T \vdash E_k \ra u_k}
+    {env_C, env_V, env_T \vdash \lag \texttt{set}\; x_1 = E_1, \ldots, x_k =
+    E_k \rag \ra v_1} \\
+    & where $env_v\; \texttt{this} = \left(t, env'_c, env'_v, v_2 \right)$ \\
+    & and $v_1 = \left( t, env'_c, env'_v, v_2\right)$ \\
+    & and $env''_v = env'_v \left[ x_1 \mapsto u_1, \ldots, x_k \mapsto u_k
+    \right]$ \\
+    & \\
+    \hline
+  \end{tabular*}
+  \capt{Transition rules for set expressions.}
+  \label{semantic:set}
+\end{table}
+
 
 \subsection{Operators and calls}
 \label{sec:operatorsandcalls}
@@ -292,6 +418,49 @@ The resulting parse tree, using the grammar of \productname{}, could look somwha
 like the tree in \figref{fig:parsetreesequences}.
 
 \input{figures/parsetreesequences}
+
+\subsubsection{Big-step semantics}
+
+The semantics presented in \tableref{semantic:callfun} is transition rules for
+function calls.
+
+\begin{table}[ht]
+  \begin{tabular*}{\textwidth}{l l}
+    \hline \\
+    \hspace{3cm} $[\mbox{CALL}_{\mbox{FUN}}]$ & \hspace{0.1cm} $env_C, env_V, env_T \vdash E \ra v_2$ \\
+                                & \hspace{0.1cm} $env_C, env_V, env_T \vdash L \ra v_3$ \vspace{-0.3cm} \\
+                                & \infrule{env'_C, env''_V, env_T \vdash E' \ra v_1}{env_C, env_V, env_T \vdash E\; L\; \ra v_1} \\
+	                        & where $v_2 = \left(X, E', env'_V, env'_C\right)$ \\
+                                & and $v_3 = \left(l, elem\right)$ \\
+	                        & and $env''_V = \left[x_1 \mapsto elem\; 1, \ldots, x_n \mapsto elem\; n \right]$ \\
+		                & \\
+                               \hline
+  \end{tabular*}
+  \capt{Transition rules for set expressions.}
+  \label{semantic:callfun}
+\end{table}
+
+\todo{explain call semantics.}
+
+The semantics presented in \tableref{semantic:memaccess} is the transition rule
+for member access.
+
+\begin{table}[ht]
+  \begin{tabular*}{\textwidth}{l l}
+    \hline \\
+    \hspace{3cm} $[\mbox{MEM}_{\mbox{ACCESS}}]$ & 
+    \infrule{env_C, env_V, env_T \vdash E \ra v_1}{env_C, env_V, env_T \vdash
+      E\texttt{.}C \rag \ra v_3} \\
+	                        & where $v_2 = \left(t, env'_C, env'_V, v_2 \right)$ \\
+                                & and $env'_C\; C = v_3$ \\
+		                & \\
+                               \hline
+  \end{tabular*}
+  \capt{Transition rules for set expressions.}
+  \label{semantic:memaccess}
+\end{table}
+
+\todo{explain member access semantics.}
 
 \subsubsection{Valid operands}
 \subsubsection{Boolean operators}

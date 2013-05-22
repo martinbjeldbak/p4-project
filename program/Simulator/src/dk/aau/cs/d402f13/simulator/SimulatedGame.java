@@ -10,6 +10,7 @@ import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
@@ -122,7 +123,10 @@ public class SimulatedGame extends BasicGame {
 	}
 	
 	private void handleSimulatorError( SimulatorError stdErr ){
-		showError( "Fatal fault in simulator", stdErr.getMessage() );
+		String msg = "At: " + stdErr.getLine() + ":" + stdErr.getColumn();
+		msg += "\n" + stdErr.getMessage();
+		
+		showError( "Fatal fault in simulator", msg );
 		stdErr.printStackTrace();
 	}
 	
@@ -216,7 +220,15 @@ public class SimulatedGame extends BasicGame {
 	}
 
 	@Override
-	public void update( GameContainer gc, int arg1 ) throws SlickException { }
+	public void update( GameContainer gc, int arg1 ) throws SlickException {
+		Input in = new Input(arg1); //TODO: what in constructor?
+		if( in.isKeyDown(Input.KEY_F5) )
+			try {
+				restartGame();
+			} catch (StandardError e) {
+				handleStandardError( e );
+			}
+	}
 
 	/**
 	 * Remove all progress and start at the beginning of the game

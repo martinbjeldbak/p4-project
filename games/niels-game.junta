@@ -1,0 +1,29 @@
+type NielsGame[] extends Game["Niels' spil!!!!"] {
+  define description = "MIT SPIL!!!"
+  define players = [VinderNiels[], TaberMartin[], HoboDude[]]
+  define turnOrder = [players[0], players[0], players[0], players[1], players[2]]
+  define initialBoard = GridBoard[5, 5]
+  define applyAction[$action] = if $action is MorphAction
+    then setBoard[$action.board]
+    else super.applyAction[$action]
+}
+
+type MyPiece[$owner] extends Piece[$owner] {
+  define actions[$game] = moveActions[this, $game.board.emptySquares]
+}
+
+type MyPlayer[$name] extends Player[$name] {
+  define actions[$game] = addActions[MyPiece[this], $game.board.emptySquares]
+  define winCondition[$game] =
+    $game.findSquares[/friend n friend e friend s friend/].size > 0
+  define tieCondition[$game] = $game.board.emptySquares == 0
+}
+
+type VinderNiels[] extends MyPlayer["Niels"] {
+}
+
+type TaberMartin[] extends MyPlayer["Martin"] {
+}
+
+type HoboDude[] extends MyPlayer["Elias"] {
+}
