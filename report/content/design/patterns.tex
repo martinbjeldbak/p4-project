@@ -23,7 +23,7 @@ This section covers how to use patterns and what to use them for. The operators 
 A pattern is checked on a particular square, and returns either true or false. An example of a pattern is \text{/n n e empty/}. This pattern can be checked on the board seen in \figref{patternboard} on the field \textbf{A1}. The pattern says ``go one square north, go one square north, go one square east, check if square is empty''. This means that the square \textbf{B3} will be checked for emptiness. Since the square is occupied by a piece, the pattern will return false if checked on \textbf{A1}. However, the same pattern checked on \textbf{C1} will return true since the square at \textbf{D3} is empty.
 \fig[scale=2]{patternboard}{A simple 4 X 4 board with 3 pieces}
 
-With this basic introduction to a simple pattern check, the table (insert ref and convert list below to a table) describes briefly how the different pattern operators work. For each operator, an example of the use in a context are given in \secref{sec:patternexamples}. Note that the description of patterns assumes a minor understanding of regular expressions, see (ref http://www.regular-expressions.info/).
+With this basic introduction to a simple pattern check, the table (insert ref and convert list below to a table) describes briefly how the different pattern operators work. For each operator, an example of the use in a context are given in \secref{sec:patternexamples}. Note that the description of patterns assumes a minor understanding of regular expressions, see \cite{regex}.
 
 \texttt{empty} : current square contains no pieces\\
 \texttt{n} : north \\
