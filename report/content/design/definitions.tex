@@ -105,28 +105,27 @@ written grammar for these definitions, and this is why there are four transition
 rules described.
 
 \begin{table}[ht]
-  \begin{center}
     \begin{tabular*}{\textwidth}{l l}
       \hline \\
-      $\left[\mbox{TYPEDEF}\right]$ & \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T \mapsto
+      \hspace{0.4cm} $\left[\mbox{TYPEDEF}\right]$ & \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T \mapsto
       \left(T, X, \varepsilon, \varepsilon, \varepsilon \right)] \rag \ra env_{T}'}
       {env_{C} \vdash \lag \texttt{type}\; T\; X\; D_{G},\; env_{T} \rag \ra env_{T}'} 
       \\
 
-      $\left[\mbox{TYPEDEF}_{\mbox{BODY}}\right]$ & \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T \mapsto
+      \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{BODY}}\right]$ & \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T \mapsto
       \left(T, X, D_{M}, \varepsilon, \varepsilon \right)] \rag \ra env_{T}'}
       {env_{C} \vdash \lag \texttt{type}\; T\; X\; \left\{D_{M}\right\}\;
       D_{G},\; env_{T} \rag \ra env_{T}'} 
       \\
 
-      $\left[\mbox{TYPEDEF}_{\mbox{EXTEND}}\right]$ & \infrule{env_{C} \vdash \lag D_{G},
+      \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{EXTEND}}\right]$ & \infrule{env_{C} \vdash \lag D_{G},
       env_{T}[T_{1} \mapsto \left(T_{1}, X, \varepsilon, L, T_{2} \right)] \rag
       \ra env_{T}'}
       {env_{C} \vdash \lag \texttt{type}\; T_{1}\; X\; \texttt{extends}\;
       T_{2}\; L\; D_{G},\; env_{T} \rag \ra env_{T}'} 
       \\
 
-      $\left[\mbox{TYPEDEF}_{\mbox{EXTEND-BODY}}\right]$ & \infrule{env_{C} \vdash \lag D_{G},
+      \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{EXTEND-BODY}}\right]$ & \infrule{env_{C} \vdash \lag D_{G},
       env_{T}[T_{1} \mapsto \left(T_{1}, X, D_{M}, L, T_{2} \right)] \rag
       \ra env_{T}'}
       {env_{C} \vdash \lag \texttt{type}\; T_{1}\; X\; \texttt{extends}\;
@@ -136,7 +135,6 @@ rules described.
     \end{tabular*}
     \capt{Transition rules for type definitions.}
     \label{semantic:typedef}
-  \end{center}
 \end{table}
 
 In the premises of the rules we present a 5-tuple where $env_{T}$ is updated
