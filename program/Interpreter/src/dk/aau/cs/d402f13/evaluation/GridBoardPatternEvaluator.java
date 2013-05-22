@@ -28,11 +28,11 @@ public class GridBoardPatternEvaluator {
     workingSet.add(new SimpleDir(squarePos.getX(),squarePos.getY()));
     evaluate(pv, workingSet);
     if (workingSet.size() == 0){
-      System.out.println("Pattern does not match");
+//      System.out.println("Pattern does not match");
     	return false;	
     }
     else{
-      System.out.println("Pattern matches (" + squarePos.getX() + "," + squarePos.getY()+") " + pv);
+//      System.out.println("Pattern matches (" + squarePos.getX() + "," + squarePos.getY()+") " + pv);
     	return true;
     }
     
