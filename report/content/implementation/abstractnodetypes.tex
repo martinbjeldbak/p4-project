@@ -1,8 +1,8 @@
 \section{Abstract node types}
 \label{sec:ant}
 
-This section illustrates how we have chosen to implement the grammar described in
-\secref{sec:grammar} into abstract syntax trees (ASTs). 
+This section illustrates how we have chosen to implement the grammar described
+thorughout \chapref{chap:design} into abstract syntax trees (ASTs). 
 We have split every program part into their own subsections with an abstract
 node type (ANT) that presents the program parts construction when it is parsed into an
 AST. Each node type corresponds to a production in the grammar. These ANTs can
@@ -24,7 +24,7 @@ abstract node types.\cite{parsevsast}
 \subsection{The abstract node type for program}
 Every program written in \productname{} begins with an ANT which 
 we call ``program'' that consists of either zero, one, or more definitions. The 
-production for this rule was presented in \secref{sec:grammar}.
+production for this rule is presented in \secref{sec:definitions}.
 
 %\begin{ebnf}
 %\grule{program}{\grep{definition}}
@@ -50,7 +50,7 @@ In this section we introduce the five different groupings of operations such as
 logical operators, equality operators, etc., and finally we present the
 production called negation. We illustrate the five groupings of operators but we
 have omitted the negation node, because it is merely a root with one child. The
-grammar for this expression was presented in \secref{sec:grammar}.
+grammar for this expression was presented in \secref{sec:operatorsandcalls}.
 
 %\begin{ebnf}
 %\grule{lo\_sequence}{eq\_sequence \gcat \grep{\ggrp{\gter{and} \gor \gter{or}} \gcat eq\_sequence}}
@@ -97,7 +97,7 @@ The grammar specified earlier in this section presented that the last operation
 ($md\_sequence$) consists of negations and the choice to add an operator between
 negations. The negation production can be an element or begin with the \gter{-}
 symbol followed by another negation. The production for a negation was presented
-in \secref{sec:grammar}.
+in \secref{sec:operatorsandcalls}.
 
 %\begin{ebnf}
 %\grule{negation}{element}
@@ -107,9 +107,9 @@ in \secref{sec:grammar}.
 This production is not illustrated with any ANT because it is simply one root
 with one child.
 
-\subsection{Abstract node type for assignment}
+\subsection{Abstract node type for let expressions}
 The production for the assignment expression was presented in
-\secref{sec:grammar}.
+\secref{sec:letexpressions}.
 
 %\begin{ebnf}
 %\grule{assignment}{\gter{let} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression} \gcat \gter{in} \gcat expression}

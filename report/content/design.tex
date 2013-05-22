@@ -3,9 +3,11 @@
 
 \productname{} is a purely functional object-oriented programming language designed for creating
 board games.
+
 \todo{More introduction}
 
 \subsection*{Code sample}
+\label{codesample}
 
 We have developed \productname{} by first brainstorming and writing a bunch of
 game implementations using a ``programming language'' which felt the most
@@ -17,18 +19,23 @@ implementation of the board game Noughts and Crosses:
 
 \codesample{noughtandcrosses.game}
 
-Just look at \csref{noughtandcrosses.game}. Isn't it purdy???
-
 \todo{Describe exactly what this example does}
 
-Based on our implementations, we first define the formal grammar of
-\productname{} in \secref{sec:grammar}. Afterwards, the contextual constraints
-are informally described  in xxx. Furthermore, we describe the\dots in xxx. Lastly, the 
-\ldots are described in xxx.
+%In this chapter we define the formal grammar of \productname{}. Etc..
 
 \subsection*{Type system}
 
-dynamic (why?)
+In \secref{sec:typesystemanalysis} we analysed the two main type system approaches. 
+We chose the dynamic type system due to the fact that it increases the writability of our programming language. As seen in the
+above code example \secref{codesample} a Noughts and Crosses game can be created in only approximately 20 lines
+of code. The types of variables, lists etc. are determined at compile time
+
+We have the following primitive data types:
+\begin{dlist}
+\item \textbf{Integer}:
+\end{dlist}
+
+%dynamic (why?)
 
 inheritance
 

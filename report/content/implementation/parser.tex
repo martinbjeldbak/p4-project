@@ -11,19 +11,19 @@ to continue working with this tool.
 
 \subsection{Constructing the parser}
 %structured as the grammar
-The parser was very simple to implement, because it is structured in the same
-manner as the grammar is defined in EBNF as seen in \secref{sec:grammar}. For
-instance if the grammar expresses that the next set of terminals must begin with
-a left bracket (`['), then the parser will expect the next token to be a
-  \tokenref{LBRACKET} which is the token name for a left bracket. If the grammar
-  then expects a non-terminal, then the parser simply calls the method for that
-  non-terminal, allowing it to finish, possibly calling more non-terminals and
-  expecting terminals, before continuing parsing the next part of the rule.
+The parser was very simple to implement, because it is structured exactly as the
+grammar which is defined in \chapref{chap:design}. For instance if the grammar
+expresses that the next set of terminals must begin with a left bracket (`['),
+  then the parser will expect the next token to be a \tokenref{LBRACKET} which
+  is the token name for a left bracket. If the grammar then expects a
+  non-terminal, then the parser simply calls the method for that non-terminal,
+  allowing it to finish, possibly calling more non-terminals and expecting
+  terminals, before continuing parsing the next part of the rule.
 
 %discuss the if expression
 In \lstref{lst:ifexpr} we give an example of how this structure looks like in
 our handwritten parser. The production rule for an if-expression is presented in
-\secref{sec:grammar}.
+\secref{sec:conditionalexpressions}.
 
 %\begin{ebnf}
 %\grule{if\_expr}{\gter{if} \gcat expression \gcat \gter{then} \gcat expression
@@ -72,8 +72,8 @@ whole if expression.
 We mentioned earlier that the parser is an LL(1) parser, which means that the
 parser is able to look ahead in the sequence of tokens. We have shown the
 \methodref{lookAhead} method to determine if the next token is part of an
-atomic expression. The production for the atomic expression was presented in
-\secref{sec:grammar}.
+atomic expression. The production for the atomic expression is presented in
+\secref{sec:atomicexpressions}.
 
 %\begin{ebnf}
 %\grule{atomic}{\gter{(} \gcat expression \gcat \gter{)}}
@@ -111,7 +111,7 @@ checks for literals. All these methods return true or false.
 In \lstref{lst:examplelookahead} we show an example of how the
 \methodref{lookAhead} method is used in the parser. The example is taken from
 the \methodref{expression} method. The productions for expressions are presented
-in \secref{sec:grammar}.
+in \secref{sec:expressions}.
 The production of an expression is reflected in the code of the parser. An
 example of this is given in \lstref{lst:examplelookahead}.
 
@@ -196,13 +196,13 @@ Tokens
   if            = 'if';
 
 Productions
-   expression   = {elopexp} element operator expression
-                | {assign} assignment
-                | {if} if_expr
-                | {lambda} lambda_expr
-                | {el} element list?
-                | {not} not expression;
-   if_expr      = if [left]:expression then [mid]:expression else [right]:expression;
+  expression   = {elopexp} element operator expression
+               | {assign} assignment
+               | {if} if_expr
+               | {lambda} lambda_expr
+               | {el} element list?
+               | {not} not expression;
+  if_expr      = if [left]:expression then [mid]:expression else [right]:expression;
 \end{lstlisting}
 
 % Pros

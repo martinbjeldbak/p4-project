@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import dk.aau.cs.d402f13.evaluation.GridBoardPatternEvaluator;
+import dk.aau.cs.d402f13.gal.wrappers.GameWrapper;
 import dk.aau.cs.d402f13.interpreter.AbstractMember;
 import dk.aau.cs.d402f13.interpreter.Callable;
 import dk.aau.cs.d402f13.interpreter.ConstantCallable;
@@ -14,6 +16,7 @@ import dk.aau.cs.d402f13.interpreter.stdenv.StandardEnvironment;
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
 import dk.aau.cs.d402f13.utilities.errors.ArgumentError;
+import dk.aau.cs.d402f13.utilities.gameapi.Game;
 import dk.aau.cs.d402f13.values.AbstractTypeValue;
 import dk.aau.cs.d402f13.values.BoolValue;
 import dk.aau.cs.d402f13.values.CoordValue;
@@ -273,14 +276,20 @@ public class GameEnvironment extends StandardEnvironment {
         return new StrValue("A board game.");
       }
     }));
+    final GameEnvironment env = this;
     game.addTypeMember("matchSquare", new Member(2, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters)
           throws StandardError {
         CoordValue position = (CoordValue)TypeValue.expect(actualParameters, 0, CoordValue.type());
         PatternValue pattern = (PatternValue)TypeValue.expect(actualParameters, 1, PatternValue.type());
-        /** @TODO Missing patterns!!! */
-        return BoolValue.falseValue();
+        ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
+        GameWrapper game = new GameWrapper(env, object);
+        GridBoardPatternEvaluator gbpe = new GridBoardPatternEvaluator();
+        if (gbpe.doesPatternMatch(game, pattern, position))
+          return BoolValue.trueValue();
+        else
+          return BoolValue.falseValue();
       }
     }));
     game.addTypeMember("matchSquares", new Member(2, false, new Callable() {
@@ -689,7 +698,7 @@ public class GameEnvironment extends StandardEnvironment {
         }
         object = (ObjectValue)object.setAttribute("squares", new ListValue(newList));
         Value[] pieces = object.getMemberList("pieces", piece);
-        newList = new Value[pieces.length - 1];
+        newList = new Value[pieces.length];
         for  (int i = 0; i < pieces.length; i++) {
           if (pieces[i].equals(p)) {
             newList[i] = p2;

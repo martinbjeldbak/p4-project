@@ -58,7 +58,7 @@ following members contained in the \classref{TypeSymbolInfo} object:
     reference to its parent type if it has one
   \begin{dlist}
     \item This is however a null pointer until running the
-      \classref{TypeTableCleaner} described in \secref{sec:typetablecleaner}
+      \classref{TypeParentRefMaker} described in \secref{sec:TypeParentRefMaker}
   \end{dlist} 
 \end{dlist}
 
@@ -66,11 +66,12 @@ All the \classref{TypeSymbolInfo} objects are kept in an object of class
 \classref{TypeTable}. The \classref{TypeTable} class is a layer of abstraction
 which provides easy and fast access information about the types contained in the
 input program. The underlying implementation is a hashmap from the type's name
-as a \classref{String} to its object reference, which provides quick lookup on
-type names, and a list of \classref{TypeSymbolInfo}, which makes iteration over the
-\classref{TypeSymbolInfo}s convenient and makes it possible to sort the types
-with a purpose described in \secref{sec:typetablecleaner}. For convenience, we
-say that a type is added to a type table which means that a
+as a \classref{String} to its object reference, which provides a quick way to map a type's name
+to the \classref{TypeSymbolInfo} object that represents the type. One use of this mapping is 
+described in \secref{sec:TypeParentRefMaker}. Another feature of \classref{TypeTable} is a 
+convenient way to iterate over all the \classref{TypeSymbolInfo}s. This is for instance used
+to topological sort the types, which is described in \secref{sec:TypeMemberPropagator}.
+For convenience, we say that a type is added to a type table which means that a
 \classref{TypeSymbolInfo} object representing the type is added to the
 \classref{TypeTable} object representing the type table.
 
@@ -83,7 +84,7 @@ The \classref{TypeSymbolInfo} objects only contain the name of their super type
 as a \classref{String} or a null value if there is no super type. By making a
 lookup in the \classref{TypeTable} on the parent name, the real object
 references can be found and stored for faster and more convenient parent lookups
-which is used greatly by the visitor described in
+which is used greatly by the visitor described in 
 \secref{sec:usesaredeclaredvisitor}.
 
 \subsection{TypeMemberPropagator}
@@ -156,7 +157,7 @@ amount of extra arguments). If A does not have a variable amount of additional
 arguments, the argument count must match exactly. The implemented code for doing
 this check can be seen in \lstref{lst:tscc}.
 
-\lstinputlisting[caption=How the TypeSuperCallChecker is implemented.,
+\lstinputlisting[caption={\emph{How the TypeSuperCallChecker is implemented.}},
 label=lst:tscc, language=Java]{listings/typeSuperCallChecker.java}
 
 \subsection{UsesAreDeclaredVisitor}
@@ -259,7 +260,7 @@ inside other scopes are implemented.
 
 \codesample{openscopeexpressions.junta}
 
-Notice how the four code samples in in the above codesample all result in the same
+Notice how the four code samples in in the above code sample all result in the same
 scope checking routine, which can be seen in \figref{fig:scope1}; First, a new
 symbol table is instantiated in which the variables \$a and \$b are put in. The
 symbol table's parent reference is updated so it points to the current symbol
@@ -291,7 +292,7 @@ declaration of \$a.
 
 \fig[height=5em]{scope2}{The variable \$a declared in two different scopes.}
 
-This is completely valid and is caused by the following codesample. If only a
+This is completely valid and is caused by the following code sample. If only a
 single symbol table was used, an incorrect double declaration would be detected.
 
 \codesample{scope2.junta}
@@ -304,7 +305,7 @@ This ensures that the data members of a type can be used anywhere in the type
 body but in that type body only. When exiting that type body and closing the
 scope the symbol table containing the data members are no longer visible.
 
-\subsection{Evaluation}
+\subsection{Summary of scope checking}
 Many different static semantic checks are implemented in the scope checker.
 Though many other checks could have been included as well, the scope of the
 static semantics has been limited due to a few constraints. First of all, there

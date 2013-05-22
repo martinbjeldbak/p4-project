@@ -2,6 +2,7 @@ package dk.aau.cs.d402f13.values;
 
 import dk.aau.cs.d402f13.utilities.errors.StandardError;
 import dk.aau.cs.d402f13.utilities.errors.TypeError;
+import dk.aau.cs.d402f13.utilities.scopechecker.SymbolInfo;
 
 public class DirValue extends Value {
   private final int x;
@@ -150,5 +151,25 @@ public class DirValue extends Value {
         return "nw";
     }
     return "(" + Integer.toString(x) + ", " + Integer.toString(y) + ")";
+  }
+  
+  @Override
+  public int hashCode() {
+    return this.x * 1117 + this.y;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+      if (obj == null)
+          return false;
+      if (obj == this)
+          return true;
+      if (obj.getClass() != getClass())
+          return false;
+  
+      DirValue other = (DirValue) obj;
+      if (other.x == this.x && other.y == this.y)
+        return true;
+      return false;
   }
 }
