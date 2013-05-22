@@ -100,12 +100,57 @@ Variables in \productname{} are assigned using let expressions:
 \gcat \gter{in} \gcat expression}
 \end{ebnf}
 
-A let expression consists of one or more assignments and an expression. Each assignments assigns
-the value of an expression to a variable name. These variables can then be used in the expression
-after the \texttt{in}-keyword. After the evaluation of the let-expression, the variables cease to
-exist.
+A let expression consists of one or more assignments and an expression. Each
+assignments assigns the value of an expression to a variable name. These
+variables can then be used in the expression after the \texttt{in}-keyword.
+After the evaluation of the let-expression, the variables cease to exist.
 
 \todo{maybe the scope stuff about let expressions here}
+
+\subsubsection{Big-step semantics}
+
+The semantics presented in \tableref{semantic:let} are the transition rules for the let expression.
+This is transition rule is defined recursively to best illustrate the functionality of the expression.
+
+\begin{table}[ht]
+  \begin{center}
+    \begin{tabular*}{\textwidth}{l l}
+      \hline \\
+      $[\mbox{LET-1}]$ & \infrule{env_{T}, env_{C}, env_{V}[x_{1} \mapsto v_{1}] \vdash
+      \texttt{let}\; x_{2} = E_{2}, \cdots,\; x_{k} = E_{k}\; \texttt{in}\;
+      E_{k+1} \ra v_{k+1}}
+      {env_{T}, env_{C}, env_{V} \vdash \texttt{let}\; x_{1} = E_{1},\; x_{2} = E_{2},
+      \cdots, x_{k} = E_{k}\; \texttt{in}\; E_{k+1} \ra v_{k+1}} \\
+       & where $env_{T}, env_{C}, env_{V} \vdash E_{1} \ra v_{1}$\\
+       & and $k \geq 2$ \\
+      
+       $[\mbox{LET-2}]$ & \infrule{env_{T}, env_{C}, env_{V}[x_{1} \mapsto v_{1}] 
+      \vdash E_{2} \ra v_{2}}
+      {env_{T}, env_{C}, env_{V} \vdash \texttt{let}\; x_{1} = E_{1}\; \texttt{in}\; E_{2} \ra
+      v_{2}} \\
+       & where $env_{T}, env_{C}, env_{V} \vdash E_{1} \ra v_{1}$ \\
+       & and $k < 2$ \\
+       & \\
+       \hline \\
+    \end{tabular*}
+    \capt{Transition rules for let expressions.}
+    \label{semantic:let}
+  \end{center}
+\end{table}
+
+The transition rules for $[\mbox{LET-1}]$ is recursively because we must
+evaluate each expression $(x_{1}=E_{1})$ before we move on to the next one. This
+is a must because of the fact that the next expressions can in fact make use of
+the previous expressions value. As an example take a look at the following code
+sample:
+
+\codesample{letbigstep.junta}
+
+So, each call where there are more than one expression to be evaluated we call
+the transition rule $[\mbox{LET-1}]$ where $k \geq 2$. Here the expression first
+in line to be evaluated will be evaluated before a new call to one of the two
+transition rules is made. When we reach a let expression with only one
+expression then we call the transition rule $[\mbox{LET-2}]$ where $k < 2$.
 
 \subsection{Conditional expressions}
 \label{sec:conditionalexpressions}
@@ -116,29 +161,57 @@ following syntax:
 
 \begin{ebnf}
 \grule{expression}{\grange \gor if\_expr}
-\grule{if\_expr}{\gter{if} \gcat expression \gcat \gter{then} \gcat expression \gcat \gter{else} \gcat expression}
+\grule{if\_expr}{\gter{if} \gcat expression \gcat \gter{then} \gcat expression
+\gcat \gter{else} \gcat expression}
 \end{ebnf}
 
-Unlike in most imperative languages, the conditional construct in \productname{} is not a statement
-(\productname{} doesn't have statements) but an expression. Since all expressions must have a value,
-the \emph{else}-part of en if-expression is compulsory.
+Unlike in most imperative languages, the conditional construct in \productname{}
+is not a statement (\productname{} doesn't have statements) but an expression.
+Since all expressions must have a value, the \emph{else}-part of en
+if-expression is compulsory.
 
-The if-expression first evaluates the condition (the first expression). The resulting value must be
-of type \type{Boolean}. If the value is equal to the boolean true-value, the \emph{then}-expression
-is evaluated, and the result is returned. If the value is false, then the \emph{else}-expression
-is evaluate, and the result returned.
+The if-expression first evaluates the condition (the first expression). The
+resulting value must be of type \type{Boolean}. If the value is equal to the
+boolean true-value, the \emph{then}-expression is evaluated, and the result is
+returned. If the value is false, then the \emph{else}-expression is evaluate,
+and the result returned.
 
 \subsection{Lambda expressions}
 
-Lambda expressions are expressions that evaluate to anonymous functions. In \productname{} they
-are defined as:
+Lambda expressions are expressions that evaluate to anonymous functions. In
+\productname{} they are defined as:
 
 \begin{ebnf}
 \grule{expression}{\grange \gor lambda\_expr}
 \grule{lambda\_expr}{\gter{\#} \gcat varlist \gcat \gter{=>} \gcat expression}
 \end{ebnf}
 
-\todo{}
+\todo{!!!!!!}
+
+\subsubsection{Big-step semantics}
+
+The semantics presented in \tableref{semantic:lambda} is the transition rule for the lambda expression. 
+
+\begin{table}[ht]
+  \begin{center}
+    \begin{tabular*}{\textwidth}{l l c}
+      \hline \\
+      $[\mbox{LAMBDA}]$ & $env_{T}, env_{C}, env_{V} \vdash \texttt{\#} \; X\;
+      \texttt{=>}\; E \ra v$ & \hspace{1cm} where $v = \left(X, E, env_{V}, env_{C}\right)$ \\
+      & & \\
+      \hline
+    \end{tabular*}
+    \capt{Transition rules for lambda expressions.}
+    \label{semantic:lambda}
+  \end{center}
+\end{table}
+
+The three environments ($env_{T}, env_{C}, env_{V}$) must be known before it is
+possible to execute a lambda expression. We need to know which types, constants
+and different variables are given in the specific scope.
+
+The lambda expressions evaluates to a value $v$. The side condition of the
+transition rule explains that $v$ is assigned the 4-tuple.
 
 \subsection{Set expressions}
 
