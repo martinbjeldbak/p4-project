@@ -113,14 +113,61 @@ the writability of our programming language. As seen in the above code example
 \secref{codesample} a Noughts and Crosses game can be created in only
 approximately 20 lines of code.
 
-The type system in \productname{} comprises a number of simple types, from which every other type
-can be creted.
+The type system in \productname{} comprises a number of simple types, from which
+every other type can be created. The simple types are; integers, character
+strings, booleans, lists, directions (vectors), coordinates (points), patterns,
+functions and types. Unlike in other programming languages, both functions and
+types in \productname{} are first-class citizens, this means that they can
+be passed around, used and returned as any other value. This adds even more
+flexibility to the language. For instance in the Noughts and Crosses example
+(see \csref{noughts-and-crosses.junta}) both the types \type{Noughts} and
+\type{Crosses} are passed as values to the constructor of \type{NacPlayer}. The
+simple types, their operators and their methods are further explained in the
+rest of this chapter.
 
-%dynamic (why?)
-%inheritance
-%members: constants/functions
-%visibility (data)
-%casting (super?)
+User types can be created using the \keyword{type}-keyword. They are very
+similar to classes in traditional object-oriented languages, in that a type has
+a constructor, attributes, constants and methods. An important aspect of the
+type system of \productname{} however, is that all values are immutable. It
+doesn't matter if it's an integer, a list, or an instance of a custom user type,
+the value of the object can't be changed. They can however be cloned and
+modified using various techniques depending on the type in question. For
+instance, adding two integers using the \texttt{+}-operator returns a new
+integer representing the sum of the two operands. For instances of user types a
+new modified instance is returned when using the \keyword{set}-keyword (as
+described in \secref{sec:setexpressions} and \secref{sec:typedefinitions}). The
+reason for this functionality, is to prevent side-effects, since randomly
+changing objects, could have undesirable influence on other functions or types
+that depend on these objects.
+
+The type system of \productname{} supports single inheritance, meaning that a
+user type \type{B} can extend the type \type{A} and inherit all members and 
+\productname{} supports single inheritance between types. An inheriting type, will
+inherit all the members of its super type(s) (if \type{C} extends \type{B}, which
+extends \type{A}, then \type{C} inherits all members from both \type{B} and
+\type{A}). Visibility in \productname{} is implicit, in that all
+constants/methods are public (they can be accessed from anywhere as long as an
+instance of the type is available) while all data fields are private (they can
+only be accessed/changed from within the specific type, not even from inheriting
+types). Getters and setters are necessary in order to access data fields from
+the outside or in inheriting types. More details on data, inheritance, members
+and abstract members are available in \secref{sec:setexpressions} and
+\secref{sec:typedefinitions}.
+
+Another feature of \productname{} is implicit casting, when dealing with simple
+types (such as integers and strings). If a user were to create a type
+\type{MyInteger} extending the built-in type \type{Integer} (the type of
+integers in \productname{}), then instances of \type{MyInteger} could be used in
+place of simple integers, this works by casting the instance to a simple integer
+value (simply by throwing away the extra information provided by the
+\type{MyInteger}-type). Explicit casting is only really possible with simple
+types, since their type constructors accepts one parameter of the same type. For
+instance the constructor \type{Integer} accepts a parameter of type
+\type{Integer}, meaning that it also accepts types that extend \type{Integer}.
+This makes it possible to cast a value of type \type{MyInteger} to a raw
+\type{Integer} value, albeit the usefulness of this functionality is dubious.
+The constructors of all the simple types implement this functionality however
+(as described in \secref{sec:standardenvironment}).
 
 \subsection*{Scope rules}
 
