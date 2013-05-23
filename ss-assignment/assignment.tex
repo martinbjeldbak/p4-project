@@ -1,0 +1,478 @@
+\input{preamble}
+
+\title{Big-Step Semantik for \junta{}, fri projektrelateret opgave}
+\author{\href{mailto:d402f13@cs.aau.dk}{d402f13}}
+
+\begin{document}
+\maketitle
+
+Hej Hans og Nicolaj. Dette er vores besvarelse på den frie
+projektrelateret opgave, hvor vi har valgt en delmængde af vores sprog
+\junta{}, som er et funktionelt objektorienteret programmeringssprog.
+
+Tankerne bag sproget er, at man skal kunne skrive brætspil i sproget,
+der kan spilles ved hjælp af en simulator. Mange funktionelle principper
+ses i sproget, da der ingen side effekter er og ingen program tilstand
+findes.
+
+Herunder defineres semantikken for følgende konstruktioner i
+sproget: Let-in-udtryk, metodekald, member tilgang, liste-tilgang, lambda-udtryk,
+set-konstruktionen og type (klasse) definitioner.
+
+
+\tableofcontents
+
+Definitionerne er på engelsk, da rapporten skrives på engelsk (og disse
+ses som et udtræk af rapporten).
+
+\chapter{Syntactic categories}
+Before we can describe the behaviour of programs written in \junta{} and
+their lexical structure, we must first present the syntax of programs. At this
+point, we are only interested in a notion of abstract syntax because we do not
+need to concern ourselves with operator precedence and so forth.
+
+The different syntactic categories are seen below:
+
+\begin{table}[ht]
+  \begin{center}
+    \begin{tabular}{rl}
+      \hline
+      $n \in$ & \textbf{Integer}         \\
+      $x \in$ & \textbf{Variable}        \\
+      $s \in$ & \textbf{String}          \\
+      $E \in$ & \textbf{Expression}      \\
+      $P \in$ & \textbf{Pattern}         \\
+      $L \in$ & \textbf{List}            \\
+      $X \in$ & \textbf{VarList}         \\
+      $Y \in$ & \textbf{Coordinate}      \\
+      $Z \in$ & \textbf{Direction}       \\
+      $C \in$ & \textbf{ConstantNames}   \\
+      $T \in$ & \textbf{TypeNames}       \\
+      $D_{G} \in$ & \textbf{GlobalDef}   \\
+      $D_{M} \in$ & \textbf{MemberDef}   \\
+      \hline
+    \end{tabular}  
+    \capt{The syntactic categories of \hspace{0.02cm} \productname{}.}
+    \label{table:syn-cat}
+  \end{center}
+\end{table}
+
+\chapter{Environments}
+In this section we present the definitions which will be used throughout the
+construction of semantics for \productname{}. In the following definitions we
+use the syntactic categories presented in \tableref{table:syn-cat}. For some of
+the definitions we define arbitrary members which will be used in the semantics
+of the constructs of the language.
+
+\textbf{Definition} (Type environment) \hspace{0.5cm} The set of type environments is the set of
+partial functions from type names to type values:
+
+\[
+  \mathbf{EnvT} = \mathbf{TypeNames} \rightharpoonup \mathbf{TypeValues}
+\]
+
+\textbf{Definition} (Constant environment) \hspace{0.5cm} The set of constant environments is the set
+of partial functions from constant names to expressions and variable lists:
+
+\[
+  \mathbf{EnvC} = \mathbf{ConstantNames} \rightharpoonup \mathbf{Expression}
+  \times \mathbf{VarList}
+\]
+
+An arbitrary member is defined as $env_{C} \in \mathbf{EnvC}$.
+
+\textbf{Definition} (Variable environment) \hspace{0.5cm} The set of variable environments is the set
+of partial functions from variables to values:
+
+\[
+  \mathbf{EnvV} = \mathbf{Variable} \rightharpoonup \mathbf{Values}
+\]
+
+
+An arbitrary member is defined as $env_{V} \in \mathbf{EnvV}$.
+
+\textbf{Definition} (Values) \hspace{0.5cm} The set of values can contain many
+different values, and is defined as follows:
+
+\begin{align*}
+ \mathbf{Values} = \mathbf{Integers} \cup \mathbf{Strings} \cup \mathbf{Lists}
+ \cup \mathbf{Patterns} \cup \mathbf{Coordinates} \cup \mathbf{Directions}\\ 
+ \cup\; \mathbf{TypeValues} \cup \mathbf{FunctionValues} \cup \mathbf{ObjectValues} 
+ \cup \mathbf{Booleans}
+\end{align*}
+
+\textbf{Definition} (List values) \hspace{0.5cm} The values of lists is
+defined as follows:
+
+\[
+  \mathbf{ListValues} = \mathbf{Integers} \times \mathbf{Elements}
+\]
+
+The length of a list is an arbitrary member of $l \in \mathbf{Integer}$.
+
+\textbf{Definition} (List elements) \hspace{0.5cm} The set of elements in
+lists is the set of partial functions from integers to values:
+
+\[
+  \mathbf{Elements} = \mathbf{Integers} \rightharpoonup \mathbf{Values}
+\]
+
+An arbitrary member is defined as $elem \in \mathbf{Elements}$.
+
+\textbf{Definition} (Function values) \hspace{0.5cm} The set of function values
+is defined as follows:
+ 
+\[
+  \mathbf{FunctionValues} = \mathbf{VarLists} \times \mathbf{Expressions} \times
+  \mathbf{EnvV} \times \mathbf{EnvC}
+\]
+
+A function value consists of variable lists, expressions and the set of variable
+and constant environments.
+
+\textbf{Definition} (Type values) \hspace{0.5cm} The set of type values is
+defined as follows:
+
+\[
+  \mathbf{TypeValues} = \mathbf{TypeNames} \times \mathbf{VarLists} \times
+  \mathbf{D_{M}} \times \mathbf{List} \times \mathbf{TypeValues }
+\]
+
+An arbitrary member is defined as $t \in \mathbf{TypeValues}$.
+
+A type value consists of type names, variable lists, the member definitions,
+lists and the type value. A type value is recursively defined since
+$\mathbf{TypeValues}$ is defined in terms of itself. This is not a problematic
+definition because these must be considered as values for two different types.
+The $\mathbf{TypeValues}$ on the right-hand side is in fact the super type's set
+of values whereas the $\mathbf{TypeValues}$ on the left-hand side is the current
+type's set of values.  The list in the definition is in fact the super type's
+parameters whereas the variable list is the current type's formal parameters.
+
+\textbf{Definition} (Object values) \hspace{0.5cm} The set of object values (an instantiated $\mathbf{TypeValue}$) is
+defined as follows:
+
+\[
+  \mathbf{ObjectValues} = \mathbf{TypeValues} \times \mathbf{EnvC} \times
+  \mathbf{EnvV} \times \mathbf{ObjectValues}
+\]
+
+An object value consists of the set of type values, the set of constant
+environment, the set of variable environments and the set of object values. This
+is yet another recursively defined definition, because an object value can have a parent object value, this is the case when an object value extends another object value. 
+
+\section{Formulation rules}
+Each syntactic category is used in one or more of the formulation rules
+presented in \figref{fig:form-rules}. The formulation rules define the structure
+of the members of the syntactic categories. 
+
+Not all of the constituents of the formulation rules are syntactic categories. We
+for instance see different parentheses, forward slashes, different operators, and
+words like $\texttt{this}$ and $\texttt{define}$. These are part of the
+construction of the given formulation rule. If they are omitted from a rule then
+it is not valid in \productname{}.
+
+\begin{figure}[ht]
+  \begin{center}
+    \begin{tabular}[ht]{r l}
+      $E\; \mathbf{::=}$ & $n$ \for $x$ \for $s$ \for $Y$ \for $Z$ \for $T$ \for
+      $C$ \for $L$ \for $\texttt{-} E$ \for $\left(\; E\; \right)$ \for
+      $\texttt{/}\; P\; \texttt{/}$ \for \\ 
+      & $E_{1}\; L$ \for $E_{1}\texttt{.}C$ \for $\texttt{\#}\; X\;
+      \texttt{=>}\; E$ \for $\texttt{if}\; E_{1}\; \texttt{then}\; E_{2}\;
+      \texttt{else}\; E3$ \for $E_{1}\; \texttt{is}\; E_{2}$ \for
+      $\texttt{not}\; E$ \for \\ 
+      & $E_{1}\; \texttt{and}\; E_{2}$ \for
+      $E_{1} \;\texttt{or}\; E_{2}$ \for $E_{1}\; \texttt{==}\; E_{2}$ \for
+      $E_{1}\; \texttt{!=}\; E_{2}$ \for $E_{1}\; \texttt{<}\; E_{2}$ \for
+      $E_{1}\; \texttt{>}\; E_{2}$ \for \\ 
+      & $E_{1}\; \texttt{<=}\; E_{2}$ \for
+      $E_{1}\; \texttt{>=}\; E_{2}$ \for $E_{1}\; \texttt{+}\; E_{2}$ \for
+      $E_{1}\; \texttt{-}\; E_{2}$ \for $E_{1}\; \texttt{*}\; E_{2}$ \for
+      $E_{1}\; \texttt{/}\; E_{2}$ \for \\ 
+      & $E_{1}\; \texttt{\%}\; E_{2}$ \for \texttt{this} \for \texttt{super}
+      \for $\texttt{let}\; x_{1}\; \texttt{=}\; E_{1},\; x_{2}\; \texttt{=}\;
+      E_{2},\; \cdots,\; x_{k}\; \texttt{=}\; E_{k}\; \texttt{in}\; E_{k+1}$ \for \\ 
+      & $\texttt{set}\; x_{1}\; \texttt{=}\; E_{1},\; x_{2}\; \texttt{=}\;
+      E_{2},\; \cdots,\; x_{k}\; \texttt{=}\; E_{k}$ \\
+      
+      $L\; ::=$ & $\texttt{[} E_{1},\; \cdots, E_{k} \texttt{]}$ \\
+      
+      $X\; ::=$ & $\texttt{[} x_{1},\; \cdots,\; x_{k} \texttt{]}$ \for
+      $\texttt{[} x_{1},\; \cdots,\; \dots x_{k} \texttt{]}$ \for $\texttt{[}
+      \dots x \texttt{]}$ \\
+      
+      $D_{G}\; ::=$ & $\texttt{define}\; C\; \texttt{=}\; E\; D_{G}$ \for
+      $\texttt{define}\; C\; X\; \texttt{=}\; E\; D_{G}$ \for $\texttt{type}\;
+      T\; X\; D_{G}$ \for \\ 
+      & $\texttt{type}\; T\; X\; \texttt{extends}\; T\; L\; D_{G}$ \for
+      $\texttt{type}\; T\; X\; \left\{D_{M}\right\}\; D_{G}$ \for \\
+      & $\texttt{type}\; T\; X\; \texttt{extends}\; T\; L\;
+      \left\{D_{M}\right\} D_{G}$ \for $\varepsilon$ \\
+
+      $D_{M} ::=$ & $\texttt{define}\; C\; \texttt{=}\; E\; D_{M}$ \for
+      $\texttt{define}\; C\; X\; \texttt{=}\; E\; D_{M}$ \for $\texttt{define}\;
+      \texttt{abstract}\; C\; D_{M}$ \for \\ 
+      & $\texttt{define}\; \texttt{abstract}\; C\; X\; D_{M}$ \for
+      $\texttt{data}\; x\; \texttt{=}\; E\; D_{M}$ \for $\varepsilon$ \\
+
+    \end{tabular}  
+    \capt{The formulation rules for the syntactic categories of \hspace{0.02cm}
+    \productname{}.}
+    \label{fig:form-rules} 
+  \end{center}
+\end{figure}
+
+The $\mathbf{::=}$ means that the left-hand side of the rule can be any one of
+the $\for$-separated right-hand sides. Furthermmore, we use ``$\cdots$'' to
+illustrate a repetition of some element in the rule. We have also used the
+slightly different ``$\dots$'' to illustrate the three dots that precede a
+variable argument (vars) which we present in \secref{sec:constantdefinitions}.
+It should be clear from the context which of the two is being used.
+
+The $\varepsilon$ represents an empty definition.
+
+\chapter{Big-step semantics}
+
+\section{Lists}
+The semantics presented in \tableref{semantic:lists} are the transition rules
+for lists.
+
+\begin{table}[ht]
+  \begin{center}
+    \begin{tabular*}{\textwidth}{l p{\textwidth}}
+      \hline \\
+      \hspace{0.5cm} $[\mbox{LIST}_{\mbox{ACCESS-1}}]$ & \infrule{env_{T},
+      env_{C}, env_{V} \vdash \lag E\; \rag \ra v_2  \qquad env_{T}, env_{C},
+      env_{V} \vdash \lag L \rag \ra v_3}
+      {env_{T}, env_{C}, env_{V} \vdash \lag E\; L \rag \ra v_1} \\
+       & where $v_2 = \left(l_1, elem_1\right)$ \\
+       & and $v_3 = (l_2,elem_2)$ \\
+       & and $l_2 = 1$ \\
+       & and $i = elem_2 =0$ \vspace{0.1cm} \\
+       & and $v_1 = \left\{
+	 \begin{array}{l l}
+           elem_1\; i         & \quad \text{if $i \geq 0$}\\
+           elem_1\; (l_1 + i) & \quad \text{if $i \geq 0$}
+	 \end{array} \right.$ \\
+	 
+      \hspace{0.5cm} $[\mbox{LIST}_{\mbox{ACCESS-2}}]$ & \infrule{env_{T},
+      env_{C}, env_{V} \vdash \lag E \rag \ra v_2  \qquad env_{T}, env_{C},
+      env_{V} \vdash \lag L \rag \ra v_3}
+      {env_{T}, env_{C}, env_{V} \vdash \lag E\; L \rag \ra v_1} \\
+       & where $v_2 = \left(l_1, elem_1\right)$ \\
+       & and $v_3 = (l_2,elem_2)$ \\
+       & and $l_2 = 2$ \vspace{0.1cm} \\
+       & and $i = \left\{
+	 \begin{array}{l l}
+           elem_2\; 0         & \quad \text{if $elem_2\; 0 \geq 0$}\\
+           l_1 + elem_2\; 0   & \quad \text{if $elem_2\; 0 < 0$}
+	 \end{array} \right.$ \vspace{0.1cm} \\
+       & and $j = \left\{
+	 \begin{array}{l l}
+           elem_2\; 1         & \quad \text{if $elem_2\; 1 \geq 0$}\\
+           l_1 + elem_2\; 1   & \quad \text{if $elem_2\; 1 < 0$}
+	 \end{array} \right.$ \vspace{0.1cm} \\
+       & and $elem_3\; z = \left\{
+	 \begin{array}{l l}
+           elem_1\; i+1       & \quad \text{if $z = 0$}\\
+	   \hspace{1cm} \vdots &   \\
+           elem_1\; i+n-1     & \quad \text{if $z = n-1$}
+	 \end{array} \right.$ \vspace{0.1cm} \\
+       & and $v_1 = (n=j-i+1, elem_3)$ \\
+       & \\
+       \hline
+    \end{tabular*}
+    \capt{Transition rules for let expressions.}
+    \label{semantic:lists}
+  \end{center}
+\end{table}
+
+\section{Let-expressions}
+
+The semantics presented in \tableref{semantic:let} are the transition rules for
+the let expression.  This is transition rule is defined recursively to best
+illustrate the functionality of the expression.
+
+\begin{table}[ht]
+  \begin{tabular*}{\textwidth}{l l}
+    \hline \\
+    \hspace{1.2cm} $[\mbox{LET-1}]$ & \infrule{env_{T}, env_{C}, env_{V}[x_{1}
+    \mapsto v_{1}] \vdash \lag \texttt{let}\; x_{2} = E_{2}, \cdots,\; x_{k} =
+    E_{k}\; \texttt{in}\; E_{k+1} \rag \ra v_{k+1}}
+    {env_{T}, env_{C}, env_{V} \vdash \lag \texttt{let}\; x_{1} = E_{1},\; x_{2}
+    = E_{2}, \cdots, x_{k} = E_{k}\; \texttt{in}\; E_{k+1} \rag \ra v_{k+1}} \\
+    & where $env_{T}, env_{C}, env_{V} \vdash E_{1} \ra v_{1}$\\
+    & and $k \geq 2$ \\
+    
+    \hspace{1.2cm} $[\mbox{LET-2}]$ & \infrule{env_{T}, env_{C}, env_{V}[x_{1}
+    \mapsto v_{1}] \vdash \lag E_{2}\rag \ra v_{2}} {env_{T}, env_{C}, env_{V} \vdash
+    \lag \texttt{let}\; x_{1} = E_{1}\; \texttt{in}\; E_{2} \rag \ra v_{2}} \\
+    & where $env_{T}, env_{C}, env_{V} \vdash E_{1} \ra v_{1}$ \\
+    & and $k < 2$ \\
+    & \\
+    \hline \\
+  \end{tabular*}
+  \capt{Transition rules for let expressions.}
+  \label{semantic:let}
+\end{table}
+
+The transition rules for $[\mbox{LET-1}]$ is recursively because we must
+evaluate each expression $(x_{1}=E_{1})$ before we move on to the next one. This
+is a must because of the fact that the next expressions can in fact make use of
+the previous expressions value. As an example take a look at the following code
+sample:
+
+\codesample{letbigstep.junta}
+
+So, each call where there are more than one expression to be evaluated we call
+the transition rule $[\mbox{LET-1}]$ where $k \geq 2$. Here the expression first
+in line to be evaluated will be evaluated before a new call to one of the two
+transition rules is made. When we reach a let expression with only one
+expression then we call the transition rule $[\mbox{LET-2}]$ where $k < 2$.
+
+\section{Lambda expressions}
+
+The semantics presented in \tableref{semantic:lambda} is the transition rule for the lambda expression. 
+
+\begin{table}[ht]
+  \begin{tabular*}{\textwidth}{l l c}
+    \hline \\
+    \hspace{0.5cm} $[\mbox{LAMBDA}]$ & $env_{T}, env_{C}, env_{V} \vdash \lag \texttt{\#} \; X\;
+    \texttt{=>}\; E \rag \ra v$ & \hspace{1cm} where $v = \left(X, E, env_{V}, env_{C}\right)$ \\
+    & & \\
+    \hline
+  \end{tabular*}
+  \capt{Transition rules for lambda expressions.}
+  \label{semantic:lambda}
+\end{table}
+
+The three environments ($env_{T}, env_{C}, env_{V}$) must be known before it is
+possible to execute a lambda expression. We need to know which types, constants
+and different variables are given in the specific scope.
+
+The lambda expressions evaluates to a value $v$. The side condition of the
+transition rule explains that $v$ is assigned the $4$-tuple.
+
+\section{Set expressions}
+
+The semantics presented in \tableref{semantic:set} is the transition rules for
+set expressions.
+
+\begin{table}[ht]
+  \begin{tabular*}{\textwidth}{l l}
+    \hline \\
+    \hspace{1.5cm} $[\mbox{SET}]$ & \infrule{env_C, env_V, env_T \vdash \lag E_1
+      \rag\ra u_1 \quad
+    \ldots \quad env_C, env_V, env_T \vdash \lag E_k \rag \ra u_k}
+    {env_C, env_V, env_T \vdash \lag \texttt{set}\; x_1 = E_1, \ldots, x_k =
+    E_k \rag \ra v_1} \\
+    & where $env_v\; \texttt{this} = \left(t, env'_c, env'_v, v_2 \right)$ \\
+    & and $v_1 = \left( t, env'_c, env'_v, v_2\right)$ \\
+    & and $env''_v = env'_v \left[ x_1 \mapsto u_1, \ldots, x_k \mapsto u_k
+    \right]$ \\
+    & \\
+    \hline
+  \end{tabular*}
+  \capt{Transition rules for set expressions.}
+  \label{semantic:set}
+\end{table}
+
+\section{Function calls}
+
+The semantics presented in \tableref{semantic:callfun} is transition rules for
+function calls.
+
+\begin{table}[ht]
+  \begin{tabular*}{\textwidth}{l l}
+    \hline \\
+    \hspace{3cm} $[\mbox{CALL}_{\mbox{FUN}}]$ & \hspace{0.1cm} $env_C, env_V,
+    env_T \vdash \lag E \rag \ra v_2$ \\
+    & \hspace{0.1cm} $env_C, env_V, env_T \vdash \lag L \rag \ra v_3$
+    \vspace{-0.3cm} \\
+    & \infrule{env'_C, env''_V, env_T \vdash \lag E' \rag \ra v_1}{env_C, env_V,
+    env_T \vdash \lag E\; L\; \rag \ra v_1} \\
+    & where $v_2 = \left(X, E', env'_V, env'_C\right)$ \\
+    & and $v_3 = \left(l, elem\right)$ \\
+    & and $env''_V = \left[x_1 \mapsto elem\; 1, \ldots, x_n \mapsto elem\; n \right]$ \\
+    & \\
+    \hline
+  \end{tabular*}
+  \capt{Transition rules for set expressions.}
+  \label{semantic:callfun}
+\end{table}
+
+The semantics presented in \tableref{semantic:memaccess} is the transition rule
+for member access.
+
+\begin{table}[ht]
+  \begin{tabular*}{\textwidth}{l l}
+    \hline \\
+    \hspace{3cm} $[\mbox{MEMBER}_{\mbox{ACCESS}}]$ & \infrule{env_C, env_V, env_T
+    \vdash \lag E \rag \ra v_1}{env_C, env_V, env_T \vdash \lag E\texttt{.}C
+  \rag \ra v_3} \\
+     & where $v_2 = \left(t, env'_C, env'_V, v_2 \right)$ \\
+     & and $env'_C\; C = v_3$ \\
+     & \\
+     \hline
+  \end{tabular*}
+  \capt{Transition rules for set expressions.}
+  \label{semantic:memaccess}
+\end{table}
+
+\section{Type definitions}
+
+The semantics presented in \tableref{semantic:typedef} are the transition rules for type definitions.
+These type definitions have some optional arguments which correspond with the
+written grammar for these definitions, and this is why there are four transition
+rules described.
+
+\begin{table}[ht]
+    \begin{tabular*}{\textwidth}{l l}
+      \hline \\
+      \hspace{0.4cm} $\left[\mbox{TYPEDEF}\right]$ & \infrule{env_{C} \vdash
+      \lag D_{G}, env_{T}[T \mapsto \left(T, X, \varepsilon, \varepsilon,
+      \varepsilon \right)] \rag \ra env_{T}'}
+      {env_{C} \vdash \lag \texttt{type}\; T\; X\; D_{G},\; env_{T} \rag \ra
+      env_{T}'} \\
+
+      \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{BODY}}\right]$ &
+      \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T \mapsto \left(T, X, D_{M},
+      \varepsilon, \varepsilon \right)] \rag \ra env_{T}'}
+      {env_{C} \vdash \lag \texttt{type}\; T\; X\; \left\{D_{M}\right\}\;
+      D_{G},\; env_{T} \rag \ra env_{T}'} \\
+
+      \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{EXTEND}}\right]$ &
+      \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T_{1} \mapsto \left(T_{1}, X,
+      \varepsilon, L, T_{2} \right)] \rag \ra env_{T}'}
+      {env_{C} \vdash \lag \texttt{type}\; T_{1}\; X\; \texttt{extends}\;
+      T_{2}\; L\; D_{G},\; env_{T} \rag \ra env_{T}'} \\
+
+      \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{EXTEND-BODY}}\right]$ &
+      \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T_{1} \mapsto \left(T_{1}, X,
+      D_{M}, L, T_{2} \right)] \rag \ra env_{T}'}
+      {env_{C} \vdash \lag \texttt{type}\; T_{1}\; X\; \texttt{extends}\;
+      T_{2}\; L\; \left\{D_{M}\right\}\; D_{G},\; env_{T} \rag \ra env_{T}'} \\
+      \hline \\
+    \end{tabular*}
+    \capt{Transition rules for type definitions.}
+    \label{semantic:typedef}
+\end{table}
+
+In the premises of the rules we present a 5-tuple where $env_{T}$ is updated
+according to the rule. In three of the four 5-tuples we include the symbol
+$\varepsilon$, which denotes that the given position of the symbol is an empty
+slot. This is again due to the fact that we have some optional arguments.
+
+The 5-tuple is ordered as follows:
+
+\begin{nlist}
+\item $\mathbf{T_{k}}$ - current type
+  \item $\mathbf{X}$ - current type's formal parameters
+  \item $\mathbf{D_{M}}$ - member definitions
+  \item $\mathbf{L}$ - super type's parameters
+  \item $\mathbf{T_{k+1}}$ - super type
+\end{nlist}
+
+Throughout the transition rules we use the 5-tuple to update the type environment.
+\end{document}
