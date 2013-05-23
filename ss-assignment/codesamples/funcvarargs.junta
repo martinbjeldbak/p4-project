@@ -1,0 +1,5 @@
+define variadic[$f, ... $args] = $args.map[$f]
+define use = variadic[
+  #[$a] => $a + 5, 
+  12, 17, 18, 2
+] // returns [18, 22, 23, 7]
