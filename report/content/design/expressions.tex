@@ -1,7 +1,27 @@
 \section{Expressions}
 \label{sec:expressions}
 
-Expressions in \productname{} is the 
+Throughout this section we will present all the expressions that are included in
+\productname{}. We have provided big-step semantics for six of the expressions
+in this section. These are the ones that we have deemed most necessary and they
+are not as any other construct. Which sections that include semantics will be
+explained in the following.
+
+The smallest parts of expressions are presented in
+\secref{sec:atomicexpressions}. In \secref{sec:lists} the notion of
+lists is presented and explained. Here we present big-step semantics. Then we
+present the let expressions in \secref{sec:letexpressions}. Also here we present
+big-step semantics. Afterwards, we present the conditional expressions in 
+\secref{sec:conditionalexpressions} followed by a lambda expressions in
+\secref{sec:lambdaexpressions}. We provide big-step semantics for lambda
+expressions. Furthermore, we present the concept of a set expression in
+\secref{sec:setexpressions}. We also provied big-step semantics for set
+expressions. Lastly, we present the different operators and calls in
+\secref{sec:operatorsandcalls}. Here we provide big-step semantics for function
+calls and for member access.
+
+We begin here by listing the main expressions below this
+paragraph:
 
 \begin{ebnf}
 %Expressions
@@ -251,6 +271,7 @@ returned. If the value is false, then the \emph{else}-expression is evaluate,
 and the result returned.
 
 \subsection{Lambda expressions}
+\label{sec:lambdaexpressions}
 
 Lambda expressions are expressions that evaluate to anonymous functions. In
 \productname{} they are defined as:
@@ -259,6 +280,9 @@ Lambda expressions are expressions that evaluate to anonymous functions. In
 \grule{expression}{\grange \gor lambda\_expr}
 \grule{lambda\_expr}{\gter{\#} \gcat varlist \gcat \gter{=>} \gcat expression}
 \end{ebnf}
+
+The non-terminal $varlist$ represents a list formal parameters, and is further
+explained in \secref{sec:constantdefinitions}.
 
 When a lambda expression is created, a reference to the scope it was created in
 is saved with it. This is known as a closure, and means that a lambda
@@ -317,6 +341,7 @@ The lambda expressions evaluates to a value $v$. The side condition of the
 transition rule explains that $v$ is assigned the 4-tuple.
 
 \subsection{Set expressions}
+\label{sec:setexpressions}
 
 Set expressions look a bit like let expressions, but are only applicable within type definitions:
 

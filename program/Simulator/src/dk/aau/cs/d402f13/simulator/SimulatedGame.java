@@ -58,6 +58,8 @@ public class SimulatedGame extends BasicGame {
 		try {
 			gal = new GameAbstractionLayer( new FileInputStream( path ) );
 			game = gal.getGame();
+			if( game == null )
+				handleSimulatorError( new SimulatorError( "GAL did not give us a game..." ) );
 		} catch (Error e) {
 			handleSimulatorError( new SimulatorError( e.getMessage() ) );
 		} catch (FileNotFoundException e1) {
@@ -65,7 +67,7 @@ public class SimulatedGame extends BasicGame {
 			handleSimulatorError( new SimulatorError( errorMsg ) );
 		}
 		
-		//Get the directory from the file path
+		//Get the folder the game resides in
 		Path filePath = Paths.get( path );
 		gameFolder = filePath.getParent().toString() + "/";
 		
