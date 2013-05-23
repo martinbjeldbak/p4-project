@@ -1,11 +1,12 @@
 \section{Definitions}
 \label{sec:definitions}
 In this section we present how programs written in \productname{} can be
-structured with definitions og constant, types and abstract types.
+structured with definitions of constants and types.
 
 We begin by presenting what a program can consist of and then we further specify
 how these different definitions are built. We present constant definitions
-followed by type definitions.
+followed by type definitions. We provide big-step semantics for type definitions
+in \secref{sec:typedefinitions}.
 
 \subsection{Program structure}
 
@@ -23,20 +24,20 @@ constants.
 
 As the above grammar shows, an empty program is valid in \productname{}, because
 it is possible to have zero, one, or more definitions in the outermost layer of
-the structuring og programs.
+the structuring of programs.
 
 \subsection{Constant definitions}
 \label{sec:constantdefinitions}
 
-Functions are also constants and are defined with the the following definition:
+Functions are also constants and are defined with the following definition:
 
 \begin{ebnf}
 \grule{constant\_def}{\gter{define} \gcat constant \gcat \gopt{varlist} \gcat
 \gter{=} \gcat \gcat expression}
 \end{ebnf}
 
-A definition of a constants can contain a list of variables as the following
-grammar rule:
+A function definition needs a list of formal parameters, formal parameters (a
+$varlist$) are described with the following grammar:
 
 \begin{ebnf}
 \grule{varlist}{\gter{[} \gcat \gopt{variable \gcat \grep{\gter{,} \gcat
@@ -44,35 +45,71 @@ variable} \gcat \gopt{\gter{,} \gcat vars} \gor vars} \gcat \gter{]}}
 \grule{vars}{\gter{...} \gcat variable}  
 \end{ebnf}
 
-A user can define custom constants for use in e.g. the implementation of a board game.
-This is done using the $\gter{define}$-keyword. Functions can be declared to accept
-any number of parameters or none at all. An example of a function definition could
-be:
+Creating constants and functions outside of type definitions adds them to the
+global scope, meaning that they are essentially accessible from anywhere in the
+program (provided that they are not hidden by a constant within a type).
+
+An example of a global function is the following implementation of function for
+computing the greatest of two numbers:
 
 \codesample{functiondef.garry}
 
-It can be used as a way of putting frequently used expressions in one definition
-of a constants and call that specific definition when it is needed instead of
-writing (or pasting) the code every time it is needed. 
+Essentially this creates a constant in the global scope named \constant{max},
+which when used, returns a value of type \type{Function}. Since function values
+can also be created with lambda expressions (as described in
+\secref{sec:lambdaexpressions}), the following constant definition is equivalent
+to \csref{functiondef.garry}:
 
-\productname{} supports variadic functions, which means that it is possible to define
-functions with indefinite arity.
+\codesample{functiondef.junta}
 
-\todo{Example of indefinite arity (vars)}
+This equivalence only holds for global constants, since type constants/methods
+are a bit more special as described in \secref{sec:typedefinitions}.
+
+Constants and functions are useful for putting frequently used expressions or
+values in one place.
+
+The non-terminal $vars$ is used for variadic functions, another feature of
+\productname{}. Variadic functions are functions with indefinite arity, meaning
+they will accept any number of actual parameters. In \productname{} this is
+supported for both lambda expressions and functions. The following code sample
+is an example of two variadic functions:
+
+\codesample{variadic.junta}
+
+The use of the \texttt{"..."}-terminal marks that the following variable
+represents a list that holds all additional parameters passed to the function.
+In the above example, calling the function \constant{last} with no parameters,
+is possible and results in the formal parameter \variable{args} holding the
+value of an empty list, \texttt{[]}. Additionally, \constant{last} can be called
+with any number of parameters, which will then be appended to the list in
+\variable{args}. In the second function, \constant{myMap}, at least one
+actual parameter must be provided (since the variadic parameter is the second
+one). But other than that, the parameter passing works in the same way as with
+\constant{last}, in that the function accepts any number of parameters greater
+than or equal to $1$. Some uses and result of the two functions are shown in the
+following two examples:
+
+\codesample{variadicuse2.junta}
+\codesample{variadicuse1.junta}
+
+One limit is that the variadic parameter (the one after \texttt{"..."}) must be
+the last one in the list of formal parameters, and there can only be one. This
+is expressed in the grammar.
 
 \subsubsection{Scope rules for functions and constants}
 
-Consider a function definition such as:
-
-\codesample{functiondef.garry}
-
-The variables \variable{a} and \variable{b} only exist within the function \function{max}.
-When calling the function:
+Consider the \constant{max}-function in \csref{functiondef.garry}. Its formal
+parameters \variable{a} and \variable{b} only exist, and are only available
+within the \constant{max}-function. The following example shows a call of the
+\constant{max}-function:
 
 \codesample{functioncall.garry}
 
-A new scope will be created and the values $5$ and $23$
-are assigned to \variable{a} and \variable{b}, respectively.
+When called with the actual parameters $5$ and $23$, a new scope is created and
+the actual parameters are assigned to the formal parameters \variable{a} and
+\variable{b}, respectively. The body of the function (the if expression) is then
+evaluated and the result is returned. When returning, the variables
+\variable{a} and \variable{b} cease to exist. 
 
 \subsection{Type definitions}
 \label{sec:typedefinitions}
@@ -112,6 +149,8 @@ the abstract constant.
 \todo{Niels: Forklar data-begrebet.}
 \subsubsection{Inheritance}
 
+\todo{repeating stuff from introduction}
+
 \productname{} supports single inheritance between types. An inheriting type, will
 inherit all the members of its super type(s) (if \type{C} extends \type{B}, which
 extends \type{A}, then \type{C} inherits all members from both \type{B} and \type{A}).
@@ -141,30 +180,29 @@ rules described.
 \begin{table}[ht]
     \begin{tabular*}{\textwidth}{l l}
       \hline \\
-      \hspace{0.4cm} $\left[\mbox{TYPEDEF}\right]$ & \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T \mapsto
-      \left(T, X, \varepsilon, \varepsilon, \varepsilon \right)] \rag \ra env_{T}'}
-      {env_{C} \vdash \lag \texttt{type}\; T\; X\; D_{G},\; env_{T} \rag \ra env_{T}'} 
-      \\
+      \hspace{0.4cm} $\left[\mbox{TYPEDEF}\right]$ & \infrule{env_{C} \vdash
+      \lag D_{G}, env_{T}[T \mapsto \left(T, X, \varepsilon, \varepsilon,
+      \varepsilon \right)] \rag \ra env_{T}'}
+      {env_{C} \vdash \lag \texttt{type}\; T\; X\; D_{G},\; env_{T} \rag \ra
+      env_{T}'} \\
 
-      \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{BODY}}\right]$ & \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T \mapsto
-      \left(T, X, D_{M}, \varepsilon, \varepsilon \right)] \rag \ra env_{T}'}
+      \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{BODY}}\right]$ &
+      \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T \mapsto \left(T, X, D_{M},
+      \varepsilon, \varepsilon \right)] \rag \ra env_{T}'}
       {env_{C} \vdash \lag \texttt{type}\; T\; X\; \left\{D_{M}\right\}\;
-      D_{G},\; env_{T} \rag \ra env_{T}'} 
-      \\
+      D_{G},\; env_{T} \rag \ra env_{T}'} \\
 
-      \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{EXTEND}}\right]$ & \infrule{env_{C} \vdash \lag D_{G},
-      env_{T}[T_{1} \mapsto \left(T_{1}, X, \varepsilon, L, T_{2} \right)] \rag
-      \ra env_{T}'}
+      \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{EXTEND}}\right]$ &
+      \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T_{1} \mapsto \left(T_{1}, X,
+      \varepsilon, L, T_{2} \right)] \rag \ra env_{T}'}
       {env_{C} \vdash \lag \texttt{type}\; T_{1}\; X\; \texttt{extends}\;
-      T_{2}\; L\; D_{G},\; env_{T} \rag \ra env_{T}'} 
-      \\
+      T_{2}\; L\; D_{G},\; env_{T} \rag \ra env_{T}'} \\
 
-      \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{EXTEND-BODY}}\right]$ & \infrule{env_{C} \vdash \lag D_{G},
-      env_{T}[T_{1} \mapsto \left(T_{1}, X, D_{M}, L, T_{2} \right)] \rag
-      \ra env_{T}'}
+      \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{EXTEND-BODY}}\right]$ &
+      \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T_{1} \mapsto \left(T_{1}, X,
+      D_{M}, L, T_{2} \right)] \rag \ra env_{T}'}
       {env_{C} \vdash \lag \texttt{type}\; T_{1}\; X\; \texttt{extends}\;
-      T_{2}\; L\; \left\{D_{M}\right\}\; D_{G},\; env_{T} \rag \ra env_{T}'} 
-      \\
+      T_{2}\; L\; \left\{D_{M}\right\}\; D_{G},\; env_{T} \rag \ra env_{T}'} \\
       \hline \\
     \end{tabular*}
     \capt{Transition rules for type definitions.}
