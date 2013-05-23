@@ -62,9 +62,14 @@ public class Interactive {
         }
         else {
           ast = p.parseAsExpression(tokens);
+          
         }
         //new ScopeChecker(ast);
         Value v = interp.visit(ast);
+        if (v instanceof PatternValue){
+          int breakit = 2;
+          breakit = breakit+2;
+        }
         if (v != null) 
           System.out.println(" = " + v + " (" + v.getClass().getSimpleName() + ")");
       }
