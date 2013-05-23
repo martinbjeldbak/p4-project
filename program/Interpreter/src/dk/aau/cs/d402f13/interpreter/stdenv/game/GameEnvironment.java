@@ -362,7 +362,7 @@ public class GameEnvironment extends StandardEnvironment {
         object = (ObjectValue)object.setAttribute("history", history);
 //        object = (ObjectValue)object.callMember("nextTurn", game, interpreter);
         if (actionObject.is(actionSequence)) {
-          Value[] sequence = object.getMemberList("actions", action, 1);
+          Value[] sequence = actionObject.getMemberList("actions", action, 1);
           for (Value a : sequence) {
             if (a.is(unitAction)) {
               object = applyUnitAction(object, (ObjectValue)a, interpreter);
@@ -640,8 +640,8 @@ public class GameEnvironment extends StandardEnvironment {
         }
         object = (ObjectValue)object.setAttribute("squares", new ListValue(newList));
         Value[] pieces = object.getMemberList("pieces", piece);
-        newList = new Value[pieces.length - 1];
-        for  (int i = 0; i < pieces.length - 1; i++) {
+        newList = new Value[pieces.length];
+        for  (int i = 0; i < pieces.length; i++) {
           if (pieces[i].equals(p)) {
             newList[i] = p.callMember("remove", piece, interpreter);
           }

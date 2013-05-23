@@ -1,0 +1,2 @@
+define last[... $args] = $args[-1]
+define myMap[$func, ... $list] = $list.map[$func]
