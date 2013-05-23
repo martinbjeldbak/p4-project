@@ -1,7 +1,7 @@
 \section{Definitions}
 \label{sec:definitions}
 In this section we present how programs written in \productname{} can be
-structured with definitions og constant, types and abstract types.
+structured with definitions of constants and types.
 
 We begin by presenting what a program can consist of and then we further specify
 how these different definitions are built. We present constant definitions
@@ -24,20 +24,20 @@ constants.
 
 As the above grammar shows, an empty program is valid in \productname{}, because
 it is possible to have zero, one, or more definitions in the outermost layer of
-the structuring og programs.
+the structuring of programs.
 
 \subsection{Constant definitions}
 \label{sec:constantdefinitions}
 
-Functions are also constants and are defined with the the following definition:
+Functions are also constants and are defined with the following definition:
 
 \begin{ebnf}
 \grule{constant\_def}{\gter{define} \gcat constant \gcat \gopt{varlist} \gcat
 \gter{=} \gcat \gcat expression}
 \end{ebnf}
 
-A definition of a constants can contain a list of variables as the following
-grammar rule:
+A function definition needs a list of formal parameters, formal parameters (a
+$varlist$) are described with the following grammar:
 
 \begin{ebnf}
 \grule{varlist}{\gter{[} \gcat \gopt{variable \gcat \grep{\gter{,} \gcat
@@ -45,43 +45,81 @@ variable} \gcat \gopt{\gter{,} \gcat vars} \gor vars} \gcat \gter{]}}
 \grule{vars}{\gter{...} \gcat variable}  
 \end{ebnf}
 
-A user can define custom constants for use in e.g. the implementation of a board game.
-This is done using the $\gter{define}$-keyword. Functions can be declared to accept
-any number of parameters or none at all. An example of a function definition could
-be:
+Creating constants and functions outside of type definitions adds them to the
+global scope, meaning that they are essentially accessible from anywhere in the
+program (provided that they are not hidden by a constant within a type).
+
+An example of a global function is the following implementation of function for
+computing the greatest of two numbers:
 
 \codesample{functiondef.garry}
 
-It can be used as a way of putting frequently used expressions in one definition
-of a constants and call that specific definition when it is needed instead of
-writing (or pasting) the code every time it is needed. 
+Essentially this creates a constant in the global scope named \constant{max},
+which when used, returns a value of type \type{Function}. Since function values
+can also be created with lambda expressions (as described in
+\secref{sec:lambdaexpressions}), the following constant definition is equivalent
+to \csref{functiondef.garry}:
 
-\productname{} supports variadic functions, which means that it is possible to define
-functions with indefinite arity.
+\codesample{functiondef.junta}
 
-\todo{Example of indefinite arity (vars)}
+This equivalence only holds for global constants, since type constants/methods
+are a bit more special as described in \secref{sec:typedefinitions}.
+
+Constants and functions are useful for putting frequently used expressions or
+values in one place.
+
+The non-terminal $vars$ is used for variadic functions, another feature of
+\productname{}. Variadic functions are functions with indefinite arity, meaning
+they will accept any number of actual parameters. In \productname{} this is
+supported for both lambda expressions and functions. The following code sample
+is an example of two variadic functions:
+
+\codesample{variadic.junta}
+
+The use of the \texttt{"..."}-terminal marks that the following variable
+represents a list that holds all additional parameters passed to the function.
+In the above example, calling the function \constant{last} with no parameters,
+is possible and results in the formal parameter \variable{args} holding the
+value of an empty list, \texttt{[]}. Additionally, \constant{last} can be called
+with any number of parameters, which will then be appended to the list in
+\variable{args}. In the second function, \constant{myMap}, at least one
+actual parameter must be provided (since the variadic parameter is the second
+one). But other than that, the parameter passing works in the same way as with
+\constant{last}, in that the function accepts any number of parameters greater
+than or equal to $1$. Some uses and result of the two functions are shown in the
+following two examples:
+
+\codesample{variadicuse2.junta}
+\codesample{variadicuse1.junta}
+
+One limit is that the variadic parameter (the one after \texttt{"..."}) must be
+the last one in the list of formal parameters, and there can only be one. This
+is expressed in the grammar.
 
 \subsubsection{Scope rules for functions and constants}
 
-Consider a function definition such as:
-
-\codesample{functiondef.garry}
-
-The variables \variable{a} and \variable{b} only exist within the function \function{max}.
-When calling the function:
+Consider the \constant{max}-function in \csref{functiondef.garry}. Its formal
+parameters \variable{a} and \variable{b} only exist, and are only available
+within the \constant{max}-function. The following example shows a call of the
+\constant{max}-function:
 
 \codesample{functioncall.garry}
 
-A new scope will be created and the values $5$ and $23$
-are assigned to \variable{a} and \variable{b}, respectively.
+When called with the actual parameters $5$ and $23$, a new scope is created and
+the actual parameters are assigned to the formal parameters \variable{a} and
+\variable{b}, respectively. The body of the function (the if expression) is then
+evaluated and the result is returned. When returning, the variables
+\variable{a} and \variable{b} cease to exist. 
 
 \subsection{Type definitions}
 \label{sec:typedefinitions}
 
-The following grammar rules present how defining a type is done followed by the
-associated definitions which can be used within a type definition. Types are
-similar to what we normally call classes in object-oriented programming
-languages. We wish to call them types in \productname{}.
+As described the introduction of this chapter, types are a central part of
+\productname{} and being able to define custom user types is essential when
+creating board games.
+The following grammar rules present how type definitions work in
+\productname{} followed by the associated definitions which can be used within
+a type definition.
 
 \begin{ebnf}
 \grule{type\_def}{\gter{type} \gcat type \gcat varlist \gcat
@@ -95,23 +133,43 @@ languages. We wish to call them types in \productname{}.
 \gcat expression}
 \end{ebnf}
 
-The keyword $\gter{type}$ is not the same as the identifier $type$, which was
-presented in \secref{sec:identifiers}. All definitions of types must begin with
-the keyword followed by the identifier.
+The simplest type that can be created is a type such as:
 
-\todo{Niels: Instantiering af superklassen.}
+\codesample{simplesttype.junta}
 
-It is optional to include a body for a type, wherein further definitions can be
-defined. These definitions must be encircled with a beginning and an ending brace. 
+The type \type{A} is a type without any data, constructor parameters, constants
+or parent type. This type is truly useless, since it has no identity or
+behaviour. It can however be instantiated, and instances of it can be compared
+using the \texttt{==}, \texttt{!=}, and \texttt{is}-operators. But since the
+type has no identity in any way, all instances will be equal:
 
-When defining an abstract constant it must be overridden before it can be used.
-This is done by simply redefining the constant exactly as it was defined in the
-definition of the abstract (with variables and such). So, a constants definition
-with the same $constant$ and $varlist$ as an abstract constant, will override
-the abstract constant.
+\codesample{simplesttypeuse.junta}
 
-\todo{Niels: Forklar data-begrebet.}
+\subsubsection{The constructor}
+
+One way to add identity to objects, is with the constructor. In the previous
+example of a very simple type, the constructor takes no parameters (the empty
+parameter list \texttt{[]} after the type name). If we were to add some formal
+parameters to the type definition, it could look like:
+
+\codesample{typedef1.junta}
+
+Now in order to instantiate \type{A}, we must provide the constructor with two
+parameters: 
+
+\codesample{typedef1use.junta}
+
+Notice how in the first line, the two objects are equal to each other, while in
+the second line they are not. This means that we have successfully added
+identity to the \type{A}-type.
+
+\subsubsection{The constants}
+
+\subsubsection{The data}
+
 \subsubsection{Inheritance}
+
+\todo{repeating stuff from introduction}
 
 \productname{} supports single inheritance between types. An inheriting type, will
 inherit all the members of its super type(s) (if \type{C} extends \type{B}, which
@@ -130,7 +188,6 @@ member of \type{A}. The type \type{C} on the other hand is not abstract, since i
 implements the abstract constant. Abstract types can't be constructed, albeit the
 constructor for an abstract type has to be used when extending the type (after the
 \keyword{extends}-keyword).
-
 
 \subsubsection{Big-step semantics}
 

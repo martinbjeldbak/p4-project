@@ -3,9 +3,6 @@ type NielsGame[] extends Game["Niels' spil!!!!"] {
   define players = [VinderNiels[], TaberMartin[], HoboDude[]]
   define turnOrder = [players[0], players[0], players[0], players[1], players[2]]
   define initialBoard = GridBoard[5, 5]
-  define applyAction[$action] = if $action is MorphAction
-    then setBoard[$action.board]
-    else super.applyAction[$action]
 }
 
 type MyPiece[$owner] extends Piece[$owner] {

@@ -4,4 +4,4 @@ define recsum[$x, $runningTotal] =
   else
     recsum[$x - 1, $runningTotal + $x]
 
-recsum[5, 0] // returns 1 + 2 + 3 + 4 + 5 = 15
+recsum[5, 0] // returns 5 + 4 + 3 + 2 + 1 = 15
