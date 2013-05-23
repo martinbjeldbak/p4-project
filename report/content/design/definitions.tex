@@ -74,6 +74,27 @@ they will accept any number of actual parameters. In \productname{} this is
 supported for both lambda expressions and functions. The following code sample
 is an example of two variadic functions:
 
+\codesample{variadic.junta}
+
+The use of the \texttt{"..."}-terminal marks that the following variable
+represents a list that holds all additional parameters passed to the function.
+In the above example, calling the function \constant{last} with no parameters,
+is possible and results in the formal parameter \variable{args} holding the
+value of an empty list, \texttt{[]}. Additionally, \constant{last} can be called
+with any number of parameters, which will then be appended to the list in
+\variable{args}. In the second function, \constant{myMap}, at least one
+actual parameter must be provided (since the variadic parameter is the second
+one). But other than that, the parameter passing works in the same way as with
+\constant{last}, in that the function accepts any number of parameters greater
+than or equal to $1$. Some uses and result of the two functions are shown in the
+following two examples:
+
+\codesample{variadicuse2.junta}
+\codesample{variadicuse1.junta}
+
+One limit is that the variadic parameter (the one after \texttt{"..."}) must be
+the last one in the list of formal parameters, and there can only be one. This
+is expressed in the grammar.
 
 \subsubsection{Scope rules for functions and constants}
 
