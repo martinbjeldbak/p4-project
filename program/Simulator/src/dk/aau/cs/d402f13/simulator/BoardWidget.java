@@ -322,6 +322,9 @@ public abstract class BoardWidget extends Widget {
 	 * @throws SimulatorError 
 	 */
 	protected void renderPiece( Graphics g, Piece p, int x, int y, int size, int offsetX, int offsetY) throws StandardError, SimulatorError{
+		if( !p.isOnBoard() )
+			return;
+		
 		String imgPath = game.getGameFolder() + p.getImage();
 		String imgFallback = "img/defaultPiece.png";
 		
