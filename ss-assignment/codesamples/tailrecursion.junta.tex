@@ -1,0 +1,9 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kr}{define} \PY{n+nf}{recsum}[\PY{n+nv}{\PYZdl{}x}, \PY{n+nv}{\PYZdl{}runningTotal}] =
+  \PY{k+kr}{if} \PY{n+nv}{\PYZdl{}x} == \PY{l+m}{0} \PY{k+kr}{then}
+    \PY{n+nv}{\PYZdl{}runningTotal}
+  \PY{k+kr}{else}
+    \PY{n+nf}{recsum}[\PY{n+nv}{\PYZdl{}x} \PYZhy{} \PY{l+m}{1}, \PY{n+nv}{\PYZdl{}runningTotal} + \PY{n+nv}{\PYZdl{}x}]
+
+\PY{n+nf}{recsum}[\PY{l+m}{5}, \PY{l+m}{0}] \PY{c}{// returns 5 + 4 + 3 + 2 + 1 = 15}
+\end{Verbatim}

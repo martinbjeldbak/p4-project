@@ -55,6 +55,7 @@ public class StandardEnvironment {
     
     //String
     current = new TypeSymbolInfo(null, "String", -1, 0);
+    current.members.add(new ConstantMember("size"));
     current.args = 1;
     tt.addType(current);
     
