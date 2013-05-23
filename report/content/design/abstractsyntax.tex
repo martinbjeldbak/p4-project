@@ -11,7 +11,7 @@ The abstract syntax of programming languages is defined as follows\cite[p.
 
 \begin{dlist}
   \item A collection of syntactic categories
-  \item For each syntactic category we have a finite set of formulation rules
+  \item For each syntactic category we have a finite set of formation rules
     that define how the elements of the given category can be built and combined
 \end{dlist}
 
@@ -43,7 +43,7 @@ Table \ref{table:syn-cat} presents the syntactic cateogries for \productname{}.
 
 In \tableref{table:syn-cat} we have letters that define one syntactic
 category. For instance we have $n \in \mathbf{Integer}$, which means that when
-we see a $n$ in the formulation rules this is actually an integer value. There
+we see a $n$ in the formation rules this is actually an integer value. There
 are two types of lists; \textbf{VarList} and \textbf{List}. These differ in that
 a variable list is used as formal parameters for types and the list is the
 sequence of parameters for a super type. 
@@ -165,12 +165,12 @@ environment, the set of variable environments and the set of object values. This
 is yet another recursively defined definition, because an object value can have a parent object value, this is the case when an object value extends another object value. 
 
 
-\subsubsection{Formulation rules}
-Each syntactic category is used in one or more of the formulation rules
-presented in \figref{fig:form-rules}. The formulation rules define the structure
+\subsubsection{Formation rules}
+Each syntactic category is used in one or more of the formation rules
+presented in \figref{fig:form-rules}. The formation rules define the structure
 of the members of the syntactic categories. 
 
-Not all of the constituents of the formulation rules are syntactic categories. We
+Not all of the constituents of the formation rules are syntactic categories. We
 for instance see different parentheses, forward slashes, different operators, and
 words like $\texttt{this}$ and $\texttt{define}$. These are part of the
 construction of the given formulation rule. If they are omitted from a rule then
@@ -221,7 +221,7 @@ it is not valid in \productname{}.
       $\texttt{data}\; x\; \texttt{=}\; E\; D_{M}$ \for $\varepsilon$ \\
 
     \end{tabular}  
-    \capt{The formulation rules for the syntactic categories of \hspace{0.02cm}
+    \capt{The formation rules for the syntactic categories of \hspace{0.02cm}
     \productname{}.}
     \label{fig:form-rules} 
   \end{center}
