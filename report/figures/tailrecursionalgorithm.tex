@@ -1,0 +1,25 @@
+\begin{algorithm}[H]
+\DontPrintSemicolon
+recursion $\leftarrow$ false\;
+body $\leftarrow$ this function's AST node body\;
+openScope()\;
+
+\Repeat{recursion $=$ true}{
+  \For{$i = 0$ \KwTo formal parameter size $n$}{
+    curentScope().addVariable(formalParam $i \mapsto$ actualParam $i$)\;
+  }
+  
+  evaluatedBody $\leftarrow$ visit(body)\tcc*[r]{returns a value}
+  
+  \eIf{evaluatedBody is a callValue and body.getFunction() $=$ this function}{
+    recursion $\leftarrow$ true\;
+    actualParameters $\leftarrow$ evaluatedBody.getParameters()\;
+  }{
+    recursion $\leftarrow$ false\;
+  }
+}
+closeScope()\;
+\Return evaluatedBody\;
+\capt{Detecting tail recursion during call of a function.}
+\label{alg:tailrecursion}
+\end{algorithm}
