@@ -98,17 +98,18 @@ is expressed in the grammar.
 
 \subsubsection{Scope rules for functions and constants}
 
-Consider a function definition such as:
-
-\codesample{functiondef.garry}
-
-The variables \variable{a} and \variable{b} only exist within the function \function{max}.
-When calling the function:
+Consider the \constant{max}-function in \csref{functiondef.garry}. Its formal
+parameters \variable{a} and \variable{b} only exist, and are only available
+within the \constant{max}-function. The following example shows a call of the
+\constant{max}-function:
 
 \codesample{functioncall.garry}
 
-A new scope will be created and the values $5$ and $23$
-are assigned to \variable{a} and \variable{b}, respectively.
+When called with the actual parameters $5$ and $23$, a new scope is created and
+the actual parameters are assigned to the formal parameters \variable{a} and
+\variable{b}, respectively. The body of the function (the if expression) is then
+evaluated and the result is returned. When returning, the variables
+\variable{a} and \variable{b} cease to exist. 
 
 \subsection{Type definitions}
 \label{sec:typedefinitions}
