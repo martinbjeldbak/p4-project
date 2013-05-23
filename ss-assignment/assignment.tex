@@ -1,24 +1,24 @@
 \input{preamble}
 
-\title{Big-Step Semantik for \junta{}, fri projektrelateret opgave}
+\title{Big-step semantik for \junta{} - fri projektrelateret opgave}
 \author{\href{mailto:d402f13@cs.aau.dk}{d402f13}}
 
 \begin{document}
 \maketitle
 
-Hej Hans og Nicolaj. Dette er vores besvarelse på den frie
-projektrelateret opgave, hvor vi har valgt en delmængde af vores sprog
-\junta{}, som er et funktionelt objektorienteret programmeringssprog.
+Dette er vores besvarelse på den frie projektrelaterede opgave, hvor vi har valgt
+en delmængde af vores sprog, \junta{}, som er et funktionelt objektorienteret
+programmeringssprog.
 
-Tankerne bag sproget er, at man skal kunne skrive brætspil i sproget,
+Tankerne bag sproget er, at man skal kunne programmere brætspil i sproget,
 der kan spilles ved hjælp af en simulator. Mange funktionelle principper
-ses i sproget, da der ingen side effekter er og ingen program tilstand
+ses i sproget, da der ingen sideeffekter er og ingen programtilstande
 findes.
 
 Herunder defineres semantikken for følgende konstruktioner i
-sproget: Let-in-udtryk, metodekald, member tilgang, liste-tilgang, lambda-udtryk,
-set-konstruktionen og type (klasse) definitioner.
-
+sproget: Let-in-udtryk, metode-kald, member-tilgang, liste-tilgang, lambda-udtryk,
+set-konstruktionen og typedefinitioner (typer minder om klasser i andre
+objektorienterede sprog).
 
 \tableofcontents
 
@@ -31,7 +31,7 @@ their lexical structure, we must first present the syntax of programs. At this
 point, we are only interested in a notion of abstract syntax because we do not
 need to concern ourselves with operator precedence and so forth.
 
-The different syntactic categories are seen below:
+The different syntactic categories are seen in table \ref{table:syn-cat}.
 
 \begin{table}[ht]
   \begin{center}
@@ -108,7 +108,7 @@ defined as follows:
   \mathbf{ListValues} = \mathbf{Integers} \times \mathbf{Elements}
 \]
 
-The length of a list is an arbitrary member of $l \in \mathbf{Integer}$.
+A length of an arbitrary list is defined as $l \in \mathbf{Integer}$.
 
 \textbf{Definition} (List elements) \hspace{0.5cm} The set of elements in
 lists is the set of partial functions from integers to values:
@@ -127,7 +127,7 @@ is defined as follows:
   \mathbf{EnvV} \times \mathbf{EnvC}
 \]
 
-A function value consists of variable lists, expressions and the set of variable
+A function value consists of a variable list, an expression and the set of variable
 and constant environments.
 
 \textbf{Definition} (Type values) \hspace{0.5cm} The set of type values is
@@ -140,8 +140,8 @@ defined as follows:
 
 An arbitrary member is defined as $t \in \mathbf{TypeValues}$.
 
-A type value consists of type names, variable lists, the member definitions,
-lists and the type value. A type value is recursively defined since
+A type value consists of a type name, a variable list, the member definitions,
+a list and the super type's type value. A type value is recursively defined since
 $\mathbf{TypeValues}$ is defined in terms of itself. This is not a problematic
 definition because these must be considered as values for two different types.
 The $\mathbf{TypeValues}$ on the right-hand side is in fact the super type's set
@@ -149,8 +149,8 @@ of values whereas the $\mathbf{TypeValues}$ on the left-hand side is the current
 type's set of values.  The list in the definition is in fact the super type's
 parameters whereas the variable list is the current type's formal parameters.
 
-\textbf{Definition} (Object values) \hspace{0.5cm} The set of object values (an instantiated $\mathbf{TypeValue}$) is
-defined as follows:
+\textbf{Definition} (Object values) \hspace{0.5cm} The set of object values (an
+instantiated $\mathbf{TypeValue}$) is defined as follows:
 
 \[
   \mathbf{ObjectValues} = \mathbf{TypeValues} \times \mathbf{EnvC} \times
@@ -159,16 +159,18 @@ defined as follows:
 
 An object value consists of the set of type values, the set of constant
 environment, the set of variable environments and the set of object values. This
-is yet another recursively defined definition, because an object value can have a parent object value, this is the case when an object value extends another object value. 
+is yet another recursively defined definition, because an object value can have
+a parent object value, this is the case when an object value extends another
+object value. 
 
 \section{Formulation rules}
 Each syntactic category is used in one or more of the formulation rules
 presented in \figref{fig:form-rules}. The formulation rules define the structure
 of the members of the syntactic categories. 
 
-Not all of the constituents of the formulation rules are syntactic categories. We
-for instance see different parentheses, forward slashes, different operators, and
-words like $\texttt{this}$ and $\texttt{define}$. These are part of the
+Not all of the constituents of the formulation rules are syntactic categories.
+We for instance see different parentheses, forward slashes, different operators,
+and words like $\texttt{this}$ and $\texttt{define}$. These are part of the
 construction of the given formulation rule. If they are omitted from a rule then
 it is not valid in \productname{}.
 
@@ -224,11 +226,12 @@ it is not valid in \productname{}.
 \end{figure}
 
 The $\mathbf{::=}$ means that the left-hand side of the rule can be any one of
-the $\for$-separated right-hand sides. Furthermmore, we use ``$\cdots$'' to
+the $\for$-separated right-hand sides. Furthermore, we use ``$\cdots$'' to
 illustrate a repetition of some element in the rule. We have also used the
 slightly different ``$\dots$'' to illustrate the three dots that precede a
-variable argument (vars) which we present in \secref{sec:constantdefinitions}.
-It should be clear from the context which of the two is being used.
+variable argument (vars) (this is explained in the report - and has been omitted
+from this document). It should be clear from the context which of the two is
+being used.
 
 The $\varepsilon$ represents an empty definition.
 
@@ -240,9 +243,9 @@ for lists.
 
 \begin{table}[ht]
   \begin{center}
-    \begin{tabular*}{\textwidth}{l p{\textwidth}}
+    \begin{tabular*}{\textwidth}{l l}
       \hline \\
-      \hspace{0.5cm} $[\mbox{LIST}_{\mbox{ACCESS-1}}]$ & \infrule{env_{T},
+      $[\mbox{LIST}_{\mbox{ACCESS-1}}]$ & \infrule{env_{T},
       env_{C}, env_{V} \vdash \lag E\; \rag \ra v_2  \qquad env_{T}, env_{C},
       env_{V} \vdash \lag L \rag \ra v_3}
       {env_{T}, env_{C}, env_{V} \vdash \lag E\; L \rag \ra v_1} \\
@@ -256,7 +259,7 @@ for lists.
            elem_1\; (l_1 + i) & \quad \text{if $i \geq 0$}
 	 \end{array} \right.$ \\
 	 
-      \hspace{0.5cm} $[\mbox{LIST}_{\mbox{ACCESS-2}}]$ & \infrule{env_{T},
+      $[\mbox{LIST}_{\mbox{ACCESS-2}}]$ & \infrule{env_{T},
       env_{C}, env_{V} \vdash \lag E \rag \ra v_2  \qquad env_{T}, env_{C},
       env_{V} \vdash \lag L \rag \ra v_3}
       {env_{T}, env_{C}, env_{V} \vdash \lag E\; L \rag \ra v_1} \\
@@ -297,7 +300,7 @@ illustrate the functionality of the expression.
 \begin{table}[ht]
   \begin{tabular*}{\textwidth}{l l}
     \hline \\
-    \hspace{1.2cm} $[\mbox{LET-1}]$ & \infrule{env_{T}, env_{C}, env_{V}[x_{1}
+    $[\mbox{LET-1}]$ & \infrule{env_{T}, env_{C}, env_{V}[x_{1}
     \mapsto v_{1}] \vdash \lag \texttt{let}\; x_{2} = E_{2}, \cdots,\; x_{k} =
     E_{k}\; \texttt{in}\; E_{k+1} \rag \ra v_{k+1}}
     {env_{T}, env_{C}, env_{V} \vdash \lag \texttt{let}\; x_{1} = E_{1},\; x_{2}
@@ -305,7 +308,7 @@ illustrate the functionality of the expression.
     & where $env_{T}, env_{C}, env_{V} \vdash E_{1} \ra v_{1}$\\
     & and $k \geq 2$ \\
     
-    \hspace{1.2cm} $[\mbox{LET-2}]$ & \infrule{env_{T}, env_{C}, env_{V}[x_{1}
+    $[\mbox{LET-2}]$ & \infrule{env_{T}, env_{C}, env_{V}[x_{1}
     \mapsto v_{1}] \vdash \lag E_{2}\rag \ra v_{2}} {env_{T}, env_{C}, env_{V} \vdash
     \lag \texttt{let}\; x_{1} = E_{1}\; \texttt{in}\; E_{2} \rag \ra v_{2}} \\
     & where $env_{T}, env_{C}, env_{V} \vdash E_{1} \ra v_{1}$ \\
@@ -333,13 +336,15 @@ expression then we call the transition rule $[\mbox{LET-2}]$ where $k < 2$.
 
 \section{Lambda expressions}
 
-The semantics presented in \tableref{semantic:lambda} is the transition rule for the lambda expression. 
+The semantics presented in \tableref{semantic:lambda} is the transition rule for
+the lambda expression. 
 
 \begin{table}[ht]
   \begin{tabular*}{\textwidth}{l l c}
     \hline \\
-    \hspace{0.5cm} $[\mbox{LAMBDA}]$ & $env_{T}, env_{C}, env_{V} \vdash \lag \texttt{\#} \; X\;
-    \texttt{=>}\; E \rag \ra v$ & \hspace{1cm} where $v = \left(X, E, env_{V}, env_{C}\right)$ \\
+    $[\mbox{LAMBDA}]$ & $env_{T}, env_{C}, env_{V} \vdash \lag \texttt{\#} \;
+    X\; \texttt{=>}\; E \rag \ra v$ & \hspace{1cm} where $v = \left(X, E,
+    env_{V}, env_{C}\right)$ \\
     & & \\
     \hline
   \end{tabular*}
@@ -362,7 +367,7 @@ set expressions.
 \begin{table}[ht]
   \begin{tabular*}{\textwidth}{l l}
     \hline \\
-    \hspace{1.5cm} $[\mbox{SET}]$ & \infrule{env_C, env_V, env_T \vdash \lag E_1
+    $[\mbox{SET}]$ & \infrule{env_C, env_V, env_T \vdash \lag E_1
       \rag\ra u_1 \quad
     \ldots \quad env_C, env_V, env_T \vdash \lag E_k \rag \ra u_k}
     {env_C, env_V, env_T \vdash \lag \texttt{set}\; x_1 = E_1, \ldots, x_k =
@@ -386,7 +391,7 @@ function calls.
 \begin{table}[ht]
   \begin{tabular*}{\textwidth}{l l}
     \hline \\
-    \hspace{3cm} $[\mbox{CALL}_{\mbox{FUN}}]$ & \hspace{0.1cm} $env_C, env_V,
+    $[\mbox{CALL}_{\mbox{FUN}}]$ & \hspace{0.1cm} $env_C, env_V,
     env_T \vdash \lag E \rag \ra v_2$ \\
     & \hspace{0.1cm} $env_C, env_V, env_T \vdash \lag L \rag \ra v_3$
     \vspace{-0.3cm} \\
@@ -408,7 +413,7 @@ for member access.
 \begin{table}[ht]
   \begin{tabular*}{\textwidth}{l l}
     \hline \\
-    \hspace{3cm} $[\mbox{MEMBER}_{\mbox{ACCESS}}]$ & \infrule{env_C, env_V, env_T
+    $[\mbox{MEMBER}_{\mbox{ACCESS}}]$ & \infrule{env_C, env_V, env_T
     \vdash \lag E \rag \ra v_1}{env_C, env_V, env_T \vdash \lag E\texttt{.}C
   \rag \ra v_3} \\
      & where $v_2 = \left(t, env'_C, env'_V, v_2 \right)$ \\
@@ -430,25 +435,25 @@ rules described.
 \begin{table}[ht]
     \begin{tabular*}{\textwidth}{l l}
       \hline \\
-      \hspace{0.4cm} $\left[\mbox{TYPEDEF}\right]$ & \infrule{env_{C} \vdash
+      $\left[\mbox{TYPEDEF}\right]$ & \infrule{env_{C} \vdash
       \lag D_{G}, env_{T}[T \mapsto \left(T, X, \varepsilon, \varepsilon,
       \varepsilon \right)] \rag \ra env_{T}'}
       {env_{C} \vdash \lag \texttt{type}\; T\; X\; D_{G},\; env_{T} \rag \ra
       env_{T}'} \\
 
-      \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{BODY}}\right]$ &
+      $\left[\mbox{TYPEDEF}_{\mbox{BODY}}\right]$ &
       \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T \mapsto \left(T, X, D_{M},
       \varepsilon, \varepsilon \right)] \rag \ra env_{T}'}
       {env_{C} \vdash \lag \texttt{type}\; T\; X\; \left\{D_{M}\right\}\;
       D_{G},\; env_{T} \rag \ra env_{T}'} \\
 
-      \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{EXTEND}}\right]$ &
+      $\left[\mbox{TYPEDEF}_{\mbox{EXTEND}}\right]$ &
       \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T_{1} \mapsto \left(T_{1}, X,
       \varepsilon, L, T_{2} \right)] \rag \ra env_{T}'}
       {env_{C} \vdash \lag \texttt{type}\; T_{1}\; X\; \texttt{extends}\;
       T_{2}\; L\; D_{G},\; env_{T} \rag \ra env_{T}'} \\
 
-      \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{EXTEND-BODY}}\right]$ &
+      $\left[\mbox{TYPEDEF}_{\mbox{EXTEND-BODY}}\right]$ &
       \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T_{1} \mapsto \left(T_{1}, X,
       D_{M}, L, T_{2} \right)] \rag \ra env_{T}'}
       {env_{C} \vdash \lag \texttt{type}\; T_{1}\; X\; \texttt{extends}\;
@@ -467,11 +472,11 @@ slot. This is again due to the fact that we have some optional arguments.
 The 5-tuple is ordered as follows:
 
 \begin{nlist}
-\item $\mathbf{T_{k}}$ - current type
+  \item $\mathbf{T_{1}}$ - current type
   \item $\mathbf{X}$ - current type's formal parameters
   \item $\mathbf{D_{M}}$ - member definitions
   \item $\mathbf{L}$ - super type's parameters
-  \item $\mathbf{T_{k+1}}$ - super type
+  \item $\mathbf{T_{2}}$ - super type
 \end{nlist}
 
 Throughout the transition rules we use the 5-tuple to update the type environment.
