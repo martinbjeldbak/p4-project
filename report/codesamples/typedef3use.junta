@@ -1,0 +1,7 @@
+let $obj1 = A[],
+  $obj2 = $obj1.setAtt[2]
+  in [
+    $obj1.att, // 15
+    $obj2.att, // 2
+    $obj1 != $obj2 // true
+  ]
