@@ -114,10 +114,12 @@ evaluated and the result is returned. When returning, the variables
 \subsection{Type definitions}
 \label{sec:typedefinitions}
 
-The following grammar rules present how defining a type is done followed by the
-associated definitions which can be used within a type definition. Types are
-similar to what we normally call classes in object-oriented programming
-languages. We wish to call them types in \productname{}.
+As described the introduction of this chapter, types are a central part of
+\productname{} and being able to define custom user types is essential when
+creating board games.
+The following grammar rules present how type definitions work in
+\productname{} followed by the associated definitions which can be used within
+a type definition.
 
 \begin{ebnf}
 \grule{type\_def}{\gter{type} \gcat type \gcat varlist \gcat
@@ -131,22 +133,40 @@ languages. We wish to call them types in \productname{}.
 \gcat expression}
 \end{ebnf}
 
-The keyword $\gter{type}$ is not the same as the identifier $type$, which was
-presented in \secref{sec:identifiers}. All definitions of types must begin with
-the keyword followed by the identifier.
+The simplest type that can be created is a type such as:
 
-\todo{Niels: Instantiering af superklassen.}
+\codesample{simplesttype.junta}
 
-It is optional to include a body for a type, wherein further definitions can be
-defined. These definitions must be encircled with a beginning and an ending brace. 
+The type \type{A} is a type without any data, constructor parameters, constants
+or parent type. This type is truly useless, since it has no identity or
+behaviour. It can however be instantiated, and instances of it can be compared
+using the \texttt{==}, \texttt{!=}, and \texttt{is}-operators. But since the
+type has no identity in any way, all instances will be equal:
 
-When defining an abstract constant it must be overridden before it can be used.
-This is done by simply redefining the constant exactly as it was defined in the
-definition of the abstract (with variables and such). So, a constants definition
-with the same $constant$ and $varlist$ as an abstract constant, will override
-the abstract constant.
+\codesample{simplesttypeuse.junta}
 
-\todo{Niels: Forklar data-begrebet.}
+\subsubsection{The constructor}
+
+One way to add identity to objects, is with the constructor. In the previous
+example of a very simple type, the constructor takes no parameters (the empty
+parameter list \texttt{[]} after the type name). If we were to add some formal
+parameters to the type definition, it could look like:
+
+\codesample{typedef1.junta}
+
+Now in order to instantiate \type{A}, we must provide the constructor with two
+parameters: 
+
+\codesample{typedef1use.junta}
+
+Notice how in the first line, the two objects are equal to each other, while in
+the second line they are not. This means that we have successfully added
+identity to the \type{A}-type.
+
+\subsubsection{The constants}
+
+\subsubsection{The data}
+
 \subsubsection{Inheritance}
 
 \todo{repeating stuff from introduction}
@@ -168,7 +188,6 @@ member of \type{A}. The type \type{C} on the other hand is not abstract, since i
 implements the abstract constant. Abstract types can't be constructed, albeit the
 constructor for an abstract type has to be used when extending the type (after the
 \keyword{extends}-keyword).
-
 
 \subsubsection{Big-step semantics}
 

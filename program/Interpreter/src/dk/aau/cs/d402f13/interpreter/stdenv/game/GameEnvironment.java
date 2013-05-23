@@ -640,8 +640,8 @@ public class GameEnvironment extends StandardEnvironment {
         }
         object = (ObjectValue)object.setAttribute("squares", new ListValue(newList));
         Value[] pieces = object.getMemberList("pieces", piece);
-        newList = new Value[pieces.length - 1];
-        for  (int i = 0; i < pieces.length - 1; i++) {
+        newList = new Value[pieces.length];
+        for  (int i = 0; i < pieces.length; i++) {
           if (pieces[i].equals(p)) {
             newList[i] = p.callMember("remove", piece, interpreter);
           }
