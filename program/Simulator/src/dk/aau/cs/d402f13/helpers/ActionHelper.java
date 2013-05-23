@@ -35,18 +35,18 @@ class ActionRemoveCheck implements ActionTypeCheck{
 
 public class ActionHelper{
 	
-
 	private static Action isAction( Action a, ActionTypeCheck atc ) throws StandardError{
 		if( a instanceof ActionSequence ){
-			for( UnitAction ua : ((ActionSequence)a).getActions() )
-				return atc.isType( ua );
+			for( UnitAction ua : ((ActionSequence)a).getActions() ){
+				Action ret = atc.isType( ua ); 
+				if( ret != null )
+					return ret;
+			}
 			return null;
 		}
 		else
 			return atc.isType( (UnitAction)a );
 	}
-	
-	
 
 	static public AddAction isAddAction( Action a ) throws StandardError{
 		Action aa = ActionHelper.isAction( a, new ActionAddCheck() );
