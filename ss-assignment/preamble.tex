@@ -1,0 +1,66 @@
+\documentclass[a4paper, 10pt, article]{memoir}
+\usepackage{fontspec}
+
+\setromanfont[Ligatures=TeX,Numbers={Lining}]{Garamond}
+\setmonofont[Scale=0.8]{Consolas}
+\setsansfont[Scale=0.9]{Optima}
+\usepackage{enumitem}
+\setcounter{secnumdepth}{1}
+
+
+\usepackage[protrusion=true,factor=2000]{microtype} 
+\setsecnumdepth{subsection}
+
+\usepackage{amsmath}
+\usepackage{polyglossia}
+\setdefaultlanguage[variant=uk]{english}
+\usepackage{xcolor}
+
+\usepackage{hyperref}
+\usepackage{fancyvrb}
+
+
+\parskip=5pt plus 2pt minus 1pt
+\parindent=0pt
+
+\newcommand{\junta}{{\fontspec{OptimusPrinceps}Junta}}
+\newcommand{\productname}{{\fontspec{OptimusPrinceps}Junta}}
+\newcommand{\tableref}[1]{table \ref{#1}}
+\newcommand{\figref}[1]{figure \ref{#1}}
+\newcommand{\capt}[1]{\caption{\emph{#1}}}
+\newcommand{\for}{ \: | \: }
+\newcommand{\secref}[1]{section \ref{#1}}
+
+
+\newcommand{\codesample}[1]{
+  \vspace{-0.6cm}
+  \begin{center}
+  \begin{tabularx}{0.9\textwidth}{m{9cm} X m{2cm} }
+  \parbox[t]{8cm}{
+    \vspace{-0.1cm}
+    \input{codesamples/#1}}
+    & &
+    \parbox{2cm}{\hfill
+      \begin{equation}\label{cs:#1}
+      \end{equation}
+    } 
+  \end{tabularx}
+  \end{center}
+  \vspace{-0.4cm}
+}
+
+%big-step-semantic
+\newcommand{\infrule}[2]
+           {\parbox{4.5cm}{$$ \frac{#1}{#2}\hspace{.5cm}$$}}
+	
+\newcommand{\ra}{\rightarrow}
+\newcommand{\lag}{\langle}
+\newcommand{\rag}{\rangle}
+
+\newenvironment{nlist}{
+\begin{enumerate}[noitemsep]
+}{
+\end{enumerate}
+}
+
+\input{pygments}
