@@ -214,27 +214,39 @@ set to $2$. After that, the values are accessed using the getter. Note that,
 again, the two objects are not equal, since the value of \variable{obj2} is
 different than \variable{obj1}.
 
-\subsubsection{Inheritance}
+\subsubsection{The super type}
 
-\todo{repeating stuff from introduction}
-
-\productname{} supports single inheritance between types. An inheriting type, will
-inherit all the members of its super type(s) (if \type{C} extends \type{B}, which
-extends \type{A}, then \type{C} inherits all members from both \type{B} and \type{A}).
-This also introduces the \keyword{super}-keyword, which can be used to access members
-in superclasses. The following example shows how inheritance works:
+In \productname{} single inheritance is possible using the
+\keyword{extends}-keyword. When extending another type, that types constructor
+must be invoked with some parameters. The following complicated example shows a
+usage of single inheritance:
 
 \codesample{typescope2.junta}
 
 \productname{} doesn't have an \keyword{abstract}-keyword for type definitions, only
 for constant/function definitions. A type is implicitly marked as abstract if it has
 unimplemented abstract members. In the above example the type \type{A} is abstract,
-since because it's member, \constant{constantA}, is abstract. Likewise, the type
+since its member, \constant{constantA}, is abstract. Likewise, the type
 \type{B} is abstract because it extends \type{A}, but doesn't implement the abstract
 member of \type{A}. The type \type{C} on the other hand is not abstract, since it
 implements the abstract constant. Abstract types can't be constructed, albeit the
 constructor for an abstract type has to be used when extending the type (after the
 \keyword{extends}-keyword).
+
+When instantiating type \type{C}, several things happen. First \type{C}'s parent
+is instantiated using the actual parameters $2$ and $4$. Then \type{B}'s parent
+is instantiated using the value of $\variable{b} + \variable{c}$. It is worth
+noting that, when calling the parent constructor, it is not possible to access
+constants or data from within the type. In \figref{fig:scopes} a
+visualisation of the scopes of a type definition is shown.
+
+\fig[width=8cm]{scopes}{The scopes of a type definition. Each scope is marked with a
+  rectangle. A scope contained within another scope has access to the variables
+of the parent scope.}
+
+
+
+\subsubsection{More about abstract types and constants}
 
 \subsubsection{Big-step semantics}
 
