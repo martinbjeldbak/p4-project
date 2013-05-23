@@ -20,6 +20,10 @@ public class PatternMultValue extends PatternValue {
   public Value getValue() {
     return value;
   }
+  
+  public int getTimes() {
+    return this.times;
+  }
 
   /**
    * Creates a new pattern multiplication value from the input value
