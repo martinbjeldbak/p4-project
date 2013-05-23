@@ -281,6 +281,9 @@ Lambda expressions are expressions that evaluate to anonymous functions. In
 \grule{lambda\_expr}{\gter{\#} \gcat varlist \gcat \gter{=>} \gcat expression}
 \end{ebnf}
 
+The non-terminal $varlist$ represents a list formal parameters, and is further
+explained in \secref{sec:constantdefinitions}.
+
 When a lambda expression is created, a reference to the scope it was created in
 is saved with it. This is known as a closure, and means that a lambda
 expression may access variables outside of its own scope. The accessible
