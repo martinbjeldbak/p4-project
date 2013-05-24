@@ -120,15 +120,16 @@ public class SimulatedGame extends BasicGame {
 	}
 	
 	private void handleStandardError( StandardError stdErr ){
-		showError( "Fatal fault in game", stdErr.getMessage() );
+		String msg = "At: " + stdErr.getLine() + ":" + stdErr.getColumn();
+		msg += "\n" + stdErr.getMessage();
+		
+		
+		showError( "Fatal fault in game", msg );
 		stdErr.printStackTrace();
 	}
 	
 	private void handleSimulatorError( SimulatorError stdErr ){
-		String msg = "At: " + stdErr.getLine() + ":" + stdErr.getColumn();
-		msg += "\n" + stdErr.getMessage();
-		
-		showError( "Fatal fault in simulator", msg );
+		showError( "Fatal fault in simulator", stdErr.getMessage() );
 		stdErr.printStackTrace();
 	}
 	

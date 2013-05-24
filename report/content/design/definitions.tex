@@ -165,68 +165,97 @@ identity to the \type{A}-type.
 
 \subsubsection{The constants}
 
+Constants within types are defined in the same way as constants outside of
+types. The difference is that constants defined within a type can only be
+accessed within that type (and inheriting types) or by using the dot-notation
+outside of the type.
+
+\codesample{typedef2.junta}
+
+In the example above, two constants are defined within type \type{A};
+\constant{b} and \constant{calculate}. The first one \constant{b} is a simple
+constant holding the value of \variable{b}, the constructor parameter, plus one.
+It can be seen as a getter, since it makes the value of \variable{b} visible to
+the outside. \constant{calculate} is a method that returns the sum of some
+numbers. In order to call the constants contained within a type, we use the dot
+notation on an object of that type:
+
+\codesample{typedef2use.junta}
+
+The variable \variable{obj} is assigned an instance of the \type{A}-type. Using
+the dot-notation, the method \constant{calculate} is called on the object.
+
 \subsubsection{The data}
 
-\subsubsection{Inheritance}
+Another way to add identity to objects, is to add data fields to the type.
+Unlike constants, data fields contain private semi-mutable data. In the
+strictest sense, the data is still immutable, but using the
+\keyword{set}-keyword, it is possible to clone the current object, and return a
+new one with the selected data fields set to new values. The following example
+shows a new version of type \type{A}, with a data field:
 
-\todo{repeating stuff from introduction}
+\codesample{typedef3.junta}
 
-\productname{} supports single inheritance between types. An inheriting type, will
-inherit all the members of its super type(s) (if \type{C} extends \type{B}, which
-extends \type{A}, then \type{C} inherits all members from both \type{B} and \type{A}).
-This also introduces the \keyword{super}-keyword, which can be used to access members
-in superclasses. The following example shows how inheritance works:
+In this example, we define the data field \variable{att} with the default value
+of $15$. Since data fields are not accessible from outside of the type, we must
+define a getter, the constant \constant{att}, in order to make the value
+visible. Using the \keyword{set}-keyword, we can also define at setter, the
+\constant{setAtt}-method, which returns a new instance of \type{A} with
+\variable{att} set to whatever parameter \constant{setAtt} was called with.
+
+The following example show the use of this setter, to create a clone of an
+instance of \type{A}:
+
+\codesample{typedef3use.junta}
+
+This time, we create an instance of \type{A}, and then calls \constant{setAtt}
+on that instance, in order to get a new instance of \type{A} with \variable{att}
+set to $2$. After that, the values are accessed using the getter. Note that,
+again, the two objects are not equal, since the value of \variable{obj2} is
+different than \variable{obj1}.
+
+\subsubsection{The super type}
+
+In \productname{} single inheritance is possible using the
+\keyword{extends}-keyword. When extending another type, that types constructor
+must be invoked with some parameters. The following complicated example shows a
+usage of single inheritance:
 
 \codesample{typescope2.junta}
 
 \productname{} doesn't have an \keyword{abstract}-keyword for type definitions, only
 for constant/function definitions. A type is implicitly marked as abstract if it has
 unimplemented abstract members. In the above example the type \type{A} is abstract,
-since because it's member, \constant{constantA}, is abstract. Likewise, the type
+since its member, \constant{constantA}, is abstract. Likewise, the type
 \type{B} is abstract because it extends \type{A}, but doesn't implement the abstract
 member of \type{A}. The type \type{C} on the other hand is not abstract, since it
 implements the abstract constant. Abstract types can't be constructed, albeit the
 constructor for an abstract type has to be used when extending the type (after the
 \keyword{extends}-keyword).
 
+When instantiating type \type{C}, several things happen. First \type{C}'s parent
+is instantiated using the actual parameters $2$ and $4$. Then \type{B}'s parent
+is instantiated using the value of $\variable{b} + \variable{c}$. It is worth
+noting that, when calling the parent constructor, it is not possible to access
+constants or data from within the type. In \figref{fig:scopes} a
+visualisation of the scopes of a type definition is shown.
+
+\fig[width=8cm]{scopes}{The scopes of a type definition. Each scope is marked with a
+  rectangle. A scope contained within another scope has access to the variables
+of the parent scope.}
+
+
+
+\subsubsection{More about abstract types and constants}
+
 \subsubsection{Big-step semantics}
 
-The semantics presented in \tableref{semantic:typedef} are the transition rules for type definitions.
-These type definitions have some optional arguments which correspond with the
-written grammar for these definitions, and this is why there are four transition
-rules described.
+The semantics presented in \tableref{semantic:typedef} are the transition rules
+for type definitions.  These type definitions have some optional arguments which
+correspond with the written grammar for these definitions, and this is why there
+are four transition rules described.
 
-\begin{table}[ht]
-    \begin{tabular*}{\textwidth}{l l}
-      \hline \\
-      \hspace{0.4cm} $\left[\mbox{TYPEDEF}\right]$ & \infrule{env_{C} \vdash
-      \lag D_{G}, env_{T}[T \mapsto \left(T, X, \varepsilon, \varepsilon,
-      \varepsilon \right)] \rag \ra env_{T}'}
-      {env_{C} \vdash \lag \texttt{type}\; T\; X\; D_{G},\; env_{T} \rag \ra
-      env_{T}'} \\
-
-      \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{BODY}}\right]$ &
-      \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T \mapsto \left(T, X, D_{M},
-      \varepsilon, \varepsilon \right)] \rag \ra env_{T}'}
-      {env_{C} \vdash \lag \texttt{type}\; T\; X\; \left\{D_{M}\right\}\;
-      D_{G},\; env_{T} \rag \ra env_{T}'} \\
-
-      \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{EXTEND}}\right]$ &
-      \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T_{1} \mapsto \left(T_{1}, X,
-      \varepsilon, L, T_{2} \right)] \rag \ra env_{T}'}
-      {env_{C} \vdash \lag \texttt{type}\; T_{1}\; X\; \texttt{extends}\;
-      T_{2}\; L\; D_{G},\; env_{T} \rag \ra env_{T}'} \\
-
-      \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{EXTEND-BODY}}\right]$ &
-      \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T_{1} \mapsto \left(T_{1}, X,
-      D_{M}, L, T_{2} \right)] \rag \ra env_{T}'}
-      {env_{C} \vdash \lag \texttt{type}\; T_{1}\; X\; \texttt{extends}\;
-      T_{2}\; L\; \left\{D_{M}\right\}\; D_{G},\; env_{T} \rag \ra env_{T}'} \\
-      \hline \\
-    \end{tabular*}
-    \capt{Transition rules for type definitions.}
-    \label{semantic:typedef}
-\end{table}
+\input{content/design/big-stepsemantics/typedef}
 
 In the premises of the rules we present a 5-tuple where $env_{T}$ is updated
 according to the rule. In three of the four 5-tuples we include the symbol
