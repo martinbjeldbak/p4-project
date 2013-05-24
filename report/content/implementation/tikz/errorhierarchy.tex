@@ -1,0 +1,33 @@
+\begin{figure}[ht]
+  \begin{center}
+    \begin{tikzpicture}
+      \node [square,yshift=-2em] (a) {Exception};
+      \node [square,yshift=-5em] (b) {Error};
+      \node [square,yshift=-8em,xshift=-7em] (c) {SyntaxError};
+      \node [square,yshift=-8em] (d) {StandardError};
+      \node [square,yshift=-8em,xshift=7.5em] (e) {SimulatorError};
+      \node [square,yshift=-12em,xshift=-21em] (f) {ScopeError};
+      \node [square,yshift=-12em,xshift=-14em] (g) {ScannerError};
+      \node [square,yshift=-12em,xshift=-7em] (h) {InternalError};
+      \node [square,yshift=-12em] (i) {TypeError};
+      \node [square,yshift=-12em,xshift=7em] (j) {ArgumentError};
+      \node [square,yshift=-12em,xshift=14em] (k) {NameError};
+      \node [square,yshift=-15em,xshift=7em] (l) {DivideByZeroError};
+
+       \draw[<-, thin,] (a) -- (b);
+       \draw[<-, thin,] (b) -- (d);
+       \draw[-|,-,thin,] (c.north) |-+(0,0.75em)-| (b.south);
+       \draw[-|,-,thin,] (e.north) |-+(0,0.86em)-| (b.south);
+       \draw[-|,->,thin,] (f.north) |-+(0,1.7em)-| (c.south);
+       \draw[<-,thin,] (d) -- (i);
+       \draw[-|,-,thin,] (g.north) |-+(0,1.11em)-| (d.south);
+       \draw[-|,-,thin,] (h.north) |-+(0,1.11em)-| (d.south);
+       \draw[-|,-,thin,] (k.north) |-+(0,1.11em)-| (d.south);
+       \draw[-|,-,thin,] (j.north) |-+(0,0.98em)-| (d.south);
+       \draw[<-, thin,] (j) -- (l);
+    \end{tikzpicture}
+  \end{center}
+  \capt{An illustration of the error hierarchy as it is implemented in the
+  interpreter.}
+  \label{ast:errorhierarchy}
+\end{figure}
