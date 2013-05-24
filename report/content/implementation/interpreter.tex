@@ -265,7 +265,7 @@ The evaluate($p$, $b$) function depends on the composition of $p$.
 \item if $p$ is $p\texttt{+}$: evaluate($p \; p*$);
 \item if $p$ is $p\texttt{?}$:
 \item if $p$ is a direction $d$: for all coordinates $c \in b$, $c += d$.
-\item if $p$ is a check-value (\texttt{friend}, \texttt{foe}, \texttt{empty}, \texttt{this}, \textit{type}): for all coordinates $c \in b$, if the square at $c$ does not comply with the check-value, $b = b \diagdown \{c\}$.
+\item if $p$ is a check-value (\texttt{friend}, \texttt{foe}, \texttt{empty}, \texttt{this}, \textit{type}): for all coordinates $c \in b$, if the square at $c$ does not comply with the check-value, $b = b \smallsetminus \{c\}$.
 \end{dlist}  
 
 
