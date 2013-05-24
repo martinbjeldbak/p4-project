@@ -1,0 +1,2 @@
+let $obj = A[5, 3]
+  in $obj.calulate[3] // (5 + 1) + 3 + 3 = 12

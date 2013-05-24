@@ -1,0 +1,50 @@
+\begin{table}[ht]
+  \begin{center}
+    \begin{tabular*}{\textwidth}{l p{\textwidth}}
+      \hline \\
+      \hspace{0.5cm} $[\mbox{LIST}_{\mbox{ACCESS-1}}]$ & \infrule{env_{T},
+      env_{C}, env_{V} \vdash \lag E\; \rag \ra v_2  \qquad env_{T}, env_{C},
+      env_{V} \vdash \lag L \rag \ra v_3}
+      {env_{T}, env_{C}, env_{V} \vdash \lag E\; L \rag \ra v_1} \\
+       & where $v_2 = \left(l_1, elem_1\right)$ \\
+       & and $v_3 = (l_2,elem_2)$ \\
+       & and $l_2 = 1$ \\
+       & and $i = elem_2\; 0$ \vspace{0.1cm} \\
+       & and $v_1 = \left\{
+	 \begin{array}{l l}
+           elem_1\; i         & \quad \text{if $i \geq 0$}\\
+           elem_1\; (l_1 + i) & \quad \text{if $i < 0$}
+	 \end{array} \right.$ \\
+	 
+      \hspace{0.5cm} $[\mbox{LIST}_{\mbox{ACCESS-2}}]$ & \infrule{env_{T},
+      env_{C}, env_{V} \vdash \lag E \rag \ra v_2  \qquad env_{T}, env_{C},
+      env_{V} \vdash \lag L \rag \ra v_3}
+      {env_{T}, env_{C}, env_{V} \vdash \lag E\; L \rag \ra v_1} \\
+       & where $v_2 = \left(l_1, elem_1\right)$ \\
+       & and $v_3 = (l_2,elem_2)$ \\
+       & and $l_2 = 2$ \vspace{0.1cm} \\
+       & and $i = \left\{
+	 \begin{array}{l l}
+           elem_2\; 0         & \quad \text{if $elem_2\; 0 \geq 0$}\\
+           l_1 + elem_2\; 0   & \quad \text{if $elem_2\; 0 < 0$}
+	 \end{array} \right.$ \vspace{0.1cm} \\
+       & and $j = \left\{
+	 \begin{array}{l l}
+           elem_2\; 1         & \quad \text{if $elem_2\; 1 \geq 0$}\\
+           l_1 + elem_2\; 1   & \quad \text{if $elem_2\; 1 < 0$}
+	 \end{array} \right.$ \vspace{0.1cm} \\
+       & and $elem_3\; z = \left\{
+	 \begin{array}{l l}
+           elem_1\; i+1       & \quad \text{if $z = 0$}\\
+	   \hspace{1cm} \vdots &   \\
+           elem_1\; i+n-1     & \quad \text{if $z = n-1$}
+	 \end{array} \right.$ \vspace{0.1cm} \\
+       & and $v_1 = (n=j-i+1,\; elem_3)$ \\
+       & \\
+       \hline
+    \end{tabular*}
+    \capt{Transition rules for accessing lists.}
+    \label{semantic:lists}
+  \end{center}
+\end{table}
+
