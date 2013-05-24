@@ -1,7 +1,9 @@
 \section{Patterns}
 \label{sec:patterns}
 
-This section covers how to use patterns and what to use them for. The operators of a pattern looks like and behaves a little like regular expressions. This EBNF-grammar shows how a pattern is constructed:
+This section covers how to use patterns and what to use them for. The operators
+of a pattern looks like and behaves a little like regular expressions. This
+EBNF-grammar shows how a pattern is constructed:
 
 \begin{ebnf}
 \grule{pattern}{pattern\_expr \gcat \grep{pattern\_expr}}
@@ -20,10 +22,22 @@ This section covers how to use patterns and what to use them for. The operators 
 \end{ebnf}
 
 
-A pattern is checked on a particular square, and returns either true or false. An example of a pattern is \text{/n n e empty/}. This pattern can be checked on the board seen in \figref{patternboard} on the field \textbf{A1}. The pattern says ``go one square north, go one square north, go one square east, check if square is empty''. This means that the square \textbf{B3} will be checked for emptiness. Since the square is occupied by a piece, the pattern will return false if checked on \textbf{A1}. However, the same pattern checked on \textbf{C1} will return true since the square at \textbf{D3} is empty.
+A pattern is checked on a particular square, and returns either true or false.
+An example of a pattern is \text{/n n e empty/}. This pattern can be checked on
+the board seen in \figref{patternboard} on the field \textbf{A1}. The pattern
+says ``go one square north, go one square north, go one square east, check if
+square is empty''. This means that the square \textbf{B3} will be checked for
+emptiness. Since the square is occupied by a piece, the pattern will return
+false if checked on \textbf{A1}. However, the same pattern checked on
+\textbf{C1} will return true since the square at \textbf{D3} is empty.
+
 \fig[scale=2]{patternboard}{A simple 4 X 4 board with 3 pieces}
 
-With this basic introduction to a simple pattern check, the table (insert ref and convert list below to a table) describes briefly how the different pattern operators work. For each operator, an example of the use in a context are given in \secref{sec:patternexamples}. Note that the description of patterns assumes a minor understanding of regular expressions, see \cite{regex}.
+With this basic introduction to a simple pattern check, the table (insert ref
+and convert list below to a table) describes briefly how the different pattern
+operators work. For each operator, an example of the use in a context are given
+in \secref{sec:patternexamples}. Note that the description of patterns assumes a
+minor understanding of regular expressions, see \cite{regex}.
 
 \texttt{empty} : current square contains no pieces\\
 \texttt{n} : north \\
@@ -38,51 +52,90 @@ With this basic introduction to a simple pattern check, the table (insert ref an
 \texttt{(} \textit{pattern} \texttt{)} : encapsulation\\
 \texttt{friend} :  current square contains at least one friendly piece of the current player\\
 \texttt{foe} : current square contains at least one enemy piece of the current player\\
-\textit{type} : the current square is of the given type or a piece of the given type is residing on the current square.
+\textit{type} : the current square is of the given type or a piece of the given
+type is residing on the current square.
 \texttt{this} : current square contains the piece for which the check is being performed\\
 
 \subsection{Pattern examples}
 \label{sec:patternexamples}
-All these examples of pattern checks are performed on the board and pieces seen in \figref{patternboard}. For each operator, two examples of a pattern check on a particular square is given. The first check returns true and the second check false.
+All these examples of pattern checks are performed on the board and pieces seen
+in \figref{patternboard}. For each operator, two examples of a pattern check on
+a particular square is given. The first check returns true and the second check
+false.
 
-\begin{nlist}
+\begin{enumerate}[noitemsep]
 \item On A1, the pattern check \texttt{/empty/} returns true because A1 is empty.
 \item On B2, the pattern check \texttt{/empty/} returns false because B2 is not empty.
 \item On A1, the pattern check \texttt{/n empty/} returns true because A2 is empty.
 \item On B1, the pattern check \texttt{/n empty/} returns false because B2 is not empty.
 \item On C3, the pattern check \texttt{/e empty/} returns true because C4 is empty.
 \item On C4, the pattern check \texttt{/e empty/} returns false because C5 is out of board.
-\item On A1, the pattern check \texttt{/n* n e empty/} returns true because moving north 2 times then north and east hits an empty square on B4.
-\end{nlist}
+\item On A1, the pattern check \texttt{/n* n e empty/} returns true because
+  moving north 2 times then north and east hits an empty square on B4.
+\end{enumerate}
 
-Notice that the *-operator causes many branches to be made. The previous pattern check, \texttt{/n* n e empty/} done on A1, has a branch checking \texttt{/n e empty/}. The branch dies because B2 is not empty. If just one branch survives, the pattern check returns true. In the example, the only branch surviving is the \texttt{n n n e empty} branch. The same rules for branching counts for the \texttt{+}, \texttt{?} and \texttt{|} operator. When a branch moves out of board it dies immediately.
+Notice that the *-operator causes many branches to be made. The previous pattern
+check, \texttt{/n* n e empty/} done on A1, has a branch checking \texttt{/n e
+empty/}. The branch dies because B2 is not empty. If just one branch survives,
+the pattern check returns true. In the example, the only branch surviving is the
+\texttt{n n n e empty} branch. The same rules for branching counts for the
+\texttt{+}, \texttt{?} and \texttt{|} operator. When a branch moves out of board
+it dies immediately.
 
-\todo{ELIAS (Sebastian siger du skal gøre det): FÅ LISTEN TIL AT STARTE PÅ 8}
-\begin{nlist}
-\item On C3, the pattern check \texttt{/n* s s !empty/} returns false because neither A1 nor A2 contains a piece.
-\item On A1, the pattern check \texttt{/n+ e empty/} returns true only because B4 is empty. Notice how this pattern check is equivalent to the pattern check in bullet 7.
-\item On B1, the pattern check \texttt{/n+ empty e !empty/} returns false because B4 is the only empty square north of B1 and C4 is empty.
-\item On B3, the pattern check \texttt{/s? e empty/} returns true only because C2 is empty. 
-\item On C2, the pattern check \texttt{/n? w empty/} returns false because neither B2 nor B3 is empty.
+\begin{enumerate}[noitemsep,resume]
+\item On C3, the pattern check \texttt{/n* s s !empty/} returns false because
+  neither A1 nor A2 contains a piece.
+\item On A1, the pattern check \texttt{/n+ e empty/} returns true only because
+  B4 is empty. Notice how this pattern check is equivalent to the pattern check
+  in bullet 7.
+\item On B1, the pattern check \texttt{/n+ empty e !empty/} returns false
+  because B4 is the only empty square north of B1 and C4 is empty.
+\item On B3, the pattern check \texttt{/s? e empty/} returns true only because
+  C2 is empty. 
+\item On C2, the pattern check \texttt{/n? w empty/} returns false because
+  neither B2 nor B3 is empty.
 \item On A2, the pattern check \texttt{/(n | e) empty/} returns true only because A3 is empty.
-\item On C2, the pattern check \texttt{/e | w empty/} returns false because neither B2 nor C3 is empty.
-\item On B1, the pattern check \texttt{/(n n | e e) empty/} returns true only because D1 is empty.
-\item On A1, the pattern check \texttt{/(n w)* empty/} returns true both because A1 is empty and because D4 is empty.
-\end{nlist}
+\item On C2, the pattern check \texttt{/e | w empty/} returns false because
+  neither B2 nor C3 is empty.
+\item On B1, the pattern check \texttt{/(n n | e e) empty/} returns true only
+  because D1 is empty.
+\item On A1, the pattern check \texttt{/(n w)* empty/} returns true both because
+  A1 is empty and because D4 is empty.
+\end{enumerate}
 
-The \texttt{friend}-keyword is evaluated based on the current player. Suppose that we have a player called Green, who owns the 
-green piece. If it is green's turn to move, any branch of a pattern check will return false
-whenever it meets a keyword \texttt{friend} on a square that does not contain any of Green's pieces.
-On B2, the pattern check \texttt{/n|e|(n e) friend/} will return true if it is Green's turn, since C3 contains a friendly piece of Green.
-On C3, the pattern check \texttt{/(e | w)+/} will return false if it is Green's turn, since no square containing a piece of Green can be reached by going east or west from C3 one or more times.
+The \texttt{friend}-keyword is evaluated based on the current player. Suppose
+that we have a player called Green, who owns the green piece. If it is green's
+turn to move, any branch of a pattern check will return false whenever it meets
+a keyword \texttt{friend} on a square that does not contain any of Green's
+pieces.  On B2, the pattern check \texttt{/n|e|(n e) friend/} will return true
+if it is Green's turn, since C3 contains a friendly piece of Green.  On C3, the
+pattern check \texttt{/(e | w)+/} will return false if it is Green's turn, since
+no square containing a piece of Green can be reached by going east or west from
+C3 one or more times.
 
-The keyword \texttt{foe} does the opposite of \texttt{friend}. It makes a branch continue only if its current square contains at least one piece not owned by the player who has the turn.
+The keyword \texttt{foe} does the opposite of \texttt{friend}. It makes a branch
+continue only if its current square contains at least one piece not owned by the
+player who has the turn.
 
-Just like \texttt{foe} and \texttt{friend}, the name of a piece or square-type defined in a \productname{}-game can also be used. E.g, the keyword \texttt{White} can be used if a piece or square-type with the name \textit{White} has been define. In a such case, a branch survives only if its current square is of type \textit{White} or if the square contains a piece of type \textit{White}.
+Just like \texttt{foe} and \texttt{friend}, the name of a piece or square-type
+defined in a \productname{}-game can also be used. E.g, the keyword
+\texttt{White} can be used if a piece or square-type with the name
+\textit{White} has been define. In a such case, a branch survives only if its
+current square is of type \textit{White} or if the square contains a piece of
+type \textit{White}.
 
-A pattern can also check that a specific piece exists on a specific square. This is done using the \texttt{this} keyword.
-Before this check can be achieved, the pattern must be checked regarding to a specific piece. Suppose that we on A3, make the pattern check
-\texttt{empty e this}. If this check is done in relation to the black piece on B3 it returns true. However, in relation to the black piece on B2, the pattern check returns false. To understand both how this function exactly works and why this is useful, consider the board in \figref{fig:patternboard}.
-If we for any piece specify that it can move to a square for which the pattern check \texttt{/(n | s) empty/} is true, this means that it can move to any square except $\{B1, B4, C4\}$. These square does not have an empty square north or east from it. Recall that a branch going out of board dies.
-However, the pattern check \texttt{/empty (n | s) this/} will in relation to the green piece return true only when checked on the squares $\{C2, C4\}$.
-This can be used to specify that a piece can move to an empty square one north or one south from its current square. 
+A pattern can also check that a specific piece exists on a specific square. This
+is done using the \texttt{this} keyword.  Before this check can be achieved, the
+pattern must be checked regarding to a specific piece. Suppose that we on A3,
+make the pattern check \texttt{empty e this}. If this check is done in relation
+to the black piece on B3 it returns true. However, in relation to the black
+piece on B2, the pattern check returns false. To understand both how this
+function exactly works and why this is useful, consider the board in
+\figref{fig:patternboard}.  If we for any piece specify that it can move to a
+square for which the pattern check \texttt{/(n | s) empty/} is true, this means
+that it can move to any square except $\{B1, B4, C4\}$. These square does not
+have an empty square north or east from it. Recall that a branch going out of
+board dies.  However, the pattern check \texttt{/empty (n | s) this/} will in
+relation to the green piece return true only when checked on the squares $\{C2,
+C4\}$.  This can be used to specify that a piece can move to an empty square one
+north or one south from its current square. 
