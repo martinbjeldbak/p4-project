@@ -13,7 +13,7 @@
    height="1052.3622047"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
+   inkscape:version="0.48.2 r9819"
    sodipodi:docname="patternalg2.svg">
   <defs
      id="defs4">
@@ -462,8 +462,8 @@
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1366"
-     inkscape:window-height="706"
+     inkscape:window-width="1440"
+     inkscape:window-height="878"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -508,7 +508,7 @@
            y="362.36218" /></flowRegion><flowPara
          id="flowPara3003" /></flowRoot>    <text
        xml:space="preserve"
-       style="font-size:28px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:28px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Sans"
        x="57.861214"
        y="319.828"
        id="text5009"
@@ -517,10 +517,10 @@
          id="tspan5011"
          x="57.861214"
          y="319.828"
-         style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">n</tspan></text>
+         style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas;fill:#0000ff">n</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:28px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:28px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Sans"
        x="59.062378"
        y="429.84824"
        id="text5009-0"
@@ -529,7 +529,7 @@
          id="tspan5011-9"
          x="59.062378"
          y="429.84824"
-         style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">w</tspan></text>
+         style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas;fill:#0000ff">w</tspan></text>
     <flowRoot
        xml:space="preserve"
        id="flowRoot5866"
@@ -644,7 +644,7 @@
     </g>
     <text
        xml:space="preserve"
-       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas"
+       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas"
        x="268.73077"
        y="302.828"
        id="text5009-7"
@@ -653,10 +653,10 @@
          id="tspan5011-3"
          x="268.73077"
          y="302.828"
-         style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">n</tspan></text>
+         style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas;fill:#0000ff">n</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas"
+       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas"
        x="269.93195"
        y="446.84824"
        id="text5009-0-4"
@@ -665,7 +665,7 @@
          id="tspan5011-9-9"
          x="269.93195"
          y="446.84824"
-         style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">w</tspan></text>
+         style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas;fill:#0000ff">w</tspan></text>
     <g
        id="g7906"
        transform="translate(-72,-1.7019455)">
@@ -781,7 +781,7 @@
     <flowRoot
        xml:space="preserve"
        id="flowRoot5883-1-2-7-1"
-       style="font-size:28px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:CONSOLAS;-inkscape-font-specification:CONSOLAS"
+       style="font-size:28px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:CONSOLAS;-inkscape-font-specification:CONSOLAS"
        transform="translate(329.39591,-331.06376)"><flowRegion
          id="flowRegion5885-5-3-6-2"><rect
            id="rect5887-2-2-1-3"
@@ -789,8 +789,8 @@
            height="52.857143"
            x="168.57143"
            y="665.2193"
-           style="font-size:28px;font-family:CONSOLAS;-inkscape-font-specification:CONSOLAS" /></flowRegion><flowPara
-         style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:CONSOLAS;-inkscape-font-specification:CONSOLAS"
+           style="font-size:28px;font-family:CONSOLAS;-inkscape-font-specification:CONSOLAS;fill:#0000ff" /></flowRegion><flowPara
+         style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:CONSOLAS;-inkscape-font-specification:CONSOLAS;fill:#0000ff"
          id="flowPara6079">!empty</flowPara></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot8090"
@@ -831,7 +831,7 @@
          id="flowPara8144">accept</flowPara></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot8146"
-       style="font-size:28px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:CONSOLAS;-inkscape-font-specification:CONSOLAS"
+       style="font-size:28px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#008000;fill-opacity:1;stroke:none;font-family:CONSOLAS;-inkscape-font-specification:CONSOLAS"
        transform="translate(71.177695,101.01526)"><flowRegion
          id="flowRegion8148"><rect
            id="rect8150"
@@ -839,6 +839,6 @@
            height="61.619305"
            x="545.48236"
            y="226.0574"
-           style="font-size:28px;font-family:CONSOLAS;-inkscape-font-specification:CONSOLAS" /></flowRegion><flowPara
+           style="font-size:28px;font-family:CONSOLAS;-inkscape-font-specification:CONSOLAS;fill:#008000" /></flowRegion><flowPara
          id="flowPara8152">accept</flowPara></flowRoot>  </g>
 </svg>
