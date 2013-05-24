@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="patternalg1.eps">
+   sodipodi:docname="patternalg2.svg">
   <defs
      id="defs4">
     <marker
@@ -460,7 +460,7 @@
      inkscape:cx="390.83106"
      inkscape:cy="722.96917"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g7974"
      showgrid="false"
      inkscape:window-width="1366"
      inkscape:window-height="706"
@@ -477,7 +477,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -506,7 +506,7 @@
            height="48.57143"
            x="150"
            y="362.36218" /></flowRegion><flowPara
-         id="flowPara3003"></flowPara></flowRoot>    <g
+         id="flowPara3003" /></flowRoot>    <g
        id="g6584"
        transform="translate(-20,8.2411485)">
       <text
@@ -544,7 +544,7 @@
            height="52.857143"
            x="412.85715"
            y="526.64789" /></flowRegion><flowPara
-         id="flowPara5872"></flowPara></flowRoot>    <flowRoot
+         id="flowPara5872" /></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot6391"
        style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Sans;font-style:normal;font-weight:normal;font-size:20px;line-height:125%;letter-spacing:0px;word-spacing:0px"><flowRegion
@@ -554,7 +554,7 @@
            height="67.14286"
            x="261.42856"
            y="505.21933" /></flowRegion><flowPara
-         id="flowPara6397"></flowPara></flowRoot>    <g
+         id="flowPara6397" /></flowRoot>    <g
        id="g6568"
        transform="translate(0,-0.33027792)">
       <text
@@ -705,7 +705,7 @@
            x="392.27542"
            sodipodi:role="line">C4</tspan><tspan
            id="tspan7332-9"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:87.00000048%;writing-mode:lr-tb;font-family:Consolas;-inkscape-font-specification:Consolas"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:87.00000047999999700%;writing-mode:lr-tb;font-family:Consolas;-inkscape-font-specification:Consolas;fill:#ff0000"
            y="268.51868"
            x="392.27542"
            sodipodi:role="line">B3</tspan><tspan
@@ -722,7 +722,7 @@
          style="font-size:40px;font-style:normal;font-weight:normal;line-height:87.00000048%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
          xml:space="preserve"><tspan
            id="tspan7328-9-3"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:87.00000048%;writing-mode:lr-tb;font-family:Consolas;-inkscape-font-specification:Consolas"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:87.00000047999999700%;writing-mode:lr-tb;font-family:Consolas;-inkscape-font-specification:Consolas;fill:#ff0000"
            y="497.01694"
            x="395.16605"
            sodipodi:role="line">B3</tspan><tspan
@@ -807,7 +807,7 @@
            height="63.63961"
            x="634.37579"
            y="346.26556" /></flowRegion><flowPara
-         id="flowPara8096"></flowPara></flowRoot>    <text
+         id="flowPara8096" /></flowRoot>    <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:87.00000048%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="643.08856"

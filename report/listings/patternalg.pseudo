@@ -1,0 +1,29 @@
+evaluate(p, B)
+{
+	if p is pLeft '|' pRight then
+		BClone = clone(B)
+		evaluate(pLeft, B)
+		evaluate(pRight, BClone) 
+		B = union(B, BClone}
+	else if p is pBody'*' then
+		B´ = B
+		do 
+			BLast = clone(B)
+			B´ = clone(B´)} 
+			evaluate(pBody, B´)
+			union(B, B´)
+		while 
+			BLast != B
+	else if p is p'+' then
+		evaluate(p p*, B)
+	else if p is p'?' then
+	else if p is pCONSTANT then
+		evaluate(concat(p, CONSTANT), B)
+	else if p is a direction d then
+		For all coordinates c in B, c += d
+	else if p is in {'friend', 'foe', 'empty', 'this', type} then
+		For all coordinates c in B
+			If the square at c does not comply with the check-value p then
+				Remove c from B
+	end if
+}
