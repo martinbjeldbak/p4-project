@@ -294,14 +294,14 @@ GridBoard extends Board.
   \item \constant{move}[ \variable{position} : \type{Coordinate} ] : \type{Piece}\\
   A \type{Piece} with \constant{position} set to \variable{position} and \constant{onBoard} set to true.
   
-  \item \content{remove}[] : \type{Piece}\\
+  \item \constant{remove}[] : \type{Piece}\\
   A \type{Piece} where \constant{position} is invalid and \constant{onBoard} is false.
   
-  \item \content{onBoard} : \type{Boolean}\\
+  \item \constant{onBoard} : \type{Boolean}\\
   Is true if \type{Piece} is on the \type{GridBoard}.
   
-  \item \content{actions}[ \variable{game} : \type{Game} ] : \type{List}\\
-  A \type{List} of possible \type{Action}s the \type{Piece} can make on its \content{owner}'s turn.
+  \item \constant{actions}[ \variable{game} : \type{Game} ] : \type{List}\\
+  A \type{List} of possible \type{Action}s the \type{Piece} can make on its \constant{owner}'s turn.
 \end{dlist}
 
 \subsubsection{Player}
