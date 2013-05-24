@@ -244,46 +244,40 @@ to feed it with the set of all possible input streams. However, this approach is
 not serious, because of the infinite possibilities of input streams. 
 
 \subsubsection{Actual implementation}
-The idea of a pattern check is to take a pattern, a game object, and a position as input and then return either true or false, depending on how the pattern complies with the game objects (board, squares and pieces) relative to the input position.
-When evaluating a pattern, a single branch is created containing the input coordinate. A branch is an individual set of coordinates and can have coordinates added or removed while evaluating a pattern. A branch is considered active as long as it contains one or more coordinates. The first branch does only contain the input coordinate. A pattern can be seen as a sequence of operations on all active branches.
-When meeting one of the pattern-values \texttt{empty},\texttt{friend},\texttt{foe},\texttt{this}, or \textit{type} it is checked that all coordinates of active branches comply with the pattern-value. Any coordinate that does not comply will be removed. Thus the pattern-value \texttt{empty} will cause the coordinate B3 to be removed from any active branch if the square on B3 contains one or more pieces. The different pattern-values effect on the active branches are briefly described here, but should be held up against the example coming up in \secref{sec:patternalg}.
+The idea of a pattern-match is explained in \secref{sec:patterns}. In the implementation, a pattern matching method takes a pattern, a game object, and a position as input and then return either true or false, depending on how the pattern complies with the game objects (board, squares and pieces) relative to the input position.
+
+To aid the understanding of how pattern-matching is implemented, this small example is introduced before the full implementation: 
+When evaluating a pattern, a single branch is created containing the input coordinate. A branch can be seen as a thing that ``digests'' the pattern sequentially and moves around on the board accordingly. The branch is the thing verifying that the pattern complies with board set up. For instance, given the pattern \texttt{/n | w empty/} and the start position B2, one branch starts on B2, meets the \texttt{|}-operator, and then splits into two branches. One branch moves one square north, the other one square west. The two branches are then united to a single branch containing the set of coordinates \{B3, A2\} The next digested part of the pattern is the \texttt{empty}-keyword. The \texttt{empty}-keyword causes all coordinates in the current branch to be removed if the square on the board on that coordinate is not empty. The pattern is now fully digested, and if the current branch still contains any coordinates, it means that it was somehow possible to make a route from the starting position that fully complied with the patter, thus the pattern match returns true. If the branch did not contain any coordinates after digesting the entire pattern, this means that it is in no way possible to choose a branch which complied with the pattern, this the pattern match returns false.
+
+In our full implementation of how a pattern is matched, these notations are used:
 
 The notations used:
-
-$b$: a branch containing a set of coordinates.
-getCoords($b$): returns the set of coordinates contained in $b$.
-isActive($b$): returns true if the branch contains any coordinates.
-$p$: a pattern.
-$c$: a coordinate.
-$d$: a direction, e.g. n (\textit{north}) or sw (\textit{south west}).
-clone($p$): returns an exact clone of p.
-evaluate($p$, $b$): modifies the branch $b$ in a way depending on the value of $p$.
-union($b_1$, $b_2$): adds all coordinates in $b_2$ not already in $b_1$ to $b_1$. 
-
-When checking if a pattern $p$ matches on a coordinate $c$ given the game object $\text{game}$ this is what happens:
-A new branch $b$ is created, containing the input coordinate $c$. 
-evaluate($p$, $b$) is called. If $b$ contains any coordinate, the pattern check returns true, false otherwise.
-
-The evaluate($p$, $b$) function depends on the composition of $p$.
 \begin{dlist}
-\item if $p$ is $p_l \texttt{|} p_r$: $b_c$ = clone($b$); evaluate($p_l$, $b$); evaluate($p_r$, $b_c$); $b = \text{union(}b, b_c\text{)}$;
-\item if $p$ is $p\texttt{*}$: $a = b$ ; do \{$b_last = \text{clone(}b\text{)}$; $a = \text{clone(}a\text{)}$ evaluate($p, a$); union($b, a$)\} while($b_last \neq b$)
-\item if $p$ is $p\texttt{+}$: evaluate($p \; p*$);
-\item if $p$ is $p\texttt{?}$:
-\item if $p$ is a direction $d$: for all coordinates $c \in b$, $c += d$.
-\item if $p$ is a check-value (\texttt{friend}, \texttt{foe}, \texttt{empty}, \texttt{this}, \textit{type}): for all coordinates $c \in b$, if the square at $c$ does not comply with the check-value, $b = b \smallsetminus \{c\}$.
-\end{dlist}  
-
-
-
-\begin{dlist}
-\item \texttt{empty},\texttt{friend},\texttt{foe},\texttt{this}, or \textit{type}: Causes all coordinates to be removed from active branches if the square specified by the coordinate or the piece residing on it does not comply with the pattern-value.
-\item $p_left \texttt{|} p_right$: For all $b$, where $b$ is an active branch, a branch $b_clone$ is cloned from $b$. The pattern value $p_left$ is 
+\item $B$: a branch containing a set of coordinates.
+\item $p$: a pattern.
+\item $c$: a coordinate.
+\item $d$: a direction, e.g. n (\textit{north}) or sw (\textit{south west}).
+\item clone($p$): returns an exact clone of p.
+\item evaluate($p$, $B$): modifies the branch $B$ in a way depending on the value of $p$.
+\item union($B_1$, $B_2$): adds all coordinates in $B_2$ to $B_1$ if they were not already contained in $B_1$. 
+\item concat($p$, c): returns $p_1 p_2 ... p_c$, where $p_i = p$.
 \end{dlist}
- 
-\subsubsection{Example of pattern-algorithm}
-\label{sec:patternalg}
 
+The full implementation of a pattern match is explained now. When checking if a pattern $p$ matches on a coordinate $c$ given the game object $\text{game}$ this is what happens:
+A new branch $B$ is created, containing the input coordinate $c$. 
+evaluate($p$, $B$) is called, and when the function returns, it is checked that if $B$ contains any coordinates. If it does the pattern check returns true, and false otherwise.
+
+The evaluate($p$, $B$) function depends on the composition of $p$, the pseudo-code for its implementation can be seen by \lstref{lst:patternalg}.
+
+\lstinputlisting[caption={\emph{Pseudo-code of how a pattern is evaluated on a branch}},
+label={lst:patternalg}, language=Java]{listings/patternalg.pseudo}
+
+\subsubsection{Visualisation of pattern-algorithm}
+\label{sec:vispatternalg}
+
+\fig[scale=2]{patternboard}{A possible board set up.}
+\fig[scale=0.35]{patternalg1}{The algorithm trying to match the pattern \texttt{/s? w* empty n !empty/} on the square D3, using the board set up in \figref{fig:patternboard}.}
+\fig[scale=0.35]{patternalg2}{The algorithm trying to match the pattern \texttt{/n|w n|w !empty/} on the square C2, using the board set up in \figref{fig:patternboard}. The two branches created when meeting a \texttt{|}-operator are merged again. Notice how this increases efficiency, as the two red coordinates (B3) are merged into a single branch before trying to match the successive pattern values.}
 
 \subsection{Evaluation of interpreter}
 We have implemented a complete interpreter with semantics for every
