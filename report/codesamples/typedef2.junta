@@ -1,0 +1,4 @@
+type A[$b, $c] {
+  define b = $b + 1
+  define calculate[$d] = b + $c + $d
+}
