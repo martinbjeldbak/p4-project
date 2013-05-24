@@ -76,7 +76,7 @@ Names (constants, types, and variables) are also atomic expressions, and are eva
 to whatever value they are associated with, based on the current scope. The keywords
 ($\gter{this}$ and $\gter{super}$) are atomic, but only applicable within type
 definitions, where $\gter{this}$ refers to the current object and $\gter{super}$
-refers to the current object casted to its parent type (if it has one). \todo{casting??}
+refers to the current object casted to its parent type (if it has one).
 
 The literals ($integer$, $string$, $direction$, and $coordinate$) are evaluated to their
 respective values, while patterns are evaluated to \type{Pattern}-values according to
@@ -333,7 +333,7 @@ copy of that object with a new variable environment, containing the new data.
 \label{sec:operatorsandcalls}
 
 Operators are useful for doing calculations, and \productname{} supports the basic
-mathematical operators and precedence. In order to prevent left-recursion (\todo{why?}),
+mathematical operators and precedence. In order to prevent left-recursion,
 but preserve left-associativity, the grammar for the operators of \productname{} are
 described using operator sequences. A sequence is essentially just a list of
 operations on that particular precedence level. In this way all the precedence levels
