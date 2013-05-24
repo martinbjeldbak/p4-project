@@ -253,8 +253,8 @@ from B1 to C3 in a game of chess. Such a move could be chosen by sequentially
 clicking the 4 squares B1, B2, B3, C3. This inconvenient approach would also
 lack the support of clicking a piece and have the squares it can move to
 highlighted. An automaton would be useful if we had decided to use backtracking
-to feed it with the set of all possible input streams. However, this approach is
-not serious, because of the infinite possibilities of input streams.
+to feed it with the set of all possible input streams. However, this approach is 
+not serious, because of the infinite possibilities of input streams. 
 
 \subsubsection{Actual implementation}
 The idea of a pattern match is explained in \secref{sec:patterns}. In the
@@ -330,6 +330,9 @@ branch.}}, label={lst:patternalg}, language=Java]{listings/patternalg.pseudo}
 The algorithm in \lstref{lst:patternalg} is used in \figref{fig:patternalg1} and
 \figref{fig:patternalg2} to visualise how the algorithm works. The patterns will be
 executed on the board in \figref{fig:patternboard}.
+\fig[scale=2]{patternboard2}{A possible board set up.}
+\fig[scale=0.35]{patternalg1}{The algorithm trying to match the pattern \texttt{/s? w* empty n !empty/} on the square D3, using the board set up in \figref{fig:patternboard2}.}
+\fig[scale=0.35]{patternalg2}{The algorithm trying to match the pattern \texttt{/n|w n|w !empty/} on the square C2, using the board set up in \figref{fig:patternboard2}. The two branches created when meeting a \texttt{|}-operator are merged again. Notice how this increases efficiency, as the two red coordinates (B3) are merged into a single branch before trying to match the successive pattern values.}
 
 \fig[scale=1.5]{patternboard}{A possible board set up.}
 
