@@ -45,25 +45,30 @@ With this basic introduction to a simple pattern check, the table (insert ref an
 \label{sec:patternexamples}
 All these examples of pattern checks are performed on the board and pieces seen in \figref{patternboard}. For each operator, two examples of a pattern check on a particular square is given. The first check returns true and the second check false.
 
-On A1, the pattern check \texttt{/empty/} returns true because A1 is empty\\
-On B2, the pattern check \texttt{/empty/} returns false because B2 is not empty\\
-On A1, the pattern check \texttt{/n empty/} returns true because A2 is empty\\
-On B1, the pattern check \texttt{/n empty/} returns false because B2 is not empty\\
-On C3, the pattern check \texttt{/e empty/} returns true because C4 is empty\\
-On C4, the pattern check \texttt{/e empty/} returns false because C5 is out of board\\
-On A1, the pattern check \texttt{/n* n e empty/} returns true because moving north 2 times then north and east hits an empty square on B4\\
+\begin{nlist}
+\item On A1, the pattern check \texttt{/empty/} returns true because A1 is empty.
+\item On B2, the pattern check \texttt{/empty/} returns false because B2 is not empty.
+\item On A1, the pattern check \texttt{/n empty/} returns true because A2 is empty.
+\item On B1, the pattern check \texttt{/n empty/} returns false because B2 is not empty.
+\item On C3, the pattern check \texttt{/e empty/} returns true because C4 is empty.
+\item On C4, the pattern check \texttt{/e empty/} returns false because C5 is out of board.
+\item On A1, the pattern check \texttt{/n* n e empty/} returns true because moving north 2 times then north and east hits an empty square on B4.
+\end{nlist}
 
 Notice that the *-operator causes many branches to be made. The previous pattern check, \texttt{/n* n e empty/} done on A1, has a branch checking \texttt{/n e empty/}. The branch dies because B2 is not empty. If just one branch survives, the pattern check returns true. In the example, the only branch surviving is the \texttt{n n n e empty} branch. The same rules for branching counts for the \texttt{+}, \texttt{?} and \texttt{|} operator. When a branch moves out of board it dies immediately.
 
-On C3, the pattern check \texttt{/n* s s !empty/} returns false because neither A1 nor A2 contains a piece\\
-On A1, the pattern check \texttt{/n+ e empty/} returns true only because B4 is empty\\
-On B1, the pattern check \texttt{/n+ empty e !empty/} returns false because B4 is the only empty square north of B1 and C4 is empty\\
-On B3, the pattern check \texttt{/s? e empty/} returns true only because C2 is empty\\
-On C2, the pattern check \texttt{/n? w empty/} returns false because neither B2 nor B3 is empty\\
-On A2, the pattern check \texttt{/(n | e) empty/} returns true only because A3 is empty\\
-On C2, the pattern check \texttt{/e | w empty/} returns false because neither B2 nor C3 is empty\\
-On B1, the pattern check \texttt{/(n n | e e) empty/} returns true only because D1 is empty\\
-On A1, the pattern check \texttt{/(n w)* empty/} returns true both because A1 is empty and because D4 is empty\\
+\todo{ELIAS (Sebastian siger du skal gøre det): FÅ LISTEN TIL AT STARTE PÅ 8}
+\begin{nlist}
+\item On C3, the pattern check \texttt{/n* s s !empty/} returns false because neither A1 nor A2 contains a piece.
+\item On A1, the pattern check \texttt{/n+ e empty/} returns true only because B4 is empty. Notice how this pattern check is equivalent to the pattern check in bullet 7.
+\item On B1, the pattern check \texttt{/n+ empty e !empty/} returns false because B4 is the only empty square north of B1 and C4 is empty.
+\item On B3, the pattern check \texttt{/s? e empty/} returns true only because C2 is empty. 
+\item On C2, the pattern check \texttt{/n? w empty/} returns false because neither B2 nor B3 is empty.
+\item On A2, the pattern check \texttt{/(n | e) empty/} returns true only because A3 is empty.
+\item On C2, the pattern check \texttt{/e | w empty/} returns false because neither B2 nor C3 is empty.
+\item On B1, the pattern check \texttt{/(n n | e e) empty/} returns true only because D1 is empty.
+\item On A1, the pattern check \texttt{/(n w)* empty/} returns true both because A1 is empty and because D4 is empty.
+\end{nlist}
 
 The \texttt{friend}-keyword is evaluated based on the current player. Suppose that we have a player called Green, who owns the 
 green piece. If it is green's turn to move, any branch of a pattern check will return false
