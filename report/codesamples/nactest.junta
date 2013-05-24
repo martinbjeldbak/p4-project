@@ -3,4 +3,4 @@ type NacTest[] extends TestCase[] {
   define testTitle = $state1.title == "Noughts and Crosses"
   data $state2 = $state1.applyAction[$state1.players[0].actions[$state1][0]]
   define testEmptySquares = $state2.board.emptySquares.size == 8
-  ]
+}
