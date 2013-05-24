@@ -1,25 +1,50 @@
-\begin{algorithm}[H]
-\DontPrintSemicolon
-recursion $\leftarrow$ false\;
-body $\leftarrow$ this function's AST node body\;
-openScope()\;
+\begin{lstlisting}[language=Pascal,label=alg:tailrecursion, caption={\emph{Detecting tail recursion during call of a function.}}]
+  if 'second time we see this function' then
+    return new CallValue(interpreter, this, actualParam)
 
-\Repeat{recursion $=$ true}{
-  \For{$i = 0$ \KwTo formal parameter size $n$}{
-    curentScope().addVariable(formalParam $i \mapsto$ actualParam $i$)\;
-  }
-  
-  evaluatedBody $\leftarrow$ visit(body)\tcc*[r]{returns a value}
-  
-  \eIf{evaluatedBody is a callValue and body.getFunction() $=$ this function}{
-    recursion $\leftarrow$ true\;
-    actualParameters $\leftarrow$ evaluatedBody.getParameters()\;
-  }{
-    recursion $\leftarrow$ false\;
-  }
-}
-closeScope()\;
-\Return evaluatedBody\;
-\capt{Detecting tail recursion during call of a function.}
-\label{alg:tailrecursion}
-\end{algorithm}
+  body := 'the AST node body of this function'
+  openScope()
+
+  recursion := false
+  repeat
+    For i := 0 to 'formal parameter size' n do
+       currentScope.addVariable(formalParam.i, actualParam.i)
+    End
+
+    evaluatedBody := visit(body)
+
+    if evaluatedBody 'is an instance of CallValue' and evaluatedBody.getFunction() = this then
+      recursion := true
+      actualParameters := evaluatedBody.getParameters()
+    else
+      recursion := false
+  until recursion = false 
+closeScope()
+return evaluatedBody
+\end{lstlisting}
+
+%\begin{algorithm}[H]
+%\DontPrintSemicolon
+%recursion $\leftarrow$ false\;
+%body $\leftarrow$ this function's AST node body\;
+%openScope()\;
+%
+%\Repeat{recursion $=$ false}{
+%  \For{$i = 0$ \KwTo formal parameter size $n$}{
+%    curentScope.addVariable(formalParam $i \mapsto$ actualParam $i$)\;
+%  }
+%  
+%  evaluatedBody $\leftarrow$ visit(body)\tcc*[r]{returns a value}
+%  
+%  \eIf{evaluatedBody is a callValue and body.getFunction() $=$ this function}{
+%    recursion $\leftarrow$ true\;
+%    actualParameters $\leftarrow$ evaluatedBody.getParameters()\;
+%  }{
+%    recursion $\leftarrow$ false\;
+%  }
+%}
+%closeScope()\;
+%\Return evaluatedBody\;
+%\capt{Detecting tail recursion during call of a function.}
+%\label{alg:tailrecursion}
+%\end{algorithm}
