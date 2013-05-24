@@ -109,6 +109,29 @@ added to the resulting \type{List}-value. When a \type{List}-value is created, i
 altered further (because of the no-side-effects condition). All operations on that \type{List}-value
 will create new \type{List}-values, and leave the original value intact.
 
+Values within lists can be accessed using the \texttt{[]}-operation (same as
+with function calls and type instantiation). Lists begin at offset $0$, so in
+order to access the second element of a list, one can use the following:
+
+\codesample{listaccess1.junta}
+
+Ranges of elements can also be returned. For instance in the following
+expression a new list is returned containing elements from offset 1 up
+to and including offset 2 (the list $\texttt{["is", "a"]}$):
+
+\codesample{listaccess2.junta}
+
+An offset can be negative, which means that the offset is dependent on
+the size of the list. This way offset $-1$ will always refer to the last element
+of the list. For example in order to return the last two elements of a list one
+could use the offsets, $-2$ and $-1$:
+
+\codesample{listaccess3.junta}
+
+Some other examples are:
+
+\codesample{listaccess4.junta}
+
 \subsubsection{Big-step semantics}
 
 The semantics presented in \tableref{semantic:lists} are the transition rules
@@ -116,7 +139,10 @@ for lists.
 
 \input{content/design/big-stepsemantics/lists}
 
-\todo{explain semantics for lists.}
+List access requires two rules, since two cases are possible. The first case, is
+when just one offset is requested, then that element should be returned. In the
+second case, two offsets are requested, and a range of elements should be
+returned.
 
 \subsection{Let expressions}
 \label{sec:letexpressions}
@@ -358,20 +384,25 @@ like the tree in \figref{fig:parsetreesequences}.
 
 \subsubsection{Big-step semantics}
 
-The semantics presented in \tableref{semantic:callfun} is transition rules for
+The semantics presented in \tableref{semantic:callfun} is transition rule for
 function calls.
 
 
 \input{content/design/big-stepsemantics/callfun}
 
-\todo{explain call semantics.}
+In this rule the expression $E$ is evaluated to a function value, $v_2$, which
+has its own variable and constant environments, as per the static scope rules.
+The variable environment is then updated with the actual parameters assigned to
+the formal parameters, after which the expression, contained within the function
+value, is evaluated.
 
 The semantics presented in \tableref{semantic:memaccess} is the transition rule
 for member access.
 
 \input{content/design/big-stepsemantics/memberaccess}
 
-\todo{explain member access semantics.}
+A member access is as simple as evaluating the left-side to an object, and then
+accessing the specified constant in that objects constant environment.
 
 \subsubsection{Valid operands}
 \subsubsection{Boolean operators}
