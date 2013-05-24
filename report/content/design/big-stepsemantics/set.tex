@@ -1,0 +1,18 @@
+\begin{table}[ht]
+  \begin{tabular*}{\textwidth}{l l}
+    \hline \\
+    \hspace{1.5cm} $[\mbox{SET}]$ & \infrule{env_C, env_V, env_T \vdash \lag E_1
+      \rag\ra u_1 \quad
+    \ldots \quad env_C, env_V, env_T \vdash \lag E_k \rag \ra u_k}
+    {env_C, env_V, env_T \vdash \lag \texttt{set}\; x_1 = E_1, \ldots, x_k =
+    E_k \rag \ra v_1} \\
+    & where $env_v\; \texttt{this} = \left(t, env'_c, env'_v, v_2 \right)$ \\
+    & and $v_1 = \left( t, env'_c, env'_v, v_2\right)$ \\
+    & and $env''_v = env'_v \left[ x_1 \mapsto u_1, \ldots, x_k \mapsto u_k
+    \right]$ \\
+    & \\
+    \hline
+  \end{tabular*}
+  \capt{Transition rules for set expressions.}
+  \label{semantic:set}
+\end{table}

@@ -219,38 +219,65 @@ in pretty much every one of our test programs to evaluate winning
 conditions, find squares or actions that have a specific property, and
 various other constructs.
 
+\subsubsection{Failed implementation with finite automaton}
 We looked at other languages in an attempt to find an existing solution
 to a similar problem and quickly found that patterns should be very
-similar to regular expressions. Unfortunately, regular expressions are
+similar to regular expressions. Unfortunately, regular expressions
 actually do not share the same properties as our patterns, ending up
 giving us quite a headache when trying to use automaton to describe
-patterns.
+patterns. One of the primary troubles we had using automatons was the fact 
+that automatons takes an input stream and decide whether the input is to be accepted 
+or rejected. For a pattern check, an input stream can be seen as a path 
+between two squares on the board. For a person who plays a \productname{}-game, it is however 
+not convenient that he has to specify the exact path he wants to move. Consider trying to move the 
+knight from B1 to C3 in a game of chess. Such a move could be chosen by 
+sequentially clicking the 4 squares  B1, B2, B3, C3. This inconvenient approach 
+would also lack the support of clicking a piece and have the squares it can 
+move to highlighted. An automaton would be useful if we had decided to use backtracking 
+to feed it with the set of all possible input streams. However, this approach is 
+not serious, because of the infinite possibilities of input streams. 
 
-\todo{Keeent}
+\subsubsection{Actual implementation}
+The idea of a pattern check is to take a pattern, a game object, and a position as input and then return either true or false, depending on how the pattern complies with the game objects (board, squares and pieces) relative to the input position.
+When evaluating a pattern, a single branch is created containing the input coordinate. A branch is an individual set of coordinates and can have coordinates added or removed while evaluating a pattern. A branch is considered active as long as it contains one or more coordinates. The first branch does only contain the input coordinate. A pattern can be seen as a sequence of operations on all active branches.
+When meeting one of the pattern-values \texttt{empty},\texttt{friend},\texttt{foe},\texttt{this}, or \textit{type} it is checked that all coordinates of active branches comply with the pattern-value. Any coordinate that does not comply will be removed. Thus the pattern-value \texttt{empty} will cause the coordinate B3 to be removed from any active branch if the square on B3 contains one or more pieces. The different pattern-values effect on the active branches are briefly described here, but should be held up against the example coming up in \secref{sec:patternalg}.
 
-\subsubsection{Failed implementation with finite automaton}
-Our first intuition was to draw inspiration from implementations
-of regular expressions. These implementations use nondeterministic
-finite automaton (NFAs) to represent the traversal of the expression,
-having different constructs of automata nodes for the different logic
-operations, such as Kleene star, union, concatenation, among others. An
-NFA is constructed for each part of the expression, as they concatenated
-together represent the entire regular expression, only accepting strings
-in the alphabet that fulfill the desired properties. These NFAs are then
-converted to deterministic finite automaton, which can be traversed much
-faster than NFAs.
+The notations used:
 
-But this implementation caused some problems, because regular
-expressions are described as a 4-tuple with an input string, which our
-patterns don't require. Patterns are used in function parameters and to
-evaluate different conditions. These conditions don't necessarily have
-an input, but are based on the current game's state, such as which piece
-and player is currently being taken into account.
+$b$: a branch containing a set of coordinates.
+getCoords($b$): returns the set of coordinates contained in $b$.
+isActive($b$): returns true if the branch contains any coordinates.
+$p$: a pattern.
+$c$: a coordinate.
+$d$: a direction, e.g. n (\textit{north}) or sw (\textit{south west}).
+clone($p$): returns an exact clone of p.
+evaluate($p$, $b$): modifies the branch $b$ in a way depending on the value of $p$.
+union($b_1$, $b_2$): adds all coordinates in $b_2$ not already in $b_1$ to $b_1$. 
 
-Therefore we needed another solution, because as practical as
-representing patterns as automaton is, they're not a valid solution.
-So we went back to the drawing board and thought of a different,
-nondeterministic implementation.
+When checking if a pattern $p$ matches on a coordinate $c$ given the game object $\text{game}$ this is what happens:
+A new branch $b$ is created, containing the input coordinate $c$. 
+evaluate($p$, $b$) is called. If $b$ contains any coordinate, the pattern check returns true, false otherwise.
+
+The evaluate($p$, $b$) function depends on the composition of $p$.
+\begin{dlist}
+\item if $p$ is $p_l \texttt{|} p_r$: $b_c$ = clone($b$); evaluate($p_l$, $b$); evaluate($p_r$, $b_c$); $b = \text{union(}b, b_c\text{)}$;
+\item if $p$ is $p\texttt{*}$: $a = b$ ; do \{$b_last = \text{clone(}b\text{)}$; $a = \text{clone(}a\text{)}$ evaluate($p, a$); union($b, a$)\} while($b_last \neq b$)
+\item if $p$ is $p\texttt{+}$: evaluate($p \; p*$);
+\item if $p$ is $p\texttt{?}$:
+\item if $p$ is a direction $d$: for all coordinates $c \in b$, $c += d$.
+\item if $p$ is a check-value (\texttt{friend}, \texttt{foe}, \texttt{empty}, \texttt{this}, \textit{type}): for all coordinates $c \in b$, if the square at $c$ does not comply with the check-value, $b = b \smallsetminus \{c\}$.
+\end{dlist}  
+
+
+
+\begin{dlist}
+\item \texttt{empty},\texttt{friend},\texttt{foe},\texttt{this}, or \textit{type}: Causes all coordinates to be removed from active branches if the square specified by the coordinate or the piece residing on it does not comply with the pattern-value.
+\item $p_left \texttt{|} p_right$: For all $b$, where $b$ is an active branch, a branch $b_clone$ is cloned from $b$. The pattern value $p_left$ is 
+\end{dlist}
+ 
+\subsubsection{Example of pattern-algorithm}
+\label{sec:patternalg}
+
 
 \subsection{Evaluation of interpreter}
 We have implemented a complete interpreter with semantics for every
