@@ -260,12 +260,12 @@ evaluate($p$, $b$) is called. If $b$ contains any coordinate, the pattern check 
 
 The evaluate($p$, $b$) function depends on the composition of $p$.
 \begin{dlist}
-\item if $p$ is $p_l \text{|} p_r$: $b_c$ = clone($b$); evaluate($p_l$, $b$); evaluate($p_r$, $b_c$); $b = \text{union(}b, b_c\text{)}$;
-\item if $p$ is $p*$: $a = b$ ; do \{$b_last = \text{clone(}b\text{)}$; $a = \text{clone(}a\text{)}$ evaluate($p, a$); union($b, a$)\} while($b_last \neq b$)
-\item if $p$ is $p+$: evaluate($p \; p*$);
-\item if $p$ is $p?$:
-\item if $p$ is a direction $d$, e.g. north: for all coordinates $c \in b$, $c += d$.
-\item if $p$ is a check-value (\texttt{friend}, \texttt{foe}, \texttt{empty}, \texttt{this}, \textit{type}): for all coordinates $c \in b$, if the square at $c$ does not comply with the check-value, $b = b \smallsetminus \{c\}$.
+\item if $p$ is $p_l \texttt{|} p_r$: $b_c$ = clone($b$); evaluate($p_l$, $b$); evaluate($p_r$, $b_c$); $b = \text{union(}b, b_c\text{)}$;
+\item if $p$ is $p\texttt{*}$: $a = b$ ; do \{$b_last = \text{clone(}b\text{)}$; $a = \text{clone(}a\text{)}$ evaluate($p, a$); union($b, a$)\} while($b_last \neq b$)
+\item if $p$ is $p\texttt{+}$: evaluate($p \; p*$);
+\item if $p$ is $p\texttt{?}$:
+\item if $p$ is a direction $d$: for all coordinates $c \in b$, $c += d$.
+\item if $p$ is a check-value (\texttt{friend}, \texttt{foe}, \texttt{empty}, \texttt{this}, \textit{type}): for all coordinates $c \in b$, if the square at $c$ does not comply with the check-value, $b = b \diagdown \{c\}$.
 \end{dlist}  
 
 
