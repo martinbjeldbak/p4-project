@@ -4,7 +4,7 @@
 In order to write programs in a programming language, it is often necessary to use a number of built-in
 functions and types. \productname{} provides a number of built-in functions and constants, as well as 
 a number of simple types for representing values such as integers and strings. \productname{} also provides
-a type-hierarchy designed for implementing and expressing board games. The build-ins will in many cases make
+a type-hierarchy designed for implementing and expressing board games. The built-ins will in many cases make
 the lives of \productname{}-programmers easier since he/she won't have to implement the functionality the built-ins
 provide for themselves. 
 
@@ -51,9 +51,11 @@ for instance the numeral exceeds the highest possible value a TypeError is throw
 \subsubsection{String}
 \begin{dlist}
   \item \type{String}[\variable{string} : \type{String}]\\
-  The standard environment provides the String type, which is implemented as Java's data type, String. That is, it may contain any unicode (UTF-16) characters. Though it is not possible to writ unicode characters of the form ``\textbackslash{}uXXXX'' as in Java (like for instance ``\textbackslash{}u0108'', which is a capital C with circumflex). The String type contains one built-in constant:  
+    The standard environment provides the String type, which is implemented as Java's data type, String. That is, it may contain any unicode (UTF-16) characters. Though it is not possible to writ unicode characters of the form ``\textbackslash{}uXXXX'' as in Java (for instance ``\textbackslash{}u0108'', which is the capital C with circumflex, Ĉ). The \type{String} type contains one built-in constant:  
+  \begin{dlist}
   \item \constant{size} : \type{Integer}\\
-  The size constant returns the number of characters in the string, which is an integer value. For example ``test\_string''.size = 11
+  The size constant returns the number of characters in the string, which is an integer value. For example ``test\_string''.size = $11$
+  \end{dlist}
 \end{dlist}
 \subsubsection{List}
 
@@ -99,7 +101,7 @@ for instance the numeral exceeds the highest possible value a TypeError is throw
 \subsection{Game environment}
 \label{sec:gameenvironment}
 
-The game environment provides a class hierachy for describing a board game in an object-oriented manner.
+The game environment provides a class hierarchy for describing a board game in an object-oriented manner.
 In the game environment the following global functions are available:
 
 \begin{dlist}

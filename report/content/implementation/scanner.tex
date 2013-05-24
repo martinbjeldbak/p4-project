@@ -1,4 +1,5 @@
 \section{Scanner}
+\label{sec:scannerimplementation}
 This section presents our implementation of a scanner for our programming language.
 
 Our scanner takes raw source code in the form of a program written in \productname{} as input. It validates the lexical correctness of a \productname{} program, which means that it tries to determine if the input is in the language of \productname{}. It does so by identifying tokens defined in \productname{} from the input. If an input is met which cannot be recognized as a valid token, the source code is not a valid program in \productname{}, hence an exception is thrown. The exception contains information about the line and offset at which the input was determined to be incorrect.
@@ -30,33 +31,40 @@ When a lexeme is found in the input stream, the scanner analyses which token typ
 
 When an input is to be analysed the scanner looks at the first symbol of the input, which is not a blank or white space character. Based on the first character it makes a jump to a subfunction. The subfunction is then responsible for determining which kind of token that is supposed to be generated. With this approach we have constructed a DFA with explicit control. The explicit control means that the transitions are handled ``manually'' using conditional jumps to subfunctions rather than having a table driven automaton with defined states and a transition table.
 
-In \lstref{lst:scan} you can clearly see many functions with the name \methodref{is{Something}()} for instace the isDigit() function. These functions check the first character in an input and checks if the next symbol in the input stream is that ``{Something}''. \methodref{isWhitespace()} checks if the next input character (\varref{nextChar}) is a white space. While true \methodref{pop()} dequeues the next symbol in the input stream and updates \varref{nextChar}. Therefore, the while loop with \methodref{isWhitespace()} removes all initial white spaces before a next token is found. If, at any time, the scanner has reached the end of the input stream it returns a \tokenref{EOF} so succeeding parts of the parser knows where the program ends.
+In \lstref{lst:scan} you can see many functions of the style \methodref{is{\textit{Something}}()} for instace \methodref{isDigit()} and \methodref{isOperator()}. These functions check the first character in an input and checks if the next symbol in the input stream is that ``\textit{Something}''. \methodref{isWhitespace()} checks if the next input character (\varref{nextChar}) is a white space. While true \methodref{pop()} dequeues the next symbol in the input stream and updates \varref{nextChar}. Therefore, the while loop with \methodref{isWhitespace()} removes all initial white spaces before a next token is found. If, at any time, the scanner has reached the end of the input stream it returns a \tokenref{EOF} so succeeding parts of the parser knows where the program ends.
 
-Beside the \methodref{isWhitespace()} function, all other functions of the form \methodref{is{Something}()} are reponsible for returning a token based on their evaluation of the input stream.
-For example, if the first symbol of a lexeme is an upper-case character, the function \methodref{scanUppercase()} is responsible for determining whether the lexeme is an \tokenref{identifier} or a \tokenref{direction} because they are the only two tokens starting with an upper-case character in \productname{}. This is depicted in \tableref{table:scanner}. 
+Beside the \methodref{isWhitespace()} function, all other functions of the form \methodref{is{\textit{Something}}()} are reponsible for returning a token based on their evaluation of the input stream.
+For example, if the first symbol of a lexeme is an upper-case character, the function \methodref{scanUppercase()} is responsible for determining whether the lexeme is a \tokenref{type} or a \tokenref{coordinate} because they are the only two tokens starting with an upper-case character in \productname{}. This is depicted in \tableref{table:scanner}.
 
 
-\tab[14cm]{scanner}{2}{The different groupings of characters, the subfunctions responsible for handling them and the possible returned token types.}
+\tab[14cm]{scanner}{2}{The different groupings of characters, the subfunctions responsible for handling them and the possible returned token types}
                  		 {Action and output												}
        {First character	}{Responsible function	& Token type							}{
 \tabrow{White space 	}{						& \textit{ignored}						}
 \tabrow{End of file    	}{						& EOF									}
-\tabrow{Digit		  	}{scanNumeric()			& INT\_LIT								}
-\tabrow{Uppercase    	}{scanUppercase()		& ID, COORD\_LIT						}
-\tabrow{''			   	}{scanString()			& STRING\_LIT							}
+\tabrow{Digit		  	}{scanNumeric()			& LIT\_INT								}
+\tabrow{Uppercase    	}{scanUppercase()		& LIT\_COORD, TYPE						}
+\tabrow{''			   	}{scanString()			& LIT\_STRING							}
 \tabrow{\$    			}{scanVar()				& VAR									}
-\tabrow{Operator (e.g. ``+'', ``-'' and ``*'')   	}{scanOperator()		& LBRACKET, RBRACKET, LBRACE, RBRACE, 
-												  LPAREN, RPAREN, PATTERN\_OR, COMMA, 
-												  SHARED\_OPERATOR, NORMAL\_OPERATOR, 
-												  ASSIGN, PATTERN\_OP, LAMBDABEGIN		}
-\tabrow{Lowercase   	}{scanKeyword()			& NORMAL\_OPERATOR, PATTERN\_KEYWORD,
-												  DIR\_LIT, NOT\_OPERATOR,
-												  KEYWORD, LET, IN, DEFINE, IF, THEN,
-												  ELSE, GAME, THIS, FUNCTION			}
+\tabrow{Operator    	}{scanOperator()		& OP\_PLUS, OP\_MINUS, OP\_MULT,
+												  OP\_DIV, OP\_MODULO, OP\_ASSIGN, 
+												  OP\_EQUALS, OP\_GREATER\_THAN,
+												  OP\_GREATER\_OR\_EQUALS, OP\_LESS\_THAN,
+												  OP\_LESS\_OR\_EQUALS, OP\_NOT\_EQUALS, 
+												  OP\_LAMPDA, LAMBDA\_BEGIN,
+												  LBRACKET, RBRACKET, LBRACE, RBRACE, 
+												  LPAREN, RPAREN, OP\_PATTERN\_QUESTION, 
+												  OP\_PATTERN\_NOT, OP\_PATTERN\_OR, COMMA,
+												  OP\_DOT, OP\_DOT\_DOT\_DOT 			}
+\tabrow{Lowercase   	}{scanKeyword()			& KEY\_THIS, KEY\_SUPER, KEY\_DEFINE,
+												  KEY\_ABSTRACT, KEY\_EXTENDS, KEY\_TYPE,
+												  KEY\_SET, KEY\_DATA, KEY\_PATTERN, 
+												  OP\_IS, OP\_OR, OP\_AND, OP\_NOT, LET, IN, IF, THEN,
+												  ELSE, LIT\_DIR						}
 }
 
 
-Two variables, \typeref{int} \varref{offset} and \typeref{int} \varref{line} keep track of where in the source file the next input character is taken from. The function \methodref{pop()} will pop the first character from the input stream and assign the value of the new first character to the variable \varref{nextChar}. The \methodref{isSomething()} functions use the \varref{nextChar} to check what kind of character the next one is.
-The \methodref{pop()} function will additionally increment \varref{offset} by one. If the next input symbol is a new line character, it assigns zero to  \varref{offset} and increments \varref{line} by one. If an unexpected input symbol is met a \typeref{SyntaxError}-exception is thrown. An example could be a \$ character followed by white space. \$ is used as prefix for variables, and expects to be followed by an identifier, e. g. \$\varref{varName}.
+Two variables, \typeref{int} \varref{offset} and \typeref{int} \varref{line} keep track of where in the source file the next input character is taken from. The function \methodref{pop()} will pop the first character from the input stream and assign the value of the new first character to the variable \varref{nextChar}. The \methodref{is{\textit{Something}}()} functions use the \varref{nextChar} to check what kind of character the next one is.
+The \methodref{pop()} function will additionally increment \varref{offset} by one. If the next input symbol is a new line character, it assigns zero to  \varref{offset} and increments \varref{line} by one. If an unexpected input symbol is met a \typeref{SyntaxError}-exception is thrown. An example could be a \$ character followed by white space. \$ is used as prefix for variables, and expects to be followed by an identifier, e. g. \$\varref{varName}. For more information on our error handling we refer to \secref{sec:errorhandling}.
  
 \lstinputlisting[caption="The scan() method from the \productname{} scanner.", label=lst:scan, language=Java]{listings/scan.java}
