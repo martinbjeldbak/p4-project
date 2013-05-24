@@ -33,28 +33,35 @@ false if checked on \textbf{A1}. However, the same pattern checked on
 
 \fig[scale=2]{patternboard}{A simple 4 X 4 board with 3 pieces}
 
-With this basic introduction to a simple pattern check, the table (insert ref
-and convert list below to a table) describes briefly how the different pattern
+With this basic introduction to a simple pattern check,
+\tableref{table:pattern-example} briefly describes how the different pattern
 operators work. For each operator, an example of the use in a context are given
 in \secref{sec:patternexamples}. Note that the description of patterns assumes a
 minor understanding of regular expressions, see \cite{regex}.
 
-\texttt{empty} : current square contains no pieces\\
-\texttt{n} : north \\
-\texttt{e} : east \\
-\texttt{s} : south \\
-\texttt{w} : west \\
-\texttt{*} : zero-to-many times\\
-\texttt{+} : one-to-many times\\
-\texttt{?} : zero-or-one time\\
-\texttt{|} : or\\
-\texttt{!} : not\\
-\texttt{(} \textit{pattern} \texttt{)} : encapsulation\\
-\texttt{friend} :  current square contains at least one friendly piece of the current player\\
-\texttt{foe} : current square contains at least one enemy piece of the current player\\
-\textit{type} : the current square is of the given type or a piece of the given
-type is residing on the current square.
-\texttt{this} : current square contains the piece for which the check is being performed\\
+\tab[10cm]{pattern-example}{1}{Pattern operators.}{}
+         {Pattern operator                       }{\textbf{Explanation}}{
+  \tabrow{\texttt{empty}                         }{current square contains no
+  pieces}
+  \tabrow{\texttt{n}                             }{north}
+  \tabrow{\texttt{e}                             }{east}
+  \tabrow{\texttt{s}                             }{south}
+  \tabrow{\texttt{w}                             }{west}
+  \tabrow{\texttt{*}                             }{zero-to-many times}
+  \tabrow{\texttt{+}                             }{one-to-many times}
+  \tabrow{\texttt{?}                             }{zero-or-many times}
+  \tabrow{\texttt{|}                             }{or}
+  \tabrow{\texttt{!}                             }{not}
+  \tabrow{\texttt{(} \textit{pattern} \texttt{)} }{encapsulation}
+  \tabrow{\texttt{friend}                        }{current square contains at
+  least one friendly piece of the current player}
+  \tabrow{\texttt{foe}                           }{current square contains at
+  least one enemy piece of the current player}
+  \tabrow{\texttt{type}                          }{the current square is of the
+given type or a piece of the given type is residing on the current square}
+  \tabrow{\texttt{this}                          }{current square contains the
+  piece for which the check is being performed}
+}
 
 \subsection{Pattern examples}
 \label{sec:patternexamples}
