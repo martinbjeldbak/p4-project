@@ -7,83 +7,109 @@ string, which doesn't correspond to one of our language's specified lexemes. In
 the parsing phase a syntax error can occur if two or more tokens are not set up
 syntactically correct according to our grammar. In order to catch these errors
 we have implemented error handlers, which extends the build-in Java class
-\classref{Exception} (\classref{Java.lang.Exception}). An error can be of big annoyance for a
-programmer if no information of what caused it is provided. So the function of
-the error handlers are to give the programmer of junta games a better chance for
-figuring out what he has done wrong and make it easier for him to correct the
-errors by for instance referring to where in the source code and error has
-occurred and what caused it. We have created an error hierarchy in order to give
-an overview of our different error handlers. The hierarchy is illustrated in
-\figref{ast:errorhierarchy}. 
+\classref{Exception} (\classref{Java.lang.Exception}). An error can be of big
+annoyance for a programmer if no information of what caused it is provided. So
+the function of the error handlers are to give the programmer of junta games a
+better chance for figuring out what he has done wrong and make it easier for him
+to correct the errors by for instance referring to where in the source code and
+error has occurred and what caused it. We have created an error hierarchy in
+order to give an overview of our different error handlers. The hierarchy is
+illustrated in \figref{ast:errorhierarchy}. 
 
 
 \begin{figure}[ht]
-	\begin{center}
-		\begin{tikzpicture}
-			\node [square] (a) {Exception}
-  				child {node [square,xshift=0cm] (b) {Error}
-  					child {node [square,xshift=-4.5cm] (c) {SyntaxError}
-  						child {node [square,xshift=0.0cm] (d) {ScannerError}}
-  					}
-  					child {node [square,xshift=0cm] (e) {StandardError}
-  						child {node [square,xshift=-0.5cm] (f) {ScopeError}}
-  						child {node [square,xshift=0.5cm] (g) {InternalError}}
-  						child {node [square,xshift=1.5cm] (h) {TypeError}}
-  						child {node [square,xshift=2.5cm] (i) {ArgumentError}
-  							child {node [square,xshift=0.0cm] (j) {DivideByZeroError}}
-  						}
-  						child {node [square,xshift=3.5cm] (k) {NameError}}
-  					}
-  					child {node [square,xshift=4.5cm] (l) {SimulatorError}}
-  				};
-  			\draw[<-, thick,] (a) -- (b);
-    		\draw[<-, thick,] (b) -- (c);
-    		\draw[<-, thick,] (c) -- (d);
-    		\draw[<-, thick,] (b) -- (e);
-    		\draw[<-, thick,] (e) -- (f);
-    		\draw[<-, thick,] (e) -- (g);
-    		\draw[<-, thick,] (e) -- (h);
-    		\draw[<-, thick,] (e) -- (i);
-    		\draw[<-, thick,] (e) -- (k);
-    		\draw[<-, thick,] (i) -- (j);
-    		\draw[<-, thick,] (b) -- (l);
-		\end{tikzpicture}
-	\end{center}
-	\capt{An illustration of the error hierarchy as it is implemented in the interpreter}
-	\label{ast:errorhierarchy}
+  \begin{center}
+    \begin{tikzpicture}
+      \node [square,yshift=-2em] (a) {Exception};
+      \node [square,yshift=-5em] (b) {Error};
+      \node [square,yshift=-8em,xshift=-7em] (c) {SyntaxError};
+      \node [square,yshift=-8em] (d) {StandardError};
+      \node [square,yshift=-8em,xshift=7.5em] (e) {SimulatorError};
+      \node [square,yshift=-12em,xshift=-21em] (f) {ScopeError};
+      \node [square,yshift=-12em,xshift=-14em] (g) {ScannerError};
+      \node [square,yshift=-12em,xshift=-7em] (h) {InternalError};
+      \node [square,yshift=-12em] (i) {TypeError};
+      \node [square,yshift=-12em,xshift=7em] (j) {ArgumentError};
+      \node [square,yshift=-12em,xshift=14em] (k) {NameError};
+      \node [square,yshift=-15em,xshift=7em] (l) {DivideByZeroError};
+
+       \draw[<-, thin,] (a) -- (b);
+       \draw[<-, thin,] (b) -- (d);
+       \draw[-|,-,thin,] (c.north) |-+(0,0.75em)-| (b.south);
+       \draw[-|,-,thin,] (e.north) |-+(0,0.86em)-| (b.south);
+       \draw[-|,->,thin,] (f.north) |-+(0,1.7em)-| (c.south);
+       \draw[<-,thin,] (d) -- (i);
+       \draw[-|,-,thin,] (g.north) |-+(0,1.11em)-| (d.south);
+       \draw[-|,-,thin,] (h.north) |-+(0,1.11em)-| (d.south);
+       \draw[-|,-,thin,] (k.north) |-+(0,1.11em)-| (d.south);
+       \draw[-|,-,thin,] (j.north) |-+(0,0.98em)-| (d.south);
+       \draw[<-, thin,] (j) -- (l);
+      
+	%first level
+%	\draw[-,-|,-,thin,] (as.south) |-+(0,-0.75em)-| (int1.north);
+%	\draw[-,-|,-,thin,] (as.south) |-+(0,-0.75em)-| (plus1.north);
+%	\draw[-,-|,-,thin,] (as.south) |-+(0,-0.75em)-| (minus1.north);
+%	\draw[-,-|,-,thin,] (as.south) |-+(0,-0.75em)-| (plus2.north);
+
+	%second level
+%	\draw[-,thin,] (plus1.south) -- (md1.north);
+%	\draw[-,thin,] (minus1.south) -- (int2.north);
+%	\draw[-,thin,] (plus2.south) -- (md2.north);
+
+	%third level
+%	\draw[-,-|,-,thin,] (md1.south) |-+(0,-0.75em)-| (int3.north);
+%	\draw[-,thin,] (md1.south) |-+(0,-0.75em)-| (mult1.north);
+%	\draw[-,-|,-,thin,] (md2.south) |-+(0,-0.75em)-| (int4.north);
+%	\draw[-,thin,] (md2.south) |-+(0,-0.75em)-| (div1.north);
+
+	%fourth level
+%	\draw[-,thin,] (mult1.south) -- (int5.north);
+%	\draw[-,thin,] (div1.south) -- (int6.north);
+
+	%solution level
+%	\draw[-,dashed,] (int1) -- (a);
+%	\draw[-,dashed,] (int2) -- (d);
+%	\draw[-,dashed,] (int4) -- (e);
+%	\draw[-,dashed,] (int5) -- (c);
+%	\draw[-,dashed,] (int6) -- (f)
+    \end{tikzpicture}
+  \end{center}
+  \capt{An illustration of the error hierarchy as it is implemented in the
+  interpreter.}
+  \label{ast:errorhierarchy}
 \end{figure}
 
 \begin{description}
 \item[\textbf{Exception}] At the top of the error hierarchy Java's standard
   error handling concept is located, which is called \classref{Exception}
-  (\classref{java.lang.Exception}). Exception is a build-in Java class that extends the
-  \classref{Throwable} class which is the superclass of all errors and exceptions in Java.
-  Only \classref{Throwable} or subclasses of \classref{Throwable} can be the argument type in a catch
-  clause and only objects that are instances of this class or it's subclasses
-  can be thrown by the Java throw statement \cite{throwable}.
+  (\classref{java.lang.Exception}). Exception is a build-in Java class that
+  extends the \classref{Throwable} class which is the superclass of all errors
+  and exceptions in Java.  Only \classref{Throwable} or subclasses of
+  \classref{Throwable} can be the argument type in a catch clause and only
+  objects that are instances of this class or it's subclasses can be thrown by
+  the Java throw statement \cite{throwable}.
 
 \item[\textbf{Error}] Extends the Exception class. Error is an abstract class
   which contains two abstract methods: \methodref{getColumn()} and
   \methodref{getLine()}.
 
-\item[\textbf{SyntaxError}] Extends the \classref{Error} class and is used in the parser to
-  handle syntactic errors. A syntactic error occurs if a token doesn't
-  correspond to the currently expected token according to the grammar.
-  \classref{SyntaxError} outputs a message and information about the line and offset of the
-  token that caused the error. 
+\item[\textbf{SyntaxError}] Extends the \classref{Error} class and is used in
+  the parser to handle syntactic errors. A syntactic error occurs if a token
+  doesn't correspond to the currently expected token according to the grammar.
+  \classref{SyntaxError} outputs a message and information about the line and
+  offset of the token that caused the error. 
 
-\item[\textbf{ScannerError}] Extends the \classref{SyntaxError} class and is used in the
-  scanner to handle lexical errors. A lexical error occurs if the programmer
-  makes a typo, e.g. writes ``defin'' instead of ``define'' or if he/she in
-  other ways doesn't follow the regulations of Junta's lexemes e.g. writes the
-  first letter in a type name in lower case letters. Like \classref{SyntaxError},
-  \classref{ScannerError} outputs a message and information about the line and offset of
-  the token that cause the error.  
+\item[\textbf{ScannerError}] Extends the \classref{SyntaxError} class and is
+  used in the scanner to handle lexical errors. A lexical error occurs if the
+  programmer makes a typo, e.g. writes ``defin'' instead of ``define'' or if
+  he/she in other ways doesn't follow the regulations of Junta's lexemes e.g.
+  writes the first letter in a type name in lower case letters. Like
+  \classref{SyntaxError}, \classref{ScannerError} outputs a message and
+  information about the line and offset of the token that cause the error.  
 
 \item[\textbf{StandardError}] Extends the Error class. The
-  \classref{StandardError} class
-  is used in the interpretation phase to handle errors with nodes in the
-  Abstract syntax tree.  
+  \classref{StandardError} class is used in the interpretation phase to handle
+  errors with nodes in the Abstract syntax tree.  
 
 \item[\textbf{ScopeError}] Extends the \classref{StandardError} class. It is
   thrown by the scope checker to notify the programmer of scope errors.
@@ -111,7 +137,5 @@ an overview of our different error handlers. The hierarchy is illustrated in
   if the simulator encounters an error.
 \end{description}
 
-
-    
 % Talk about how, where, and why errors are thrown in the different packages
 % ..and how they're implemented
