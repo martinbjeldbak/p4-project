@@ -90,7 +90,8 @@ The \type{List}-type is one of the basic types in \productname{}. A \type{List}-
 created using the following syntax:
 
 \begin{ebnf}
-\grule{list}{\gter{[} \gcat \gopt{expression \gcat \grep{\gter{,} \gcat expression}} \gcat \gter{]}}
+\grule{list}{\gter{[} \gcat \gopt{expression \gcat \grep{\gter{,} \gcat
+expression}} \gcat \gter{]}}
 \end{ebnf}
 
 Essentially this means that a list is created from zero or more expressions (separated
@@ -102,12 +103,13 @@ by commas). The following statements can be made about lists:
 \item Lists are immutable.
 \end{nlist}
 
-When a list is evaluated, each expressions is evaluated to a value (the order
-of evaluation does not matter, since no side-effects are possible, lazy-evaluation of expressions
-could even be a possibility), and all values (in the same order as the expressions) are
-added to the resulting \type{List}-value. When a \type{List}-value is created, it can't be
-altered further (because of the no-side-effects condition). All operations on that \type{List}-value
-will create new \type{List}-values, and leave the original value intact.
+When a list is evaluated, each expressions is evaluated to a value (the order of
+evaluation does not matter, since no side-effects are possible, lazy-evaluation
+of expressions could even be a possibility), and all values (in the same order
+as the expressions) are added to the resulting \type{List}-value. When a
+\type{List}-value is created, it can't be altered further (because of the
+no-side-effects condition). All operations on that \type{List}-value will create
+new \type{List}-values, and leave the original value intact.
 
 \subsubsection{Big-step semantics}
 
@@ -235,25 +237,28 @@ created. The use of the \function{getAdder}-function could look like this:
 
 \codesample{closureuse.garry}
 
-In the first line \function{getAdder} is called with the argument, $25$. A new scope, $A$,
-is created, in which the variable \variable{a} is assigned the value $25$. Then the function
-expression is evaluated, which results in a new lambda expression (with a reference to scope $A$).
-This is returned and assigned to \variable{adder} in line 1 of the above example.
+In the first line \function{getAdder} is called with the argument, $25$. A new
+scope, $A$, is created, in which the variable \variable{a} is assigned the value
+$25$. Then the function expression is evaluated, which results in a new lambda
+expression (with a reference to scope $A$).  This is returned and assigned to
+\variable{adder} in line 1 of the above example.
 
-In the second line the \variable{adder} is called as a function, which means that a new scope, $B$,
-is created, in which the variable \variable{b} is assigned the value $5$. The important part is
-that $B$'s parent scope is set to $A$ (which is saved with the lambda expression). The expression
-(the right side of the lambda expression) is then evaluated. First the \variable{a}-variable is
-encountered. The interpreter first searches the $B$-scope for \variable{a}, and when unsuccessful,
-searches the parent-scope, $A$, for \variable{a}. In $A$ the variable \variable{a} holds the value
-$25$, and this is returned. Then the $B$-scope is searched for the \variable{b}-variable, and the value
-$5$ is returned. The two integers are added, and the final return-value of the lambda-expression
-ends up being $30$.
+In the second line the \variable{adder} is called as a function, which means
+that a new scope, $B$, is created, in which the variable \variable{b} is
+assigned the value $5$. The important part is that $B$'s parent scope is set to
+$A$ (which is saved with the lambda expression). The expression (the right side
+of the lambda expression) is then evaluated. First the \variable{a}-variable is
+encountered. The interpreter first searches the $B$-scope for \variable{a}, and
+when unsuccessful, searches the parent-scope, $A$, for \variable{a}. In $A$ the
+variable \variable{a} holds the value $25$, and this is returned. Then the
+$B$-scope is searched for the \variable{b}-variable, and the value $5$ is
+returned. The two integers are added, and the final return-value of the
+lambda-expression ends up being $30$.
 
 \subsubsection{Big-step semantics}
 
-The semantics presented in \tableref{semantic:lambda} is the transition rule for the lambda expression. 
-
+The semantics presented in \tableref{semantic:lambda} is the transition rule for
+the lambda expression. 
 
 \input{content/design/big-stepsemantics/lambda}
 
@@ -267,30 +272,33 @@ transition rule explains that $v$ is assigned the $4$-tuple.
 \subsection{Set expressions}
 \label{sec:setexpressions}
 
-Set expressions look a bit like let expressions, but are only applicable within type definitions:
+Set expressions look a bit like let expressions, but are only applicable within
+type definitions:
 
 \begin{ebnf}
 \grule{expression}{\grange \gor set\_expr}
-\grule{set\_expr}{\gter{set} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression}}
+\grule{set\_expr}{\gter{set} \gcat variable \gcat \gter{=} \gcat expression
+\gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression}}
 \end{ebnf}
 
-Set expressions are used to ``modify'' the value of data-members in objects (see \secref{sec:typedefinitions}
-for an explanation of data). Each variable in the set expression must exist in the current type as
-data-members. Since modifying a data-member would be a side-effect, which is not allowed, the set expression
-instead returns a clone of the object, with the specified data-members set to their respective values. This
-is useful for making setters (or something that looks like setters). Consider for example the following
-type:
+Set expressions are used to ``modify'' the value of data-members in objects (see
+\secref{sec:typedefinitions} for an explanation of data). Each variable in the
+set expression must exist in the current type as data-members. Since modifying a
+data-member would be a side-effect, which is not allowed, the set expression
+instead returns a clone of the object, with the specified data-members set to
+their respective values. This is useful for making setters (or something that
+looks like setters). Consider for example the following type:
 
 \codesample{setget.junta}
 
-In the example above, the method \constant{setMyData} returns a new instance of \type{MyType}, with
-the data-member \variable{myData} set to something else. The following example shows the use of
-a getter and a setter:
+In the example above, the method \constant{setMyData} returns a new instance of
+\type{MyType}, with the data-member \variable{myData} set to something else. The
+following example shows the use of a getter and a setter:
 
 \codesample{setget2.junta}
 
-The call to \constant{setMyData} does not change the state of the original instance of \type{MyType},
-instead it returns a new instance.
+The call to \constant{setMyData} does not change the state of the original
+instance of \type{MyType}, instead it returns a new instance.
 
 \subsubsection{Big-step semantics}
 
@@ -306,20 +314,27 @@ copy of that object with a new variable environment, containing the new data.
 \subsection{Operators and calls}
 \label{sec:operatorsandcalls}
 
-Operators are useful for doing calculations, and \productname{} supports the basic
-mathematical operators and precedence. In order to prevent left-recursion (\todo{why?}),
-but preserve left-associativity, the grammar for the operators of \productname{} are
-described using operator sequences. A sequence is essentially just a list of
-operations on that particular precedence level. In this way all the precedence levels
-of \productname{} are described formally:
+Operators are useful for doing calculations, and \productname{} supports the
+basic mathematical operators and precedence. In order to prevent left-recursion,
+which makes it possible for us to construct an LL-parser (this was discussed in
+\secref{subsec:llparsersandlrparsers}), but preserve left-associativity. The
+grammar for the operators of \productname{} are described using operator
+sequences. A sequence is essentially just a list of operations on that
+particular precedence level. In this way all the precedence levels of
+\productname{} are described formally:
 
 \begin{ebnf}
 \grule{expression}{\grange \gor \gter{not} \gcat expression \gor lo\_sequence}
-\grule{lo\_sequence}{eq\_sequence \gcat \grep{\ggrp{\gter{and} \gor \gter{or}} \gcat eq\_sequence}}
-\grule{eq\_sequence}{cm\_sequence \gcat \grep{\ggrp{\gter{==} \gor \gter{!=} \gor \gter{is}} \gcat cm\_sequence}}
-\grule{cm\_sequence}{as\_sequence \gcat \grep{\ggrp{\gter{<} \gor \gter{>} \gor \gter{<=} \gor \gter{>=}} \gcat as\_sequence}}
-\grule{as\_sequence}{md\_sequence \gcat \grep{\ggrp{\gter{+} \gor \gter{-}} \gcat md\_sequence}}
-\grule{md\_sequence}{negation \gcat \grep{\ggrp{\gter{*} \gor \gter{/} \gor \gter{\%}} \gcat negation}}
+\grule{lo\_sequence}{eq\_sequence \gcat \grep{\ggrp{\gter{and} \gor \gter{or}}
+\gcat eq\_sequence}}
+\grule{eq\_sequence}{cm\_sequence \gcat \grep{\ggrp{\gter{==} \gor \gter{!=}
+\gor \gter{is}} \gcat cm\_sequence}}
+\grule{cm\_sequence}{as\_sequence \gcat \grep{\ggrp{\gter{<} \gor \gter{>} \gor
+\gter{<=} \gor \gter{>=}} \gcat as\_sequence}}
+\grule{as\_sequence}{md\_sequence \gcat \grep{\ggrp{\gter{+} \gor \gter{-}}
+\gcat md\_sequence}}
+\grule{md\_sequence}{negation \gcat \grep{\ggrp{\gter{*} \gor \gter{/} \gor
+\gter{\%}} \gcat negation}}
 \grule{negation}{element}
 \galt{\gter{-} \gcat negation}
 \grule{element}{call\_sequence \gcat \grep{member\_access}}
@@ -327,9 +342,13 @@ of \productname{} are described formally:
 \grule{call\_sequence}{atomic \gcat \grep{list}}
 \end{ebnf}
 
+In order to completely understand this grammar, we must first take a look at the list of
+operators ordered by precedence. The precedence of operators is presented in
+\tableref{table:operatorPrecedence}.
+
 \tab[\textwidth]{operatorPrecedence}{2}{The precedence of operators in \productname{}.}
-         {Operator precedence}
-  {Level}{Operator & Description}{
+                  {Operator precedence}
+           {Level}{Operator & Description}{
     \tabrow{1}{\texttt{f[]} & Function/constructor invocation and list access}
     \tabrow{2}{\texttt{r.m r.m[]} & Record member access and member invocation}
     \tabrow{3}{\texttt{-} & Unary negation operation}
@@ -342,25 +361,29 @@ of \productname{} are described formally:
     \tabrow{10}{\texttt{if let set \#} & if-, let-, set-, and lambda-expressions}
 }
 
-In order to completely understand this grammar, we should first take a look at the list of
-operators ordered by precedence. The precedence of operators is presented in
-\tableref{table:operatorPrecedence}. Each precedence level will correspond to a certain rule
-in the grammar. For instance the fifth precedence level for addition and subtraction is expressed
-using the $as\_sequence$-rule. Combined with some multiplication an expression making use of
-the $as\_sequence$- and $md\_sequence$-rules could look like \csref{asandmd.junta}:
+Each precedence level will correspond to a certain rule in the grammar. For
+instance the fifth precedence level for addition and subtraction is expressed
+using the $as\_sequence$-rule. Combined with some multiplication an expression
+making use of the $as\_sequence$- and $md\_sequence$-rules could look like
+\csref{asandmd.junta}:
 
 \codesample{asandmd.junta}
 
-The resulting parse tree, using the grammar of \productname{}, could look somwhat
-like the tree in \figref{fig:parsetreesequences}.
+The resulting parse tree, using the grammar of \productname{}, could look
+somewhat like the tree in \figref{fig:parsetreesequences}.
 
 \input{figures/parsetreesequences}
+
+The figure clearly shows the precedence, because the lower nodes will be
+calculated before the nodes that are higher in the parse tree. E.g. all of the
+multiplication and division nodes will be calculated before the additions and
+subtraction. This hierarchy is achieved because of the formally described
+precedence rules in the previous grammar about sequences.
 
 \subsubsection{Big-step semantics}
 
 The semantics presented in \tableref{semantic:callfun} is transition rules for
 function calls.
-
 
 \input{content/design/big-stepsemantics/callfun}
 
@@ -374,9 +397,14 @@ for member access.
 \todo{explain member access semantics.}
 
 \subsubsection{Valid operands}
-\subsubsection{Boolean operators}
+In the following paragraphs we present the valid operands of
+\productname{}. These will be grouped in the following categories; boolean,
+comparison, integer, string, list, and direection and coordinate operators.
 
-These operators only accept boolean operands and only return boolean values.
+\paragraph{Boolean operators}
+
+These operators only accept boolean operands and only return boolean values:
+
 \begin{dlist}
   \item \operator[Boolean]{and}{Boolean}{Boolean}\\
     Returns true when both operands are true and false otherwise. 
@@ -386,10 +414,10 @@ These operators only accept boolean operands and only return boolean values.
     Returns true if the single operand is false and false otherwise.
 \end{dlist}
 
-\subsubsection{Comparison operators}
+\paragraph{Comparison operators}
 
-These operators are used when comparing two values, they will always return
-boolean values.
+These operators are used to compare two values, and always returns a boolean value:
+
 \begin{dlist}
   \item \operator[Integer]{<}{Integer}{Boolean}\\
     Returns true if the left operand is less than the right one.
@@ -408,9 +436,10 @@ boolean values.
     the type operand.
 \end{dlist}
 
-\subsubsection{Integer operators}
+\paragraph{Integer operators}
 
 The following operations are possible on integers:
+
 \begin{dlist}
   \item \operator{-}{Integer}{Integer} \\
     Integer negation.
@@ -426,9 +455,10 @@ The following operations are possible on integers:
     Integer modulo operation.
 \end{dlist}
 
-\subsubsection{String operators}
+\paragraph{String operators}
 
 It is possible to concatenate strings:
+
 \begin{dlist}
   \item \operator[String]{+}{String}{String} \\
     Returns the concatenation of two strings.
@@ -437,9 +467,10 @@ It is possible to concatenate strings:
     Returns the concatenation of a string and the string-representation of another type
 \end{dlist}
 
-\subsubsection{List operators}
+\paragraph{List operators}
 
 Some operators are available for list values as well:
+
 \begin{dlist}
 \item \operator[List]{+}{List}{List} \\
   Returns a list containing all elements from the first list followed
@@ -455,9 +486,10 @@ Some operators are available for list values as well:
   Prepends any element on to the start of a list, and returns the resulting list.
 \end{dlist}
 
-\subsubsection{Direction and coordinate operators}
+\paragraph{Direction and coordinate operators}
 
-It is possible to manipulate directions and coordinates using the following operator:
+The following operators can manipulate directions and coordinates:
+
 \begin{dlist}
   \item \operator[Direction]{+}{Direction}{Direction} \\
     Add a direction (vector) to another direction.
@@ -477,6 +509,7 @@ It is possible to manipulate directions and coordinates using the following oper
 
 For instance adding the directions \texttt{n} and \texttt{e} produces a
 direction equivalent with the direction \texttt{ne}. Adding a coordinate and
-direction (and visa versa) gives a coordinate. As an example, $\texttt{A2}
+direction (and vice versa) gives a coordinate. As an example, $\texttt{A2}
 \verb!+! \texttt{e}$ gives \texttt{B2}. More information about the coordinate
-and direction types is available in \secref{sec:types}.
+and direction types is available in \secref{sec:standardenvironment}.
+
