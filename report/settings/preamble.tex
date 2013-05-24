@@ -7,7 +7,16 @@
 \setmonofont[Scale=0.8]{Consolas}
 \setsansfont[Scale=0.9]{Optima}
 %\usepackage[protrusion=true,factor=2000]{microtype} need beta 2.5 for XeTeX support
+
+
+% TABLE OF CONTENTS
 \setsecnumdepth{subsection}
+\setlength{\beforechapskip}{0pt}
+\setlength{\afterchapskip}{10pt} % vspace under chapters
+\setlength{\belowcaptionskip}{-7pt} % vspace mellem caption og tekst
+\setlength{\cftparskip}{0pt}
+\setlength{\cftbeforechapterskip}{6pt}
+\setlength{\cftbeforepartskip}{14pt}
 
 %math
 \usepackage{amsmath}
@@ -141,3 +150,7 @@
 % Pygments syntex highlightning
 \usepackage{fancyvrb}
 \input{settings/pygments}
+
+
+
+

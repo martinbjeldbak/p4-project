@@ -1,17 +1,15 @@
 \section{Parser}
+\label{sec:parserimplementation}
 
-In this section we present our handwritten parser for our programming language.
+In this section we present the handwritten parser of \productname{}'s.
 We have written a top-down recursive descent parser, which is within the class
 of LL(1) parsers. The grammar for \productname{} is suited for this because
-e.g.\ it does not have left-recursive productions. This is a result of the
-choice of parsing technique before we started formally defining our grammar.
-
-In the end of this section we present our work with SableCC and why we chose not
-to continue working with this tool.
+e.g.\ it does not have left-recursive productions. In the end of the section we present our work 
+with SableCC and the reason why we chose not to continue working with this tool.
 
 \subsection{Constructing the parser}
 %structured as the grammar
-The parser was very simple to implement, because it is structured exactly as the
+The parser was very simple to implement, because it is structured exactly the same way as the
 grammar which is defined in \chapref{chap:design}. For instance if the grammar
 expresses that the next set of terminals must begin with a left bracket (`['),
   then the parser will expect the next token to be a \tokenref{LBRACKET} which
