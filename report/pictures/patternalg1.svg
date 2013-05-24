@@ -388,15 +388,15 @@
      inkscape:pageshadow="2"
      inkscape:zoom="0.7"
      inkscape:cx="478.49776"
-     inkscape:cy="672.65457"
+     inkscape:cy="701.58436"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1366"
-     inkscape:window-height="706"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1" />
+     inkscape:window-width="463"
+     inkscape:window-height="423"
+     inkscape:window-x="350"
+     inkscape:window-y="97"
+     inkscape:window-maximized="0" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -485,9 +485,7 @@
            y="198.07646"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas" /></flowRegion><flowPara
          id="flowPara2993-1-7"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">D3 D2 <flowSpan
-   style="font-style:italic;fill:#ff0000"
-   id="flowSpan3401">C3 C2</flowSpan></flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">D3 D2 C3 C2</flowPara></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot5883-1-8-2"
        style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas"
@@ -513,9 +511,7 @@
            y="198.07646"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas" /></flowRegion><flowPara
          id="flowPara2993-1-7-8"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">D3 D2 C3 C2 <flowSpan
-   style="font-style:italic;fill:#ff0000"
-   id="flowSpan3403">B3 B2</flowSpan></flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">D3 D2 C3 C2 B3 B2</flowPara></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot5883-1-8-2-2"
        style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Consolas;-inkscape-font-specification:Consolas"
@@ -541,9 +537,7 @@
            y="198.07646"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas" /></flowRegion><flowPara
          id="flowPara2993-1-7-1"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">D3 D2 C3 C2 B3 B2 <flowSpan
-   style="font-style:italic;fill:#ff0000"
-   id="flowSpan3405">A3 A2</flowSpan></flowPara></flowRoot>    <flowRoot
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Consolas;-inkscape-font-specification:Consolas">D3 D2 C3 C2 B3 B2 A3 A2</flowPara></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot5883-1-8-2-3"
        style="font-size:20px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -595,7 +589,7 @@
            height="224.28572"
            x="-344.28571"
            y="-361.92352" /></flowRegion><flowPara
-         id="flowPara3399"></flowPara></flowRoot>    <flowRoot
+         id="flowPara3399" /></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot3407"
        style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Sans;font-style:normal;font-weight:normal;font-size:40px;line-height:125%;letter-spacing:0px;word-spacing:0px"><flowRegion
@@ -605,7 +599,7 @@
            height="175.71428"
            x="280"
            y="590.93359" /></flowRegion><flowPara
-         id="flowPara3413"></flowPara></flowRoot>    <flowRoot
+         id="flowPara3413" /></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot5883-1-8-2-3-6-4"
        style="font-size:20px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
