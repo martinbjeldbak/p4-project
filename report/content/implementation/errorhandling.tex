@@ -16,68 +16,7 @@ error has occurred and what caused it. We have created an error hierarchy in
 order to give an overview of our different error handlers. The hierarchy is
 illustrated in \figref{ast:errorhierarchy}. 
 
-
-\begin{figure}[ht]
-  \begin{center}
-    \begin{tikzpicture}
-      \node [square,yshift=-2em] (a) {Exception};
-      \node [square,yshift=-5em] (b) {Error};
-      \node [square,yshift=-8em,xshift=-7em] (c) {SyntaxError};
-      \node [square,yshift=-8em] (d) {StandardError};
-      \node [square,yshift=-8em,xshift=7.5em] (e) {SimulatorError};
-      \node [square,yshift=-12em,xshift=-21em] (f) {ScopeError};
-      \node [square,yshift=-12em,xshift=-14em] (g) {ScannerError};
-      \node [square,yshift=-12em,xshift=-7em] (h) {InternalError};
-      \node [square,yshift=-12em] (i) {TypeError};
-      \node [square,yshift=-12em,xshift=7em] (j) {ArgumentError};
-      \node [square,yshift=-12em,xshift=14em] (k) {NameError};
-      \node [square,yshift=-15em,xshift=7em] (l) {DivideByZeroError};
-
-       \draw[<-, thin,] (a) -- (b);
-       \draw[<-, thin,] (b) -- (d);
-       \draw[-|,-,thin,] (c.north) |-+(0,0.75em)-| (b.south);
-       \draw[-|,-,thin,] (e.north) |-+(0,0.86em)-| (b.south);
-       \draw[-|,->,thin,] (f.north) |-+(0,1.7em)-| (c.south);
-       \draw[<-,thin,] (d) -- (i);
-       \draw[-|,-,thin,] (g.north) |-+(0,1.11em)-| (d.south);
-       \draw[-|,-,thin,] (h.north) |-+(0,1.11em)-| (d.south);
-       \draw[-|,-,thin,] (k.north) |-+(0,1.11em)-| (d.south);
-       \draw[-|,-,thin,] (j.north) |-+(0,0.98em)-| (d.south);
-       \draw[<-, thin,] (j) -- (l);
-      
-	%first level
-%	\draw[-,-|,-,thin,] (as.south) |-+(0,-0.75em)-| (int1.north);
-%	\draw[-,-|,-,thin,] (as.south) |-+(0,-0.75em)-| (plus1.north);
-%	\draw[-,-|,-,thin,] (as.south) |-+(0,-0.75em)-| (minus1.north);
-%	\draw[-,-|,-,thin,] (as.south) |-+(0,-0.75em)-| (plus2.north);
-
-	%second level
-%	\draw[-,thin,] (plus1.south) -- (md1.north);
-%	\draw[-,thin,] (minus1.south) -- (int2.north);
-%	\draw[-,thin,] (plus2.south) -- (md2.north);
-
-	%third level
-%	\draw[-,-|,-,thin,] (md1.south) |-+(0,-0.75em)-| (int3.north);
-%	\draw[-,thin,] (md1.south) |-+(0,-0.75em)-| (mult1.north);
-%	\draw[-,-|,-,thin,] (md2.south) |-+(0,-0.75em)-| (int4.north);
-%	\draw[-,thin,] (md2.south) |-+(0,-0.75em)-| (div1.north);
-
-	%fourth level
-%	\draw[-,thin,] (mult1.south) -- (int5.north);
-%	\draw[-,thin,] (div1.south) -- (int6.north);
-
-	%solution level
-%	\draw[-,dashed,] (int1) -- (a);
-%	\draw[-,dashed,] (int2) -- (d);
-%	\draw[-,dashed,] (int4) -- (e);
-%	\draw[-,dashed,] (int5) -- (c);
-%	\draw[-,dashed,] (int6) -- (f)
-    \end{tikzpicture}
-  \end{center}
-  \capt{An illustration of the error hierarchy as it is implemented in the
-  interpreter.}
-  \label{ast:errorhierarchy}
-\end{figure}
+\input{content/implementation/tikz/errorhierarchy}
 
 \begin{description}
 \item[\textbf{Exception}] At the top of the error hierarchy Java's standard
