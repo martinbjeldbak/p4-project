@@ -32,6 +32,7 @@ Table \ref{table:syn-cat} presents the syntactic cateogries for \productname{}.
       $Z \in$ & \textbf{Direction}       \\
       $C \in$ & \textbf{ConstantNames}   \\
       $T \in$ & \textbf{TypeNames}       \\
+      $F \in$ & \textbf{FunctionConstants} \\
       $D_{G} \in$ & \textbf{GlobalDef}   \\
       $D_{M} \in$ & \textbf{MemberDef}   \\
       \hline
@@ -48,7 +49,7 @@ are two types of lists; \textbf{VarList} and \textbf{List}. These differ in that
 a variable list is used as formal parameters for types and the list is the
 sequence of parameters for a super type. 
 
-Furhtermore, we have defined two definitions; \textbf{GlobalDef} and
+Furhtermore, we have defined two definitions: \textbf{GlobalDef} and
 \textbf{MemberDef}. These are the set of definitions in their respective scopes.
 E.g. a in the global scope we can define differnet constants and types. In the
 member scope we can also define different constants, and also the abstract
@@ -179,26 +180,22 @@ it is not valid in \productname{}.
 \begin{figure}[ht]
   \begin{center}
     \begin{tabular}[ht]{r l}
-      $E\; \mathbf{::=}$ & $n$ \for $x$ \for $s$ \for $Y$ \for $Z$ \for $T$ \for
-      $C$ \for $L$ \for $\texttt{-} E$ \for $\left(\; E\; \right)$ \for
-      $\texttt{/}\; P\; \texttt{/}$ \for \\ 
-      & $E_{1}\; L$ \for $E_{1}\texttt{.}C$ \for $\texttt{\#}\; X\;
-      \texttt{=>}\; E$ \for $\texttt{if}\; E_{1}\; \texttt{then}\; E_{2}\;
-      \texttt{else}\; E_3$ \for $E_{1}\; \texttt{is}\; E_{2}$ \for
-      $\texttt{not}\; E$ \for \\ 
-      & $E_{1}\; \texttt{and}\; E_{2}$ \for
-      $E_{1} \;\texttt{or}\; E_{2}$ \for $E_{1}\; \texttt{==}\; E_{2}$ \for
-      $E_{1}\; \texttt{!=}\; E_{2}$ \for $E_{1}\; \texttt{<}\; E_{2}$ \for
-      $E_{1}\; \texttt{>}\; E_{2}$ \for \\ 
-      & $E_{1}\; \texttt{<=}\; E_{2}$ \for
-      $E_{1}\; \texttt{>=}\; E_{2}$ \for $E_{1}\; \texttt{+}\; E_{2}$ \for
-      $E_{1}\; \texttt{-}\; E_{2}$ \for $E_{1}\; \texttt{*}\; E_{2}$ \for
-      $E_{1}\; \texttt{/}\; E_{2}$ \for \\ 
-      & $E_{1}\; \texttt{\%}\; E_{2}$ \for \texttt{this} \for \texttt{super}
-      \for $\texttt{let}\; x_{1}\; \texttt{=}\; E_{1},\; x_{2}\; \texttt{=}\;
-      E_{2},\; \cdots,\; x_{k}\; \texttt{=}\; E_{k}\; \texttt{in}\; E_{k+1}$ \for \\ 
-      & $\texttt{set}\; x_{1}\; \texttt{=}\; E_{1},\; x_{2}\; \texttt{=}\;
-      E_{2},\; \cdots,\; x_{k}\; \texttt{=}\; E_{k}$ \\
+      $E\; \mathbf{::=}$ & $n$ \for $x$ \for $s$ \for $Y$ \for $Z$
+      \for $T$ \for $C$ \for $L$ \for $\texttt{-} E$ \for $\left(\;
+      E\; \right)$ \for $\texttt{/}\; P\; \texttt{/}$ \for \\ & $E\;
+      L$ \for $E\texttt{.}C$ \for $\texttt{\#}\; X\; \texttt{=>}\; E$
+      \for $\texttt{if}\; E_0\; \texttt{then}\; E_1\; \texttt{else}\;
+      E_2$ \for $\texttt{not}\; E$ \for $E_1\; F\; E_2$ \for \\ &
+      $\texttt{let}\; x_{1}\; \texttt{=}\; E_{1},\; \ldots,\; x_{k}\;
+      \texttt{=}\; E_{k}\; \texttt{in}\; E_{k+1}$ \for $\texttt{set}\;
+      x_{1}\; \texttt{=}\; E_{1},\; \ldots,\; x_{k}\; \texttt{=}\;
+      E_{k}$ \for $\texttt{this}$ \for $\texttt{super}$ \\
+
+      $F\; \mathbf{::=}$ & \texttt{is} \for \texttt{and} \for
+      \texttt{or} \for \texttt{==} \for $\texttt{!=}$ \for $\texttt{<}$ \for
+      $\texttt{>}$ \for $\texttt{<=}$ \for $\texttt{>=}$ \for $\texttt{+}$
+      \for $\texttt{-}$ \for $\texttt{*}$ \for \\ & $\texttt{/}$ \for
+      $\texttt{\%}$ \\
       
       $L\; ::=$ & $\texttt{[} E_{1},\; \cdots, E_{k} \texttt{]}$ \\
       
@@ -228,7 +225,7 @@ it is not valid in \productname{}.
 \end{figure}
 
 The $\mathbf{::=}$ means that the left-hand side of the rule can be any one of
-the $\for$-separated right-hand sides. Furthermmore, we use ``$\cdots$'' to
+the $\for$-separated right-hand sides. Furthermore, we use ``$\cdots$'' to
 illustrate a repetition of some element in the rule. We have also used the
 slightly different ``$\dots$'' to illustrate the three dots that precede a
 variable argument (vars) which we present in \secref{sec:constantdefinitions}.
