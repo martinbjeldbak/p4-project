@@ -1,5 +1,5 @@
 \begin{lstlisting}[language=Pascal,label=alg:tailrecursion, caption={\emph{Detecting tail recursion during call of a function.}}]
-  recursion := true 
+  recursion := false
   body := 'the AST node body of this function'
   openScope()
 
@@ -10,7 +10,7 @@
 
     evaluatedBody := visit(body)
 
-    if 'this is the second time we see' evaluatedBody then
+    if 'this is the second time we see' evaluatedBody and evaluatedBody.getFunction() = this then
       recursion := true
       actualParameters := evaluatedBody.getParameters()
     else
