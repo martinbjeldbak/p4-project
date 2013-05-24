@@ -1,8 +1,11 @@
 \begin{lstlisting}[language=Pascal,label=alg:tailrecursion, caption={\emph{Detecting tail recursion during call of a function.}}]
-  recursion := false
+  if 'second time we see this function' then
+    return new CallValue(interpreter, this, actualParam)
+
   body := 'the AST node body of this function'
   openScope()
 
+  recursion := false
   repeat
     For i := 0 to 'formal parameter size' n do
        currentScope.addVariable(formalParam.i, actualParam.i)
@@ -10,7 +13,7 @@
 
     evaluatedBody := visit(body)
 
-    if 'this is the second time we see' evaluatedBody and evaluatedBody.getFunction() = this then
+    if evaluatedBody 'is an instance of CallValue' and evaluatedBody.getFunction() = this then
       recursion := true
       actualParameters := evaluatedBody.getParameters()
     else
