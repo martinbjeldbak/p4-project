@@ -100,6 +100,28 @@ for instance the numeral exceeds the highest possible value a TypeError is throw
 \label{sec:gameenvironment}
 
 The game environment provides a class hierachy for describing a board game in an object-oriented manner.
+In the game environment the following global functions are available:
+
+\begin{dlist}
+  \item \constant{addAction}[\variable{piece} : \type{Piece}, \variable{squares} : \type{List}] : \type{List}\\
+    A function that returns a list of squares \variable{squares} to where it's possible to add a piece (\variable{piece}. The functions
+    takes two parameters. The first parameter contains information on which type of piece the actions applies to. The second parameter is
+    the list of squares where the type of piece can be added to.
+    
+    In the code example in \secref{codesample} in the beginning of the chapter, \function{addAction} is used in the following
+    way: \\
+    \begin{center}
+    {addAction}[\variable{pieceType}[\keyword{this}], \variable{gameState}.\constant{board}.\constant{emptySquares}]
+    \end{center}
+    
+    Here \constant{addAction} returns a list of empty squares to where it's possible to add a piece of the type \keyword{this}, which in this case was
+    either a crosses piece or noughts piece depending who's turn it is.
+  \item \constant{moveAction}[\variable{piece} : \type{Piece}, \variable{squares} : \type{List}] : \type{List}\\
+  	
+    
+\end{dlist}
+
+
 
 \subsubsection{Game}
 The Game type 
