@@ -1,11 +1,11 @@
-\section{Abstract Node Types}
+\chapter{Abstract Node Types}
 \label{ap:ant}
 
 In \secref{sec:ant} we presented a few examples of how we have implemented the
 grammar described throughout \chapref{chap:design}. Here we present the rest of the
 implementations of these abstract node types (ANTs). 
 
-\subsubsection{Program structure}
+\subsection{Program structure}
 The following subsections present the structure of programs. The sections are 
 structured as follows:
 
@@ -21,7 +21,7 @@ structured as follows:
 
 The ANT for program was presented in \secref{sec:ant}.
 
-\subsubsection{Definition}
+\subsection{Definition}
 Programmers have the opportunity of defining constants and types in their
 programs.  The parser knows that the following piece of code is a constant when
 it meets the keyword \gter{define}, and that the following piece of code is a
@@ -40,7 +40,7 @@ type. But the program node says that it is possible to have multiple
 definitions, so in fact the definitions of constants and types can be
 interleaved.
 
-\subsubsection{Constant definition}
+\subsection{Constant definition}
 The first type of definition is that of a constant. The production for a
 this definition is as follows:
 
@@ -60,7 +60,7 @@ assignment symbol. These are not shown in the ANT because they are not part
 of an AST (but they are part of a parse tree). The optional node is illustrated 
 with a dashed edge from the parent.
 
-\subsubsection{Type definition}
+\subsection{Type definition}
 \label{ap:typedef}
 
 The second type of definition is that of a type. The following production
@@ -92,7 +92,7 @@ keyword is present then the next input must be a type followed by a list.
 The second choice is to include a type body. These two choices are independent
 of each other.
 
-\subsubsection{Type body and member definition}
+\subsection{Type body and member definition}
 
 In this subsection we have coupled two productions because they are intertwined
 and we have chosen not to visualise the ANT of the member definition because it
@@ -120,7 +120,7 @@ root and zero, one, or more member definitions.
 A description of the constant definition was presented earlier in this section
 and the description of the abstract definition will follow this subsection.
 
-\subsubsection{Abstract definition}
+\subsection{Abstract definition}
 The definition of an abstract constant is similar to the definition of a
 ``regular'' constant. There are two differences. The first difference is that
 following the \gter{define} keyword another keyword must appear, namely the
@@ -141,7 +141,7 @@ a definition is that there is no expression as the last child.  This is due to
 that the ANTs do not have keywords and such as child nodes.
 
 
-\subsubsection{Variable list and variable arguments}
+\subsection{Variable list and variable arguments}
 Within this section we have couple two productions because they are intertwined. 
 The productions are presented in the following grammar:
 
@@ -194,7 +194,7 @@ The following seven subsections present the different expressions in
 
 The ANT for operations and assignments were presented in \secref{sec:ant}.
 
-\subsubsection{Element}
+\subsection{Element}
 The following grammar presents the production for an element:
 
 \begin{ebnf}
@@ -213,7 +213,7 @@ construted. As mentioned earlier in the section explaining operations in
 \productname{}, this is done to avoid long paths in the AST with single child
 nodes.
 
-\subsubsection{Member access}
+\subsection{Member access}
 
 The member access begins with the \gter{.} symbol followed by a constant and
 zero, one, or more lists. This is presented in the following production:
@@ -227,7 +227,7 @@ production. It corresponds exactly to the production.
 
 \input{content/implementation/abstractnodetypes/memberaccess}
 
-\subsubsection{Call sequence}
+\subsection{Call sequence}
 
 A call sequence consists of an atomic value, which can be many expressions,
 followed by zero, one, or more lists. The following production presents this:
@@ -247,7 +247,7 @@ at least one list following the atomic value if it is to be constructed.
 Otherwise, it will fall through and only construct an atomic node. This is due
 to the same reason as earlier, to avoid single-child nodes.
 
-\subsubsection{If expression}
+\subsection{If expression}
 The if expression is specified in the following production:
 
 \begin{ebnf}
@@ -264,7 +264,7 @@ which means they cannot be omitted.
 
 \input{content/implementation/abstractnodetypes/ifexpr}
 
-\subsubsection{Lambda expression}
+\subsection{Lambda expression}
 
 The lambda expression is specified in the following production:
 
@@ -282,7 +282,7 @@ Figure \ref{ast:lambdaexpr} illustrates the ANT for this expression. Because a
 lambda expression is an expression it is possible to have lambda expressions
 inside other lambda expressions, so it is possible to nest these expressions.
 
-\subsubsection{List}
+\subsection{List}
 
 We also have an ANT for lists. Any list can be empty
 just like a variable list but instead of containing variables a list contains
@@ -303,7 +303,7 @@ in \figref{ast:list}.
 The ANT in \figref{ast:list} illustrates that a list can contain zero, one, or
 more expressions.
 
-\subsubsection{Not-operator}
+\subsection{Not-operator}
 
 We have implemented a not-operator that has to do with expressions. The programming
 language also conists of a not-operator which has to do with patterns. These
@@ -331,7 +331,7 @@ illustrating that these can occur zero, one, or more times.
 
 \input{content/implementation/abstractnodetypes/pattern}
 
-\subsubsection{Pattern operators}
+\subsection{Pattern operators}
 
 \productname{} consists of three different pattern operators. We have an
 or-operator, a multiplier-operator, and a not-operator.
