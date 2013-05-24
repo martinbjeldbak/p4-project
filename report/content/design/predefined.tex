@@ -243,8 +243,49 @@ GridBoard extends Board.
 \end{dlist}
 
 \subsubsection{Square}
+\begin{dlist}
+	\item \type{Square}[]\\
+	\type{Square} with no \type{Piece}s.
+	
+	\item \constant{position} : \type{Coordinate}\\
+	\type{Coordinate} describing the position on a \type{GridBoard}.
+	
+	\item \constant{pieces} : \type{List}\\
+	A \type{List} with \type{Piece}s located on this \type{Square}.
+	
+	\item \constant{addPiece}[ \variable{piece} : \type{Piece} ] : \type{Square}\\
+	A \type{Square} where \variable{piece} is appended to \constant{pieces}.
+	
+	\item \constant{removePiece}[ \variable{piece} : \type{Piece} ] : \type{Square}\\
+	A \type{Square} where \variable{piece} is not contained in \constant{pieces}.
+	
+	\item \constant{setPieces}[ \variable{pieces} : \type{List} ] : \type{Square}\\
+	A \type{Square} where \constant{pieces} is equaliant to \variable{pieces}.
+	
+	\item \constant{image} : \type{String}\\
+	Path to an image file used for visualizing the \type{Square}.
+	
+	\item \constant{isOccupied} : \type{Boolean}\\
+	Is true if \constant{pieces}.\constant{size} is larger than 0.
+	
+	\item \constant{isEmpty} : \type{Boolean}\\
+	Is true if \constant{pieces}.\constant{size} is 0.
+	
+	\item \constant{setPosition}[ \variable{position} : \type{Coordinate} ] : \type{Square}\\
+	A \type{Square} where \constant{position} is equaliant to \variable{position}.
+\end{dlist}
 
 \subsubsection{Piece}
+\begin{dlist}
+  \item \type{Piece}[ \variable{owner} : \type{Player} ]\\
+  \type{Piece} with \constant{owner} set to \variable{owner}.
+  
+  \item \constant{owner} : \type{Player}\\
+  \type{Player} which owns this \type{Piece}.
+  
+  \item \constant{image} : \type{String}\\
+  Path to an image file used for visualizing the \type{Piece}.
+\end{dlist}
 
 \subsubsection{Player}
 
