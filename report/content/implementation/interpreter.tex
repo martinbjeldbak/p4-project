@@ -222,14 +222,14 @@ is shown by the pseudocode below:
 
 \input{figures/tailrecursionalgorithm}
 
-Here it is important to note that an internal class is used to keep track of the
-returned body after being evaluated, making the check on line number $12$ in
-\lstref{alg:tailrecursion} possible. This is done by having a boolean outside
+Here it is important to note that an internal \classref{Value} class \classref{CallValue} is used to keep track of the
+returned body after being evaluated, making the check on line number $15$ in
+\lstref{alg:tailrecursion} possible and true if it's the second or more time executing the body. This is done by having a boolean outside
 the call initially set as false, and being switched to true upon executing the
 body. Since a recursive function calls its own body again, a check on the
-boolean is done to see if this is the case. If the boolean is set, a different,
+boolean is done to see if this is the case (line $1$). If the boolean is set, a different,
 internal value \classref{CallValue} is created with a reference to the
-\classref{Interpreter} and \classref{FunValue} classes, and the function's
+\classref{Interpreter} and current \classref{FunValue} classes, and the function's
 actual parameters, all possibly being effected by the function.
 
 \subsection{Pattern matching}
