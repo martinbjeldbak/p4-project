@@ -294,10 +294,14 @@ instead it returns a new instance.
 
 \subsubsection{Big-step semantics}
 
-The semantics presented in \tableref{semantic:set} is the transition rules for
+The semantics presented in \tableref{semantic:set} is the transition rule for
 set expressions.
 
 \input{content/design/big-stepsemantics/set}
+
+The transition rule assumes that the current constant environment $env_C$
+contains a pointer to the current object, $\texttt{this}$. It then returns a
+copy of that object with a new variable environment, containing the new data.
 
 \subsection{Operators and calls}
 \label{sec:operatorsandcalls}
