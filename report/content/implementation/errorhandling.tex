@@ -1,7 +1,19 @@
 \section{Error handling}
 
-In the different phases of the interpreter lots of errors can occur. In the scanning phase for instance,
-a scanning error can occur if the scanner detects a string, which doesn't correspond to one of our language's specified lexemes. In the parsing phase a syntax error can occur if two or more tokens are not set up syntactically correct according to our grammar. In order to catch these errors we have implemented error handlers, which extends the build-in Java class Exception (Java.lang.Exception). An error can be of big annoyance for a programmer if no information of what caused it is provided. So the function of the error handlers are to give the programmer of junta games a better chance for figuring out what he has done wrong and make it easier for him to correct the errors by for instance referring to where in the source code and error has occurred and what caused it. We have created an error hierarchy in order to give an overview of our different error handlers. The hierarchy is illustrated in \figref{ast:errorhierarchy}. 
+In the different phases of the interpreter lots of errors can occur. In the
+scanning phase for instance, a scanning error can occur if the scanner detects a
+string, which doesn't correspond to one of our language's specified lexemes. In
+the parsing phase a syntax error can occur if two or more tokens are not set up
+syntactically correct according to our grammar. In order to catch these errors
+we have implemented error handlers, which extends the build-in Java class
+\classref{Exception} (\classref{Java.lang.Exception}). An error can be of big annoyance for a
+programmer if no information of what caused it is provided. So the function of
+the error handlers are to give the programmer of junta games a better chance for
+figuring out what he has done wrong and make it easier for him to correct the
+errors by for instance referring to where in the source code and error has
+occurred and what caused it. We have created an error hierarchy in order to give
+an overview of our different error handlers. The hierarchy is illustrated in
+\figref{ast:errorhierarchy}. 
 
 
 \begin{figure}[ht]
@@ -9,7 +21,7 @@ a scanning error can occur if the scanner detects a string, which doesn't corres
 		\begin{tikzpicture}
 			\node [square] (a) {Exception}
   				child {node [square,xshift=0cm] (b) {Error}
-  					child {node [square,xshift=-4.5cm] (c) {syntaxError}
+  					child {node [square,xshift=-4.5cm] (c) {SyntaxError}
   						child {node [square,xshift=0.0cm] (d) {ScannerError}}
   					}
   					child {node [square,xshift=0cm] (e) {StandardError}
@@ -41,29 +53,61 @@ a scanning error can occur if the scanner detects a string, which doesn't corres
 \end{figure}
 
 \begin{description}
-\item[\textbf{Exception}] At the top of the error hierarchy Java's standard error handling concept is located, which is called Exception (java.lang.Exception). Exception is a build-in Java class that extends the Throwable class which is the superclass of all errors and exceptions in Java. Only Throwable or subclasses of Throwable can be the argument type in a catch clause and only objects that are instances of this class or it's subclasses can be thrown by the Java throw statement. (kilde: http://docs.oracle.com/javase/6/docs/api/java/lang/Throwable.html).  
+\item[\textbf{Exception}] At the top of the error hierarchy Java's standard
+  error handling concept is located, which is called \classref{Exception}
+  (\classref{java.lang.Exception}). Exception is a build-in Java class that extends the
+  \classref{Throwable} class which is the superclass of all errors and exceptions in Java.
+  Only \classref{Throwable} or subclasses of \classref{Throwable} can be the argument type in a catch
+  clause and only objects that are instances of this class or it's subclasses
+  can be thrown by the Java throw statement \cite{throwable}.
 
-\item[\textbf{Error}] Extends the Exception class. Error is an abstract class which contains two abstract methods: GetColumn() and GetLine().
+\item[\textbf{Error}] Extends the Exception class. Error is an abstract class
+  which contains two abstract methods: \methodref{getColumn()} and
+  \methodref{getLine()}.
 
-\item[\textbf{SyntaxError}] Extends the Error class and is used in the parser to handle syntactic errors. A syntactic error occurs if a token doesn't correspond to the currently expected token according to the grammar. SyntaxError outputs a message and information about the line and offset of the token that caused the error. 
+\item[\textbf{SyntaxError}] Extends the \classref{Error} class and is used in the parser to
+  handle syntactic errors. A syntactic error occurs if a token doesn't
+  correspond to the currently expected token according to the grammar.
+  \classref{SyntaxError} outputs a message and information about the line and offset of the
+  token that caused the error. 
 
-\item[\textbf{ScannerError}] Extends the SyntaxError class and is used in the scanner to handle lexical errors. A lexical error occurs if the programmer makes a typo, e.g. writes ``defin'' instead of ``define'' or if he/she in other ways doesn't follow the regulations of Junta's lexemes e.g. writes the first letter in a type name in lower case letters. Like syntaxError, ScannerError outputs a message and information about the line and offset of the token that cause the error.  
+\item[\textbf{ScannerError}] Extends the \classref{SyntaxError} class and is used in the
+  scanner to handle lexical errors. A lexical error occurs if the programmer
+  makes a typo, e.g. writes ``defin'' instead of ``define'' or if he/she in
+  other ways doesn't follow the regulations of Junta's lexemes e.g. writes the
+  first letter in a type name in lower case letters. Like \classref{SyntaxError},
+  \classref{ScannerError} outputs a message and information about the line and offset of
+  the token that cause the error.  
 
-\item[\textbf{StandardError}] Extends the Error class. The StandardError class is used in the interpretation phase to handle errors with nodes in the Abstract syntax tree.  
+\item[\textbf{StandardError}] Extends the Error class. The
+  \classref{StandardError} class
+  is used in the interpretation phase to handle errors with nodes in the
+  Abstract syntax tree.  
 
-\item[\textbf{ScopeError}] Extends the StandardError class
+\item[\textbf{ScopeError}] Extends the \classref{StandardError} class. It is
+  thrown by the scope checker to notify the programmer of scope errors.
 
-\item[\textbf{InternalError}]
+\item[\textbf{InternalError}] Extends the \classref{StandardError} class. It is
+  an error that encapsulates Java's own exceptions, if they are thrown. It
+  essentially represents an error in the implementation or environment in which
+  it is running, and is not caused directly by the programmers code.
 
-\item[\textbf{TypeError}]
+\item[\textbf{TypeError}] Extends the \classref{StandardError} class. It is
+  thrown at runtime when a value is of the wrong type, for instance when using
+  an operator such as the \texttt{+}-operator, the operands must be applicable
+  for that operator.
 
-\item[\textbf{ArgumentError}]
+\item[\textbf{ArgumentError}] Extends the \classref{StarndardError} class. It is
+  thrown at runtime if a function is supplied the wrong number of arguments.
 
-\item[\textbf{NameError}]
+\item[\textbf{NameError}] Extends the \classref{StandardError} class. It is
+  thrown at runtime if a used constant, type or variable.
 
-\item[\textbf{DivideByZeroError}]
+\item[\textbf{DivideByZeroError}] Extends the \classref{ArgumentError} class. It
+  is thrown when dividing by zero.
 
-\item[\textbf{SimulatorError}]
+\item[\textbf{SimulatorError}] Extends the \classref{Error} class. It is thrown
+  if the simulator encounters an error.
 \end{description}
 
 
