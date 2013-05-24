@@ -1,0 +1,5 @@
+type A[] {
+  data $att = 15
+  define att = $att
+  define setAtt[$val] = set $att = $val
+}
