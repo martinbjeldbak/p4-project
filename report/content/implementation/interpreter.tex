@@ -167,51 +167,57 @@ functions, where the implementation of functions is described blow.
 \subsubsection{Functions}
 Functions are yet another sub-class of the \classref{Value} type,
 though only supporting the addition operation to store the function in
-a \classref{ListValue} (letting functions be first class citizens).
+a \classref{ListValue} (an example of functions being first class citizens).
 Functions are represented internally as constants, and can therefore be
 defined in the global scope or within any sub-scope that may exist, each
 updating the symbol table's current scope's constant declarations.
 
 % Creating function values 
 Functions are created with the AST node expression body, which is
-stored and not evaluated until the function is called. They do not keep
-track of their names, as that's the symbol table's job (allowing lambda
-expressions to also have the \classref{FunValue} type), so functions
-merely incorporate formal parameters and an expression. Functions also
-allow the ability to have a variable list of formal parameters. If the
-function is a lambda expression, then the current scope is passed to the
-\classref{FunValue} when instantiating. On the other hand, if a function
-is defined with a name identifying it, the interpreter adds it to the
-symbol table's constant table, instantiating a \classref{FunValue} with
-the AST node expression and AST node formal parameters.
+stored and not evaluated until the function is called. Functions
+do not keep track of their own names, making it the interpreter's
+symbol table's job. This allows lambda expressions to also have the
+same type. Functions therefore merely incorporate formal parameters
+and an expression, the body of the function. Functions also allow
+the ability to have a variable list of formal parameters. If the
+function is a lambda expression, then the current scope is passed to
+the \classref{FunValue} when instantiating. This is because the lambda
+expression is evaluated when declared. On the other hand, if a function
+is declared with a name identifying it, the interpreter adds it to the
+symbol table's constant table (thereby also keeping track of scope),
+instantiating a \classref{FunValue} with the AST node expression and AST
+node formal parameters allowing it to be accessed in the symbol table
+when called.
 
 % Calling a function
-When a function is called, it is called with a reference to the
+When a function is executed, it is called with a reference to the
 interpreter and the actual parameters passed to the function. The
-interpreter is needed to evaluate the body, and is used for access
-to the symbol table for scopes, adding variables, and so forth.
-For optimization, an error is thrown if the length of the actual
-parameters does not match the length of the formal parameters, already
-short-circuiting the call if attempted. Else the function body is
-evaluated with the actual parameters in a new, temporary scope that only
-exists while the call is running. This scope has the previous scope as a
-parent, giving it complete access to all the existing, declared members
-outside the function's body inside the function's body.
+interpreter is needed to evaluate the body, and is used for access to
+the symbol table for scopes to add and look up variables and functions,
+and so forth. For optimisation, an error is thrown if the length of
+the actual parameter(s) does/do not match the length of the formal
+parameter(s), already short-circuiting the call if attempted. Else
+the function body is evaluated with the actual parameters in a new,
+temporary scope that only exists while the call is running. This is
+done by calling the interpreter's visit method on the root body node,
+resulting in a \classref{Value} that the function returns. This scope
+has the previous scope as a parent, giving it complete access to all the
+existing, declared members outside the function's body.
 
 % Tail recursion detection
-Special action is taken during the call when tail recursion is
-detected. An example of a tail recursive function, a small method
-\methodref{recsum} that makes use of it, is seen below:
+An interesting feature of the interpreter in respect to functions is
+tail recursion detection and optimisation. Special action is taken
+during the call when this form of recursion is detected, converting it
+to an iterative loop instead. An example of a tail recursive function, a
+small method \methodref{recsum} that makes use of it, is seen below:
 
-\todo{Pygmentize below (commented out) code sample}
-%\codesample{tailrecursion.junta}
+\codesample{tailrecursion.junta}
 
-This simple function adds the first $N$ integers, where $N$ is defined as the first parameter to the function. The tail recursion optimizer converts the recursive function into a loop if it detects a trail recursion construction, guaranteeing stack overflow prevention when using tail recursion. How tail recursion is detected by the function when it is called is shown by the pseudocode below:
+This simple function adds the first $N$ integers, where $N$ is defined as the first parameter to the function. The tail recursion optimiser converts the recursive function into a loop if it detects a trail recursion construction, guaranteeing stack overflow prevention when using tail recursion in \productname. How tail recursion is detected by the function when it is called is shown by the pseudocode below:
 
 \input{figures/tailrecursionalgorithm}
 
-Here it is important to note that the type \classref{CallValue} is an internal \classref{Value}
-\todo{Finish this\ldots}
+Here it is important to note that an internal class is used to keep track of the returned body after being evaluated, making the check on line number $12$ in \lstref{alg:tailrecursion} possible. This is done by having a boolean outside the call initially set as false, and being switched to true upon executing the body. Since a recursive function calls its own body again, a check on the boolean is done to see if this is the case. If the boolean is set, a different, internal value \classref{CallValue} is created with a reference to the \classref{Interpreter} and \classref{FunValue} classes, and the function's actual parameters, all possibly being effected by the function.
 
 \subsection{Pattern evaluation}
 Patterns in \productname{} are a very important feature, being used
