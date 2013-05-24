@@ -244,9 +244,20 @@ visualisation of the scopes of a type definition is shown.
   rectangle. A scope contained within another scope has access to the variables
 of the parent scope.}
 
+\subsubsection{Overriding}
 
-
-\subsubsection{More about abstract types and constants}
+\productname{} supports overriding and abstract constants/methods. Any constant
+in the parents can be overridden in the subtype. It is however required that the
+overriding constant has the same signature as the original. Since
+\productname{} is dynamically typed, the only constraints are:
+\begin{nlist}
+\item If the original member is a constant (no formal parameter list after the name),
+  then the overriding member must be a constant as well.
+\item If the original member is a method with $n$ formal parameters, then the
+  overriding method must have $n$ formal parameters as well.
+\end {nlist}
+So unlike in the global scope, there is a small difference between constants and
+functions (methods). For abstract members, the same constraints hold.
 
 \subsubsection{Big-step semantics}
 
