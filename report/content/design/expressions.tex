@@ -114,55 +114,7 @@ will create new \type{List}-values, and leave the original value intact.
 The semantics presented in \tableref{semantic:lists} are the transition rules
 for lists.
 
-\begin{table}[ht]
-  \begin{center}
-    \begin{tabular*}{\textwidth}{l p{\textwidth}}
-      \hline \\
-      \hspace{0.5cm} $[\mbox{LIST}_{\mbox{ACCESS-1}}]$ & \infrule{env_{T},
-      env_{C}, env_{V} \vdash \lag E\; \rag \ra v_2  \qquad env_{T}, env_{C},
-      env_{V} \vdash \lag L \rag \ra v_3}
-      {env_{T}, env_{C}, env_{V} \vdash \lag E\; L \rag \ra v_1} \\
-       & where $v_2 = \left(l_1, elem_1\right)$ \\
-       & and $v_3 = (l_2,elem_2)$ \\
-       & and $l_2 = 1$ \\
-       & and $i = elem_2 =0$ \vspace{0.1cm} \\
-       & and $v_1 = \left\{
-	 \begin{array}{l l}
-           elem_1\; i         & \quad \text{if $i \geq 0$}\\
-           elem_1\; (l_1 + i) & \quad \text{if $i \geq 0$}
-	 \end{array} \right.$ \\
-	 
-      \hspace{0.5cm} $[\mbox{LIST}_{\mbox{ACCESS-2}}]$ & \infrule{env_{T},
-      env_{C}, env_{V} \vdash \lag E \rag \ra v_2  \qquad env_{T}, env_{C},
-      env_{V} \vdash \lag L \rag \ra v_3}
-      {env_{T}, env_{C}, env_{V} \vdash \lag E\; L \rag \ra v_1} \\
-       & where $v_2 = \left(l_1, elem_1\right)$ \\
-       & and $v_3 = (l_2,elem_2)$ \\
-       & and $l_2 = 2$ \vspace{0.1cm} \\
-       & and $i = \left\{
-	 \begin{array}{l l}
-           elem_2\; 0         & \quad \text{if $elem_2\; 0 \geq 0$}\\
-           l_1 + elem_2\; 0   & \quad \text{if $elem_2\; 0 < 0$}
-	 \end{array} \right.$ \vspace{0.1cm} \\
-       & and $j = \left\{
-	 \begin{array}{l l}
-           elem_2\; 1         & \quad \text{if $elem_2\; 1 \geq 0$}\\
-           l_1 + elem_2\; 1   & \quad \text{if $elem_2\; 1 < 0$}
-	 \end{array} \right.$ \vspace{0.1cm} \\
-       & and $elem_3\; z = \left\{
-	 \begin{array}{l l}
-           elem_1\; i+1       & \quad \text{if $z = 0$}\\
-	   \hspace{1cm} \vdots &   \\
-           elem_1\; i+n-1     & \quad \text{if $z = n-1$}
-	 \end{array} \right.$ \vspace{0.1cm} \\
-       & and $v_1 = (n=j-i+1, elem_3)$ \\
-       & \\
-       \hline
-    \end{tabular*}
-    \capt{Transition rules for let expressions.}
-    \label{semantic:lists}
-  \end{center}
-\end{table}
+\input{content/design/big-stepsemantics/lists}
 
 \todo{explain semantics for lists.}
 
@@ -173,7 +125,8 @@ Variables in \productname{} are assigned using let expressions:
 
 \begin{ebnf}
 \grule{expression}{\grange \gor let\_expr}
-\grule{let\_expr}{\gter{let} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression} \gnl
+\grule{let\_expr}{\gter{let} \gcat variable \gcat \gter{=} \gcat expression
+\gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression} \gnl
 \gcat \gter{in} \gcat expression}
 \end{ebnf}
 
@@ -184,22 +137,22 @@ After the evaluation of the let-expression, the variables cease to exist.
 
 \subsubsection{Informal scope rules for let expressions}
 
-Destructive assignments are not possible \productname{}, meaning that it isn't possible to 
-reassign a variable. It is however possible to hide a variable.
+Destructive assignments are not possible \productname{}, meaning that it isn't
+possible to reassign a variable. It is however possible to hide a variable.
 Consider the following expression:
 
 \codesample{lethiding.garry}
 
-The value of this expression is $13$. This is because within the \texttt{\variable{x} + 2}-expression
-the \variable{x}-variable evaluates to $6$. But in the outer expression \variable{x} evaluates to
-$5$.
+The value of this expression is $13$. This is because within the
+\texttt{\variable{x} + 2}-expression the \variable{x}-variable evaluates to $6$.
+But in the outer expression \variable{x} evaluates to $5$.
 
 Nested \emph{let}-scopes are possible. Consider for instance:
 
 \codesample{nestedlet.garry}
 
-In the inner scope, both \variable{x} and \variable{y} are available. This is of course equivalent
-to:
+In the inner scope, both \variable{x} and \variable{y} are available. This is of
+course equivalent to:
 
 \codesample{nestedlet2.garry}
 
@@ -209,28 +162,8 @@ The semantics presented in \tableref{semantic:let} are the transition rules for
 the let expression.  This is transition rule is defined recursively to best
 illustrate the functionality of the expression.
 
-\begin{table}[ht]
-  \begin{tabular*}{\textwidth}{l l}
-    \hline \\
-    \hspace{1.2cm} $[\mbox{LET-1}]$ & \infrule{env_{T}, env_{C}, env_{V}[x_{1}
-    \mapsto v_{1}] \vdash \lag \texttt{let}\; x_{2} = E_{2}, \cdots,\; x_{k} =
-    E_{k}\; \texttt{in}\; E_{k+1} \rag \ra v_{k+1}}
-    {env_{T}, env_{C}, env_{V} \vdash \lag \texttt{let}\; x_{1} = E_{1},\; x_{2}
-    = E_{2}, \cdots, x_{k} = E_{k}\; \texttt{in}\; E_{k+1} \rag \ra v_{k+1}} \\
-    & where $env_{T}, env_{C}, env_{V} \vdash E_{1} \ra v_{1}$\\
-    & and $k \geq 2$ \\
-    
-    \hspace{1.2cm} $[\mbox{LET-2}]$ & \infrule{env_{T}, env_{C}, env_{V}[x_{1}
-    \mapsto v_{1}] \vdash \lag E_{2}\rag \ra v_{2}} {env_{T}, env_{C}, env_{V} \vdash
-    \lag \texttt{let}\; x_{1} = E_{1}\; \texttt{in}\; E_{2} \rag \ra v_{2}} \\
-    & where $env_{T}, env_{C}, env_{V} \vdash E_{1} \ra v_{1}$ \\
-    & and $k < 2$ \\
-    & \\
-    \hline \\
-  \end{tabular*}
-  \capt{Transition rules for let expressions.}
-  \label{semantic:let}
-\end{table}
+
+\input{content/design/big-stepsemantics/let}
 
 The transition rules for $[\mbox{LET-1}]$ is recursively because we must
 evaluate each expression $(x_{1}=E_{1})$ before we move on to the next one. This
@@ -321,17 +254,8 @@ ends up being $30$.
 
 The semantics presented in \tableref{semantic:lambda} is the transition rule for the lambda expression. 
 
-\begin{table}[ht]
-  \begin{tabular*}{\textwidth}{l l c}
-    \hline \\
-    \hspace{0.5cm} $[\mbox{LAMBDA}]$ & $env_{T}, env_{C}, env_{V} \vdash \lag \texttt{\#} \; X\;
-    \texttt{=>}\; E \rag \ra v$ & \hspace{1cm} where $v = \left(X, E, env_{V}, env_{C}\right)$ \\
-    & & \\
-    \hline
-  \end{tabular*}
-  \capt{Transition rules for lambda expressions.}
-  \label{semantic:lambda}
-\end{table}
+
+\input{content/design/big-stepsemantics/lambda}
 
 The three environments ($env_{T}, env_{C}, env_{V}$) must be known before it is
 possible to execute a lambda expression. We need to know which types, constants
@@ -373,25 +297,7 @@ instead it returns a new instance.
 The semantics presented in \tableref{semantic:set} is the transition rules for
 set expressions.
 
-\begin{table}[ht]
-  \begin{tabular*}{\textwidth}{l l}
-    \hline \\
-    \hspace{1.5cm} $[\mbox{SET}]$ & \infrule{env_C, env_V, env_T \vdash \lag E_1
-      \rag\ra u_1 \quad
-    \ldots \quad env_C, env_V, env_T \vdash \lag E_k \rag \ra u_k}
-    {env_C, env_V, env_T \vdash \lag \texttt{set}\; x_1 = E_1, \ldots, x_k =
-    E_k \rag \ra v_1} \\
-    & where $env_v\; \texttt{this} = \left(t, env'_c, env'_v, v_2 \right)$ \\
-    & and $v_1 = \left( t, env'_c, env'_v, v_2\right)$ \\
-    & and $env''_v = env'_v \left[ x_1 \mapsto u_1, \ldots, x_k \mapsto u_k
-    \right]$ \\
-    & \\
-    \hline
-  \end{tabular*}
-  \capt{Transition rules for set expressions.}
-  \label{semantic:set}
-\end{table}
-
+\input{content/design/big-stepsemantics/set}
 
 \subsection{Operators and calls}
 \label{sec:operatorsandcalls}
@@ -451,44 +357,15 @@ like the tree in \figref{fig:parsetreesequences}.
 The semantics presented in \tableref{semantic:callfun} is transition rules for
 function calls.
 
-\begin{table}[ht]
-  \begin{tabular*}{\textwidth}{l l}
-    \hline \\
-    \hspace{3cm} $[\mbox{CALL}_{\mbox{FUN}}]$ & \hspace{0.1cm} $env_C, env_V,
-    env_T \vdash \lag E \rag \ra v_2$ \\
-    & \hspace{0.1cm} $env_C, env_V, env_T \vdash \lag L \rag \ra v_3$
-    \vspace{-0.3cm} \\
-    & \infrule{env'_C, env''_V, env_T \vdash \lag E' \rag \ra v_1}{env_C, env_V,
-    env_T \vdash \lag E\; L\; \rag \ra v_1} \\
-    & where $v_2 = \left(X, E', env'_V, env'_C\right)$ \\
-    & and $v_3 = \left(l, elem\right)$ \\
-    & and $env''_V = \left[x_1 \mapsto elem\; 1, \ldots, x_n \mapsto elem\; n \right]$ \\
-    & \\
-    \hline
-  \end{tabular*}
-  \capt{Transition rules for set expressions.}
-  \label{semantic:callfun}
-\end{table}
+
+\input{content/design/big-stepsemantics/callfun}
 
 \todo{explain call semantics.}
 
 The semantics presented in \tableref{semantic:memaccess} is the transition rule
 for member access.
 
-\begin{table}[ht]
-  \begin{tabular*}{\textwidth}{l l}
-    \hline \\
-    \hspace{3cm} $[\mbox{MEMBER}_{\mbox{ACCESS}}]$ & \infrule{env_C, env_V, env_T
-    \vdash \lag E \rag \ra v_1}{env_C, env_V, env_T \vdash \lag E\texttt{.}C
-  \rag \ra v_3} \\
-     & where $v_2 = \left(t, env'_C, env'_V, v_2 \right)$ \\
-     & and $env'_C\; C = v_3$ \\
-     & \\
-     \hline
-  \end{tabular*}
-  \capt{Transition rules for set expressions.}
-  \label{semantic:memaccess}
-\end{table}
+\input{content/design/big-stepsemantics/memberaccess}
 
 \todo{explain member access semantics.}
 
