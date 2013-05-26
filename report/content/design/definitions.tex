@@ -225,8 +225,8 @@ usage of single inheritance:
 
 \productname{} doesn't have an \keyword{abstract}-keyword for type definitions, only
 for constant/function definitions. A type is implicitly marked as abstract if it has
-unimplemented abstract members. In the above example the type \type{A} is abstract,
-since its member, \constant{constantA}, is abstract. Likewise, the type
+unimplemented abstract members. In the above example, the type \type{A} is abstract
+since its member \constant{constantA} is abstract. Likewise, the type
 \type{B} is abstract because it extends \type{A}, but doesn't implement the abstract
 member of \type{A}. The type \type{C} on the other hand is not abstract, since it
 implements the abstract constant. Abstract types can't be constructed, albeit the
@@ -252,10 +252,10 @@ overriding constant has the same signature as the original. Since
 \productname{} is dynamically typed, the only constraints are:
 \begin{nlist}
 \item If the original member is a constant (no formal parameter list after the name),
-  then the overriding member must be a constant as well.
+  then the overriding member must be a constant as well
 \item If the original member is a method with $n$ formal parameters, then the
-  overriding method must have $n$ formal parameters as well.
-\end {nlist}
+  overriding method must have $n$ formal parameters as well
+\end{nlist}
 So unlike in the global scope, there is a small difference between constants and
 functions (methods). For abstract members, the same constraints hold.
 
@@ -268,19 +268,20 @@ are four transition rules described.
 
 \input{content/design/big-stepsemantics/typedef}
 
-In the premises of the rules we present a 5-tuple where $env_{T}$ is updated
-according to the rule. In three of the four 5-tuples we include the symbol
-$\varepsilon$, which denotes that the given position of the symbol is an empty
-slot. This is again due to the fact that we have some optional arguments.
+In the premises of the rules we present a $5$-tuple, a
+\textbf{TypeValue} where $env_{T}$ is updated according to the rule. In
+three of the four $5$-tuples we include the symbol $\varepsilon$, which
+denotes that the given position of the symbol is an empty slot. This is
+again due to the fact that we have some optional arguments.
 
-The 5-tuple is ordered as follows:
+The $5$-tuple is ordered as follows:
 
 \begin{nlist}
-\item $\mathbf{T_{k}}$ - current type
-  \item $\mathbf{X}$ - current type's formal parameters
-  \item $\mathbf{D_{M}}$ - member definitions
-  \item $\mathbf{L}$ - super type's parameters
-  \item $\mathbf{T_{k+1}}$ - super type
+\item $\mathbf{T_{k}}$ -- current type
+  \item $\mathbf{X}$ -- current type's formal parameters
+  \item $\mathbf{D_{M}}$ -- member definitions
+  \item $\mathbf{L}$ -- super type's parameters
+  \item $\mathbf{T_{k+1}}$ -- super type
 \end{nlist}
 
-Throughout the transition rules we use the 5-tuple to update the type environment.
+Throughout the transition rules we use the $5$-tuple to update the type environment.

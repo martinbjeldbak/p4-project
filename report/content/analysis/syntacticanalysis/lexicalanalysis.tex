@@ -1,6 +1,6 @@
 \subsection{Lexical analysis}
 \label{sec:lexicalanalysis}
-Before the syntax analysis can be performed a scanner must perform a lexical
+Before the syntax analysis can be performed a scanner must perform lexical
 analysis. The scanner's job is basically to check a given source code for lexical
 errors and translating the input stream of characters from the source code into
 a stream of tokens which the parser can work with, this
@@ -8,18 +8,22 @@ is done by identifying every lexeme in the source and attaching a potential
 token to it.
 \cite[p. 57]{fischer2009}
 
-Lexemes are strings of characters described by regular expressions.  Typical
-examples of lexemes in a programming language are: variable names, integer
-literals, operators and special keywords etc. A variable name lexeme could be
-defined by the following regular expression: $[a-z, A-Z, "\_"][a-z, A-Z, 0-9,
-"\_"]^*$. Which means a variable name can start with either an uppercase letter,
-lowercase letter or an underscore followed by zero or more lowercase letters,
-uppercase letters, numbers or underscores. In \tableref{table:lexandtokens} we
-give examples of lexemes and the tokens they have been paired with. If both
-\textit{a} and \textit{b} are lexemes describing variable names and \textit{102}
-and \textit{42} are lexemes describing integer literals, then \textit{a} and
-\textit{b} or \textit{102} and \textit{42} can typically be used interchangeably
-and still give a syntatic meaningful program.
+Lexemes are strings of characters described by regular expressions.
+Typical examples of lexemes in a programming language are: variable
+names, integer literals, operators and special keywords etc. A
+variable name lexeme could be defined by the following regular
+expression: $[a-z, A-Z, "\_"][a-z, A-Z, 0-9, "\_"]^*$. Which means a
+variable name can start with either an upper case letter, lower case
+letter or an underscore followed by zero or more lower case letters,
+upper case letters, numbers or underscores. The syntax or semantics
+of regular expressions are not described here, we refer to Perl
+notation\cite{perlRegex}. In \tableref{table:lexandtokens} we give
+examples of lexemes and the tokens they have been paired with. If both
+\textit{a} and \textit{b} are lexemes describing variable names and
+\textit{102} and \textit{42} are lexemes describing integer literals,
+then \textit{a} and \textit{b} or \textit{102} and \textit{42} can
+typically be used interchangeably and still give a syntactic meaningful
+program.
 
 \tab[10cm]{lexandtokens}{1}{Lexemes and their corresponding token group.}
 		             {               }
@@ -38,12 +42,14 @@ and still give a syntatic meaningful program.
 \tabrow{ switch 	    }{KEYWORD  	      }
 }
 
-A scanner is a relatively simple component which can be constructed by writing
-it by hand or using a scanner-generating tool such as Lex, which generates an
-executable scanner by feeding it with a set of regular expressions. When
-implementing the scanner for \productname{}, we would likely benefit more from
-crafting the scanner by hand than by using a scanner-generating tool. By
-crafting it by hand we will know excatly how it is implemented. There might be
-some advantages of using a scanner-generating tool such as the fact that it is
-more reliable, it is easier to maintain and it is faster to implement if one
-already knows how it works, if not, a handwritten scanner might be just as fast. 
+A scanner is a relatively simple component which can be constructed
+by writing it by hand or using a scanner-generating tool such as Lex,
+which generates an executable scanner by feeding it with a set of
+regular expressions. When implementing the scanner for \productname{},
+we would likely benefit more from crafting the scanner by hand than by
+using a scanner-generating tool. By crafting it by hand we will know
+exactly how it is implemented. There might be some advantages of using
+a scanner-generating tool such as the fact that it can run faster due
+to optimized code, is more reliable, it is easier to maintain and it
+is faster to implement if one already knows how it works, if not, a
+handwritten scanner could be just as fast to write.
