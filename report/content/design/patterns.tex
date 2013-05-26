@@ -31,13 +31,13 @@ is empty. Since the square is occupied by a piece, the pattern will return
 false if checked on \textbf{A1}. However, the same pattern matched on
 \textbf{C1} will return true since the square at \textbf{D3} is empty.
 
-\fig[scale=1.5]{patternboard}{A simple 4 X 4 board with 3 pieces}
+\fig[scale=1.5]{patternboard}{A simple $4 \times 4$ board with $3$ pieces.}
 
 With this basic introduction to a simple pattern matching,
 \tableref{table:pattern-example} briefly describes how the different pattern
 operators work. For each operator an example of the use in a context is given
 in \secref{sec:patternexamples}. Note that the description of patterns assumes a
-minor understanding of regular expressions, see \cite{regex}.
+minor understanding of regular expressions, see \cite{regex}\cite{perlRegex}.
 
 \tab[10cm]{pattern-example}{1}{Pattern operators.}{}
          {Pattern operator                       }{\textbf{Explanation}}{
@@ -65,7 +65,7 @@ given type or a piece of the given type is residing on the current square}
 
 \subsection{Pattern examples}
 \label{sec:patternexamples}
-All these examples of pattern machings are performed on the board and pieces
+All these examples of pattern matching are performed on the board and pieces
 seen in \figref{fig:patternboard}. For each operator two examples of a pattern
 matching on a particular square is given. The first check returns true and the
 second check false.
@@ -83,9 +83,9 @@ second check false.
     because \textbf{C4} is empty
   \item On \textbf{C4}: the pattern matching \texttt{/e empty/} returns false
     because \textbf{C5} is out of board
-  \item On \textbf{A1}: the pattern matching \texttt{/n* n e empty/} returns true
-    because moving north 2 times then north and east hits an empty square on
-    \textbf{B4}
+  \item On \textbf{A1}: the pattern matching \texttt{/n* n e empty/}
+  returns true because moving north $2$ times to \textbf{A3}, then north
+  and east hits an empty square on \textbf{B4}
 \end{enumerate}
 
 Notice that the \texttt{*}-operator causes many branches to be made. The
@@ -142,14 +142,14 @@ defined. In such a case, a branch survives only if its current square is of type
 \textit{White} or if the square contains a piece of type \textit{White}.
 
 A pattern can also match if a specific piece exists on a specific square. This
-is done using the \texttt{this} keyword. Before this mathcing can be achieved,
+is done using the \texttt{this} keyword. Before this matching can be achieved,
 the pattern must be matched regarding to a specific piece. Suppose that we on
 \textbf{A3} make the pattern matching \texttt{/empty e this/}. If this matching
 is done in relation to the black piece on \textbf{B3} it returns true. However,
 in relation to the black piece on \textbf{B2}, the pattern matching returns
 alse. 
 
-To understand how this function exactly works and why this is useful, consider
+To understand how this function works and why this is useful, consider
 the board in \figref{fig:patternboard}. If we for any piece specify that it can
 move to a square for which the pattern matching \texttt{/(n | s) empty/} is
 true, this means that it can move to any square except $\mathbf{\left\{B1, B4,
