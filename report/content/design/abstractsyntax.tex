@@ -24,12 +24,12 @@ Table \ref{table:syn-cat} presents the syntactic categories of \productname{}.
       $n \in$ & \textbf{Integer}         \\
       $x \in$ & \textbf{Variable}        \\
       $s \in$ & \textbf{String}          \\
-      $E \in$ & \textbf{Expression}      \\
-      $P \in$ & \textbf{Pattern}         \\
-      $L \in$ & \textbf{List}            \\
-      $X \in$ & \textbf{VarList}         \\
-      $Y \in$ & \textbf{Coordinate}      \\
-      $Z \in$ & \textbf{Direction}       \\
+      $e \in$ & \textbf{Expression}      \\
+      $p \in$ & \textbf{Pattern}         \\
+      $i \in$ & \textbf{List}            \\
+      $g \in$ & \textbf{VarList}         \\
+      $y \in$ & \textbf{Coordinate}      \\
+      $z \in$ & \textbf{Direction}       \\
       $C \in$ & \textbf{ConstantNames}   \\
       $T \in$ & \textbf{TypeNames}       \\
       $F \in$ & \textbf{FunctionConstants} \\
@@ -45,13 +45,13 @@ Table \ref{table:syn-cat} presents the syntactic categories of \productname{}.
 In \tableref{table:syn-cat} we have letters that define one syntactic
 category. For instance we have $n \in \mathbf{Integer}$, which means that when
 we see a $n$ in the formation rules this is actually an integer value. There
-are two types of lists: \textbf{VarList} and \textbf{List}. These differ in that
+are two types of lists; \textbf{VarList} and \textbf{List}. These differ in that
 a variable list is used as formal parameters for types and the list is the
 sequence of parameters for a super type. 
 
-Furthermore, we have defined two definitions: \textbf{GlobalDef} and
+Furthermore, we have defined two definitions; \textbf{GlobalDef} and
 \textbf{MemberDef}. These are the set of definitions in their respective scopes.
-E.g. a in the global scope we can define different constants and types. In the
+E.g. in the global scope we can define different constants and types. In the
 member scope we can also define different constants, and also the abstract
 definitions and the notion of data definitions. This will become very apparent
 in \secref{sec:definitions}, where we present the grammar of program structures.
@@ -131,7 +131,7 @@ is defined as follows:
   \mathbf{EnvV} \times \mathbf{EnvC}
 \]
 
-A function value consists of variable lists, expressions and the set of variable
+A function value consists of a variable list, an expression and the set of variable
 and constant environments.
 
 \textbf{Definition} (Type values) \hspace{0.5cm} The set of type values is
@@ -144,8 +144,8 @@ defined as follows:
 
 An arbitrary member is defined as $t \in \mathbf{TypeValues}$.
 
-A type value consists of type names, variable lists, the member definitions,
-lists and the type value. A type value is recursively defined since
+A type value consists of a type name, a variable list, the member definitions,
+the super type's paramters and the super type's type value. A type value is recursively defined since
 $\mathbf{TypeValues}$ is defined in terms of itself. This is not a problematic
 definition because these must be considered as values for two different types.
 The $\mathbf{TypeValues}$ on the right-hand side is in fact the super type's set
@@ -163,7 +163,8 @@ defined as follows:
 
 An object value consists of the set of type values, the set of constant
 environment, the set of variable environments and the set of object values. This
-is yet another recursively defined definition, because an object value can have a parent object value, this is the case when an object value extends another object value. 
+is yet another recursively defined definition, because an object value can have a parent 
+object value, this is the case when an object value extends another object value. 
 
 
 \subsubsection{Formation rules}
@@ -174,22 +175,22 @@ of the members of the syntactic categories.
 Not all of the constituents of the formation rules are syntactic categories. We
 for instance see different parentheses, forward slashes, different operators, and
 words like $\texttt{this}$ and $\texttt{define}$. These are part of the
-construction of the given formulation rule. If they are omitted from a rule then
+construction of the given formation rule. If they are omitted from a rule then
 it is not valid in \productname{}.
 
 \begin{figure}[ht]
   \begin{center}
     \begin{tabular}[ht]{r l}
-      $E\; \mathbf{::=}$ & $n$ \for $x$ \for $s$ \for $Y$ \for $Z$
-      \for $T$ \for $C$ \for $L$ \for $\texttt{-} E$ \for $\left(\;
-      E\; \right)$ \for $\texttt{/}\; P\; \texttt{/}$ \for \\ & $E\;
-      L$ \for $E\texttt{.}C$ \for $\texttt{\#}\; X\; \texttt{=>}\; E$
-      \for $\texttt{if}\; E_0\; \texttt{then}\; E_1\; \texttt{else}\;
-      E_2$ \for $\texttt{not}\; E$ \for $E_1\; F\; E_2$ \for \\ &
-      $\texttt{let}\; x_{1}\; \texttt{=}\; E_{1},\; \ldots,\; x_{k}\;
-      \texttt{=}\; E_{k}\; \texttt{in}\; E_{k+1}$ \for $\texttt{set}\;
-      x_{1}\; \texttt{=}\; E_{1},\; \ldots,\; x_{k}\; \texttt{=}\;
-      E_{k}$ \for $\texttt{this}$ \for $\texttt{super}$ \\
+      $e\; \mathbf{::=}$ & $n$ \for $x$ \for $s$ \for $y$ \for $z$
+      \for $T$ \for $C$ \for $i$ \for $\texttt{-} e$ \for $\left(\;
+      e\; \right)$ \for $\texttt{/}\; p\; \texttt{/}$ \for \\ & $e\;
+      i$ \for $e\texttt{.}C$ \for $\texttt{\#}\; g\; \texttt{=>}\; e$
+      \for $\texttt{if}\; e_0\; \texttt{then}\; e_1\; \texttt{else}\;
+      e_2$ \for $\texttt{not}\; e$ \for $e_1\; F\; e_2$ \for \\ &
+      $\texttt{let}\; x_{1}\; \texttt{=}\; e_{1},\; \ldots,\; x_{k}\;
+      \texttt{=}\; e_{k}\; \texttt{in}\; e_{k+1}$ \for $\texttt{set}\;
+      x_{1}\; \texttt{=}\; e_{1},\; \ldots,\; x_{k}\; \texttt{=}\;
+      e_{k}$ \for $\texttt{this}$ \for $\texttt{super}$ \\
 
       $F\; \mathbf{::=}$ & \texttt{is} \for \texttt{and} \for
       \texttt{or} \for \texttt{==} \for $\texttt{!=}$ \for $\texttt{<}$ \for
@@ -197,25 +198,25 @@ it is not valid in \productname{}.
       \for $\texttt{-}$ \for $\texttt{*}$ \for \\ & $\texttt{/}$ \for
       $\texttt{\%}$ \\
       
-      $L\; ::=$ & $\texttt{[} E_{1},\; \cdots, E_{k} \texttt{]}$ \\
+      $i\; ::=$ & $\texttt{[} e_{1},\; \cdots, e_{k} \texttt{]}$ \\
       
-      $X\; ::=$ & $\texttt{[} x_{1},\; \cdots,\; x_{k} \texttt{]}$ \for
+      $g\; ::=$ & $\texttt{[} x_{1},\; \cdots,\; x_{k} \texttt{]}$ \for
       $\texttt{[} x_{1},\; \cdots,\; \dots x_{k} \texttt{]}$ \for $\texttt{[}
       \dots x \texttt{]}$ \\
       
-      $D_{G}\; ::=$ & $\texttt{define}\; C\; \texttt{=}\; E\; D_{G}$ \for
-      $\texttt{define}\; C\; X\; \texttt{=}\; E\; D_{G}$ \for $\texttt{type}\;
-      T\; X\; D_{G}$ \for \\ 
-      & $\texttt{type}\; T\; X\; \texttt{extends}\; T\; L\; D_{G}$ \for
-      $\texttt{type}\; T\; X\; \left\{D_{M}\right\}\; D_{G}$ \for \\
-      & $\texttt{type}\; T\; X\; \texttt{extends}\; T\; L\;
+      $D_{G}\; ::=$ & $\texttt{define}\; C\; \texttt{=}\; e\; D_{G}$ \for
+      $\texttt{define}\; C\; g\; \texttt{=}\; e\; D_{G}$ \for $\texttt{type}\;
+      T\; g\; D_{G}$ \for \\ 
+      & $\texttt{type}\; T\; g\; \texttt{extends}\; T\; i\; D_{G}$ \for
+      $\texttt{type}\; T\; g\; \left\{D_{M}\right\}\; D_{G}$ \for \\
+      & $\texttt{type}\; T\; g\; \texttt{extends}\; T\; i\;
       \left\{D_{M}\right\} D_{G}$ \for $\varepsilon$ \\
 
-      $D_{M} ::=$ & $\texttt{define}\; C\; \texttt{=}\; E\; D_{M}$ \for
-      $\texttt{define}\; C\; X\; \texttt{=}\; E\; D_{M}$ \for $\texttt{define}\;
+      $D_{M} ::=$ & $\texttt{define}\; C\; \texttt{=}\; e\; D_{M}$ \for
+      $\texttt{define}\; C\; g\; \texttt{=}\; e\; D_{M}$ \for $\texttt{define}\;
       \texttt{abstract}\; C\; D_{M}$ \for \\ 
-      & $\texttt{define}\; \texttt{abstract}\; C\; X\; D_{M}$ \for
-      $\texttt{data}\; x\; \texttt{=}\; E\; D_{M}$ \for $\varepsilon$ \\
+      & $\texttt{define}\; \texttt{abstract}\; C\; g\; D_{M}$ \for
+      $\texttt{data}\; x\; \texttt{=}\; e\; D_{M}$ \for $\varepsilon$ \\
 
     \end{tabular}  
     \capt{The formation rules for the syntactic categories of \hspace{0.02cm}
