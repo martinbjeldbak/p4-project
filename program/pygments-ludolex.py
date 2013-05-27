@@ -18,9 +18,10 @@ class LudoLexer(RegexLexer):
             (r'\b(friend|foe|empty)\b', Keyword.Reserved),
             (r'"([^"\\]|\\.)*"', String),
             (r'\b(n|s|e|w|ne|nw|se|sw)\b', Name.Entity),
-            (r'[A-Z][a-zA-Z0-9]*', Name.Constant),
-            (r'[a-z][a-zA-Z0-9]*', Name.Function),
+            (r'[A-Z][a-zA-Z0-9]*\b', Name.Constant),
+            (r'[a-z][a-zA-Z0-9]*\b', Name.Function),
             (r'\$[a-zA-z0-9]+\b', Name.Variable),
-			(r'.', Text)
+			(r'.', Text),
+            (r'[\[\]]', Text)
         ]
     }
