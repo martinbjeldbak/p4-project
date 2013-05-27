@@ -290,22 +290,19 @@ public class Widget {
 		 * The same pattern is used for mouseClicked(), mousedReleased()
 		 * and mouseDragged().
 		 */
-		for( Widget o : widgets ){
-			//Transform the current view, so we can use local coordinates
-			//when drawing. (Relative coordinates)
-			g.translate( o.getX(), o.getY() );
-			
-			//Set clipping to avoid Widgets to draw outside its boundaries
-			g.setClip( absX + o.getX(), absY + o.getY(), o.getWidth(), o.getHeight() );
-			
-			o.handleDraw( g );
+		//Transform the current view, so we can use local coordinates
+		//when drawing. (Relative coordinates)
+		g.translate( getX(), getY() );
+
+		//Set clipping to avoid Widgets to draw outside its boundaries
+		g.setClip( absX, absY, getWidth(), getHeight() );
+		handleDraw( g );
+		g.clearClip();
+		
+		for( Widget o : widgets )
 			o.draw( g, absX + o.getX(), absY + o.getY() );
-			
-			
-			//Reset clip and translate
-			g.clearClip();
-			g.translate( -o.getX(), -o.getY() );
-		}
+		
+		g.translate( -getX(), -getY() );
 	}
 	
 	/**

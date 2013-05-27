@@ -1,8 +1,8 @@
 \section{Patterns}
 \label{sec:patterns}
 
-This section covers how to use patterns and what they are used for. The operators
-of a pattern looks like and behaves a little like regular expressions. This
+This section covers how to use patterns. The operators of a pattern looks 
+like and behaves a little like regular expressions. This
 grammar shows how a pattern is constructed:
 
 \begin{ebnf}
@@ -49,7 +49,7 @@ minor understanding of regular expressions, see \cite{regex}\cite{perlRegex}.
   \tabrow{\texttt{w}                             }{west}
   \tabrow{\texttt{*}                             }{zero-to-many times}
   \tabrow{\texttt{+}                             }{one-to-many times}
-  \tabrow{\texttt{?}                             }{zero-or-many times}
+  \tabrow{\texttt{?}                             }{zero-or-one time}
   \tabrow{\texttt{|}                             }{or}
   \tabrow{\texttt{!}                             }{not}
   \tabrow{\texttt{(} \textit{pattern} \texttt{)} }{encapsulation}
@@ -58,7 +58,7 @@ minor understanding of regular expressions, see \cite{regex}\cite{perlRegex}.
   \tabrow{\texttt{foe}                           }{current square contains at
   least one enemy piece of the current player}
   \tabrow{\texttt{type}                          }{the current square is of the
-given type or a piece of the given type is residing on the current square}
+given type, or a piece of the given type is residing on the current square}
   \tabrow{\texttt{this}                          }{current square contains the
   piece for which the check is being performed}
 }
@@ -68,7 +68,7 @@ given type or a piece of the given type is residing on the current square}
 All these examples of pattern matching are performed on the board and pieces
 seen in \figref{fig:patternboard}. For each operator two examples of a pattern
 matching on a particular square is given. The first check returns true and the
-second check false.
+second check returns false.
 
 \begin{enumerate}[noitemsep]
   \item On \textbf{A1}: the pattern matching \texttt{/empty/} returns true because
@@ -88,8 +88,8 @@ second check false.
   and east hits an empty square on \textbf{B4}
 \end{enumerate}
 
-Notice that the \texttt{*}-operator causes many branches to be made. The
-previous pattern \texttt{/n* n e empty/} done on \textbf{A1}, has a branch checking
+Notice that the \texttt{*} operator causes many branches to be made. The
+previous pattern \texttt{/n* n e empty/} done on \textbf{A1}  has a branch checking
 \texttt{/n e empty/}. The branch dies because \textbf{B2} is not empty. If just one
 branch survives, the pattern matching returns true. In the example, the only branch
 surviving is the \texttt{n n n e empty} branch. The same rules for branching
@@ -116,7 +116,7 @@ moves out of board it dies immediately.
   \item On \textbf{B1}: the pattern matching \texttt{/(n n | e e) empty/}
     returns true only because \textbf{D1} is empty
   \item On \textbf{A1}: the pattern matching \texttt{/(n w)* empty/} returns
-    true both because \textbf{A1} is empty and because D4 is empty
+    true both because \textbf{A1} is empty and because \textbf{D4} is empty
 \end{enumerate}
 
 \subsubsection{Pattern keywords}
@@ -133,7 +133,7 @@ be reached by going east or west from \textbf{C3} one or more times.
 
 The \texttt{foe} keyword does the opposite of \texttt{friend}. It makes a branch
 continue only if its current square contains at least one piece not owned by the
-player who has the turn.
+current player's turn.
 
 Just like \texttt{foe} and \texttt{friend}, the name of a piece or square type
 defined in a \productname{} game can also be used. E.g. the keyword
@@ -147,7 +147,7 @@ the pattern must be matched regarding to a specific piece. Suppose that we on
 \textbf{A3} make the pattern matching \texttt{/empty e this/}. If this matching
 is done in relation to the black piece on \textbf{B3} it returns true. However,
 in relation to the black piece on \textbf{B2}, the pattern matching returns
-alse. 
+false. 
 
 To understand how this function works and why this is useful, consider
 the board in \figref{fig:patternboard}. If we for any piece specify that it can
