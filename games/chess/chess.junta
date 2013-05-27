@@ -60,7 +60,9 @@ type Pawn[ $player, $dir ] extends ChessPiece[ $player ]{
   define actions[$game] =
    // if isFirstMove[this] then
       //moveActions[ this, $game.findSquares[ / $dir this / ] ]
-      toActions[ $game.findSquares[ / empty (empty $dir)2 this / ] ]
+      toActions[ union[	$game.findSquares[ / empty (empty $dir)2 this / ] +
+						$game.findSquares[ / foe $dir e|w this / ] +
+						$game.findSquares[ / empty $dir this / ] ] ]
    // else
    //   []
         // +	map[ findSquares[ / foe (empty $dir) | ((w $dir)|(e $dir) this) / ],
