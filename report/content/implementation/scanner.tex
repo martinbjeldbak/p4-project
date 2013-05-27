@@ -15,7 +15,7 @@ offset at which the input was determined to be incorrect.
 The strings which are converted to tokens are called lexemes. Many
 lexemes can be converted to the same type of token. Programs will
 typically contain many different identifiers, which in \productname{}
-will be treated as an \tokenref{ID}-token. The name of the identifier will
+will be treated as an \tokenref{ID} token. The name of the identifier will
 then be saved as a value belonging to the particular token.
 
 \tab[8cm]{lexemestotokens}{1}{Analysing an input stream for lexemes and tokens.}
@@ -75,11 +75,11 @@ parser knows where the program ends.
 Beside the \methodref{isWhitespace()} function, all other functions
 of the form \methodref{is{\textit{Something}}()} are responsible for
 returning a token based on their evaluation of the input stream.
-For example, if the first symbol of a lexeme is an upper-case
+For example, if the first symbol of a lexeme is an upper case
 character, the function \methodref{scanUppercase()} is responsible
 for determining whether the lexeme is a \tokenref{type} or a
 \tokenref{coordinate} because they are the only two tokens starting
-with an upper-case character in \productname{}. This is depicted in
+with an upper case character in \productname{}. This is depicted in
 \tableref{table:scanner}.
 
 
@@ -120,7 +120,7 @@ to check what kind of character the next one is. The \methodref{pop()}
 function will additionally increment \varref{offset} by one. If
 the next input symbol is a new line character, it assigns zero to
 \varref{offset} and increments \varref{line} by one. If an unexpected
-input symbol is met, a \typeref{SyntaxError}-exception is thrown. An
+input symbol is met, a \typeref{SyntaxError} exception is thrown. An
 example could be a \$ character followed by white space. \$ is used as
 prefix for variables, and expects to be followed by an identifier, e.g.\
 \$\varref{varName}. For more information on our error handling, refer to

@@ -370,7 +370,7 @@ interpreter to make it run faster, such as detecting tail recursion. Since
 \productname{} has no loop-constructs, recursive functions are the only way to
 repeatedly run through some code.
 
-Patterns are also a very important and central feature to our language,
-requiring an almost non-deterministic implementation, again hurting
-performance. A restriction with patterns is that they only work on
+Patterns are also a very important and central feature to our language. Though some 
+small optimisations have been made, pattern matching requires a non-deterministic 
+implementation, again hurting performance. A restriction with patterns is that they only work on
 grid-formed boards.
