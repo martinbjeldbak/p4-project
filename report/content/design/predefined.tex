@@ -106,7 +106,7 @@ In the game environment the following global functions are available:
 
 \begin{dlist}
   \item \constant{addAction}[\variable{piece} : \type{Piece}, \variable{squares} : \type{List}] : \type{List}\\
-    A function that returns a list of squares \variable{squares} to where it's possible to add a piece (\variable{piece}. The functions
+    A function that returns a list of \type{AddAction}s to where it's possible to add a piece (\variable{piece}. The functions
     takes two parameters. The first parameter contains information on which type of piece the actions applies to. The second parameter is
     the list of squares where the type of piece can be added to.
     
@@ -118,7 +118,9 @@ In the game environment the following global functions are available:
     
     Here \constant{addAction} returns a list of empty squares to where it's possible to add a piece of the type \keyword{this}, which in this case was
     either a crosses piece or noughts piece depending whose turn it is.
+    
   \item \constant{moveAction}[\variable{piece} : \type{Piece}, \variable{squares} : \type{List}] : \type{List}\\
+  \constant{moveAction} works like \constant{addAction}, but instead of returning a \type{List} of \type{AddAction}s it returns a \type{List} of \type{MoveAction}s.
   	
     
 \end{dlist}
@@ -126,9 +128,11 @@ In the game environment the following global functions are available:
 
 
 \subsubsection{Game}
+The \type{Game} type contains all information to describe a board game at a specific point at time.
+
 \begin{dlist}
   \item \type{Game}[\variable{title} : \type{String}]\\
-  Creates a instance of the \type{Game} type with a Game title of \variable{title}, \constant{board} set to \constant{initialBoard} and \constant{currentPlayer} set to \constant{turnOrder}[0]. The \type{Game} type contains all information to describe a board game at a specific point at time.
+  Creates a instance of the \type{Game} type with a Game title of \variable{title}, \constant{board} set to \constant{initialBoard} and \constant{currentPlayer} set to \constant{turnOrder}[0].
   
   \item \constant{players} : \type{List}\\
   List of all \type{Player}s which are a part of this game.
@@ -198,7 +202,7 @@ In the game environment the following global functions are available:
 \end{dlist}
 
 \subsubsection{GridBoard}
-GridBoard extends Board.
+\type{GridBoard} \keyword{extends} \type{Board} to provide an easy way to describe rectangular \type{Board}s.
 
 \begin{dlist}
   \item \type{GridBoard}[ \variable{width} : \type{Integer}, \variable{height} : \type{Integer} ]\\
@@ -245,6 +249,8 @@ GridBoard extends Board.
 \end{dlist}
 
 \subsubsection{Square}
+\type{Square} describes a position on the \type{Board} where 0-to-many \type{Piece}s can be placed.
+
 \begin{dlist}
 	\item \type{Square}[]\\
 	\type{Square} with no \type{Piece}s.
@@ -278,6 +284,8 @@ GridBoard extends Board.
 \end{dlist}
 
 \subsubsection{Piece}
+\type{Piece} describes an item associated to a \type{Player} which the \type{Player} can manipulate in order to progress the game.
+
 \begin{dlist}
   \item \type{Piece}[ \variable{owner} : \type{Player} ]\\
   \type{Piece} with \constant{owner} set to \variable{owner}.
@@ -305,17 +313,83 @@ GridBoard extends Board.
 \end{dlist}
 
 \subsubsection{Player}
+\begin{dlist}
+  \item \type{Player}[ \variable{name} : \type{String} ]\\
+  \type{Player} with \constant{name} set to \variable{name}
+  
+  \item \constant{name} : \type{String}\\
+  The name of the \type{Player}.
+  
+  \item \constant{winCondition}[ \variable{game} : \type{Game} ] : \type{Boolean}\\
+  Is true if the \type{Player} has won at the ending of this turn.
+  
+  \item \constant{tieCondition}[ \variable{game} : \type{Game} ] : \type{Boolean}\\
+  Is true if the game ended without a winner.
+  
+  \item \constant{actions}[ \variable{game} : \type{Game} ] : \type{List}\\
+  A \type{List} of \type{Action}s that the \type{Player} can do during his turn.
+\end{dlist}
 
 \subsubsection{Action}
-
-\subsubsection{ActionSequence}
+\begin{dlist}
+  \item \type{Action}[]\\
+  Empty \type{Action}.
+\end{dlist}
 
 \subsubsection{UnitAction}
+\type{UnitAction} \keyword{extends} \type{Action} to provide a basic change to be performed on \type{Game}.
+
+\begin{dlist}
+  \item \type{UnitAction}[ \variable{piece} : \type{Piece} ]\\
+  A \type{UnitAction} with \constant{piece} set to \variable{piece}.
+  
+  \item \constant{piece} : \type{Piece}\\
+  The \type{Piece} this \type{UnitAction} affects.
+\end{dlist}
 
 \subsubsection{AddAction}
+\type{UnitAction} \keyword{extends} \type{Action} to add a \type{Piece} to a \type{Game}.
 
-\subsubsection{MoveAction}
+\begin{dlist}
+  \item \type{AddAction}[ \variable{piece} : \type{Piece}, \variable{to} : \type{Square} ]\\
+  An \type{AddAction} which adds \variable{piece} to \variable{to}.
+  
+  \item \constant{to} : \type{Square}\\
+  \type{Square} to add \constant{piece} to.
+\end{dlist}
 
 \subsubsection{RemoveAction}
+\type{UnitAction} \keyword{extends} \type{Action} to remove a \type{Piece} from a \type{Game}.
+
+\begin{dlist}
+  \item \type{RemoveAction}[ \variable{piece} : \type{Piece} ]\\
+  A \type{RemoveAction} which removes \variable{piece}.
+\end{dlist}
+
+\subsubsection{MoveAction}
+\type{UnitAction} \keyword{extends} \type{Action} to move a \type{Piece} to another \type{Square}.
+
+\begin{dlist}
+  \item \type{MoveAction}[ \variable{piece} : \type{Piece}, \variable{to} : \type{Square} ]\\
+  A \type{MoveAction} which moves \variable{piece} to \variable{to}.
+  
+  \item \constant{to} : \type{Square}\\
+  \type{Square} to add \constant{piece} to.
+\end{dlist}
+
+\subsubsection{ActionSequence}
+\type{ActionSequence} \keyword{extends} \type{Action} to provide a sequence of \type{UnitAction}s to be performed in order.
+
+\begin{dlist}
+  \item \type{ActionSeqence}[ \ldots \variable{actions} : \type{UnitAction} ]\\
+  \type{ActionSequence} with \constant{actions} set to [ \ldots \variable{actions} ].
+  
+  \item \constant{actions} : \type{List}\\
+  A \type{List} of \type{UnitAction} to be performed in order.
+  
+  \item \constant{addAction}[ \variable{action} : \type{UnitAction} ] : \type{ActionSequence}\\
+  A \type{ActionSequence} where \variable{action} is appended to constant{actions}.
+\end{dlist}
 
 \subsubsection{TestCase}
+An abstract type for unit testing.

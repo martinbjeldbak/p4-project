@@ -1,23 +1,36 @@
 \chapter{Evaluation}
 \label{chap:evaluation}
 
+\section{Writing games in \productname}
+We have written a handful of games in \productname{}. The games vary from classic board games to unknown puzzle games invented by individual group members. All game screenshots in this section are taken from the simulator while running a \productname{}-implementation of a particular game. 
+
+The first game we implemented in \productname was Noughts and Crosses, which can seen being simulated in \figref{fig:nacSimulated}. The source-code can be found in \lstref{lst:nacCode}.
+\fig[scale=0.3]{nacSimulated}{An implementation of Noughts and Crosses in \productname{}, played in the simulator.}
+
+\input{codesamples/nacCode.junta}
+
+``Connect-4'' was written in 5 minutes using the Noughts And Crosses implementation as a template, modifying board set up, win condition, etc. The game loaded in the simulator can be seen in \figref{fig:connect4Simulated}. The source code is showed in \lstref{lst:connect4Code}.
+\fig[scale=0.3]{connect4Simulated}{An implementation of Connect-4 \productname{}, played in the simulator.}
+
+\input{codesamples/connect4Code.junta}
+
+The Ice-game is a single-player puzzle game partly invented by one of the group members. (Partly here means that it is not based on any particular game, but the game mechanics is used in many other puzzle games). The goal is to move the player (the ring-shaped piece) onto the green square. The player can move continuously in one of the directions north, east, west, or south until he meets a black wall. He cannot stop halfway on the path. A screenshot of the game loaded in the simulator can be seen in \figref{fig:iceSimulated}. The red numbers show the moves needed to solve the puzzle, they are not visible in the game.
+
+\fig[scale=0.3]{iceSimulated}{A \productname{}-implementation of a custom puzzle game ``Ice'', played in the simulator.}
+
+``Kent-game'' is another game invented by the group. \figref{fig:kentGameSimulated} shows the initial board set up. The goal is to swap the position of all red and blue pieces. A blue piece can move one square north or one square east if it lands on an empty square. It can however move two squares north or two square east by jumping over a red piece landing on an empty field. The moves of a red piece are identical to those a blue piece, just in the opposite direction. The game is hard to solve because pieces can never move back and the narrow passage in the middle allows only one piece to pass at once. One of the group members liked the game idea and implemented it in JavaScript so he could post it on his website. He included a backtracking solver which verified that the game is solvable.
+
+\fig[scale=0.3]{kentGameSimulated}{A \productname{}-implementation of a custom puzzle game ``Kent-game'', played in the simulator.}
+
+
 \section{Unit testing}
 A \productname{}-language construct makes it easy to unit test a \productname{}-game.
 If a source code contains a type which extends the \typeref{TestCase}-type, it means that any constant defined in the type must evaluate to true.
 
-An example of a unit test of Naughts and Crosses can be seen in \todo{Input codesamples/nactest}.
+An example of a unit test of Noughts and Crosses can be seen in \input{codesamples/nacTest.junta}.
 The data member \varref{state1} contain a Naughts and Crosses game in its starting state.
 The first constant \methodref{testTitle} verifies that the game title really is set to ``Noughts and Crosses''.
 The data member \varref{state2} contains the game state after the first player has 
 performed the first action in the list of possible actions. This first action will cause a piece to be placed on one of the squares, which means 
-that $3*3 - 1$ squares must still be empty. This is verified by the test constant \varref{testEmptySquares}.
-
-\section{Writing games in \productname}
-We have written a handful of games in \productname{}. The games vary from classic board games to unknown puzzle games invented by individual group members.
-
-The Ice-game is a single-player puzzle game written in no more than 5 minutes.\figref{icegame} shows a screenshot of the game. The goal is to move the 
-
-%kent-game
-%mine-sweeper
-%ice
+that $3*3 - 1 = 8$ squares must still be empty. This is verified by the test constant \varref{testEmptySquares}.
 
