@@ -336,19 +336,20 @@ executed on the board in \figref{fig:patternboard2}.
 \fig[scale=1.5]{patternboard2}{A possible board set up.}
 
 The execution of the algorithm trying to match the pattern \texttt{/s? w* empty
-n !empty/} on the square D3, using the board set up in
-\figref{fig:patternboard}.
+n !empty/} on the square D3, can be seen in \figref{patternalg1}. 
+The board set up used is that depicted in \figref{fig:patternboard}.
 
 \fig[scale=0.35]{patternalg1}{Pattern matching of \texttt{/s? w* empty n
-!empty/}.}
+!empty/} on the square D3.}
 
 The execution of the algorithm trying to match the pattern \texttt{/n|w n|w
-!empty/} on the square C2, using the board set up in \figref{fig:patternboard}.
-The two branches created when meeting a \texttt{|}-operator are merged again.
+!empty/} on the square C2 can be seen in \figref{patternalg2}. The board set up 
+used is the one depicted in \figref{fig:patternboard}.
+The two branches created when meeting a \texttt{|}-operator are merged again shortly after.
 Notice how this increases efficiency, as the two red coordinates (B3) are merged
 into a single branch before trying to match the successive pattern values.
 
-\fig[scale=0.35]{patternalg2}{Pattern matching of \texttt{/n|w n|w !empty/}.}
+\fig[scale=0.35]{patternalg2}{Pattern matching of \texttt{/n|w n|w !empty/} on the square C2.}
 
 \subsection{Evaluation of interpreter}
 We have implemented a complete interpreter with semantics for every single node
