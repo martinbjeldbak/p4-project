@@ -1,21 +1,20 @@
 \subsection{LL- and LR-parsers}
 \label{subsec:llparsersandlrparsers}
-As mentioned in the introduction to the section, the LL-parsers derive from a 
-top-down parsing approach. In terms of grammars, this means LL-parsers
-attempt to parse a string by starting at the start symbol of the grammar and
-through a series of left-most derivations match the input string. On the
-opposite, LR-parsers derive from the bottom-up parsing approach. Here 
-LR-parsers attempt to parse by starting with the input string and through a
-series of reductions get back to the start symbol.
+As mentioned in the introduction to the section, the LL-parsers derive from a
+top-down parsing approach. In terms of grammars, this means LL-parsers attempt
+to parse a string by starting at the start symbol of the grammar and through a
+series of left-most derivations match the input string. On the opposite,
+LR-parsers derive from the bottom-up parsing approach. Here LR-parsers attempt
+to parse by starting with the input string and through a series of reductions
+get back to the start symbol.
 
-LL-parsers have two actions: predict and match. The predict action is
-used when the parser is trying to guess the next production to apply in
-order to get closer to the input string. While the match action eats
-the next unconsumed input symbol if it corresponds to the left-most
-predicted terminal. These two actions are continuously called until the
-entire input string has been eaten and thereby has been matched. An
-example of an LL($1$)-parser can be seen in \tableref{table:LL1}. In the
-example the parser is based on the simple grammar:
+LL-parsers have two actions: predict and match. The predict action is used when
+the parser is trying to guess the next production to apply in order to get
+closer to the input string. While the match action eats the next unconsumed
+input symbol if it corresponds to the left-most predicted terminal. These two
+actions are continuously called until the entire input string has been eaten and
+thereby has been matched. An example of an LL($2$)-parser can be seen in
+\tableref{table:LL1}. In the example the parser is based on the simple grammar:
 
 \begin{centering}
 \begin{ebnf}
@@ -26,7 +25,7 @@ example the parser is based on the simple grammar:
 \end{ebnf}
 \end{centering}
 
-\tab[11cm]{LL1}{3}{An LL($1$) parser in action parsing the string ``int + int''.}
+\tab[11cm]{LL1}{3}{An LL($2$)-parser parsing the string ``int + int''.}
 	      {The process                                          }
 {Step  	 }{Production & Input       & Action                        }{
 \tabrow{1}{$S$        & $int + int$ & Predict $S \rightarrow E$     }
@@ -42,15 +41,14 @@ example the parser is based on the simple grammar:
 
 $S$, $E$ and $T$ are non-terminals, and $+$ and $int$ are terminals. 
 
-LR-parsers also have two actions: shift and reduce. The shift action
-adds the next input symbol of the input string into a buffer for
-consideration. The reduce action reduces a collection of non-terminals
-and terminals into a non-terminal by reversing a production. These
-two actions are continuously called until the input string is reduced
-to the start symbol. \cite{LL(1)andLR(2)inaction} An example of an
-LR($2$)-parser in action is illustrated in \tableref{table:LR2}.
+LR-parsers also have two actions: shift and reduce. The shift action adds the
+next input symbol of the input string into a buffer for consideration. The
+reduce action reduces a collection of non-terminals and terminals into a
+non-terminal by reversing a production. These two actions are continuously
+called until the input string is reduced to the start symbol\cite{sebesta2013}.
+An example of an LR($1$)-parser in action is illustrated in \tableref{table:LR2}.
 
-\tab[11cm]{LR2}{3}{An LR($2$) parser seen in action parsing the string ``int + int''.}
+\tab[11cm]{LR2}{3}{An LR($1$)-parser parsing the string ``int + int''.}
 	  {The process	    					 }
 {Step  	 }{Production & Input       & Action                     }{
 \tabrow{1}{           & $int + int$ & Shift   			 }
@@ -65,22 +63,23 @@ LR($2$)-parser in action is illustrated in \tableref{table:LR2}.
 }
 
 \subsubsection{Comparison of the parsers}
-Compared to LL-parsers, LR-parsers are more complex and they are
-generally harder to construct\cite[p. 193]{sebesta2013}, but using
-automated generator tools this might not be the case. We take a look at
-how to construct a parser in \secref{subsec:constructingaparser}.
+Compared to LL-parsers, LR-parsers are more complex and they are generally
+harder to construct\cite[p. 193]{sebesta2013}, but using automated generator
+tools this might not be the case. We take a look at how to construct a parser in
+\secref{subsec:constructingaparser}.
 
-LR-parsers are more powerful than LL-parsers because they accept a
-larger variety of grammars. For instance LL-parsers can't handle grammars with
+LR-parsers are more powerful than LL-parsers because they accept a larger
+variety of grammars. For instance LL-parsers can't handle grammars with
 left-recursion, while LR-parsers can. The ``power'' and complexity of a parser
-is very dependent on the number of lookahead tokens, $k$, which the parser makes
+is very dependent on the number of look ahead tokens ($k$), which the parser makes
 use of. The larger $k$ is, the more complex and difficult the parser is to
-contruct, but the larger variety of grammars the parser also accepts. As
+construct, but the larger variety of grammars the parser also accepts. As
 illustrated in \figref{fig:LL-parserandLR-parser}, LL-parsers are a proper
 subset of LR-parsers.
 
-\fig[width=0.75\textwidth]{LL-parserandLR-parser}{The set of grammars accepted
-by different parsers. As illustrated LL($k$)-parsers are a subsets of
-LR($k$)-parsers for different number of lookahead tokens, $k$. The figure is
-modified from slides presented in the ``Languages and Compilers''
-course from Aalborg University in the spring of 2013.}
+\fig[width=0.6\textwidth]{LL-parserandLR-parser}{Illustration of how the
+different parsers are connected. The figure is modified from slides presented in
+the ``Languages and Compilers'' course from Aalborg University in the spring of
+2013.}
+
+SLR stands for simple LR-parser, and LALR stands for Look-Ahead LR-parser.

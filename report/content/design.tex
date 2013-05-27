@@ -2,7 +2,8 @@
 \label{chap:design}
 
 In this chapter we present the design of our programming language
-(\productname{}). The abstract syntax of \productname{} will be presented in
+(\productname{}). We begin this chapter by giving an example of a game implemented in Junta. 
+The abstract syntax of \productname{} will be presented in
 \secref{sec:abstractsyntax}, followed by the lexical structure of programs in
 \secref{sec:lexicalstructure}. We also present the different expressions and
 their grammar in \secref{sec:expressions} followed by the different definitions
@@ -23,16 +24,8 @@ type can be instantiated using its \emph{constructor}, this creates an
 \emph{instance} or \emph{object} of that type. All values in \productname{} are
 instances of types.
 
-We begin this chapter by giving an example of a game implemented in
-\productname{}:
-
 \subsection*{Code example}
 \label{codesample}
-
-The following is an example of a program written in \productname{}. It is
-an implementation of the board game Noughts and Crosses:
-
-\codesample{noughtandcrosses.game}
 
 \productname{} is a purely functional object-oriented programming language
 designed explicitly for creating board games. We have developed \productname{}
@@ -42,10 +35,9 @@ were actually using the programming language before we had even constructed
 it. We began by writing programs in the unfinished language to try to find out
 how it should be built and what would be the easiest to write and understand. 
 
-In the following we will go through the \csref{noughtandcrosses.game}
-and introduce some of the important concepts of \productname{}. These will be
-further described in the rest of this chapter and in
-\chapref{chap:implementation}.
+In the following we go through the \csref{noughtandcrosses.game}. The example feature
+an implementation of the Noughts and Crosses game and introduces some of the important concepts of \productname{}. These will be
+further described in the rest of this chapter and in \chapref{chap:implementation}.
 
 The very first thing that is visible in \csref{noughtandcrosses.game} are the
 two lines of comments. Comments are made with two forward slashes. Comments are
@@ -61,6 +53,8 @@ similar to the extends keyword of Java, and means the \type{NacGame}[] type
 inherits members of the \type{Game} type.  \type{Game}'s constructor takes the
 title of the game as input and it contains many useful constants and
 functions, described further in \secref{sec:predefined}. 
+
+\codesample{noughtandcrosses.game}
 
 Constants and functions can be thought of as subprograms similar to methods.
 They distinguish themselves from each other by the fact that constants cannot
@@ -91,7 +85,6 @@ overridden in line four and eight, respectively.
 
 The next thing that is important in the code sample are the three functions: 
 \function{winCondition}, \function{tieCondition} and \function{actions}. 
-
 As the name indicates, the function \function{winCondition} checks if the current player
 is in a winning state and returns a boolean value: true or false.
 \function{winCondition} takes a game object as input. In Noughts and Crosses the

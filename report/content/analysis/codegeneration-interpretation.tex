@@ -61,28 +61,26 @@ platform makes it possible to create optimized code which runs faster.
 
 \subsubsection{An intermediate language}
 \label{sec:intermediatelanguage}
-A middle step between compiling or interpretation and generating
-executable machine code is to translate source code to an intermediate
-language (IL), which is then interpreted or compiled further. IL are
-usually more low-level than the initial source code, which would make it
-possible to optimize code for higher efficiency in later stages, such as
-eliminating superfluous node types and dead code.
+A middle step between compiling or interpretation and generating executable
+machine code is to translate source code to an intermediate language (IL), which
+is then interpreted or compiled further. IL are usually more low-level than the
+initial source code, which would make it possible to optimize code for higher
+efficiency in later stages, such as eliminating superfluous node types and dead
+code.
 
-Furthermore, one can compile to an intermediate language such as Java
-bytecode, executable on every machine that supports
-Java by having a Java virtual machine installed. This is very useful
-because the programmer, whom is developing a compiler for a language,
-does not have to construct a compiler for every platform; just one
-that translates to Java bytecode, that can then be translated further many
-supported platforms. This way the programmer must only construct a
-single compiler. If one does not compile
-to an intermediate language, then the programmer must construct a
-compiler for each specific platform, which will be a lengthy and
-cost-heavy process. If you have $m$ compilers and $n$ platforms, then
-the programmer must construct $m*n$ compilers to be able to compile
-to every platform. The difference between compiling directly to a
-platform or to an intermediate language and then further translating is
-illustrated in \figref{fig:mtimesn}.
+Furthermore, one can compile to an intermediate language such as Java bytecode,
+executable on every machine that supports Java by having a Java virtual machine
+installed. This is very useful because the programmer, whom is developing a
+compiler for a language, does not have to construct a compiler for every
+platform; just one that translates to Java bytecode, that can then be translated
+further to many supported platforms. This way the programmer must only construct a
+single compiler. If one does not compile to an intermediate language, then the
+programmer must construct a compiler for each specific platform, which will be a
+lengthy and cost-heavy process. If you have $m$ languages and $n$ platforms,
+then the programmer must construct $m*n$ compilers to be able to compile to
+every platform. The difference between compiling directly to a platform or to an
+intermediate language and then further translating is illustrated in
+\figref{fig:mtimesn}.
 
 \input{figures/compiletointermediate}
 
@@ -99,18 +97,11 @@ languages such as Microsoft's Common Intermediate Language bytecode or
 Java bytecode, that abstract away from platform-specific instructions and
 registers that other languages, such as assembly language use.
 
-When compiling to an intermediate language before compiling to the target
-language (often the object code), it is possible to make optimisations on the
-intermediate code. This is one advantage of compiling to an intermediate
-language and results in more efficient executable code.
-
-Instead of compiling to native machine code it could be compiled to an
-intermediate format such as Java bytecode which is supported on many platforms.
 While Java bytecode is interpreted and therefore slower, modern interpreters
 use sophisticated methods such as Just-in-Time compilation (JIT), which at
 run-time compiles intermediate code into native machine code. This process of
 course adds an overhead, and the speed differences are not that great
-anymore. \cite{java-speed}
+anymore\cite{java-speed}.
 
 \subsubsection{An intermediate format}
 To take it a step further, it could also be possible to use an
@@ -203,11 +194,7 @@ it faster than compiling the complete code.
 
 If code is translated to an IL and then further translated, a lot of
 work away when talking about generating compilers to machine code
-because these compilers are platform dependant. If we say that we have
-$n$ compilers and $m$ platforms, then when compiling to an IL we only
-have to develop $n+m$ compilers instead of $n*m$ because when compiling
-to an IL every platform can compile to this language and from the IL to
-the target platform.
+because these compilers are platform dependant.
 
 It is possible to combine compilation and interpretation. The program is
 compiled to intermediate code which is then interpreted. By using this approach,
