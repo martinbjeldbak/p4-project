@@ -407,8 +407,13 @@ somewhat like the tree in \figref{fig:parsetreesequences}.
 The figure clearly shows the precedence, because the lower nodes will be
 evaluated before the nodes that are higher in the parse tree. E.g.\ all of the
 multiplication and division nodes will be calculated before the additions and
-subtraction. This hierarchy is achieved because of the formally described
-precedence rules in the previous grammar about sequences.
+subtraction. The circular nodes contain information about each operation in a
+sequence, i.e. all children of a sequence, except the first one, must have
+information about the operation. How exactly this is done, is up to the parser.
+It could also be an attribute on each node, decreasing the number of nodes. The
+extra information is needed, since for instance addition and subtraction must be
+on the same precedence level. Making two separate sequences for addition and
+subtraction would give one operator precedence over the other.
 
 \subsubsection{Big-step semantics}
 
@@ -435,9 +440,9 @@ objects constant environment.
 
 \subsubsection{Valid operands}
 \label{sec:validoperands}
-In the following paragraphs we present the valid operands of
+In the following paragraphs we present the valid operands for the operators of
 \productname{}. These will be grouped in the following categories; boolean,
-comparison, integer, string, list, and direection and coordinate operators.
+comparison, integer, string, list, and direction and coordinate operators.
 
 \paragraph{Boolean operators}
 

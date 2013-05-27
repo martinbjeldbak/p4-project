@@ -20,7 +20,7 @@ class LudoLexer(RegexLexer):
             (r'\b(n|s|e|w|ne|nw|se|sw)\b', Name.Entity),
             (r'[A-Z][a-zA-Z0-9]*', Name.Constant),
             (r'[a-z][a-zA-Z0-9]*', Name.Function),
-            (r'\$[a-zA-z0-9]+\b', Name.Variable),
+            (r'\$[a-zA-z0-9]+[^\[]', Name.Variable),
 			(r'.', Text)
         ]
     }
