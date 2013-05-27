@@ -6,13 +6,13 @@
   ]
   \PY{k+kr}{define} \PY{n+nf}{initialBoard} = \PY{n+no}{GridBoard}[\PY{l+m}{3}, \PY{l+m}{3}]
 \PYZcb{}
-\PY{k+kr}{type} \PY{n+no}{NacPlayer}[\PY{n+nv}{\PYZdl{}pieceType,} \PY{n+nv}{\PYZdl{}name] }\PY{k+kr}{extends} \PY{n+no}{Player}[\PY{n+nv}{\PYZdl{}name] }\PYZob{}
-  \PY{k+kr}{define} \PY{n+nf}{winCondition}[\PY{n+nv}{\PYZdl{}gameState] }=
-    \PY{n+nv}{\PYZdl{}gameState.}\PY{n+nf}{findSquares}[
+\PY{k+kr}{type} \PY{n+no}{NacPlayer}[\PY{n+nv}{\PYZdl{}pieceType}, \PY{n+nv}{\PYZdl{}name}] \PY{k+kr}{extends} \PY{n+no}{Player}[\PY{n+nv}{\PYZdl{}name}] \PYZob{}
+  \PY{k+kr}{define} \PY{n+nf}{winCondition}[\PY{n+nv}{\PYZdl{}gameState}] =
+    \PY{n+nv}{\PYZdl{}gameState}.\PY{n+nf}{findSquares}[
       /\PY{k+kr}{friend} (\PY{n+ni}{n} \PY{k+kr}{friend} \PY{n+ni}{n}) | (\PY{n+ni}{e} \PY{k+kr}{friend} \PY{n+ni}{e}) | (\PY{n+ni}{nw} \PY{k+kr}{friend} \PY{n+ni}{nw}) | (\PY{n+ni}{ne} \PY{k+kr}{friend} \PY{n+ni}{ne} ) \PY{k+kr}{friend}/].\PY{n+nf}{size} != \PY{l+m}{0}
-  \PY{k+kr}{define} \PY{n+nf}{tieCondition}[\PY{n+nv}{\PYZdl{}gameState] }= \PY{n+nv}{\PYZdl{}gameState.}\PY{n+nf}{board}.\PY{n+nf}{isFull}
-  \PY{k+kr}{define} \PY{n+nf}{actions}[\PY{n+nv}{\PYZdl{}gameState] }= \PY{n+nf}{addActions}[\PY{n+nv}{\PYZdl{}pieceType[this],} \PY{n+nv}{\PYZdl{}gameState.}\PY{n+nf}{board}.\PY{n+nf}{emptySquares}]
+  \PY{k+kr}{define} \PY{n+nf}{tieCondition}[\PY{n+nv}{\PYZdl{}gameState}] = \PY{n+nv}{\PYZdl{}gameState}.\PY{n+nf}{board}.\PY{n+nf}{isFull}
+  \PY{k+kr}{define} \PY{n+nf}{actions}[\PY{n+nv}{\PYZdl{}gameState}] = \PY{n+nf}{addActions}[\PY{n+nv}{\PYZdl{}pieceType[this}], \PY{n+nv}{\PYZdl{}gameState}.\PY{n+nf}{board}.\PY{n+nf}{emptySquares}]
 \PYZcb{}
-\PY{k+kr}{type} \PY{n+no}{Crosses}[\PY{n+nv}{\PYZdl{}owner] }\PY{k+kr}{extends} \PY{n+no}{Piece}[\PY{n+nv}{\PYZdl{}owner]}
-\PY{k+kr}{type} \PY{n+no}{Noughts}[\PY{n+nv}{\PYZdl{}owner] }\PY{k+kr}{extends} \PY{n+no}{Piece}[\PY{n+nv}{\PYZdl{}owner]}
+\PY{k+kr}{type} \PY{n+no}{Crosses}[\PY{n+nv}{\PYZdl{}owner}] \PY{k+kr}{extends} \PY{n+no}{Piece}[\PY{n+nv}{\PYZdl{}owner}]
+\PY{k+kr}{type} \PY{n+no}{Noughts}[\PY{n+nv}{\PYZdl{}owner}] \PY{k+kr}{extends} \PY{n+no}{Piece}[\PY{n+nv}{\PYZdl{}owner}]
 \end{Verbatim}

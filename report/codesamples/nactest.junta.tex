@@ -1,8 +1,8 @@
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k+kr}{type} \PY{n+no}{NacTest}[] \PY{k+kr}{extends} \PY{n+no}{TestCase}[] \PYZob{}
-  \PY{k+kr}{data} \PY{n+nv}{\PYZdl{}state1 }= \PY{n+no}{NacGame}[]
-  \PY{k+kr}{define} \PY{n+nf}{testTitle} = \PY{n+nv}{\PYZdl{}state1.}\PY{n+nf}{title} == \PY{l+s}{\PYZdq{}Noughts and Crosses\PYZdq{}}
-  \PY{k+kr}{data} \PY{n+nv}{\PYZdl{}state2 }= \PY{n+nv}{\PYZdl{}state1.}\PY{n+nf}{applyAction}[\PY{n+nv}{\PYZdl{}state1.}\PY{n+nf}{players}[\PY{l+m}{0}].\PY{n+nf}{actions}[\PY{n+nv}{\PYZdl{}state1][0]]}
-  \PY{k+kr}{define} \PY{n+nf}{testEmptySquares} = \PY{n+nv}{\PYZdl{}state2.}\PY{n+nf}{board}.\PY{n+nf}{emptySquares}.\PY{n+nf}{size} == \PY{l+m}{8}
+  \PY{k+kr}{data} \PY{n+nv}{\PYZdl{}state1} = \PY{n+no}{NacGame}[]
+  \PY{k+kr}{define} \PY{n+nf}{testTitle} = \PY{n+nv}{\PYZdl{}state1}.\PY{n+nf}{title} == \PY{l+s}{\PYZdq{}Noughts and Crosses\PYZdq{}}
+  \PY{k+kr}{data} \PY{n+nv}{\PYZdl{}state2} = \PY{n+nv}{\PYZdl{}state1}.\PY{n+nf}{applyAction}[\PY{n+nv}{\PYZdl{}state1}.\PY{n+nf}{players}[\PY{l+m}{0}].\PY{n+nf}{actions}[\PY{n+nv}{\PYZdl{}state1][0}]]
+  \PY{k+kr}{define} \PY{n+nf}{testEmptySquares} = \PY{n+nv}{\PYZdl{}state2}.\PY{n+nf}{board}.\PY{n+nf}{emptySquares}.\PY{n+nf}{size} == \PY{l+m}{8}
 \PYZcb{}
 \end{Verbatim}
