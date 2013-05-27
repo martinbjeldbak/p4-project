@@ -98,7 +98,7 @@ Essentially this means that a list is created from zero, one, or more expression
 by commas). The following statements can be made about lists:
 
 \begin{nlist}
-\item A list can be empty; \texttt{[]}
+\item A list can be empty: \texttt{[]}
 \item Lists begin at offset $0$
 \item Lists are ordered ($\texttt{[1, 2]} \ne \texttt{[2, 1]}$)
 \item Lists are immutable
@@ -411,7 +411,7 @@ The figure clearly shows the precedence, because the lower nodes will be
 evaluated before the nodes that are higher in the parse tree. E.g.\ all of the
 multiplication and division nodes will be calculated before the additions and
 subtraction. The circular nodes contain information about each operation in a
-sequence, i.e. all children of a sequence, except the first one, must have
+sequence, i.e.\ all children of a sequence, except the first one, must have
 information about the operation. How exactly this is done, is up to the parser.
 It could also be an attribute on each node, decreasing the number of nodes. The
 extra information is needed, since for instance addition and subtraction must be
@@ -444,7 +444,7 @@ objects constant environment.
 \subsubsection{Valid operands}
 \label{sec:validoperands}
 In the following paragraphs we present the valid operands for the operators of
-\productname{}. These will be grouped in the following categories; boolean,
+\productname{}. These will be grouped in the following categories: boolean,
 comparison, integer, string, list, and direction and coordinate operators.
 
 \paragraph{Boolean operators}
