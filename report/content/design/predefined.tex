@@ -106,7 +106,7 @@ In the game environment the following global functions are available:
 
 \begin{dlist}
   \item \constant{addAction}[\variable{piece} : \type{Piece}, \variable{squares} : \type{List}] : \type{List}\\
-    A function that returns a list of squares \variable{squares} to where it's possible to add a piece (\variable{piece}. The functions
+    A function that returns a list of \type{AddAction}s to where it's possible to add a piece (\variable{piece}. The functions
     takes two parameters. The first parameter contains information on which type of piece the actions applies to. The second parameter is
     the list of squares where the type of piece can be added to.
     
@@ -118,7 +118,9 @@ In the game environment the following global functions are available:
     
     Here \constant{addAction} returns a list of empty squares to where it's possible to add a piece of the type \keyword{this}, which in this case was
     either a crosses piece or noughts piece depending whose turn it is.
+    
   \item \constant{moveAction}[\variable{piece} : \type{Piece}, \variable{squares} : \type{List}] : \type{List}\\
+  \constant{moveAction} works like \constant{addAction}, but instead of returning a \type{List} of \type{AddAction}s it returns a \type{List} of \type{MoveAction}s.
   	
     
 \end{dlist}
@@ -126,9 +128,11 @@ In the game environment the following global functions are available:
 
 
 \subsubsection{Game}
+The \type{Game} type contains all information to describe a board game at a specific point at time.
+
 \begin{dlist}
   \item \type{Game}[\variable{title} : \type{String}]\\
-  Creates a instance of the \type{Game} type with a Game title of \variable{title}, \constant{board} set to \constant{initialBoard} and \constant{currentPlayer} set to \constant{turnOrder}[0]. The \type{Game} type contains all information to describe a board game at a specific point at time.
+  Creates a instance of the \type{Game} type with a Game title of \variable{title}, \constant{board} set to \constant{initialBoard} and \constant{currentPlayer} set to \constant{turnOrder}[0].
   
   \item \constant{players} : \type{List}\\
   List of all \type{Player}s which are a part of this game.
@@ -198,7 +202,7 @@ In the game environment the following global functions are available:
 \end{dlist}
 
 \subsubsection{GridBoard}
-GridBoard \keyword{extends} Board.
+\type{GridBoard} \keyword{extends} \type{Board} to provide an easy way to describe rectangular \type{Board}s.
 
 \begin{dlist}
   \item \type{GridBoard}[ \variable{width} : \type{Integer}, \variable{height} : \type{Integer} ]\\
@@ -245,6 +249,8 @@ GridBoard \keyword{extends} Board.
 \end{dlist}
 
 \subsubsection{Square}
+\type{Square} describes a position on the \type{Board} where 0-to-many \type{Piece}s can be placed.
+
 \begin{dlist}
 	\item \type{Square}[]\\
 	\type{Square} with no \type{Piece}s.
@@ -278,6 +284,8 @@ GridBoard \keyword{extends} Board.
 \end{dlist}
 
 \subsubsection{Piece}
+\type{Piece} describes an item associated to a \type{Player} which the \type{Player} can manipulate in order to progress the game.
+
 \begin{dlist}
   \item \type{Piece}[ \variable{owner} : \type{Player} ]\\
   \type{Piece} with \constant{owner} set to \variable{owner}.

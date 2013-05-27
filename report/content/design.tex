@@ -74,33 +74,38 @@ this case is assigned a grid board (another built-in type that takes the height
 and width of the board as parameters) of $3 \times 3$ squares. In other
 programming languages the override keyword is used when implementing methods
 from a super class but in \productname{} the override functionality
+<<<<<<< HEAD
+already exists in the \keyword{define} keyword. For instance in
+\csref{noughtandcrosses.game} \constant{players} and \constant{initialBoard} are
+=======
 already exists in the define keyword. For instance in
 \csref{noughtsandcrosses.game} \constant{players} and \constant{initialBoard} are
+>>>>>>> 235950374443c0633a82912ab98461ada5240278
 overridden in line four and eight, respectively.
 
 %A second type \type{NacPlayer}, is declared which extends the built-in
 %\productname{} type \type{Player}. The \type{Player} type takes as input the name of
 %the player and contains three important functions: \function{winCondition},
 
-The next thing that is important in the code sample are the three functions: 
+The next thing that is important in the code sample are the three functions; 
 \function{winCondition}, \function{tieCondition} and \function{actions}. 
 As the name indicates, the function \function{winCondition} checks if the current player
-is in a winning state and returns a boolean value: true or false.
+is in a winning state and returns a boolean value; true or false.
 \function{winCondition} takes a game object as input. In Noughts and Crosses the
-win condition is obtained if a player has three of his pieces in a row, in
-either a vertical, horizontal or diagonal line. In \productname{} this is
+win condition is obtained if a player has three of his pieces in a row in
+either a vertical, horizontal, or diagonal line. In \productname{} this is
 specified by using what we call ``patterns'', described in
 \secref{sec:patterns}. Patterns begin and end with forward slashes. A pattern for
 \function{winCondition} can be seen through line $13$ and $14$.
 
-The \function{tieCondition} function checks if a tie condition is obtained and
-returns a boolean value: true or false. The tie condition is achieved whenever
-the board is full. This is specified using the built-in function:
+The function, \function{tieCondition}, checks if a tie is obtained and
+returns a boolean value; true or false. The tie condition is achieved whenever
+the board is full. This is specified using the built-in function;
 \function{isFull}. 
 
-The last function \function{actions} also takes as input a game object and
+The last function, \function{actions}, also takes as input a game object and
 contains a list of actions. In this case the only possible action is the
-\function{addAction} function which makes it possible to add a piece to the
+function, \function{addAction}, which makes it possible to add a piece to the
 board of type \keyword{this}, which is the current player's piece type (crosses
 or noughts), to an empty square on the board.
 
@@ -112,10 +117,9 @@ don't have to implement all the functionality themselves.
 \subsection*{Type system}
 
 In \secref{sec:typesystemanalysis} we analysed the two main type system
-approaches.  We chose the dynamic type system due to the fact that it increases
-the writability of our programming language. As seen in the above code example
-above a Noughts and Crosses game can be created in only
-approximately $20$ lines of code.
+approaches. We chose the dynamic type system due to the fact that it increases
+the writability of our programming language. The game seen in \csref{noughtandcrosses.game}
+can be created in approximately $20$ lines of code.
 
 The type system in \productname{} comprises a number of simple types, from which
 every other type can be created. The simple types are: integers, character
@@ -124,37 +128,37 @@ functions and types. Unlike in other programming languages, both functions and
 types in \productname{} are first-class citizens, this means that they can
 be passed like any other value. This adds even more
 flexibility to the language. For instance in the Noughts and Crosses example
-(see \csref{noughts-and-crosses.junta}) both the types \type{Noughts} and
+(see \csref{noughtandcrosses.game}) both the types \type{Noughts} and
 \type{Crosses} are passed as values to the constructor of \type{NacPlayer}. The
-simple types, their operators and their methods are further explained in the
+simple types, their operators, and their methods are further explained in the
 rest of this chapter.
 
-User types can be created using the \keyword{type}-keyword. They are very
+User types can be created using the \keyword{type} keyword. They are very
 similar to classes in traditional object-oriented languages, in that a type has
-a constructor, attributes, constants and methods. An important aspect of the
+a constructor, attributes, constants, and methods. An important aspect of the
 type system of \productname{} however, is that all values are immutable. It
 doesn't matter if it's an integer, a list, or an instance of a custom user type,
 the value of the object can't be changed. They can however be cloned and
 modified using various techniques depending on the type in question. For
-instance, adding two integers using the \texttt{+}-operator returns a new
+instance, adding two integers using the \texttt{+} operator returns a new
 integer representing the sum of the two operands. For instances of user types a
-new modified instance is returned when using the \keyword{set}-keyword (as
-described in \secref{sec:setexpressions} and \secref{sec:typedefinitions}). The
+new modified instance is returned when using the \keyword{set} keyword (this is
+further described in \secref{sec:setexpressions} and \secref{sec:typedefinitions}). The
 reason for this functionality, is to prevent side-effects, since randomly
 changing objects, could have undesirable influence on other functions or types
 that depend on these objects.
 
 The type system of \productname{} supports single inheritance, meaning that a
-user of type \type{B} can extend the type \type{A} and inherit all members and 
-\productname{} supports single inheritance between types. An inheriting type, will
+user of type \type{B} can extend the type \type{A} and inherit all members. \productname{} 
+supports single inheritance between types. An inheriting type will
 inherit all the members of its super type(s) (if \type{C} extends \type{B}, which
 extends \type{A}, then \type{C} inherits all members from both \type{B} and
 \type{A}). Visibility in \productname{} is implicit, in that all
 constants/methods are public (they can be accessed from anywhere as long as an
-instance of the type is available) while all data fields are private (they can
+instance of the type is available), while all data fields are private (they can
 only be accessed/changed from within the specific type, not even from inheriting
 types). Getters and setters are necessary in order to access data fields from
-the outside or in inheriting types. More details on data, inheritance, members
+the outside or in inheriting types. More details on data, inheritance, members,
 and abstract members are available in \secref{sec:setexpressions} and
 \secref{sec:typedefinitions}.
 
@@ -162,15 +166,16 @@ Another feature of \productname{} is implicit casting, when dealing with simple
 types (such as integers and strings). If a user were to create a type
 \type{MyInteger} extending the built-in type \type{Integer} (the type of
 integers in \productname{}), then instances of \type{MyInteger} could be used in
-place of simple integers, this works by casting the instance to a simple integer
+place of simple integers. This works by casting the instance to a simple integer
 value (simply by throwing away the extra information provided by the
-\type{MyInteger}-type). Explicit casting is only really possible with simple
+\type{MyInteger} type). Explicit casting is only really possible with simple
 types, since their type constructors accepts one parameter of the same type. For
 instance the constructor \type{Integer} accepts a parameter of type
 \type{Integer}, meaning that it also accepts types that extend \type{Integer}.
 This makes it possible to cast a value of type \type{MyInteger} to a raw
 \type{Integer} value, albeit the usefulness of this functionality is dubious.
-The constructors of all the simple types implement this functionality however, shown later in \secref{sec:standardenvironment}.
+The constructors of all the simple types implement this functionality however, 
+shown later in \secref{sec:standardenvironment}.
 
 \subsection*{Scope rules}
 

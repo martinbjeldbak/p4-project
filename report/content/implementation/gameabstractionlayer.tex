@@ -1,3 +1,64 @@
 \section{Game abstraction layer}
-% How it's implemented
-% Standard environment
+\label{sec:gameabstractionlayer}
+We need an abstraction layer to act as the glue between the interpreter
+and simulator, allowing a simulator access to different elements in a
+written program. This has caused us to write an abstraction layer on top
+of the interpreter, offering interfaces such as our graphical simulator
+the player access to elements in the game.
+
+There are three different packages relating to the game abstraction
+layer. The first is the central class in the Game Abstraction Layer
+package, the second are wrappers in the Interpreter package, providing
+the actual implementation, and lastly is the game application
+programming interface in our Utilities package. Each is described in
+this section.
+
+\subsection{The main layer}
+The entire program package offered by \productname{} is encapsulated by
+the class \classref{GameAbstractionLayer}. This small class is basically
+only defined by its constructor, seen below in \lstref{lst:gal}:
+
+\lstinputlisting[language=Java,label={lst:gal},caption={\emph{The game abstraction layer's constructor, initializing different constructs based off of an input of characters.}}]{listings/gal.java}
+
+Here all the constructs are tied together: The handwritten scanner
+is instantiated with the input provided in the constructor, creating
+a stream of tokens fed to the parser, that then creates an abstract
+syntax tree traversed by the interpreter. The interpreter and its
+information is then used when getting the main game wrapper. The class
+is also complimented by the method \methodref{getGame}, called after
+instantiating the \classref{GameAbstractionLayer}. This method returns a
+\classref{GameWrapper} (described in the next sub-section), containing
+all the needed information about the written game.
+
+This class is what's called and used by the simulator when starting up,
+as the simulator needs access information about the game, which in turn
+builds on top of our scanner and parser. It's meant to be used by any
+interface that wishes to access and modify a game's state.
+
+\subsection{The application programming interface}
+The application programming interface (API) provided is simply a collection of interfaces used by the wrappers. This means that classes implementing these interfaces guarantee different methods are available. As an example, the \classref{Square} interface is seen in \lstref{lst:squareinterface} below:
+
+\lstinputlisting[language=Java,label={lst:squareinterface},caption={\emph{The \classref{Square} interface, one among many such interfaces provided by \productname{}.}}]{listings/squareInterface.java}
+
+Currently $12$ such interfaces exist for different aspects of a game,
+such as getting information about the game itself, its players,
+board, action sequences, etc.
+
+\subsection{Wrappers}
+Wrappers provide a way of accessing the values created by the
+interpreter, allowing a simulator to use the properties of these
+values to, for example, display the game's title, supply information
+about the winning conditions, squares \& pieces, actions \& move
+history, and so on. The wrappers implement the interfaces in the
+API described above. The main wrapper returned from the method
+\methodref{getGame} provides access to all the other wrappers
+(implementing their respective interfaces) via methods in its body.
+
+% Write about gamewrapper
+When instantiating \classref{GameWrapper} in method \methodref{getGame} of class \classref{GameAbstractionLayer}, an instance of the interpreter is passed. All wrapper classes have the following signature:
+
+\begin{lstlisting}[language=Java,caption={\emph{The signaure of all API wrapper classes.}}]
+  public class xxWrapper extends Wrapper implements yy { ... }
+\end{lstlisting}
+
+Where $xx$ is one of the $12$ wrappers and $yy$ is the matching interface.

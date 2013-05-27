@@ -1,7 +1,7 @@
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{k+kr}{define} \PY{n+nf}{variadic}[\PY{n+nv}{\PYZdl{}f,} ... \PY{n+nv}{\PYZdl{}args] }= \PY{n+nv}{\PYZdl{}args.}\PY{n+nf}{map}[\PY{n+nv}{\PYZdl{}f]}
+\PY{k+kr}{define} \PY{n+nf}{variadic}[\PY{n+nv}{\PYZdl{}f}, ... \PY{n+nv}{\PYZdl{}args}] = \PY{n+nv}{\PYZdl{}args}.\PY{n+nf}{map}[\PY{n+nv}{\PYZdl{}f}]
 \PY{k+kr}{define} \PY{n+nf}{use} = \PY{n+nf}{variadic}[
-  \PYZsh{}[\PY{n+nv}{\PYZdl{}a] }=\PYZgt{} \PY{n+nv}{\PYZdl{}a }+ \PY{l+m}{5}, 
+  \PYZsh{}[\PY{n+nv}{\PYZdl{}a}] =\PYZgt{} \PY{n+nv}{\PYZdl{}a} + \PY{l+m}{5}, 
   \PY{l+m}{12}, \PY{l+m}{17}, \PY{l+m}{18}, \PY{l+m}{2}
 ] \PY{c}{// returns [18, 22, 23, 7]}
 \end{Verbatim}
