@@ -22,9 +22,9 @@ of our different error handlers. The hierarchy is illustrated in
 \input{content/implementation/tikz/errorhierarchy}
 
 \begin{description}
-\item[\textbf{Exception}] is at the top of the error hierarchy Java's standard
-  error handling concept is located, which is called \classref{Exception}
-  (\classref{java.lang.Exception}). Exception is a built-in Java class that
+\item[\textbf{Exception}] is Java's standard error handling concept and is located 
+  at the top of the error hierarchy (\classref{Exception}
+  \classref{java.lang.Exception}). Exception is a built-in Java class that
   extends the \classref{Throwable} class which is the superclass of all errors
   and exceptions in Java. Only \classref{Throwable} or subclasses of
   \classref{Throwable} can be the argument type in a catch clause and only
@@ -65,7 +65,7 @@ of our different error handlers. The hierarchy is illustrated in
 
 \item[\textbf{TypeError}] extends the \classref{StandardError} class. It is
   thrown at runtime when a value is of the wrong type, for instance when using
-  an operator such as the \texttt{+}-operator, the operands must be applicable
+  an operator such as the \texttt{+} operator, the operands must be applicable
   for that operator.
 
 \item[\textbf{ArgumentError}] extends the \classref{StarndardError} class. It is

@@ -1,21 +1,20 @@
 \PassOptionsToPackage{table}{xcolor}
 \documentclass[openright,twoside,10pt]{memoir}
-\usepackage{fontspec}
 \synctex=1
 
 % DOCUMENT LAYOUT
+\usepackage{xltxtra} % includes fixltx2e, metalogo, xunicode, fontspec
 \setromanfont[Ligatures=TeX,Numbers={Lining}]{EB Garamond}
 \setmonofont[Scale=0.8]{Consolas}
 \setsansfont[Scale=0.9]{Optima}
 \usepackage[protrusion=true,factor=2000]{microtype} 
-\usepackage{xltxtra}
 
 
 % TABLE OF CONTENTS
 \setsecnumdepth{subsection}
 \setlength{\beforechapskip}{0pt}
 \setlength{\afterchapskip}{10pt} % vspace under chapters
-\setlength{\belowcaptionskip}{-7pt} % vspace mellem caption og tekst
+\setlength{\belowcaptionskip}{-8pt} % vspace mellem caption og tekst
 \setlength{\cftparskip}{0pt}
 \setlength{\cftbeforechapterskip}{6pt}
 \setlength{\cftbeforepartskip}{14pt}
@@ -27,9 +26,6 @@
 % LANGUAGE
 \usepackage{polyglossia} %XeTeX babel
 \setdefaultlanguage[variant=uk]{english}
-
-% FONTS
-\usepackage{xunicode}
 
 % For \smallsetminus
 \usepackage{ amssymb }
