@@ -90,7 +90,7 @@ public class GridBoardWidget extends BoardWidget {
 		
 		//Draw pieces
 		for( Piece piece : board().getPieces() )
-			if( piece != dragged )
+			if( !piece.equals( dragged ) )
 				renderPieceLocal( g, piece
 						,	pieceXCoordiate( piece )
 						,	pieceYCoordiate( piece )
