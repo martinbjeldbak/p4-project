@@ -36,13 +36,19 @@ builds on top of our scanner and parser. It's meant to be used by any
 interface that wishes to access and modify a game's state.
 
 \subsection{The application programming interface}
-The application programming interface (API) provided is simply a collection of interfaces used by the wrappers. This means that classes implementing these interfaces guarantee different methods are available. As an example, the \classref{Square} interface is seen in \lstref{lst:squareinterface} below:
+The application programming interface (API) provided is simply a collection of interfaces used by the wrappers. This means that classes implementing these interfaces guarantees different methods are available. As an example, the \classref{Square} interface is seen in \lstref{lst:squareinterface} below:
 
 \lstinputlisting[language=Java,label={lst:squareinterface},caption={\emph{The \classref{Square} interface, one among many such interfaces provided by \productname{}.}}]{listings/squareInterface.java}
 
 Currently $12$ such interfaces exist for different aspects of a game,
-such as getting information about the game itself, its players,
-board, action sequences, etc.
+such as getting information about the game itself, its players, board,
+action sequences, etc. These interfaces all build on top of the default
+types in the game environment described in \secref{sec:predefined}. As a
+rule, an interface exists for every default type defined in the standard
+environment. If we want to expand the standard environment, an interface
+and its wrapper would need to be added, considering the fact that it's
+one of the only ways 3\textsuperscript{rd} party simulators can interact
+with \productname{}.
 
 \subsection{Wrappers}
 Wrappers provide a way of accessing the values created by the
@@ -54,11 +60,22 @@ API described above. The main wrapper returned from the method
 \methodref{getGame} provides access to all the other wrappers
 (implementing their respective interfaces) via methods in its body.
 
-% Write about gamewrapper
-When instantiating \classref{GameWrapper} in method \methodref{getGame} of class \classref{GameAbstractionLayer}, an instance of the interpreter is passed. All wrapper classes have the following signature:
+When instantiating \classref{GameWrapper} in method \methodref{getGame}
+of class \classref{GameAbstractionLayer}, an instance of the interpreter
+is passed to the method, which means full access to the symbol table and
+standard environment. All wrapper classes have the following signature:
 
 \begin{lstlisting}[language=Java,caption={\emph{The signaure of all API wrapper classes.}}]
   public class xxWrapper extends Wrapper implements yy { ... }
 \end{lstlisting}
 
-Where $xx$ is one of the $12$ wrappers and $yy$ is the matching interface.
+Where $xx$ is one of the $12$ wrappers and $yy$ is the matching
+interface. The root class \classref{Wrapper} houses a series of methods
+used by all the wrapper sub-classes that retrieve different values in
+the type the specific wrapper abstracts over (as in the implemented
+interface).
+
+This construction is the only way applications such as our simulator
+can interact with the programming language. A simple instantiation of
+\classref{GameAbstractionLayer} provides everything needed for this to
+happen (granted it's a Java application).
