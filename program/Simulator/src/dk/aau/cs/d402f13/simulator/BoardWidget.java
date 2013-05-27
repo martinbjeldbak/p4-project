@@ -31,7 +31,7 @@ import dk.aau.cs.d402f13.widgets.Widget;
  *
  */
 public abstract class BoardWidget extends Widget {
-	protected SimulatedGame game;
+	protected Simulator game;
 	
 	protected List<Square> hintSquares = new ArrayList<Square>();
 	protected Square selected;
@@ -46,9 +46,9 @@ public abstract class BoardWidget extends Widget {
 	
 	/**
 	 * Constructs a SimulatedBoard
-	 * @param game SimulatedGame to visualize
+	 * @param game Simulator to visualize
 	 */
-	public BoardWidget( SimulatedGame game ){
+	public BoardWidget( Simulator game ){
 		scaleWidth( 0 );
 		scaleHeight( 0 );
 		this.game = game;

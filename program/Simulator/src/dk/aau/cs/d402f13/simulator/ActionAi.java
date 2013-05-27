@@ -9,7 +9,7 @@ import dk.aau.cs.d402f13.widgets.Widget.Event;
 public class ActionAi extends ActionSelector {
 	private Action calculatedAction = null;
 	
-	ActionAi( SimulatedGame game ){
+	ActionAi( Simulator game ){
 		super( game );
 	}
 

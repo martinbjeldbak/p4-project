@@ -29,7 +29,7 @@ import dk.aau.cs.d402f13.widgets.Message;
 import dk.aau.cs.d402f13.widgets.ScaleContainer;
 
 /**
- * SimulatedGame is the glue which binds GAL, slick2d and widgets together.
+ * Simulator is the glue which binds GAL, slick2d and widgets together.
  * It has the following responsibilities:
  * -  Load the game file
  * -  Make sure all get the correct state of the game
@@ -40,7 +40,7 @@ import dk.aau.cs.d402f13.widgets.ScaleContainer;
  * @author spiller
  *
  */
-public class SimulatedGame extends BasicGame {
+public class Simulator extends BasicGame {
 	//Game mechanics stuff
 	ScaleContainer sceneHandler = null;
 	GridBoardWidget board = null;
@@ -50,7 +50,7 @@ public class SimulatedGame extends BasicGame {
 	String gameFolder;
 	
 	
-	public SimulatedGame( String path ){
+	public Simulator(String path){
 		super( "Junta Simulator" );
 		sceneHandler = new ScaleContainer( false );
 		
@@ -205,7 +205,7 @@ public class SimulatedGame extends BasicGame {
 		if( args.length != 1 )
 			return;
 		
-		SimulatedGame simulator = new SimulatedGame( args[0] );
+		Simulator simulator = new Simulator( args[0] );
 		AppGameContainer app = new AppGameContainer( simulator );
 		//app.setDisplayMode( 1366, 768, true ); //full-screen
 		app.setDisplayMode( 1024, 600, false );
