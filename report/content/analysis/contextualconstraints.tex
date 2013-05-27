@@ -1,12 +1,12 @@
 \subsubsection{Contextual constraints for context-free grammars}
 \label{sec:contextualconstraints}
 
-Context-free grammars (CFGs), as explained in \secref{sec:context-freegrammars}, cannot describe syntax which can only be
+Context-free grammars (CFGs), as explained in \secref{sec:context-freegrammars}, 
+cannot describe syntax which can only be
 syntactically correct given a specific context (hence the name of these
 grammars). This means that there are constraints which a given CFG cannot
 describe.
-These contextual constraints are i.e.\:
-\cite[p. 39]{plpp}
+These contextual constraints are i.e.\cite[p. 39]{plpp}:
 
 \begin{dlist}
 \item Declaration before use
@@ -31,8 +31,7 @@ scope rules. Typically, a variable declared in one scope cannot be
 used outside that scope, depending on scope rules, of course. The CFG
 cannot describe such scope rules that we describe as static semantic
 rules. It is named static because the analysis required to check the
-specifications can be done at compile-time rather than run-time.
-\cite[p. 153]{sebesta2013}
+specifications can be done at compile time rather than run time\cite[p. 153]{sebesta2013}.
 
 %type and overriding methods
 The same issue is present when working with type systems and the

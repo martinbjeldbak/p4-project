@@ -18,10 +18,10 @@ project's repository.
 \subsection{Noughts and Crosses}
 The first game implemented in \productname{} is Noughts and
 Crosses. A picture of a possible board layout is shown below in
-\figref{fig:nacSimulated}. The source code for the entire game is seen
-after in \lstref{lst:nacCode}:
+\figref{fig:nacsimulated}. The source code for the entire game is seen
+after in \lstref{lst:naccode}:
 
-\fig[scale=0.3]{nacSimulated}{An implementation of Noughts and Crosses
+\fig[scale=0.3]{nacsimulated}{An implementation of Noughts and Crosses
   in \productname{}, played in the simulator.}
 
 \input{codesamples/nacCode.junta}
@@ -30,13 +30,13 @@ after in \lstref{lst:nacCode}:
 The famous Connect Four game was written in approximately $5$ minutes
 using the Noughts And Crosses implementation as a template, modifying
 board set up, win condition, etc. The game loaded in the simulator can
-be seen in \figref{fig:connect4Simulated}. The source code is shown in
+be seen in \figref{fig:connect4simulated}. The source code is shown in
 \csref{connect4code.junta} underneath.
 
-\fig[scale=0.3]{connect4Simulated}{An implementation of Connect Four
+\fig[scale=0.3]{connect4simulated}{An implementation of Connect Four
   \productname{}, played in the simulator.}
 
-\codesample{codesamples/connect4Code.junta}
+\codesample{codesamples/connect4code.junta}
 
 \subsection{Ice}
 The Ice game is a single-player puzzle game partly invented by one
@@ -46,14 +46,14 @@ games. The goal is to move the player (the ring-shaped piece) onto the
 green square. The player can move continuously in one of the directions
 north, east, west, or south until he meets a black wall. He cannot stop
 halfway on the path. A screenshot of the game loaded in the simulator
-can be seen in \figref{fig:iceSimulated}. The red numbers show the moves
+can be seen in \figref{fig:icesimulated}. The red numbers show the moves
 needed to solve the puzzle, they are not visible in the game.
 
-\fig[scale=0.3]{iceSimulated}{A \productname{} implementation of a custom puzzle game, Ice, played in the simulator.}
+\fig[scale=0.3]{icesimulated}{A \productname{} implementation of a custom puzzle game, Ice, played in the simulator.}
 
 \subsection{Kent's Game}
 Kent's Game is another game invented by the group.
-\figref{fig:kentGameSimulated} shows the initial board set up. The
+\figref{fig:kentgamesimulated} shows the initial board set up. The
 goal is to swap the position of all red and blue pieces. A blue piece
 can move one square north or one square east if it lands on an empty
 square. It can however move two squares north or two squares east by
@@ -66,8 +66,8 @@ game idea and implemented it in JavaScript so he could post it on his
 website. He included a backtracking solver which verified that the
 game is solvable with multiple solutions after dozens of moves. The
 source code is not listed here, but is only about $35$ lines. Below, in
-\figref{fig:kentGameSimulated}, the initial board setup in the simulator
+\figref{fig:kentgamesimulated}, the initial board setup in the simulator
 is shown.
 
-\fig[scale=0.3]{kentGameSimulated}{A \productname{} implementation of a
+\fig[scale=0.3]{kentgamesimulated}{A \productname{} implementation of a
 custom puzzle game, Kent's Game, played in the simulator.}
