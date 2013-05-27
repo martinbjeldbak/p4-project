@@ -45,6 +45,14 @@ define flattenList[ $list, $temp ] =
 
 
 type ChessPiece[ $player ] extends Piece[ $player ]{
+    
+    data $moves = 0
+    
+    define setHaveMoved[ $val ] = set $moves = $moves + 1
+    
+    define move[ $position ] = super.move[ $position ].setHaveMoved[ true ]
+    define isFirstMove[] = $moves <= 1
+  
   define slide[ $game, $patterns ] =
     toActions[ flattenList[ $patterns.map[ #[$pattern] =>
     $game.findSquares[ / !friend $pattern (empty $pattern)* this / ]
@@ -57,12 +65,20 @@ type ChessPiece[ $player ] extends Piece[ $player ]{
 }
 
 type Pawn[ $player, $dir ] extends ChessPiece[ $player ]{
+  //TODO: keep track of last turn
+  
   define actions[$game] =
-   // if isFirstMove[this] then
+    toActions[
+      $game.findSquares[ / foe $dir e|w this / ]
+      +
+      (if isFirstMove[] then
+        $game.findSquares[ / empty $dir (empty $dir)? this / ]
+      else
+        $game.findSquares[ / empty $dir this / ])
+    ]
+   //TODO: en-pasant
+   //TODO: promotion
       //moveActions[ this, $game.findSquares[ / $dir this / ] ]
-      toActions[ union[	$game.findSquares[ / empty (empty $dir)2 this / ] +
-						$game.findSquares[ / foe $dir e|w this / ] +
-						$game.findSquares[ / empty $dir this / ] ] ]
    // else
    //   []
         // +	map[ findSquares[ / foe (empty $dir) | ((w $dir)|(e $dir) this) / ],
