@@ -52,7 +52,8 @@ the Simulator and their relations. Triangles means inheriance, while arrows mean
 \classref{Widget} specifies an object which can have a size and a position, can be
 drawn, take mouse input, and send messages to each other. The most important
 property of \classref{Widget} however is that a \classref{Widget} can contain
-several sub-\classref{Widget}s which each can contain futher sub-\classref{Widget}s. We use this tree-structure to control how drawing and mouse input is handled.
+several sub-\classref{Widget}s which each can contain futher sub-\classref{Widget}s. 
+We use this tree structure to control how drawing and mouse input is handled.
 
 \subsubsection{Placement}
 
@@ -103,10 +104,7 @@ about itself. An overview of \texttt{draw()} is given in
 \lstref{lst:simulatorDraw}.
 
 \lstinputlisting[caption={\emph{Pseudocode for the \texttt{draw()} method.}},
-label={lst:simulatorDraw}, language=Java]{listings/simulatorDraw.java} 
-
-\todo{looks wrong, draw() will never be called on the top-level
-  \classref{Widget}.  Secondly, draw() should be called before handleDraw() }
+label={lst:simulatorDraw}, language=Java]{listings/simulatorDraw.java}
 
 To further ease development, the coordinate system is translated so
 \texttt{handleDraw()} will be done using local coordinates instead of absolute

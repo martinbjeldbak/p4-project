@@ -21,7 +21,7 @@ expresses that the next set of terminals must begin with a left bracket (`['),
 
 %discuss the if expression
 In \lstref{lst:ifexpr}, we give an example of how this structure looks like in
-our handwritten parser. The production rule for an if-expression is presented in
+our handwritten parser. The production rule for an if expression is presented in
 \secref{sec:conditionalexpressions}.
 
 %\begin{ebnf}
@@ -29,18 +29,18 @@ our handwritten parser. The production rule for an if-expression is presented in
 %\gcat \gter{else} \gcat expression}
 %\end{ebnf}
 
-The production for if-expression says that every expression of this type
+The production for if expression says that every expression of this type
 must start with the combination of the two symbols spelling the word
 \gter{if}. When the parser meets this word in an expression, it knows
-that it has to parse an if-expression.
+that it has to parse an if expression.
 
-\lstinputlisting[caption="How if-expressions are parsed using top-down parsing in Java.",
+\lstinputlisting[caption="How if expressions are parsed using top-down parsing in Java.",
 label=lst:ifexpr, language=Java]{listings/ifexpr.java}
 
 \subsection{Building an abstract syntax tree}
 %astNode()
 In \lstref{lst:ifexpr}, the parser initialises the node for the
-expected if-expression. The parser starts by calling the method
+expected if expression. The parser starts by calling the method
 \methodref{astNode} to create a node for the Abstract Syntax Tree (AST).
 We call the method with information about what type of expression this
 is (\tokenref{IF\_EXPR}). The method calls the \methodref{expect} method
@@ -49,17 +49,17 @@ tokens do not match, the parser throws a syntax error with information
 about the error. If everything is syntactically correct the parser
 constructs a node for the AST for the given expression. The first child
 of the node is the boolean expression, and the next two siblings of that
-child are the expression branches of the if-expression.
+child are the expression branches of the if expression.
 
 \subsubsection{Terminal and nonterminals}
 Every grammar has a finite set of nonterminals and terminals that
 constitute the productions of the grammar. We have defined tokens in the
-parser for every nonterminal in our grammar. The if-expression has the
+parser for every nonterminal in our grammar. The if expression has the
 token name of \tokenref{IF\_EXPR}.
 
-In the production for the if-expression, we have three terminals: the \gter{if},
+In the production for the if expression, we have three terminals: the \gter{if},
 \gter{then}, and the \gter{else}. These are all required in the method for any
-if-expression. When the parser finishes reading a terminal, it knows that the
+if expression. When the parser finishes reading a terminal, it knows that the
 following token will be an expression, and therefore a new child for the node is
 made with a call to the \methodref{expression} method wherein we parse
 expressions. Finally the method returns the node containing every child for the
@@ -121,8 +121,8 @@ example of this is given in \lstref{lst:examplelookahead}.
 %\galt{operation}
 %\end{ebnf}
 
-\lstinputlisting[caption="Use of the \methodref{lookAhead}-method. This example
-is from the \methodref{expression}-method.", label=lst:examplelookahead,
+\lstinputlisting[caption="Use of the \methodref{lookAhead} method. This example
+is from the \methodref{expression} method.", label=lst:examplelookahead,
 language=Java]{listings/example_lookAheadAtomic.java}
 
 The code presented in \lstref{lst:examplelookahead} is a small section of the
@@ -167,7 +167,7 @@ We chose SableCC instead of various other popular tools such as
 ANTLR\cite{antlr} and JavaCC\cite{javacc}. Though ANTLR and JavaCC are
 far more well-documented than SableCC, we still choose to work with
 this tool because its parser generates a LALR($1$) parser, whereas
-ANTLR and JavaCC create simpler LL($k$) parsers, which our hand-written
+ANTLR and JavaCC create simpler LL($k$) parsers, which our handwritten
 implementation already takes advantage of. Therefore, we felt LALR($1$)
 parsing to be more interesting, since it also supports more powerful
 grammars, such as left-recursion.
@@ -189,7 +189,7 @@ quite a while to read the documentation before and during writing the
 specifications, as it simply isn't just copy/pasting EBNF grammar
 into a file. An example of the if-expression rule is seen below:
 
-\begin{lstlisting}[caption={Part of the grammar specifications file of SableCC, with focus on if-expressions.}]
+\begin{lstlisting}[caption={Part of the grammar specifications file of SableCC, with focus on if expressions.}]
 Tokens
   else          = 'else';
   then          = 'then';
@@ -207,7 +207,7 @@ Productions
 
 % Pros
 This example brings out the strengths of SableCC, as it looks very
-similar to the EBNF for expressions and if-expressions seen in
+similar to the EBNF for expressions and if expressions seen in
 \secref{sec:expressions}, with a few additions. As long as you know
 the special syntax and how helpers, tokens, and productions works, it
 is possible to create scanners and parsers very quickly. This was not
