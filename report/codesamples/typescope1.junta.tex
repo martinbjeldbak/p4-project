@@ -1,8 +1,8 @@
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{k+kr}{type} \PY{n+no}{MyType}[\PY{n+nv}{\PYZdl{}a}] \PYZob{}
+\PY{k+kr}{type} \PY{n+no}{MyType}[\PY{n+nv}{\PYZdl{}a] }\PYZob{}
   \PY{k+kr}{define} \PY{n+nf}{aConstant} = \PY{l+m}{15} / \PY{n+nv}{\PYZdl{}a}
-  \PY{k+kr}{define} \PY{n+nf}{aMethodA}[\PY{n+nv}{\PYZdl{}b}] = \PY{n+nf}{aConstant} + \PY{n+nv}{\PYZdl{}a} + \PY{n+nv}{\PYZdl{}b}
-  \PY{k+kr}{define} \PY{n+nf}{aMethodB}[\PY{n+nv}{\PYZdl{}b}] = \PY{k+kr}{this}.\PY{n+nf}{aMethodA}[\PY{n+nv}{\PYZdl{}b}]
+  \PY{k+kr}{define} \PY{n+nf}{aMethodA}[\PY{n+nv}{\PYZdl{}b] }= \PY{n+nf}{aConstant} + \PY{n+nv}{\PYZdl{}a }+ \PY{n+nv}{\PYZdl{}b}
+  \PY{k+kr}{define} \PY{n+nf}{aMethodB}[\PY{n+nv}{\PYZdl{}b] }= \PY{k+kr}{this}.\PY{n+nf}{aMethodA}[\PY{n+nv}{\PYZdl{}b]}
 \PYZcb{}
 
 \PY{k+kr}{define} \PY{n+nf}{use} = \PY{n+no}{MyType}[\PY{l+m}{5}].\PY{n+nf}{aMethodB}[\PY{l+m}{2}] \PY{c}{// 10 = 15 / 5 + 5 + 2}

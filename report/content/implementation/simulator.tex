@@ -1,5 +1,5 @@
 \section{Simulator}
-\label{sec:simulator}
+\label{sec:simulator-impl}
 
 In this section, we begin by giving an overview of the relations of classes in
 the Simulator in \secref{sec:overview}. Afterwards, we present
@@ -37,7 +37,7 @@ manage other \classref{Widget}s, while others provide visual and interactive
 content. The game \classref{Widget}s provide visual and interactive intefaces to
 GAL.
 
-To work with graphics and input, the game framework slick2d is used. \todo{kilde på slick2d}
+To work with graphics and input, the game framework slick2d is used\cite{slick2d}.
 \classref{SimulatedGame} is used to bind slick2d, \classref{Widget}s, and GAL
 together to provide a complete system.
 
