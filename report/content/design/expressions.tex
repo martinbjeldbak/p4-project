@@ -69,7 +69,7 @@ the precedence of operations. Consider the following two expressions:
 \codesample{parentheses2.junta}
 
 In \csref{parentheses2.junta} the parentheses are in fact unnecessary because the
-\texttt{*}-operator has precedence over the \texttt{+}-operator (see
+\texttt{*} operator has precedence over the \texttt{+} operator (see
 \secref{sec:operatorsandcalls}).
 
 Names (constants, types, and variables) are also atomic expressions, and are evaluated
@@ -79,14 +79,14 @@ definitions, where $\gter{this}$ refers to the current object and $\gter{super}$
 refers to the current object casted to its parent type (if it has one).
 
 The literals ($integer$, $string$, $direction$, and $coordinate$) are evaluated to their
-respective values, while patterns are evaluated to \type{Pattern}-values according to
-the grammar in \secref{sec:patterns} and lists are evaluated to \type{List}-values
+respective values, while patterns are evaluated to \type{Pattern} values according to
+the grammar in \secref{sec:patterns} and lists are evaluated to \type{List} values
 according to the grammar in \secref{sec:lists}.
 
 \subsection{Lists}
 \label{sec:lists}
 
-The \type{List}-type is one of the basic types in \productname{}. A \type{List}-value is
+The \type{List} type is one of the basic types in \productname{}. A \type{List} value is
 created using the following syntax:
 
 \begin{ebnf}
@@ -94,43 +94,46 @@ created using the following syntax:
 expression}} \gcat \gter{]}}
 \end{ebnf}
 
-Essentially this means that a list is created from zero or more expressions (separated
+Essentially this means that a list is created from zero, one, or more expressions (separated
 by commas). The following statements can be made about lists:
 
 \begin{nlist}
-\item A list can be empty: \texttt{[]}
-\item Lists are ordered ($\texttt{[1, 2]} \ne \texttt{[2, 1]}$).
-\item Lists are immutable.
+\item A list can be empty; \texttt{[]}
+\item Lists begin at offset $0$
+\item Lists are ordered ($\texttt{[1, 2]} \ne \texttt{[2, 1]}$)
+\item Lists are immutable
 \end{nlist}
 
 When a list is evaluated, each expression is evaluated to a value (the order of
 evaluation does not matter, since no side-effects are possible, lazy-evaluation
 of expressions could even be a possibility), and all values (in the same order
-as the expressions) are added to the resulting \type{List}-value. When a
-\type{List}-value is created, it can't be altered further (because of the
-no-side-effects condition). All operations on that \type{List}-value will create
-new \type{List}-values, and leave the original value intact.
+as the expressions) are added to the resulting \type{List} value. When a
+\type{List} value is created, it can't be altered further (because of the
+no-side-effects condition). All operations on that \type{List} value will create
+new \type{List} values, and leave the original value intact.
 
-Values within lists can be accessed using the \texttt{[]}-operation (same as
-with function calls and type instantiation). Lists begin at offset $0$, so in
-order to access the second element of a list, one can use the following:
+Values within lists can be accessed using the \texttt{[]} operation (same as
+with function calls and type instantiation). Because lists begin at offset $0$, in
+order to access the second element of a list, one write as illustrated in
+\csref{listaccess1.junta}.
 
 \codesample{listaccess1.junta}
 
-Ranges of elements can also be returned. For instance in the following
-expression a new list is returned containing elements from offset 1 up
-to and including offset 2 (the list $\texttt{["is", "a"]}$):
+Ranges of elements can also be returned. For instance in
+\csref{listaccess2.junta} a new list is returned containing elements from offset 1 up
+to and including offset 2 (the list $\texttt{["is", "a"]}$).
 
 \codesample{listaccess2.junta}
 
 An offset can be negative, which means that the offset is dependent on
 the size of the list. This way offset $-1$ will always refer to the last element
-of the list. For example in order to return the last two elements of a list one
+of the list, because the length of the list minus $1$ will give the offset of
+the last element. For example in order to return the last two elements of a list one
 could use the offsets, $-2$ and $-1$:
 
 \codesample{listaccess3.junta}
 
-Some other examples are:
+Some other examples are presented in \csref{listaccess4.junta}:
 
 \codesample{listaccess4.junta}
 
@@ -160,40 +163,39 @@ Variables in \productname{} are assigned using let expressions:
 
 A let expression consists of one or more assignments and an expression. Each
 assignment assigns the value of an expression to a variable name. These
-variables can then be used in the expression after the \texttt{in}-keyword.
-After the evaluation of the let-expression, the variables cease to exist.
+variables can then be used in the expression after the \texttt{in} keyword.
+After the evaluation of the let expression, the variables cease to exist.
 
 \subsubsection{Informal scope rules for let expressions}
 
-Destructive assignments are not possible \productname{}, meaning that it isn't
+Destructive assignments are not possible in \productname{}, meaning that it isn't
 possible to reassign a variable. It is however possible to hide a variable.
-Consider the following expression:
+Consider the expression presented in \csref{lethiding.garry}.
 
 \codesample{lethiding.garry}
 
 The value of this expression is $13$. This is because within the
-\texttt{\variable{x} + 2}-expression the \variable{x}-variable evaluates to $6$.
+\texttt{\variable{x} + \numeral{2}} expression the \variable{x} variable evaluates to $6$.
 But in the outer expression \variable{x} evaluates to $5$.
 
-Nested \emph{let}-scopes are possible. Consider for instance:
+Nested let scopes are possible. Consider for instance \csref{nestedlet.garry}.
 
 \codesample{nestedlet.garry}
 
 In the inner scope, both \variable{x} and \variable{y} are available. This is of
-course equivalent to:
+course equivalent to \csref{nestedlet2.garry}.
 
 \codesample{nestedlet2.garry}
 
 \subsubsection{Big-step semantics}
 
 The semantics presented in \tableref{semantic:let} are the transition rules for
-the let expression.  This is transition rule is defined recursively to best
+the let expression. This transition rule is defined recursively to best
 illustrate the functionality of the expression.
-
 
 \input{content/design/big-stepsemantics/let}
 
-The transition rules for $[\mbox{LET-1}]$ is recursive because we must
+The transition rules for $[\mbox{LET-1}]$ are recursive because we must
 evaluate each expression $(x_{1}=E_{1})$ individually before we move on to the next one. This
 is a must because of the fact that the next expressions can in fact make use of
 the previous expressions value. As an example take a look at the following code
@@ -205,13 +207,13 @@ So, each call where there is more than one expression to be evaluated,
 the transition rule $[\mbox{LET-1}]$ where $k \geq 2$ is used. Here the expression first
 in line to be evaluated will be evaluated before a new call to one of the two
 transition rules is made. When we reach a let expression with only one
-expression, we then call the transition rule $[\mbox{LET-2}]$ where $k < 2$.
+expression, we call the transition rule $[\mbox{LET-2}]$ where $k < 2$.
 
 \subsection{Conditional expressions}
 \label{sec:conditionalexpressions}
 
 It is often desirable to base the result of an expression on some sort of condition.
-In \productname{} this is achievable using \emph{if}-expressions, as defined by the
+In \productname{} this is achieved bye using \emph{if} expressions, as defined by the
 following syntax:
 
 \begin{ebnf}
@@ -222,13 +224,13 @@ following syntax:
 
 Unlike in most imperative languages, the conditional construct in \productname{}
 is not a statement (\productname{} doesn't have statements) but an expression.
-Since all expressions must have a value, the \emph{else}-part of en
-if-expression is compulsory.
+Since all expressions must have a value, the \emph{else} part of en
+if expression is compulsory.
 
-The if-expression first evaluates the condition (the first expression). The
+The if expression first evaluates the condition (the first expression). The
 resulting value must be of type \type{Boolean}. If the value is equal to the
-boolean true-value, the \emph{then}-expression is evaluated, and the result is
-returned. If the value is false, then the \emph{else}-expression is evaluate,
+boolean true value, the \emph{then} expression is evaluated, and the result is
+returned. If the value is false, then the \emph{else} expression is evaluated,
 and the result returned.
 
 \subsection{Lambda expressions}
@@ -242,7 +244,7 @@ Lambda expressions are expressions that evaluate to anonymous functions. In
 \grule{lambda\_expr}{\gter{\#} \gcat varlist \gcat \gter{=>} \gcat expression}
 \end{ebnf}
 
-The non-terminal $varlist$ represents a list formal parameters, and is further
+The non-terminal $varlist$ represents a list of formal parameters, and is further
 explained in \secref{sec:constantdefinitions}.
 
 When a lambda expression is created, a reference to the scope it was created in
@@ -251,35 +253,36 @@ expression may access variables outside of its own scope. The accessible
 variables are the variables that were available at the time of the creation of
 the lambda expression.
 
-Consider the following example:
+Consider the example in \csref{closuredef.garry}.
 
 \codesample{closuredef.garry}
 
 The function \function{getAdder} takes one argument (\variable{a}) and
-returns a lambda expression, is defined. Notice how \variable{a} is used within
+returns a lambda expression. Notice how \variable{a} is used within
 the lambda expression. This means that when the lambda expression is created, it
 must remember the value of the variables that exist in the scope, in which it is
-created. The use of the \function{getAdder}-function could look like this:
+created. The use of the \function{getAdder} function could be as illustrated in
+\csref{closureuse.garry}.
 
 \codesample{closureuse.garry}
 
-In the first line \function{getAdder} is called with the argument, $25$. A new
-scope, $A$, is created, in which the variable \variable{a} is assigned the value
+In the first line \function{getAdder} is called with the argument $25$. A new
+scope, A, is created in which the variable \variable{a} is assigned the value
 $25$. Then the function expression is evaluated, which results in a new lambda
 expression (with a reference to scope $A$).  This is returned and assigned to
-\variable{adder} in line 1 of the above example.
+\variable{adder} in line 1 of \csref{closureuse.garry}.
 
 In the second line, \variable{adder} is called as a function, meaning
-that a new scope, $B$, is created, where the variable \variable{b} is
+that a new scope, $B$, is created where the variable \variable{b} is
 assigned the value $5$. The important part is that $B$'s parent scope is set to
 $A$ (which is saved with the lambda expression). The expression (the right side
-of the lambda expression) is then evaluated. First the \variable{a}-variable is
-encountered. The interpreter first searches the $B$-scope for \variable{a}, and
-when unsuccessful, searches the parent-scope, $A$, for \variable{a}. In $A$ the
+of the lambda expression) is then evaluated. First the \variable{a} variable is
+encountered. The interpreter first searches the $B$ scope for \variable{a}, and
+when unsuccessful, searches the parent scope, $A$, for \variable{a}. In $A$ the
 variable \variable{a} holds the value $25$, and this is returned. Then the
-$B$-scope is searched for the \variable{b}-variable, and the value $5$ is
-returned. The two integers are added, and the final return-value of the
-lambda-expression ends up being $30$.
+$B$ scope is searched for the \variable{b} variable, and the value $5$ is
+returned. The two integers are added, and the final return value of the
+lambda expression ends up being $30$.
 
 \subsubsection{Big-step semantics}
 
@@ -289,7 +292,7 @@ lambda expressions.
 \input{content/design/big-stepsemantics/lambda}
 
 The three environments ($env_{T}, env_{C}, env_{V}$) must be known before it is
-possible to execute a lambda expression. We need to know which types, constants
+possible to execute a lambda expression. We need to know which types, constants,
 and different variables are given in the specific scope.
 
 The lambda expressions evaluates to a value $v$. The side condition
@@ -308,19 +311,19 @@ type definitions:
 \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression}}
 \end{ebnf}
 
-Set expressions are used to ``modify'' the value of data-members in objects (see
+Set expressions are used to ``modify'' the value of data members in objects (see
 \secref{sec:typedefinitions} for an explanation of data). Each variable in the
-set expression must exist in the current type as data-members. Since modifying a
-data-member would be a side-effect, which is not allowed, the set expression
-instead returns a clone of the object, with the specified data-members set to
+set expression must exist in the current type as data members. Since modifying a
+data member would be a side-effect, which is not allowed, the set expression
+instead returns a clone of the object, with the specified data members set to
 their respective values. This is useful for making setters (or something that
-looks like setters). Consider for example the following type:
+looks like setters). Consider for example presented in \csref{setget.junta}.
 
 \codesample{setget.junta}
 
-In the example above, the method \constant{setMyData} returns a new instance of
-\type{MyType}, with the data-member \variable{myData} set to something else. The
-following example shows the use of a getter and a setter:
+In \csref{setget.junta} the method \constant{setMyData} returns a new instance of
+\type{MyType}, with the data member \variable{myData} set to something else. The
+\csref{setget2.junta} shows the use of a getter and a setter.
 
 \codesample{setget2.junta}
 
@@ -334,7 +337,7 @@ set expressions.
 
 \input{content/design/big-stepsemantics/set}
 
-The transition rule assumes that the current constant environment $env_C$
+The transition rule assumes that the current constant environment $(env_C)$
 contains a pointer to the current object, $\texttt{this}$. It then returns a
 copy of that object with a new variable environment, containing the new data.
 
@@ -392,9 +395,9 @@ operators ordered by precedence. The precedence of operators is presented in
 }
 
 Each precedence level will correspond to a certain rule in the grammar. For
-instance, the fifth precedence level for addition and subtraction is expressed
-using the $as\_sequence$-rule. Combined with some multiplication an expression
-making use of the $as\_sequence$- and $md\_sequence$-rules could look like
+instance the fifth precedence level for addition and subtraction is expressed
+using the $as\_sequence$ rule. Combined with some multiplication an expression
+making use of the $as\_sequence$ and $md\_sequence$ rules could look like
 \csref{asandmd.junta}:
 
 \codesample{asandmd.junta}
@@ -417,14 +420,14 @@ subtraction would give one operator precedence over the other.
 
 \subsubsection{Big-step semantics}
 
-The semantics presented in \tableref{semantic:callfun} is transition
+The semantics presented in \tableref{semantic:callfun} is the transition
 rule for function calls. Big-step semantics for the others are left out,
 as they are mostly trivial.
 
 \input{content/design/big-stepsemantics/callfun}
 
-In this rule the expression $E$ is evaluated to a function value, $v_2$, which
-has its own variable and constant environments, as per the static scope rules.
+In this rule the expression $e$ is evaluated to a function value $v_2$, which
+has its own variable and constant environments, as the static scope rules.
 The variable environment is then updated with the actual parameters assigned to
 the formal parameters, after which the expression, contained within the function
 value, is evaluated.
@@ -446,7 +449,7 @@ comparison, integer, string, list, and direction and coordinate operators.
 
 \paragraph{Boolean operators}
 
-These operators only accept boolean operands and only return boolean values:
+These operators only accept boolean operands, and only return boolean values:
 
 \begin{dlist}
   \item \operator[Boolean]{and}{Boolean}{Boolean}\\
@@ -552,7 +555,7 @@ The following operators can manipulate directions and coordinates:
 
 For instance adding the directions \texttt{n} and \texttt{e} produces a
 direction equivalent with the direction \texttt{ne}. Adding a coordinate and
-direction (and vice versa) gives a coordinate. As an example, $\texttt{A2}
-\verb!+! \texttt{e}$ gives \texttt{B2}. More information about the coordinate
+direction (and vice versa) gives a coordinate. As an example, $\texttt{A2} \;
+\verb!+! \; \texttt{e}$ gives \texttt{B2}. More information about the coordinate
 and direction types is available in \secref{sec:standardenvironment}.
 

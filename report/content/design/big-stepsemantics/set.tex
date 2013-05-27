@@ -1,11 +1,11 @@
 \begin{table}[ht]
   \begin{tabular*}{\textwidth}{l l}
     \hline \\
-    \hspace{1.5cm} $[\mbox{SET}]$ & \infrule{env_C, env_V, env_T \vdash \lag E_1
+    \hspace{1.5cm} $[\mbox{SET}]$ & \infrule{env_C, env_V, env_T \vdash \lag e_1
       \rag\ra u_1 \quad
-    \ldots \quad env_C, env_V, env_T \vdash \lag E_k \rag \ra u_k}
-    {env_C, env_V, env_T \vdash \lag \texttt{set}\; x_1 = E_1, \ldots, x_k =
-    E_k \rag \ra v_1} \\
+    \ldots \quad env_C, env_V, env_T \vdash \lag e_k \rag \ra u_k}
+    {env_C, env_V, env_T \vdash \lag \texttt{set}\; x_1 = e_1, \ldots, x_k =
+    e_k \rag \ra v_1} \\
     & where $env_C\; \texttt{this} = \left(t, env'_C, env'_V, v_2 \right)$ \\
   & and $env''_V = env'_V \left[ x_1 \mapsto u_1, \ldots, x_k \mapsto u_k \right]$ \\
     & and $v_1 = \left( t, env'_C, env''_V, v_2\right)$ \\ 

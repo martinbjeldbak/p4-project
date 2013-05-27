@@ -2,12 +2,12 @@
   \begin{tabular*}{\textwidth}{l l}
     \hline \\
     \hspace{3cm} $[\mbox{CALL}_{\mbox{FUN}}]$ & \hspace{0.1cm} $env_C, env_V,
-    env_T \vdash \lag E \rag \ra v_2$ \\
-    & \hspace{0.1cm} $env_C, env_V, env_T \vdash \lag L \rag \ra v_3$
+    env_T \vdash \lag e \rag \ra v_2$ \\
+    & \hspace{0.1cm} $env_C, env_V, env_T \vdash \lag i \rag \ra v_3$
     \vspace{-0.3cm} \\
-    & \infrule{env'_C, env''_V, env_T \vdash \lag E' \rag \ra v_1}{env_C, env_V,
-    env_T \vdash \lag E\; L\; \rag \ra v_1} \\
-    & where $v_2 = \left(X, E', env'_V, env'_C\right)$ \\
+    & \infrule{env'_C, env''_V, env_T \vdash \lag e' \rag \ra v_1}{env_C, env_V,
+    env_T \vdash \lag e\; i\; \rag \ra v_1} \\
+    & where $v_2 = \left(g, e', env'_V, env'_C\right)$ \\
     & and $v_3 = \left(l, elem\right)$ \\
     & and $env''_V = \left[x_1 \mapsto elem\; 1, \ldots, x_n \mapsto elem\; n \right]$ \\
     & \\
