@@ -72,8 +72,7 @@ of our different error handlers. The hierarchy is illustrated in
   thrown at runtime if a function is supplied the wrong number of arguments.
 
 \item[\textbf{NameError}] extends the \classref{StandardError} class. It is
-  thrown at runtime if a used constant, type or variable is not used or there is
-  another kind of conflict between these.
+  thrown at runtime if a used constant, type or variable is not defined in the current scope.
 
 \item[\textbf{DivideByZeroError}] extends the \classref{ArgumentError} class. It
   is thrown when dividing by zero.
