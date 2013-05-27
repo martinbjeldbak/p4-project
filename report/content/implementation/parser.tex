@@ -11,7 +11,7 @@ not to continue working with this tool.
 \subsection{Constructing the parser}
 %structured as the grammar
 The parser was very simple to implement, because it is structured exactly the same way as the
-grammar which is defined in \chapref{chap:design}. For instance, if the grammar
+grammar which can be found in \chapref{ap:CFG}.  For instance if the grammar
 expresses that the next set of terminals must begin with a left bracket (`['),
   then the parser will expect the next token to be a \tokenref{LBRACKET} which
   is the token name for a left bracket. If the grammar then expects a
@@ -32,8 +32,7 @@ our handwritten parser. The production rule for an if-expression is presented in
 The production for if-expression says that every expression of this type
 must start with the combination of the two symbols spelling the word
 \gter{if}. When the parser meets this word in an expression, it knows
-that it has to parse an if-expression and the code for this is reflected
-in \lstref{lst:ifexpr}.
+that it has to parse an if-expression.
 
 \lstinputlisting[caption="How if-expressions are parsed using top-down parsing in Java.",
 label=lst:ifexpr, language=Java]{listings/ifexpr.java}
