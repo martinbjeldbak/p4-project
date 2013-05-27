@@ -4,66 +4,70 @@ on a board of $8 \times 8$ squares. The squares are typically black and white,
 but can be any two colors (see figure \ref{fig:chess}). The squares can only
 contain one piece at a time, unlike other games e.g. Kalah and Backgammon. 
 
-Each player has a total of 16 pieces: 8 pawns, 2 knights, 2 bishops, 2 rooks, 1
-queen and 1 king. Each piece type has unique possible moves. For instance a pawn
-can move only one square vertically forward or one square diagonal when
-capturing an enemy piece. A rook can move unlimited squares either vertically or
-horisontally. The fact that each piece type has a unique way to move separates
-chess from a lot of other common board games where all pieces have the same
-abilities, like Naughts and Crosses, Kalah, Ludo, Backgammon. This means it
-should be possible to define a unique movement pattern for numerus different
-types of pieces in \productname{}. 
+Each player has a total of $16$ pieces: $8$ pawns, $2$ knights, $2$
+bishops, $2$ rooks, $1$ queen and $1$ king. Each piece type has unique
+possible moves. For instance a pawn can move only one square vertically
+forward or one square diagonal when capturing an enemy piece. A rook
+can move unlimited squares either vertically or horizontally. The fact
+that each piece type has a unique way to move separates chess from a lot
+of other common board games where all pieces have the same abilities,
+like Noughts and Crosses, Kalah, Ludo, Backgammon. This means it should
+be possible to define a unique movement pattern for numerous different
+types of pieces in \productname{}.
 
 Cut to the bone, Chess goes as follow: When a game starts the pieces are in their
 starting positions as seen in figure \ref{fig:chess}. The player with the white
 pieces always makes the first move and after that the players take turn in
 which clever moves are being made and pieces are being captured until one
-player has checkmated the other - and the game is over. The checkmate condition
+player has checkmated the other -- and the game is over. The checkmate condition
 is obtained when the king piece is in a position to be captured and cannot
 escape from capture in the next move. \cite{chessrules} Therefore it should be
 possible to look one move ahead to control if the checkmate condition is
 obtained.
 
 \subsubsection{Special moves} 
-In chess there are numerus special moves which doesn't follow the normal pattern
+In chess, there are numerous special moves that don't follow the normal pattern
 of movements in chess. Earlier we mentioned that a pawn can move only one square
-vertically forward or one square diagonal when capturing an enemy piece. But
-this is not always true. If the pawn is in its respective starting position it
+vertically forward or one square diagonally when capturing an enemy piece. But
+this is not always the case. If the pawn is in its respective starting position, it
 can move either one or two squares vertically forward. After that it can only
 move one square forward or one square vertically the rest of the game. 
 
-Another special move is the move called ``castling''. This move allows a player
+Another special move is the move called ``Castling''. This move allows a player
 to move two pieces in one turn (the king and one of the rooks). But to do the
-move several conditions must be met. First; the move has to be the very first
+move several conditions must be met. First: the move has to be the very first
 move of the king and the rook, second; there can't be any pieces standing
 between the king and the rook, and third; there can't be any opposing pieces
 that could capture the king in his original square, the squares he moves through
 or the square he ends up in.
 \cite{chessrules} 
 
-There exits two more special moves which are called ''En Passant´´ and
-''Promotion´´. These are not going to be described here, but information about
-them can be found in \cite{chessrules}. 
+There exits two more special moves which are called ``En Passant'' and
+``Promotion''. These moves are important to the game, but not exactly
+relevant. Hence they are not going to be described here, but refer to
+\cite{chessrules} for more information.
 
-So what is the problem with these special moves? The problem is the fact that
+So, what's the problem with these special moves? The problem is the fact that
 they don't follow the regular pattern of the game and this has to be taken into
 consideration when designing \productname{}.
 
 \fig[width=0.25\textwidth]{chess}{The board game chess with the pieces in start
 position.}
 
-From the above analysis we present this list of interesting game elements we found 
+From brief analysis above, we present this list of interesting game elements we found 
 in chess:
 
 \begin{dlist}
-\item Pieces have different movement abilities.
-\item A squared board with a number of squares in it.
-\item A winning condition - when the king has been checkmated.
+\item Pieces have different movement abilities
+\item A squared board with a number of squares in it
+\item A winning condition - when the king has been checkmated
 \item A starting state - how the pieces are placed on the board before the
-  game's very first move.
-\item Special moves like ``Castling'', ``Promotion'', and ``En Passant''.
+  game's very first move
+\item Special moves like ``Castling'', ``Promotion'', and ``En Passant''
 \item Constraints that disallow a piece to move if some condition is true after
-  the move has been made (a move that sets your king in check).
+  the move has been made (a move that sets your king in check)
 \item A piece can be ``captured'' by another piece, which causes the piece to be
-  removed from the board.
+  removed from the board
 \end{dlist}
+
+From looking at chess, we conclude that these aspects and elements need to be easily done in \productname{}.

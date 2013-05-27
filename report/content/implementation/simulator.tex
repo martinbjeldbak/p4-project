@@ -1,12 +1,12 @@
 \section{Simulator}
 
-In this section we begin by giving an overview of the relations of classes in
+In this section, we begin by giving an overview of the relations of classes in
 the Simulator in \secref{sec:overview}. Afterwards, we present
 \classref{Widget}s and their properties in \secref{sec:widget}. We also explain
 the different actions that are available in \secref{sec:actions}. Furthermore,
-we explain how the different \classref{Widget}s communicate with eachother in
+we explain how the different \classref{Widget}s communicate with each other in
 \secref{sec:communication}. Lastly, we present how we have made the game
-interactive in \secref{sec:interaction} and how everything is connected in
+interactive in \secref{sec:interaction}, and how everything is connected in
 \secref{sec:connection}.
 
 %Overview
@@ -18,13 +18,13 @@ interactive in \secref{sec:interaction} and how everything is connected in
 
 The Simulator has been constructed to provide a visual interface to the API
 provided by the Game Abstraction Layer (GAL). The interface should give a visual
-representation of the board and pieces similar to how the board game would look
+representation of the board and pieces, similar to how the board game would look
 in real life. Furthermore, it should provide an easy way to interact with the
-game. This interaction should be sufficient enough to mnake it possible to play
+game. This interaction should be sufficient enough to make it possible to play
 the game.
 
 The result is a Java application with a graphical user interface, which takes a
-\productname code file and makes it playable by the use of GAL.
+\productname{} code file and makes it playable by the use of GAL.
 
 \subsection{Overview}
 \label{sec:overview}
@@ -36,7 +36,7 @@ manage other \classref{Widget}s, while others provide visual and interactive
 content. The game \classref{Widget}s provide visual and interactive intefaces to
 GAL.
 
-To work with graphics and input, the game framework slick2d is used.
+To work with graphics and input, the game framework slick2d is used. \todo{kilde på slick2d}
 \classref{SimulatedGame} is used to bind slick2d, \classref{Widget}s, and GAL
 together to provide a complete system.
 
@@ -52,7 +52,7 @@ the Simulator and their relations}
 \label{sec:widget}
 
 \classref{Widget} specifies an object which can have a size and a position, can be
-drawn, take mouse input, and send messages to eachother. The most important
+drawn, take mouse input, and send messages to each other. The most important
 property of \classref{Widget} however is that a \classref{Widget} can contain
 several sub-\classref{Widget}s, and that drawing and mouse input is handled
 according to this hierarchy.
@@ -61,9 +61,9 @@ according to this hierarchy.
 
 \subsubsection{Placement}
 
-A \classref{Widget} has a position specified with a $(x,y)$ coordinate. Its
+A \classref{Widget} has a position specified with a $(x, y)$ coordinate. Its
 position is relative to its parent, so if a \classref{Widget} has position
-$(7,10)$ and its parent has $(23,50)$, its absolute position is $(30,60)$.
+$(7, 10)$ and its parent has $(23, 50)$, its absolute position is $(30, 60)$.
 
 Furthermore, a \classref{Widget} has a size specified with a width and height,
 but it also contains an allowed range for each dimension. This allows us to
@@ -73,12 +73,12 @@ wanted.
 \subsubsection{Automatic placement and sizing}
 
 Instead of setting sizes and positions manually, we create container classes
-which manage the position and size of its sub-\classref{Widget}s. By using
+that manage the position and size of their sub-\classref{Widget}s. By using
 \classref{Widget}s which are dynamic in size, we can create a layout which works
-independent of the window size.
+independent of the window and board size.
 
 \classref{ScaleContainer} is such a container \classref{Widget} and positions
-\classref{Widget}s along an axis. For \classref{Widget}s which size is dynamic,
+\classref{Widget}s along an axis. For \classref{Widget}s whose size is dynamic,
 the remaining available space is distributed evenly amoung them. An example is
 shown in \figref{fig:ScaleContainer}. The top-level \classref{Widget} is a
 \classref{ScaleContainer} set to position \classref{Widget}s vertically. It does
@@ -99,11 +99,11 @@ single \classref{Widget}.
 \label{sec:actions}
 
 Drawing a \classref{Widget} should not only draw the \classref{Widget}, but also
-all its sub-\classref{Widget} and their sub-\classref{Widget}s. To do this,
+all its sub-\classref{Widget}s and their sub-\classref{Widget}s. To do this,
 \classref{Widget} has two methods, \texttt{draw()} and \texttt{handleDraw()}.
-\texttt{handleDraw()} needs to be overridden in sub-\classref{Widget}s which
+\texttt{handleDraw()} needs to be overridden in sub-\classref{Widget}s that 
 wants to provide a custom drawing method. \texttt{draw()} handles all the logic
-for drawing sub-\classref{Widget}s so the inherited class only needs to worry
+for drawing sub-\classref{Widget}s, so the inherited class only needs to worry
 about itself. An overview of \texttt{draw()} is given in
 \lstref{lst:simulatorDraw}.
 
@@ -177,7 +177,7 @@ will work on any two \classref{Square}s whether or not it contains any
 the ones which are related to those Squares. To help ease this process, usable
 \classref{Square}s are hinted as shown in \todo{ add screenshot }.
 
-In reality we have two \classref{Widget}s; \classref{BoardWidget} and
+In reality we have two \classref{Widget}s: \classref{BoardWidget} and
 \classref{GridBoardWidget} which are specialisations of \classref{BoardWidget}.
 While it is not necessary at this point, it is an attempt to generalise
 \classref{GirdBoard} so that a future addition with new \classref{Board} types
@@ -194,7 +194,7 @@ to fit the whole window and tells it to adjust the sizes of its
 sub-\classref{Widgets}. Secondly, it sends all mouse-events to this
 \classref{Widget} and draws it whenever slick2d wants to be redrawn.
 
-On construction of \classref{SimulatedGame}, it reads the \productname code file
+On construction of \classref{SimulatedGame}, it reads the \productname{} code file
 and attempts to load it through GAL. It then creates the game
 \classref{Widget}s, but it does not pass a reference to the game directly. As
 the game object changes each time an \classref{Action} is applied, which

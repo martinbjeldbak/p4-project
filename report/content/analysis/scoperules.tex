@@ -10,31 +10,31 @@ we introduce and discuss the consequences of static and dynamic type systems.
 With static scoping the scopes of variables can be determined prior to
 execution. This means that a compiler can easily determine the type of every
 variable in the program by just examining the source code. So, when a variable
-is referenced in a statically scoped language the value and type of the variable 
+is referenced in a statically scoped language, the value and type of the variable 
 is the on it had at the time of declaration.
 
 
-Static scope rules provide subprograms with access to nonlocal identifiers and
-this type of scoping works very well with compilers because the scope can be
-determined at compile time.
+Static scope rules provide subprograms with access to non-local
+identifiers. This type of scoping works very well with compilers because
+the scope can be determined at compile time, which allows a compiler to
+do certain optimisations.
 
 A disadvantage of static scoping is that it can give too much access and might
 need restrictions. But programs are dynamic and are often restructured which
 can lead to destruction of initial restrictions.
 
-With dynamic scoping the scopes of variables can only be determine at run time
-because it is based on the calling sequence of subprograms. When a variable is
-referenced in a language with dynamic scoping then the value and type of the 
-variable is what it had on the time of the call to it.
-\cite[p. 227]{sebesta2013}
-%5.5.6, side 227 (sebesta)
+With dynamic scoping the scopes of variables can only be determined at
+run time, because it is based on the calling sequence of subprograms.
+When a variable is referenced in a language with dynamic scoping then
+the value and type of the variable is what it had on the time of the
+call to it. \cite[p. 227]{sebesta2013} %5.5.6, side 227 (sebesta)
 
-It is not possible to determine scopes statically because the calling sequence
-of subprograms is not always known. When a method A calls a method B then B has 
-access to variables in that were declared in A. As a result dynamically scoped
-languages are much more difficult to read and understand and this results in
-them being less reliable.
-
+It is not possible to determine scopes statically, because the calling
+sequence of subprograms is not always known. When a method \methodref{A}
+calls a method \methodref{B}, then \methodref{B} has access to variables
+in that were declared in \methodref{A}. As a result dynamically scoped
+languages are much more difficult to read and understand, and this
+results in them being less reliable.
 
 Comparing two similar programs with different scoping, then the statically
 scoped program will be much easier to read, more reliable, and it will execute
