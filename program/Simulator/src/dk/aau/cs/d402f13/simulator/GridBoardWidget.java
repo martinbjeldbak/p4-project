@@ -19,7 +19,7 @@ public class GridBoardWidget extends BoardWidget {
 		return board().getHeight() - y - 1;
 	}
 	
-	public GridBoardWidget( SimulatedGame game, GridBoard b ) {
+	public GridBoardWidget( Simulator game, GridBoard b ) {
 		super( game );
 	}
 	public GridBoard board() throws StandardError, SimulatorError{
