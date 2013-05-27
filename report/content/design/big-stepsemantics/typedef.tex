@@ -2,28 +2,28 @@
     \begin{tabular*}{\textwidth}{l l}
       \hline \\
       \hspace{0.4cm} $\left[\mbox{TYPEDEF}\right]$ & \infrule{env_{C} \vdash
-      \lag D_{G}, env_{T}[T \mapsto \left(T, X, \varepsilon, \varepsilon,
+      \lag D_{G}, env_{T}[T \mapsto \left(T, g, \varepsilon, \varepsilon,
       \varepsilon \right)] \rag \ra env_{T}'}
-      {env_{C} \vdash \lag \texttt{type}\; T\; X\; D_{G},\; env_{T} \rag \ra
+      {env_{C} \vdash \lag \texttt{type}\; T\; g\; D_{G},\; env_{T} \rag \ra
       env_{T}'} \\
 
       \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{BODY}}\right]$ &
-      \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T \mapsto \left(T, X, D_{M},
+      \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T \mapsto \left(T, g, D_{M},
       \varepsilon, \varepsilon \right)] \rag \ra env_{T}'}
-      {env_{C} \vdash \lag \texttt{type}\; T\; X\; \left\{D_{M}\right\}\;
+      {env_{C} \vdash \lag \texttt{type}\; T\; g\; \left\{D_{M}\right\}\;
       D_{G},\; env_{T} \rag \ra env_{T}'} \\
 
       \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{EXTEND}}\right]$ &
       \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T_{1} \mapsto \left(T_{1}, X,
-      \varepsilon, L, T_{2} \right)] \rag \ra env_{T}'}
-      {env_{C} \vdash \lag \texttt{type}\; T_{1}\; X\; \texttt{extends}\;
+      \varepsilon, i, T_{2} \right)] \rag \ra env_{T}'}
+      {env_{C} \vdash \lag \texttt{type}\; T_{1}\; g\; \texttt{extends}\;
       T_{2}\; L\; D_{G},\; env_{T} \rag \ra env_{T}'} \\
 
       \hspace{0.4cm} $\left[\mbox{TYPEDEF}_{\mbox{EXTEND-BODY}}\right]$ &
-      \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T_{1} \mapsto \left(T_{1}, X,
-      D_{M}, L, T_{2} \right)] \rag \ra env_{T}'}
-      {env_{C} \vdash \lag \texttt{type}\; T_{1}\; X\; \texttt{extends}\;
-      T_{2}\; L\; \left\{D_{M}\right\}\; D_{G},\; env_{T} \rag \ra env_{T}'} \\
+      \infrule{env_{C} \vdash \lag D_{G}, env_{T}[T_{1} \mapsto \left(T_{1}, g,
+      D_{M}, i, T_{2} \right)] \rag \ra env_{T}'}
+      {env_{C} \vdash \lag \texttt{type}\; T_{1}\; g\; \texttt{extends}\;
+      T_{2}\; i\; \left\{D_{M}\right\}\; D_{G},\; env_{T} \rag \ra env_{T}'} \\
       \hline \\
     \end{tabular*}
     \capt{Transition rules for type definitions.}

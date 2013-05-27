@@ -1,0 +1,20 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kr}{type} \PY{n+no}{NacGame}[] \PY{k+kr}{extends} \PY{n+no}{Game}[\PY{n+no}{Noughts} \PY{o+ow}{and} \PY{n+no}{Crosses}] \PYZob{}
+  \PY{k+kr}{define} \PY{n+nf}{players} = [
+    \PY{n+no}{NacPlayer}[\PY{n+no}{Crosses}, \PY{n+no}{Crosses}],
+    \PY{n+no}{NacPlayer}[\PY{n+no}{Noughts}, \PY{n+no}{Noughts}]
+  ]
+  \PY{k+kr}{define} \PY{n+nf}{initialBoard} = \PY{n+no}{GridBoard}[\PY{l+m}{8}, \PY{l+m}{8}].\PY{n+nf}{setSquaresAt}[\PY{n+no}{Bottom}[], [\PY{g+gu}{A1}, \PY{g+gu}{B1}, \PY{g+gu}{C1}, \PY{g+gu}{D1}, \PY{g+gu}{E1}, \PY{g+gu}{F1}, \PY{g+gu}{G1}, \PY{g+gu}{H1}]]
+\PYZcb{}
+\PY{k+kr}{type} \PY{n+no}{NacPlayer}[\PY{n+nv}{\PYZdl{}pieceType}, \PY{n+nv}{\PYZdl{}name}] \PY{k+kr}{extends} \PY{n+no}{Player}[\PY{n+nv}{\PYZdl{}name}] \PYZob{}
+  \PY{k+kr}{define} \PY{n+nf}{winCondition}[\PY{n+nv}{\PYZdl{}gameState}] =
+    \PY{n+nv}{\PYZdl{}gameState}.\PY{n+nf}{findSquares}[\PY{k+kr}{friend} (\PY{n+ni}{n} \PY{k+kr}{friend})\PY{l+m}{3}  (\PY{n+ni}{e} \PY{k+kr}{friend})\PY{l+m}{3}  (\PY{n+ni}{nw} \PY{k+kr}{friend})\PY{l+m}{3}  (\PY{n+ni}{ne} \PY{k+kr}{friend})\PY{l+m}{3} ].\PY{n+nf}{size} != \PY{l+m}{0}
+  \PY{k+kr}{define} \PY{n+nf}{tieCondition}[\PY{n+nv}{\PYZdl{}gameState}] = \PY{n+nv}{\PYZdl{}gameState}.\PY{n+nf}{board}.\PY{n+nf}{isFull}
+  \PY{k+kr}{define} \PY{n+nf}{actions}[\PY{n+nv}{\PYZdl{}gameState}] = \PY{n+nf}{addActions}[\PY{n+nv}{\PYZdl{}pieceType[this}], \PY{n+nv}{\PYZdl{}gameState}.\PY{n+nf}{findSquares}[\PY{k+kr}{empty} \PY{n+ni}{s} !\PY{k+kr}{empty}]]
+\PYZcb{}
+\PY{k+kr}{type} \PY{n+no}{Crosses}[\PY{n+nv}{\PYZdl{}owner}] \PY{k+kr}{extends} \PY{n+no}{Piece}[\PY{n+nv}{\PYZdl{}owner}]
+\PY{k+kr}{type} \PY{n+no}{Noughts}[\PY{n+nv}{\PYZdl{}owner}] \PY{k+kr}{extends} \PY{n+no}{Piece}[\PY{n+nv}{\PYZdl{}owner}]
+\PY{k+kr}{type} \PY{n+no}{Bottom}[] \PY{k+kr}{extends} \PY{n+no}{Square}[] \PYZob{}
+  \PY{k+kr}{define} \PY{n+nf}{isEmpty} = \PY{n+nf}{false}
+\PYZcb{}
+\end{Verbatim}
