@@ -29,9 +29,8 @@ The result is a Java application with a graphical user interface, which takes a
 
 \subsection{Overview}
 \label{sec:overview}
-\todo{Hvad er Widget?}
 
-The implementation is based around \classref{Widget}, which simplifies the
+The implementation is based around the class \classref{Widget}, which simplifies the
 process of distributing drawings and handling input. Some \classref{Widget}s
 manage other \classref{Widget}s, while others provide visual and interactive
 content. The game \classref{Widget}s provide visual and interactive intefaces to
@@ -45,9 +44,7 @@ Figure \ref{fig:simulator-overview} shows all these components and their most
 important relationships.
 
 \fig[width=0.7\textwidth]{simulator-overview}{Generalised overview of classes in
-the Simulator and their relations}
-
-\todo{Hvad betyder de forskellige pile?}
+the Simulator and their relations. Triangles means inheriance, while arrows means that one class makes use of the one it points to.}
 
 \subsection{Widget}
 \label{sec:widget}
@@ -55,10 +52,7 @@ the Simulator and their relations}
 \classref{Widget} specifies an object which can have a size and a position, can be
 drawn, take mouse input, and send messages to each other. The most important
 property of \classref{Widget} however is that a \classref{Widget} can contain
-several sub-\classref{Widget}s, and that drawing and mouse input is handled
-according to this hierarchy.
-
-\todo{Hvilken hierarki?}
+several sub-\classref{Widget}s which each can contain futher sub-\classref{Widget}s. We use this tree-structure to control how drawing and mouse input is handled.
 
 \subsubsection{Placement}
 
