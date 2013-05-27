@@ -1,2 +1,2 @@
 let $myList = ["this", "is", "a", "list"]
-  in $myList[1, 2]
+  in $myList[1, 2] // =>["is", "a"]

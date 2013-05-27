@@ -17,7 +17,7 @@ that each provide.
 \label{sec:standardenvironment}
 
 We now introduce the standard environment of \productname{}. The standard environment provides the simple types, such as
-integers, strings, boolean values etc. and their related functions and constants for working with the these.
+integers, strings, boolean values, etc.\ and their related functions and constants for working with the these.
 
 The following global constants are available:
 
@@ -77,13 +77,13 @@ for instance the numeral exceeds the highest possible value a TypeError is throw
 \subsubsection{Direction}
 \begin{dlist}
   \item \type{Direction}[\variable{direction} : \type{Direction}]\\
-  The standard environment provides the Direction type, which can be compared to vectors. There are eight different directions: n (north), s (south), w (west), e (east), nw, ne, sw, se. The type consist of a x value and an y value. For example n has value y = 1 and x = 0, s has value y = -1 and x = 0, w has value y = 0 and x = -1 etc. The Direction type is meant as a practical tool when specifying the movements on a board.  
+  The standard environment provides the Direction type, which can be compared to a vector. There are eight different directions: n (north), s (south), w (west), e (east), nw, ne, sw, se. The type consist of an $x$ value and a $y$ value. For example n has value $y = 1$ and $x = 0$, s has value $y = -1$ and $x = 0$, w has value $y = 0$ and $x = -1$, etc.\ The Direction type is meant as a practical tool for use in patterns. 
 \end{dlist}
 
 \subsubsection{Coordinate}
 \begin{dlist}
   \item \type{Coordinate}[\variable{coordinate} : \type{Coordinate}]\\
-  The standard environment provides the Coordinate type. The Coordinate type is closely related to the Direction type in the way that it also consist of a x value and an y value. When the interpreter detects a number of capital letters followed by a number a numerals it returns a coordinate value object. Examples of coordinate values are A1, Z99 and ABCD1234. The coordinate value A1 corresponds to the x value 1 and y value 1, which is the top-left square on a board. The coordinate type is means as a practical tool to specify squares on a board.  
+  The standard environment provides the Coordinate type. The Coordinate type is closely related to the Direction type in the way that it also consist of a $x$ value and an $y$ value. When the interpreter detects a number of capital letters followed by a number a numerals it returns a coordinate value object. Examples of coordinate values are A1, Z99 and ABCD1234. The coordinate value A1 corresponds to the $x$ value $1$ and $y$ value $1$, which is the top-left square on a board. The coordinate type is means as a practical tool to specify squares on a grid-formed board. Coordinate values must be positive, as negative $x$ and $y$ values make no sense representing coordinates off of the board.
 \end{dlist}
 \subsubsection{Type}
 \begin{dlist}
@@ -117,7 +117,7 @@ In the game environment the following global functions are available:
     \end{center}
     
     Here \constant{addAction} returns a list of empty squares to where it's possible to add a piece of the type \keyword{this}, which in this case was
-    either a crosses piece or noughts piece depending who's turn it is.
+    either a crosses piece or noughts piece depending whose turn it is.
   \item \constant{moveAction}[\variable{piece} : \type{Piece}, \variable{squares} : \type{List}] : \type{List}\\
   	
     
@@ -126,15 +126,183 @@ In the game environment the following global functions are available:
 
 
 \subsubsection{Game}
-The Game type 
+\begin{dlist}
+  \item \type{Game}[\variable{title} : \type{String}]\\
+  Creates a instance of the \type{Game} type with a Game title of \variable{title}, \constant{board} set to \constant{initialBoard} and \constant{currentPlayer} set to \constant{turnOrder}[0]. The \type{Game} type contains all information to describe a board game at a specific point at time.
+  
+  \item \constant{players} : \type{List}\\
+  List of all \type{Player}s which are a part of this game.
+  
+  \item \constant{currentPlayer} : \type{Player}\\
+  The \type{Player} from \constant{players} which currently have the turn.
+  
+  \item \constant{turnOrder} : \type{List}\\
+  The order of \type{Player}s which determines in which order each \type{Player} from \constant{players} has their turn.
+  
+  \item \constant{initialBoard} : \type{Board}\\
+  The value of \constant{board} at the beginning of each game.
+  
+  \item \constant{board} : \type{Board}\\
+  The current state of a \type{Board} for this game.
+  
+  \item \constant{title} : \type{String}\\
+  The title of the game which users can indentify the game with.
+  
+  \item \constant{description} : \type{String}\\
+  An short explanation of the game and/or its rules.
+  
+  \item \constant{matchSquare}[ \variable{position} : \type{Coordinate}, \variable{pattern} : \type{Pattern} ] : \type{Boolean}\\
+  Is true if \variable{pattern} is valid for \variable{position}.
+  
+  \item \constant{matchSquares}[ \variable{positions} : \type{List}, \variable{pattern} : \type{Pattern} ] : \type{Boolean}\\
+  Is true if and only if all \type{Coordinate}s in \variable{positions} is true for \constant{matchSquare} with \variable{pattern}.
+  
+  \item \constant{findSquares}[ \variable{pattern} : \type{Pattern} ] : \type{List}\\
+  \type{List} of all \type{Square}s where its \constant{position} matches \variable{pattern}.
+  
+  \item \constant{findSquaresIn}[ \variable{positions} : \type{List}, \variable{pattern} : \type{Pattern} ] : \type{List}\\
+  \type{List} of \type{Square}s where its \constant{position} matches \variable{pattern}, but only \type{Squares} which \type{Coordinate} exists in \variable{positions}.
+  
+  \item \constant{history} : \type{List}\\
+  \type{List} of all applied \type{Action}s.
+  
+  \item \constant{applyAction}[ \variable{action} : \type{Action} ] : \type{Game}\\
+  A \type{Game} where \constant{board} have been updated according to \variable{action} and where \variable{action} is appended to \constant{history}.
+  
+  \item \constant{undoAction}[ \variable{action} : \type{Action} ] : \type{Game}\\
+  A \type{Game} where \constant{board} have been reset to its state before \type{Action} was applied and with \constant{history} updated accordantly.
+  
+  \item \constant{setHistory}[ \variable{history} : \type{List} ] : \type{Game}\\
+  A \type{Game} where \constant{history} is equaliant to \variable{history}.
+  
+  \item \constant{setBoard}[ \variable{board} : \type{GridBoard} ] : \type{Game}\\
+  A \type{Game} where \constant{board} is equaliant to \variable{board}.
+  
+  \item \constant{setCurrentPlayer}[ \variable{i} : \type{Integer} ] : \type{Game}\\
+  A \type{Game} where \constant{currentPlayer} is \constant{turnOrder}[\variable{i}].
+  
+  \item \constant{nextTurn}[] : \type{Game}\\
+  The \type{Player} which has the turn after \constant{currentPlayer}.
+\end{dlist}
 
 \subsubsection{Board}
+\begin{dlist}
+  \item \type{Board}[]\\
+  A \type{Board} with no \type{Piece}s.
+  
+  \item \constant{pieces} : \type{List}\\
+  A \type{List} containing all \type{Piece}s associated with the \type{Board}.
+  
+  \item \constant{setPieces}[ \variable{pieces} : \type{List} ] : \type{Board}\\
+  A \type{Board} where \constant{pieces} is equaliant to \variable{pieces}.
+\end{dlist}
 
 \subsubsection{GridBoard}
+GridBoard extends Board.
+
+\begin{dlist}
+  \item \type{GridBoard}[ \variable{width} : \type{Integer}, \variable{height} : \type{Integer} ]\\
+  A \type{GridBoard} with \constant{width} and \constant{height} being \variable{width} and \variable{height} respectively.
+  
+  \item \constant{width} : \type{Integer}\\
+  The width of the rectangular \type{Board}.
+  
+  \item \constant{height} : \type{Integer}\\
+  The height of the rectangular \type{Board}.
+  
+  \item \constant{squares} : \type{List}\\
+  A \type{List} of all associated \type{Square}s.
+  
+  \item \constant{setSqaures}[ \variable{squares} : \type{List} ] : \type{GridBoard}\\
+  A \type{GridBoard} where \constant{squares} is equaliant to \variable{squares}.
+  
+  \item \constant{addPiece}[ \variable{piece} : \type{Piece}, \variable{position} : \type{Coordinate} ] : \type{GridBoard}\\
+  A \type{GridBoard} where \variable{piece} is appended to \constant{pieces} and added to the \type{Square} at \variable{position}.
+  
+  \item \constant{addPieces}[ \variable{piece} : \type{Piece}, \variable{positions} : \type{List} ] : \type{GridBoard}\\
+  A \type{GridBoard} where \variable{piece} is appended to \constant{pieces} and added to all the \type{Square}s at any of \variable{positions}.
+  
+  \item \constant{removePiece}[ \variable{piece} : \type{Piece} ] : \type{GridBoard}\\
+  A \type{GridBoard} where \variable{piece} is off-board.
+  
+  \item \constant{movePiece}[ \variable{piece} : \type{Piece}, \variable{position} : \type{Coordinate} ] : \type{GridBoard}\\
+  A \type{GridBoard} where \variable{piece} (which is already contained in \constant{pieces}) is \constant{onBoard} and is only included in one \type{Square}'s \constant{pieces}.
+  
+  \item \constant{squareAt}[ \variable{position} : \type{Coordinate} ] : \type{Square}\\
+  The \type{Square} at \variable{position} in the rectangular grid of \type{GridBoard}.
+  
+  \item \constant{setSqauresAt}[ \variable{square} : \type{Square}, \variable{position} : \type{List} ] : \type{Square}\\
+  A \type{GridBoard} where \constant{squareAt}[ \variable{position} ] is equaliant to \variable{square}.
+  
+  \item \constant{isFull} : \type{Boolean}\\
+  Is true if \constant{emptySquares}.size is 0.
+  
+  \item \constant{emptySquares} : \type{List}\\
+  A \type{List} with \type{Square}s from \constant{squares} where \constant{isEmpty} is false.
+  
+  \item \constant{squareTypes} : \type{List}\\
+  A \type{List} with default \type{Square}s which will be used to create a checkered pattern of \type{Square}s in the grid of \type{Square}s.
+\end{dlist}
 
 \subsubsection{Square}
+\begin{dlist}
+	\item \type{Square}[]\\
+	\type{Square} with no \type{Piece}s.
+	
+	\item \constant{position} : \type{Coordinate}\\
+	\type{Coordinate} describing the position on a \type{GridBoard}.
+	
+	\item \constant{pieces} : \type{List}\\
+	A \type{List} with \type{Piece}s located on this \type{Square}.
+	
+	\item \constant{addPiece}[ \variable{piece} : \type{Piece} ] : \type{Square}\\
+	A \type{Square} where \variable{piece} is appended to \constant{pieces}.
+	
+	\item \constant{removePiece}[ \variable{piece} : \type{Piece} ] : \type{Square}\\
+	A \type{Square} where \variable{piece} is not contained in \constant{pieces}.
+	
+	\item \constant{setPieces}[ \variable{pieces} : \type{List} ] : \type{Square}\\
+	A \type{Square} where \constant{pieces} is equaliant to \variable{pieces}.
+	
+	\item \constant{image} : \type{String}\\
+	Path to an image file used for visualizing the \type{Square}.
+	
+	\item \constant{isOccupied} : \type{Boolean}\\
+	Is true if \constant{pieces}.\constant{size} is larger than 0.
+	
+	\item \constant{isEmpty} : \type{Boolean}\\
+	Is true if \constant{pieces}.\constant{size} is 0.
+	
+	\item \constant{setPosition}[ \variable{position} : \type{Coordinate} ] : \type{Square}\\
+	A \type{Square} where \constant{position} is equaliant to \variable{position}.
+\end{dlist}
 
 \subsubsection{Piece}
+\begin{dlist}
+  \item \type{Piece}[ \variable{owner} : \type{Player} ]\\
+  \type{Piece} with \constant{owner} set to \variable{owner}.
+  
+  \item \constant{owner} : \type{Player}\\
+  \type{Player} which owns this \type{Piece}.
+  
+  \item \constant{image} : \type{String}\\
+  Path to an image file used for visualizing the \type{Piece}.
+  
+  \item \constant{position} : \type{Coordinate}\\
+  \type{Coordinate} for the \type{Square} this \type{Piece} is located on.
+  
+  \item \constant{move}[ \variable{position} : \type{Coordinate} ] : \type{Piece}\\
+  A \type{Piece} with \constant{position} set to \variable{position} and \constant{onBoard} set to true.
+  
+  \item \constant{remove}[] : \type{Piece}\\
+  A \type{Piece} where \constant{position} is invalid and \constant{onBoard} is false.
+  
+  \item \constant{onBoard} : \type{Boolean}\\
+  Is true if \type{Piece} is on the \type{GridBoard}.
+  
+  \item \constant{actions}[ \variable{game} : \type{Game} ] : \type{List}\\
+  A \type{List} of possible \type{Action}s the \type{Piece} can make on its \constant{owner}'s turn.
+\end{dlist}
 
 \subsubsection{Player}
 

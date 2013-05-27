@@ -1,11 +1,12 @@
 \section{Parser}
 \label{sec:parserimplementation}
 
-In this section we present the handwritten parser of \productname{}'s.
-We have written a top-down recursive descent parser, which is within the class
-of LL(1) parsers. The grammar for \productname{} is suited for this because
-e.g.\ it does not have left-recursive productions. In the end of the section we present our work 
-with SableCC and the reason why we chose not to continue working with this tool.
+In this section we present \productname{}'s handwritten parser. We have
+written a top-down recursive descent parser, which is within the class
+of LL($1$) parsers. The grammar for \productname{} is suited for this
+because e.g.\ it does not have left-recursive productions. In the end of
+the section we present our work with SableCC and the reason why we choose
+not to continue working with this tool.
 
 \subsection{Constructing the parser}
 %structured as the grammar
@@ -19,7 +20,7 @@ expresses that the next set of terminals must begin with a left bracket (`['),
   terminals, before continuing parsing the next part of the rule.
 
 %discuss the if expression
-In \lstref{lst:ifexpr} we give an example of how this structure looks like in
+In \lstref{lst:ifexpr}, we give an example of how this structure looks like in
 our handwritten parser. The production rule for an if-expression is presented in
 \secref{sec:conditionalexpressions}.
 
@@ -29,7 +30,7 @@ our handwritten parser. The production rule for an if-expression is presented in
 %\end{ebnf}
 
 The production for if-expression says that every expression of this type
-must start with the combination of the two symbols which spell the word
+must start with the combination of the two symbols spelling the word
 \gter{if}. When the parser meets this word in an expression, it knows
 that it has to parse an if-expression.
 
@@ -66,7 +67,7 @@ whole if expression.
 
 \subsection{Looking ahead in the input}
 %lookAhead methods - atomic
-We mentioned earlier that the parser is an LL(1) parser, which means that the
+We mentioned earlier that the parser is an LL($1$) parser, which means that the
 parser is able to look ahead in the sequence of tokens. We have shown the
 \methodref{lookAhead} method to determine if the next token is part of an
 atomic expression. The production for the atomic expression is presented in
@@ -132,7 +133,7 @@ the \methodref{lookAhead} methods are used.
 
 An assignment begins with the reserved word \gter{let} and the first
 \methodref{lookAhead} method peeks for exactly that token to determine
-if the next production is an assignment. If the method returns true then
+if the next production is an assignment. If the method returns true, then
 the next token is in fact the \gter{let} word, and the parser enters a
 new method, namely the \methodref{assignment} method which checks to
 determine if the rest of the production is correctly written. The same
@@ -146,10 +147,10 @@ begin with either an atomic value or a minus operator. So the code uses a
 specific token as a parameter to check if the next production is an operation.
 
 The methods return nodes which are connected with each other to form
-a complete AST\@. When the parser has parsed every token of the input,
+a complete AST. When the parser has parsed every token of the input,
 it can produce an AST that corresponds to the program written in
 \productname{}. This shows that the parser is built systematically
-according to the grammar, producing a parse tree consisting of AST
+according to the grammar, producing an unambiguous parse tree consisting of AST
 nodes.
 
 \subsection{SableCC}
@@ -163,28 +164,30 @@ compilers and interpreters. We have implemented an early version of
 
 \subsubsection{Choice of SableCC}
 We chose SableCC instead of various other popular tools such as
-ANTLR\cite{antlr} and JavaCC\cite{javacc}. Though ANTLR and JavaCC are far more
-well-documented than SableCC, we still chose this tool because it's parser
-generates a LALR($1$) parser, whereas ANTLR and JavaCC create simpler
-LL($k$) parsers, which our hand-written implementation already takes advantage of.
-Therefore, we felt LALR($1$) parsing to be more interesting, since it
-also supports more powerful grammars (such as left-recursion).
+ANTLR\cite{antlr} and JavaCC\cite{javacc}. Though ANTLR and JavaCC are
+far more well-documented than SableCC, we still choose to work with
+this tool because its parser generates a LALR($1$) parser, whereas
+ANTLR and JavaCC create simpler LL($k$) parsers, which our hand-written
+implementation already takes advantage of. Therefore, we felt LALR($1$)
+parsing to be more interesting, since it also supports more powerful
+grammars, such as left-recursion.
 
-SableCC outputs an abstract syntax node type fokokr each alternation in
-every rule in the grammar specifications file. It's then possible to
-iterate over these nodes via extending the visitor pattern SableCC also
+SableCC outputs an abstract syntax node type for each alternation
+in every rule in the grammar specifications file, which is merely a
+simple text file with EBNF-like syntax. It's then possible to iterate
+over these nodes via extending the visitor pattern SableCC also
 supplies, generating code or directly interpreting a syntactically
 correct program. This is all done in classes separate from the grammar
 specifications, which is also desirable and different from ANTLR
 and JavaCC, where action code is injected directly in the grammar
 specification. This is all done in Java, which is also desirable, since
-it would work well with the rest of the project (also written in Java).
+it would work well with the rest of the project, written in Java.
 
 \subsubsection{Experience with SableCC}
 Our experience with the tool has been rather cumbersome, in that it took
 quite a while to read the documentation before and during writing the
 specifications, as it simply isn't just copy/pasting EBNF grammar
-into a file. An example of the if-expression rule is seen here
+into a file. An example of the if-expression rule is seen below:
 
 \begin{lstlisting}[caption={Part of the grammar specifications file of SableCC, with focus on if-expressions.}]
 Tokens
@@ -204,19 +207,20 @@ Productions
 
 % Pros
 This example brings out the strengths of SableCC, as it looks very
-similar to the EBNF for if-expressions, with a few additions. As long as
-you know the special syntax and how helpers, tokens, and productions works, it
+similar to the EBNF for expressions and if-expressions seen in
+\secref{sec:expressions}, with a few additions. As long as you know
+the special syntax and how helpers, tokens, and productions works, it
 is possible to create scanners and parsers very quickly. This was not
-our case, as no one had experience with any form of compiler-compilers.
+our case, as no one had experience with any form of compiler-compiler.
 Given that it generates a LALR parser, it grants the ability to have
 more powerful grammar than what we had designed. Lastly, the fact that
 there's a clear and clean separation between automated, generated code
 and user code makes the grammar and compilation/interpretation parts
 easier to maintain. When adding new features to the language, you simply
 have to update the specifications file and generate a new scanner/parser
-combination. On the other hand when adding new features to the language while
-using a handwritten scanner and parser many lines of codes needs to be change
-in order to implement the new feature. 
+combination. Whereas when adding new features to the language
+while using a handwritten scanner and parser many lines of code needs
+to be change in order to implement the new feature.
 
 % Cons
 Even though SableCC looks like a prime candidate to continue
@@ -224,23 +228,23 @@ interpretation with, we chose not to use the tool. This is because it
 took an unreasonable amount of time to figure out how to precisely
 define the grammar to keep it from being ambiguous. And with poor
 documentation, it took even longer. Also, it offers less control and
-customizability, compared to writing our own from scratch. As an
+customisability, compared to writing our own from scratch. As an
 example, the tool offers an application-specific interface to tree
 walking the AST nodes with the visitor pattern, requiring knowledge of
-how SableCC implements it. SableCC also generates around 17000 lines of
-Java code, even for our simple grammar, which seems superfluous compared
-to the handwritten code, consisting of around 1500 lines of code.
+how SableCC implements it. SableCC also generates around $17,000$ lines
+of Java code, even for our simple grammar, which seems superfluous
+compared our handwritten scanner and parser, consisting of ``only''
+around $1,500$ lines of code.
 %  - Don't learn as much about different parser techniques
 %  - Old project, not as active anymore
 
-% WHAT TO CALL THIS SUBSUBSECTION?
-\subsubsection{Discussion}
+\subsubsection{Discussion of using a compiler compiler}
 We chose not to continue using SableCC on our updated grammar, due
 to the weight of cons against pros, and the fact that the time spent
 working on implementing SableCC was also spent making the handwritten
-scanner and parser and making them work exactly the way we want them to. It might
-not be as easy to modify our language with this solution, but the time
-spend on modifying and adding features to our language with the use of a
-handwritten scanner and parser is not wasted time, but learning time, which
-gives us better understanding of their underlying functionality.  
-
+scanner and parser and making them work exactly the way we want them to.
+It might not be as easy to modify our language with this solution, but
+the time spent on modifying and adding features to our language with the
+use of a handwritten scanner and parser is not wasted time, as it was
+spent learning, which gives us better understanding of their underlying
+functionality.

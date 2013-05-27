@@ -1,90 +1,209 @@
 \section{Simulator}
 
-The Simulator is to provide a visual interface to the API provided by GAL. The interface should give a visual representation of the board and pieces similar to how the board game would look in real life. Furthermore it should provide an easy way to interact with the game, sufficient enough to be able to play it.
+In this section, we begin by giving an overview of the relations of classes in
+the Simulator in \secref{sec:overview}. Afterwards, we present
+\classref{Widget}s and their properties in \secref{sec:widget}. We also explain
+the different actions that are available in \secref{sec:actions}. Furthermore,
+we explain how the different \classref{Widget}s communicate with each other in
+\secref{sec:communication}. Lastly, we present how we have made the game
+interactive in \secref{sec:interaction}, and how everything is connected in
+\secref{sec:connection}.
 
-The result is a Java application with a graphical user interface, which takes a \productname code file and makes it playable by the use of GAL.
+%Overview
+%Widget
+%Propagated actions
+%Communication between widgets
+%Making games interactive
+%Connecting everything
 
+The Simulator has been constructed to provide a visual interface to the API
+provided by the Game Abstraction Layer (GAL). The interface should give a visual
+representation of the board and pieces, similar to how the board game would look
+in real life. Furthermore, it should provide an easy way to interact with the
+game. This interaction should be sufficient enough to make it possible to play
+the game.
+
+The result is a Java application with a graphical user interface, which takes a
+\productname{} code file and makes it playable by the use of GAL.
 
 \subsection{Overview}
+\label{sec:overview}
+\todo{Hvad er Widget?}
 
-The implementation is based around \classref{Widget}, which simplifies the process of distrubiting drawing and handling input. Some \classref{Widget}s manages other \classref{Widget}s, while others provide visual and interactive content. The game \classref{Widget}s provide visual and interactive intefaces to GAL.
+The implementation is based around \classref{Widget}, which simplifies the
+process of distributing drawings and handling input. Some \classref{Widget}s
+manage other \classref{Widget}s, while others provide visual and interactive
+content. The game \classref{Widget}s provide visual and interactive intefaces to
+GAL.
 
-To work with graphics and input, the game framework slick2d is used. \classref{SimulatedGame} is used to bind slick2d, \classref{Widget}s and GAL together to provide a complete system.
+To work with graphics and input, the game framework slick2d is used. \todo{kilde på slick2d}
+\classref{SimulatedGame} is used to bind slick2d, \classref{Widget}s, and GAL
+together to provide a complete system.
 
-Figure \figref{fig:simulator-overview} shows all these components and their most important relationships.
+Figure \ref{fig:simulator-overview} shows all these components and their most
+important relationships.
 
-\fig[width=\textwidth]{simulator-overview}{Generalized overview of classes in the Simulator and their relations}
+\fig[width=0.7\textwidth]{simulator-overview}{Generalised overview of classes in
+the Simulator and their relations}
 
+\todo{Hvad betyder de forskellige pile?}
 
 \subsection{Widget}
+\label{sec:widget}
 
-\classref{Widget} specifies a object which can have a size and position, be drawn, take mouse input, and send messages to eachother. The most important property of \classref{Widget} however is that a \classref{Widget} can contain several sub-\classref{Widget}s, and that drawing and mouse input is handled according to this heiriacy.
+\classref{Widget} specifies an object which can have a size and a position, can be
+drawn, take mouse input, and send messages to each other. The most important
+property of \classref{Widget} however is that a \classref{Widget} can contain
+several sub-\classref{Widget}s, and that drawing and mouse input is handled
+according to this hierarchy.
 
+\todo{Hvilken hierarki?}
 
 \subsubsection{Placement}
 
-A \classref{Widget} has a position specified with a (x,y) coordinate. Its position is relative to its parent, so if a \classref{Widget} has position (7,10) and its parent has (23,50), its absolute position is (30,60).
+A \classref{Widget} has a position specified with a $(x, y)$ coordinate. Its
+position is relative to its parent, so if a \classref{Widget} has position
+$(7, 10)$ and its parent has $(23, 50)$, its absolute position is $(30, 60)$.
 
-Furthermore, a \classref{Widget} has a size specified with a width and height, but it also contains an allowed range of for each dimention. This allows us to specify that a \classref{Widget} might be dynamic in size and can be adjusted if wanted.
-
+Furthermore, a \classref{Widget} has a size specified with a width and height,
+but it also contains an allowed range for each dimension. This allows us to
+specify that a \classref{Widget} might be dynamic in size and can be adjusted if
+wanted.
 
 \subsubsection{Automatic placement and sizing}
 
-Instead of setting sizes and positions manually, we create Container classes which manages the position and size of it sub-\classref{Widget}s. By using \classref{Widget}s which are dynamic in size, we can create a layout which works independant of the window size.
+Instead of setting sizes and positions manually, we create container classes
+that manage the position and size of their sub-\classref{Widget}s. By using
+\classref{Widget}s which are dynamic in size, we can create a layout which works
+independent of the window and board size.
 
-\classref{ScaleContainer} is such a Container \classref{Widget} and positions \classref{Widget}s along an axis. For \classref{Widget}s which size is dynamic, the remaining available space is distrubted evenly amoung them. An example is shown in \figref{fig:ScaleContainer}. The top-level \classref{Widget} is a \classref{ScaleContainer} set to position \classref{Widget}s in the vertical direction. It does not affect its own size, only its sub-\classref{Widget}s. The second \classref{ScaleContainer} (containing two buttons, to be positioned horizontally) is thus resized by the first \classref{ScaleContainer}. The ordering of the sub-\classref{Widget}s determines the sequence they are positioned in the \classref{ScaleContainer}.
+\classref{ScaleContainer} is such a container \classref{Widget} and positions
+\classref{Widget}s along an axis. For \classref{Widget}s whose size is dynamic,
+the remaining available space is distributed evenly amoung them. An example is
+shown in \figref{fig:ScaleContainer}. The top-level \classref{Widget} is a
+\classref{ScaleContainer} set to position \classref{Widget}s vertically. It does
+not affect its own size, only its sub-\classref{Widget}s. The second
+\classref{ScaleContainer} (containing two buttons, to be positioned
+horizontally) is thus resized by the first \classref{ScaleContainer}. The
+ordering of the sub-\classref{Widget}s determines the sequence they are
+positioned in the \classref{ScaleContainer}.
 
-\fig[width=\textwidth]{ScaleContainer}{How \classref{ScaleContainers} (marked with color) affects the positioning and sizing of sub-\classref{Widget}s.}
+\fig[width=0.7\textwidth]{ScaleContainer}{How \classref{ScaleContainers} (marked
+with color) affects the positioning and resizing of sub-\classref{Widget}s.}
 
-Creating an layout is now only a matter of building a heiriacy of \classref{Widget}s, not deciding the exact position and size of each and every single \classref{Widget}.
-
+Creating a layout is now only a matter of building a hierarchy of
+\classref{Widget}s, not deciding the exact position and size of each and every
+single \classref{Widget}.
 
 \subsection{Propagated actions}
+\label{sec:actions}
 
-Drawing a \classref{Widget} should not only draw the \classref{Widget}, but also all its sub-\classref{Widget} and theirs sub-\classref{Widget}s. To do this, \classref{Widget} has two methods, draw() and handleDraw(). handleDraw() needs to be overwritten in sub-\classref{Widget}s which wants to provide a custom drawing method. draw() handles all the logic for drawing sub-\classref{Widget}s so the inheriated class only needs to worry about itself. An overview of draw() is given in Listing{lst:simulatorDraw}.
+Drawing a \classref{Widget} should not only draw the \classref{Widget}, but also
+all its sub-\classref{Widget}s and their sub-\classref{Widget}s. To do this,
+\classref{Widget} has two methods, \texttt{draw()} and \texttt{handleDraw()}.
+\texttt{handleDraw()} needs to be overridden in sub-\classref{Widget}s that 
+wants to provide a custom drawing method. \texttt{draw()} handles all the logic
+for drawing sub-\classref{Widget}s, so the inherited class only needs to worry
+about itself. An overview of \texttt{draw()} is given in
+\lstref{lst:simulatorDraw}.
 
-\lstinputlisting[caption={\emph{Pseudocode for the draw() method.}}, label={lst:simulatorDraw}, language=Java]{listings/simulatorDraw.java}
-	\todo{ looks wrong, draw() will never be called on the top-level \classref{Widget}. Secondly, draw() should be called before handleDraw() }
+\lstinputlisting[caption={\emph{Pseudocode for the \texttt{draw()} method.}},
+label={lst:simulatorDraw}, language=Java]{listings/simulatorDraw.java} 
 
-To futher ease development, the coordinate-system is translated so handleDraw() will be done using local coordinates instead of absolute coordinates. Furthermore we apply clipping, so that any drawing outside the \classref{Widget} will be clipped and not displayed. This way we can ensure \classref{Widget}s can't mess with other \classref{Widget}s.
+\todo{looks wrong, draw() will never be called on the top-level
+  \classref{Widget}.  Secondly, draw() should be called before handleDraw() }
 
-We enforce this by making draw() final so it can't be overwritten, and handleDraw() is protected, so the calling class can't call handleDraw() instead of draw() by accident.
+To further ease development, the coordinate system is translated so
+\texttt{handleDraw()} will be done using local coordinates instead of absolute
+coordinates.  Furthermore, we apply clipping, so that any drawing outside the
+\classref{Widget} will be clipped and not displayed. This way we can ensure that
+\classref{Widget}s can't mess with other \classref{Widget}s.
 
+We enforce this by restricting the \texttt{draw()} method with Java's final
+keyword so it can't be overwridden, and \texttt{handleDraw()} is protected, so
+the calling class can't call \texttt{handleDraw()} instead of \texttt{draw()} by
+accident.
 
 \subsubsection{Mouse input}
 
-The samme pattern is used for mouse input, but here we use it to determine which \classref{Widget} is responsible for handling it. An overview is given in Listing \ref{lst:simulatorMouseClicked}.
+The same pattern is used for mouse input, but here we use it to determine which
+\classref{Widget} is responsible for handling it. An overview is given in
+\lstref{lst:simulatorMouseClicked}.
 
-\lstinputlisting[caption={\emph{Pseudocode for the mouseClicked() method.}}, label={lst:simulatorMouseClicked}, language=Java]{listings/simulatorMouseClicked.java}
+\lstinputlisting[caption={\emph{Pseudocode for the \texttt{mouseClicked()}
+method.}}, label={lst:simulatorMouseClicked},
+language=Java]{listings/simulatorMouseClicked.java}
 
-Like with drawing, we translate coordinates into local coordinates, however notice that it returns a boolean which is used to determine if the event was handled, and it will stop as soon any callee returns true. A second difference is that in constrast to drawing, input is handled bottom up. The reasoning is that the lower we get in the heraicy, the more specific the behaviour of each \classref{Widget} is. Thus, we try to see if the more specific \classref{Widget}s will handle the input and if not, less and less specific \classref{Widget}s are tried.
+Like with drawing, we translate coordinates into local coordinates, however
+notice that it returns a boolean which is used to determine if the event was
+handled, and it will stop as soon as any callee returns true. A second
+difference is that in constrast to drawing, input is handled bottom up. The
+reasoning is that the lower we get in the hierarchy, the more specific the
+behaviour of each \classref{Widget} is. Thus, we try to see if the more specific
+\classref{Widget}s will handle the input and if not, less and less specific
+\classref{Widget}s are tried.
 
-For mouse presses and releases, it will only try \classref{Widget}s which contains the position the mouse is currently pointing. For mouse dragging the situation is different, it will try any \classref{Widget} which has initiated a drag, even if the mouse has moved outside it. If this was not the case, a scrollbar for example would only move if keep the mouse exactly on it, which usually is tricky as they are long and slim.
-
+When mouse buttons are pushed and released, it will only try \classref{Widget}s
+which contain the position at which the mouse is currently pointioned at. For
+mouse dragging the situation is different, it will try any \classref{Widget}
+which has initiated a drag, even if the mouse has moved outside it. If this was
+not the case, a scrollbar for example would only move if we kept the mouse
+exactly on top of it, which usually is tricky as they are long and slim.
 
 \subsection{Communication between Widgets}
+\label{sec:communication}
 
-Consider the case where a \classref{Widget} represent a button. The user might click on it, but the button by itself is not interested in what this should signify. Thus, we need some way of notifying \classref{Widget}s that some events have happened inside other \classref{Widgets}. For this, the Observer design pattern is used in \classref{Widget}.
-
+Consider the case where a \classref{Widget} represent a button. The user might
+click on it, but the button by itself is not interested in what this should
+signify. Thus, we need some way of notifying \classref{Widget}s that some events
+have happened inside other \classref{Widget}s. For this, the Observer design
+pattern is used in \classref{Widget}.
 
 \subsection{Making games interactive}
+\label{sec:interaction}
 
-Two "game \classref{Widgets}" which interacts with GAL are used to present the game to the user. They are \classref{GameInfoWidget} which provides information like move history, and \classref{BoardWidget} which displays an interactive board with pieces based on GAL.
+Two "game \classref{Widget}s" which interact with GAL are used to present the
+game to the user. They are \classref{GameInfoWidget}s which provide information
+like move history, and \classref{BoardWidget} which displays an interactive
+board with pieces based on GAL.
 
 \subsubsection{BoardWidget}
 
-For interaction, \classref{BoardWidget} support selecting \classref{Action}s by the use of either Drag\&Drop or click and select. While Drag\&Drop only allows you to move a \classref{Piece} from one \classref{Square} to another, click and select will work on any two \classref{Square}s whether or not it contains any \classref{Pieces}. It will go through all available \classref{Action}s and find the ones which are related to those Squares. To help ease this process, usable \classref{Square}s are hinted as shown in \todo{ add screenshot }.
+For interaction, \classref{BoardWidget} supports selecting \classref{Action}s by
+the use of either Drag\&Drop or Click\&Select. While Drag\&Drop only allows
+you to move a \classref{Piece} from one \classref{Square} to another, Click\&Select 
+will work on any two \classref{Square}s whether or not it contains any
+\classref{Piece}s. It will go through all available \classref{Action}s and find
+the ones which are related to those Squares. To help ease this process, usable
+\classref{Square}s are hinted as shown in \todo{ add screenshot }.
 
-In reality we have two \classref{Widget}s, \classref{BoardWidget} and \classref{GridBoardWidget} which is a specialization of \classref{BoardWidget}. While it is not necessary at this point of time, it is an attempt to generalize \classref{GirdBoard} so that a future addition with new \classref{Board} types will be easier to implement.
-
+In reality we have two \classref{Widget}s: \classref{BoardWidget} and
+\classref{GridBoardWidget} which are specialisations of \classref{BoardWidget}.
+While it is not necessary at this point, it is an attempt to generalise
+\classref{GirdBoard} so that a future addition with new \classref{Board} types
+will be easier to implement.
 
 \subsection{Binding everything together}
+\label{sec:connection}
 
-The class \classref{SimulatedGame} has the responsibility to connect slick2d with the \classref{Widget} structure, and GAL with the game \classref{Widget}s.
+The class \classref{SimulatedGame} has the responsibility to connect slick2d
+with the \classref{Widget} structure, and GAL with the game \classref{Widget}s.
 
-\classref{SimulatedGame} contains one \classref{ScaleContainer}, which it sizes to fit the whole window and tells it to adjust the sizes of its sub-\classref{Widgets}. Secondly, it sends all mouse-events to this \classref{Widget} and draws it whenever slick2d wants to be redrawed.
+\classref{SimulatedGame} contains one \classref{ScaleContainer}, which it resizes
+to fit the whole window and tells it to adjust the sizes of its
+sub-\classref{Widgets}. Secondly, it sends all mouse-events to this
+\classref{Widget} and draws it whenever slick2d wants to be redrawn.
 
-On construction of \classref{SimulatedGame}, it reads the \productname codefile and attempts to load it through GAL. It then goes on and creates the game \classref{Widget}s, but it does not pass a reference to the game directly. As the game object changes each time an \classref{Action} is applied this would require us to update it in every game object each time. Instead we pass a reference to this instance of \classref{SimulatedGame} and the game Widgets must then access the game 
-object though its accessor methods directly, without caching it.
+On construction of \classref{SimulatedGame}, it reads the \productname{} code file
+and attempts to load it through GAL. It then creates the game
+\classref{Widget}s, but it does not pass a reference to the game directly. As
+the game object changes each time an \classref{Action} is applied, which
+requires us to update it in every game object each time. Instead we pass a
+reference to this instance of \classref{SimulatedGame} and the game
+\classref{Widget}s must
+then access the game object through its accessor methods directly, without
+caching it.
 
-One final task of \classref{SimulatedGame} is to handle any exceptions in GAL or the \classref{Simulator} and show them to the user, without the application crashing.
+One final task of \classref{SimulatedGame} is to handle any exceptions in GAL or
+the \classref{Simulator} and show them to the user, without the application
+crashing.

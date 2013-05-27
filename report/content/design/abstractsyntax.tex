@@ -15,7 +15,7 @@ The abstract syntax of programming languages is defined as follows\cite[p.
     that define how the elements of the given category can be built and combined
 \end{dlist}
 
-Table \ref{table:syn-cat} presents the syntactic cateogries for \productname{}.
+Table \ref{table:syn-cat} presents the syntactic categories of \productname{}.
 
 \begin{table}[ht]
   \begin{center}
@@ -45,16 +45,16 @@ Table \ref{table:syn-cat} presents the syntactic cateogries for \productname{}.
 In \tableref{table:syn-cat} we have letters that define one syntactic
 category. For instance we have $n \in \mathbf{Integer}$, which means that when
 we see a $n$ in the formation rules this is actually an integer value. There
-are two types of lists; \textbf{VarList} and \textbf{List}. These differ in that
+are two types of lists: \textbf{VarList} and \textbf{List}. These differ in that
 a variable list is used as formal parameters for types and the list is the
 sequence of parameters for a super type. 
 
-Furhtermore, we have defined two definitions: \textbf{GlobalDef} and
+Furthermore, we have defined two definitions: \textbf{GlobalDef} and
 \textbf{MemberDef}. These are the set of definitions in their respective scopes.
-E.g. a in the global scope we can define differnet constants and types. In the
+E.g. a in the global scope we can define different constants and types. In the
 member scope we can also define different constants, and also the abstract
 definitions and the notion of data definitions. This will become very apparent
-in \secref{sec:definitions} where we present the grammar of program structures.
+in \secref{sec:definitions}, where we present the grammar of program structures.
 
 \subsubsection{Definitions}
 \label{sec:abstractdefinitions}
@@ -231,4 +231,4 @@ slightly different ``$\dots$'' to illustrate the three dots that precede a
 variable argument (vars) which we present in \secref{sec:constantdefinitions}.
 It should be clear from the context which of the two is being used.
 
-The $\varepsilon$ represents an empty definition.
+Epsilon denoted by $\varepsilon$ represents an empty definition.

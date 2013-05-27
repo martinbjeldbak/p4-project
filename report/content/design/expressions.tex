@@ -2,7 +2,7 @@
 \label{sec:expressions}
 
 Throughout this section we will present all the expressions that are included in
-\productname{}. We have provided big-step semantics for six of the expressions
+\productname{}. We have provided big-step semantics for six central expressions
 in this section. These are the ones that we have deemed most necessary and they
 are not as any other construct. Which sections that include semantics will be
 explained in the following.
@@ -15,7 +15,7 @@ big-step semantics. Afterwards, we present the conditional expressions in
 \secref{sec:conditionalexpressions} followed by a lambda expressions in
 \secref{sec:lambdaexpressions}. We provide big-step semantics for lambda
 expressions. Furthermore, we present the concept of a set expression in
-\secref{sec:setexpressions}. We also provied big-step semantics for set
+\secref{sec:setexpressions}. We also supply big-step semantics for set
 expressions. Lastly, we present the different operators and calls in
 \secref{sec:operatorsandcalls}. Here we provide big-step semantics for function
 calls and for member access.
@@ -103,7 +103,7 @@ by commas). The following statements can be made about lists:
 \item Lists are immutable.
 \end{nlist}
 
-When a list is evaluated, each expressions is evaluated to a value (the order of
+When a list is evaluated, each expression is evaluated to a value (the order of
 evaluation does not matter, since no side-effects are possible, lazy-evaluation
 of expressions could even be a possibility), and all values (in the same order
 as the expressions) are added to the resulting \type{List}-value. When a
@@ -144,7 +144,7 @@ for lists.
 List access requires two rules, since two cases are possible. The first case, is
 when just one offset is requested, then that element should be returned. In the
 second case, two offsets are requested, and a range of elements should be
-returned.
+returned, also in the form of a list.
 
 \subsection{Let expressions}
 \label{sec:letexpressions}
@@ -159,7 +159,7 @@ Variables in \productname{} are assigned using let expressions:
 \end{ebnf}
 
 A let expression consists of one or more assignments and an expression. Each
-assignments assigns the value of an expression to a variable name. These
+assignment assigns the value of an expression to a variable name. These
 variables can then be used in the expression after the \texttt{in}-keyword.
 After the evaluation of the let-expression, the variables cease to exist.
 
@@ -193,19 +193,19 @@ illustrate the functionality of the expression.
 
 \input{content/design/big-stepsemantics/let}
 
-The transition rules for $[\mbox{LET-1}]$ is recursively because we must
-evaluate each expression $(x_{1}=E_{1})$ before we move on to the next one. This
+The transition rules for $[\mbox{LET-1}]$ is recursive because we must
+evaluate each expression $(x_{1}=E_{1})$ individually before we move on to the next one. This
 is a must because of the fact that the next expressions can in fact make use of
 the previous expressions value. As an example take a look at the following code
 sample:
 
 \codesample{letbigstep.junta}
 
-So, each call where there are more than one expression to be evaluated we call
-the transition rule $[\mbox{LET-1}]$ where $k \geq 2$. Here the expression first
+So, each call where there is more than one expression to be evaluated, 
+the transition rule $[\mbox{LET-1}]$ where $k \geq 2$ is used. Here the expression first
 in line to be evaluated will be evaluated before a new call to one of the two
 transition rules is made. When we reach a let expression with only one
-expression then we call the transition rule $[\mbox{LET-2}]$ where $k < 2$.
+expression, we then call the transition rule $[\mbox{LET-2}]$ where $k < 2$.
 
 \subsection{Conditional expressions}
 \label{sec:conditionalexpressions}
@@ -255,7 +255,7 @@ Consider the following example:
 
 \codesample{closuredef.garry}
 
-A function \function{getAdder}, which takes one argument (\variable{a}) and
+The function \function{getAdder} takes one argument (\variable{a}) and
 returns a lambda expression, is defined. Notice how \variable{a} is used within
 the lambda expression. This means that when the lambda expression is created, it
 must remember the value of the variables that exist in the scope, in which it is
@@ -269,8 +269,8 @@ $25$. Then the function expression is evaluated, which results in a new lambda
 expression (with a reference to scope $A$).  This is returned and assigned to
 \variable{adder} in line 1 of the above example.
 
-In the second line the \variable{adder} is called as a function, which means
-that a new scope, $B$, is created, in which the variable \variable{b} is
+In the second line, \variable{adder} is called as a function, meaning
+that a new scope, $B$, is created, where the variable \variable{b} is
 assigned the value $5$. The important part is that $B$'s parent scope is set to
 $A$ (which is saved with the lambda expression). The expression (the right side
 of the lambda expression) is then evaluated. First the \variable{a}-variable is
@@ -284,7 +284,7 @@ lambda-expression ends up being $30$.
 \subsubsection{Big-step semantics}
 
 The semantics presented in \tableref{semantic:lambda} is the transition rule for
-the lambda expression. 
+lambda expressions.
 
 \input{content/design/big-stepsemantics/lambda}
 
@@ -292,8 +292,9 @@ The three environments ($env_{T}, env_{C}, env_{V}$) must be known before it is
 possible to execute a lambda expression. We need to know which types, constants
 and different variables are given in the specific scope.
 
-The lambda expressions evaluates to a value $v$. The side condition of the
-transition rule explains that $v$ is assigned the $4$-tuple.
+The lambda expressions evaluates to a value $v$. The side condition
+of the transition rule explains that $v$ is assigned the $4$-tuple, a
+function value.
 
 \subsection{Set expressions}
 \label{sec:setexpressions}
@@ -340,11 +341,14 @@ copy of that object with a new variable environment, containing the new data.
 \subsection{Operators and calls}
 \label{sec:operatorsandcalls}
 
-Operators are useful for doing calculations, and \productname{} supports the
-basic mathematical operators and precedence. In order to prevent left-recursion,
-which makes it possible for us to construct an LL-parser (this was discussed in
-\secref{subsec:llparsersandlrparsers}), but preserve left-associativity. The
-grammar for the operators of \productname{} are described using operator
+Operators are useful for doing calculations, and \productname{} supports
+basic mathematical operators and precedence. In order to prevent
+left-recursion, which makes it possible for us to construct an LL-parser
+(this was discussed in \secref{subsec:llparsersandlrparsers}), but
+preserve left-associativity we have created a hierarchy of operators,
+taking advantage of LL-parsing by putting the operators with highest
+precedence the lowest in any parse tree that includes them. The grammar
+for the operators of \productname{} are described using operator
 sequences. A sequence is essentially just a list of operations on that
 particular precedence level. In this way all the precedence levels of
 \productname{} are described formally:
@@ -388,7 +392,7 @@ operators ordered by precedence. The precedence of operators is presented in
 }
 
 Each precedence level will correspond to a certain rule in the grammar. For
-instance the fifth precedence level for addition and subtraction is expressed
+instance, the fifth precedence level for addition and subtraction is expressed
 using the $as\_sequence$-rule. Combined with some multiplication an expression
 making use of the $as\_sequence$- and $md\_sequence$-rules could look like
 \csref{asandmd.junta}:
@@ -401,15 +405,16 @@ somewhat like the tree in \figref{fig:parsetreesequences}.
 \input{figures/parsetreesequences}
 
 The figure clearly shows the precedence, because the lower nodes will be
-calculated before the nodes that are higher in the parse tree. E.g. all of the
+evaluated before the nodes that are higher in the parse tree. E.g.\ all of the
 multiplication and division nodes will be calculated before the additions and
 subtraction. This hierarchy is achieved because of the formally described
 precedence rules in the previous grammar about sequences.
 
 \subsubsection{Big-step semantics}
 
-The semantics presented in \tableref{semantic:callfun} is transition rule for
-function calls.
+The semantics presented in \tableref{semantic:callfun} is transition
+rule for function calls. Big-step semantics for the others are left out,
+as they are mostly trivial.
 
 \input{content/design/big-stepsemantics/callfun}
 
@@ -420,14 +425,16 @@ the formal parameters, after which the expression, contained within the function
 value, is evaluated.
 
 The semantics presented in \tableref{semantic:memaccess} is the transition rule
-for member access.
+for member access, also known as dot-notation.
 
 \input{content/design/big-stepsemantics/memberaccess}
 
-A member access is as simple as evaluating the left-side to an object, and then
-accessing the specified constant in that objects constant environment.
+A member access is as simple as evaluating the left-side of the object
+first (the constant), and then accessing the evaluated constant in that
+objects constant environment.
 
 \subsubsection{Valid operands}
+\label{sec:validoperands}
 In the following paragraphs we present the valid operands of
 \productname{}. These will be grouped in the following categories; boolean,
 comparison, integer, string, list, and direection and coordinate operators.
