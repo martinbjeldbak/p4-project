@@ -36,8 +36,8 @@ Functions are also constants and are defined with the following definition:
 \gter{=} \gcat \gcat expression}
 \end{ebnf}
 
-A function definition needs a list of formal parameters, formal parameters (a
-$varlist$) are described with the following grammar:
+A function definition needs a list of formal parameters. Formal parameters which
+are represented as $varlists$ are described with the following grammar:
 
 \begin{ebnf}
 \grule{varlist}{\gter{[} \gcat \gopt{variable \gcat \grep{\gter{,} \gcat
@@ -49,8 +49,8 @@ Creating constants and functions outside of type definitions adds them to the
 global scope, meaning that they are essentially accessible from anywhere in the
 program (provided that they are not hidden by a constant within a type).
 
-An example of a global function is the following implementation of function for
-computing the greatest of two numbers:
+An example of a global function is as the following implementation of a function for
+computing the greatest of two numbers, presented in \csref{functiondef.garry}.
 
 \codesample{functiondef.garry}
 
@@ -71,14 +71,14 @@ values in one place.
 The non-terminal $vars$ is used for variadic functions, another feature of
 \productname{}. Variadic functions are functions with indefinite arity, meaning
 they will accept any number of actual parameters. In \productname{} this is
-supported for both lambda expressions and functions. The following code sample
-is an example of two variadic functions:
+supported for both lambda expressions and functions. The \csref{variadic.junta} 
+is an example of two variadic functions.
 
 \codesample{variadic.junta}
 
-The use of the \texttt{"..."}-terminal marks that the following variable
+The use of the \texttt{"..."} terminal marks that the following variable
 represents a list that holds all additional parameters passed to the function.
-In the above example, calling the function \constant{last} with no parameters,
+In \csref{variadic.junta}, calling the function \constant{last} with no parameters,
 is possible and results in the formal parameter \variable{args} holding the
 value of an empty list, \texttt{[]}. Additionally, \constant{last} can be called
 with any number of parameters, which will then be appended to the list in
@@ -86,8 +86,8 @@ with any number of parameters, which will then be appended to the list in
 actual parameter must be provided (since the variadic parameter is the second
 one). But other than that, the parameter passing works in the same way as with
 \constant{last}, in that the function accepts any number of parameters greater
-than or equal to $1$. Some uses and result of the two functions are shown in the
-following two examples:
+than or equal to $1$. Some uses and results of the two functions are shown in
+\csref{variadicuse2.junta} and \csref{variadicuse1.junta}.
 
 \codesample{variadicuse2.junta}
 \codesample{variadicuse1.junta}
@@ -98,10 +98,10 @@ is expressed in the grammar.
 
 \subsubsection{Scope rules for functions and constants}
 
-Consider the \constant{max}-function in \csref{functiondef.garry}. Its formal
-parameters \variable{a} and \variable{b} only exist, and are only available
-within the \constant{max}-function. The following example shows a call of the
-\constant{max}-function:
+Consider the \constant{max} function in \csref{functiondef.garry}. Its formal
+parameters \variable{a} and \variable{b} only exist and are only available
+within that function. The example in \csref{functioncall.garry} shows a call of the
+\constant{max} function, which was presented in \csref{functiondef.junta}.
 
 \codesample{functioncall.garry}
 
@@ -114,7 +114,7 @@ evaluated and the result is returned. When returning, the variables
 \subsection{Type definitions}
 \label{sec:typedefinitions}
 
-As described the introduction of this chapter, types are a central part of
+As described in the introduction to this chapter, types are a central part of
 \productname{} and being able to define custom user types is essential when
 creating board games.
 The following grammar rules present how type definitions work in
@@ -133,109 +133,113 @@ a type definition.
 \gcat expression}
 \end{ebnf}
 
-The simplest type that can be created is a type such as:
+The simplest type that can be created is a type such as the example in
+\csref{simplesttype.junta}.
 
 \codesample{simplesttype.junta}
 
-The type \type{A} is a type without any data, constructor parameters, constants
+The type \type{A} is a type without any data, constructor parameters, constants,
 or parent type. This type is truly useless, since it has no identity or
 behaviour. It can however be instantiated, and instances of it can be compared
-using the \texttt{==}, \texttt{!=}, and \texttt{is}-operators. But since the
-type has no identity in any way, all instances will be equal:
+using the \texttt{==}, \texttt{!=}, and \texttt{is} operators. But since the
+type has no identity in any way, all instances will be equal as presented in
+\csref{simplesttypeuse.junta}.
 
 \codesample{simplesttypeuse.junta}
 
 \subsubsection{The constructor}
 
 One way to add identity to objects, is with the constructor. In the previous
-example of a very simple type, the constructor takes no parameters (the empty
+\csref{simplesttype.junta} of a very simple type, the constructor takes no parameters (the empty
 parameter list \texttt{[]} after the type name). If we were to add some formal
-parameters to the type definition, it could look like:
+parameters to the type definition, it could look like the
+\csref{typedef1.junta}.
 
 \codesample{typedef1.junta}
 
 Now in order to instantiate \type{A}, we must provide the constructor with two
-parameters: 
+parameters as presented in \csref{typedef1use.junta}. 
 
 \codesample{typedef1use.junta}
 
 Notice how in the first line, the two objects are equal to each other, while in
 the second line they are not. This means that we have successfully added
-identity to the \type{A}-type.
+identity to the \type{A} type.
 
 \subsubsection{The constants}
 
 Constants within types are defined in the same way as constants outside of
 types. The difference is that constants defined within a type can only be
 accessed within that type (and inheriting types) or by using the dot-notation
-outside of the type.
+outside of the type. This is illustrated in \csref{typedef2.junta}.
 
 \codesample{typedef2.junta}
 
-In the example above, two constants are defined within type \type{A};
-\constant{b} and \constant{calculate}. The first one \constant{b} is a simple
+In \csref{typedef2.junta}, two constants are defined within type \type{A};
+\constant{b} and \constant{calculate}. \constant{b} is a simple
 constant holding the value of \variable{b}, the constructor parameter, plus one.
 It can be seen as a getter, since it makes the value of \variable{b} visible to
 the outside. \constant{calculate} is a method that returns the sum of some
-numbers. In order to call the constants contained within a type, we use the dot
-notation on an object of that type:
+numbers. In order to call the constants contained within a type, we use the dot-notation 
+on an object of that type illustrated in \csref{typedef2use.junta}.
 
 \codesample{typedef2use.junta}
 
-The variable \variable{obj} is assigned an instance of the \type{A}-type. Using
+The variable \variable{obj} is assigned an instance of the \type{A} type. Using
 the dot-notation, the method \constant{calculate} is called on the object.
 
 \subsubsection{The data}
 
 Another way to add identity to objects, is to add data fields to the type.
 Unlike constants, data fields contain private semi-mutable data. In the
-strictest sense, the data is still immutable, but using the
-\keyword{set}-keyword, it is possible to clone the current object, and return a
-new one with the selected data fields set to new values. The following example
-shows a new version of type \type{A}, with a data field:
+strictest sense, the data is still immutable, but by using the
+\keyword{set} keyword, it is possible to clone the current object, and return a
+new one with the selected data fields set to new values. The example in
+\csref{typedef3.junta} shows a new version of type \type{A}, with a data field.
 
 \codesample{typedef3.junta}
 
 In this example, we define the data field \variable{att} with the default value
 of $15$. Since data fields are not accessible from outside of the type, we must
 define a getter, the constant \constant{att}, in order to make the value
-visible. Using the \keyword{set}-keyword, we can also define at setter, the
-\constant{setAtt}-method, which returns a new instance of \type{A} with
+visible. Using the \keyword{set} keyword, we can also define at setter, the
+\constant{setAtt} method, which returns a new instance of \type{A} with
 \variable{att} set to whatever parameter \constant{setAtt} was called with.
 
-The following example show the use of this setter, to create a clone of an
-instance of \type{A}:
+The example in \csref{typedef3use.junta} shows the use of this setter, to create a clone of an
+instance of \type{A}.
 
 \codesample{typedef3use.junta}
 
-This time, we create an instance of \type{A}, and then calls \constant{setAtt}
+This time we create an instance of \type{A}, and then call \constant{setAtt}
 on that instance, in order to get a new instance of \type{A} with \variable{att}
-set to $2$. After that, the values are accessed using the getter. Note that,
-again, the two objects are not equal, since the value of \variable{obj2} is
+set to $2$. After that, the values are accessed using the getter. Note that
+again the two objects are not equal, since the value of \variable{obj2} is
 different than \variable{obj1}.
 
 \subsubsection{The super type}
 
 In \productname{} single inheritance is possible using the
-\keyword{extends}-keyword. When extending another type, that types constructor
-must be invoked with some parameters. The following complicated example shows a
-usage of single inheritance:
+\keyword{extends} keyword. When extending another type, that type's constructor
+must be invoked with some parameters. The following complicated example
+illustrated in \csref{typescope2.junta} shows how single inheritance can be used.
 
 \codesample{typescope2.junta}
 
-\productname{} doesn't have an \keyword{abstract}-keyword for type definitions, only
+\productname{} doesn't have an \keyword{abstract} keyword for type definitions, only
 for constant/function definitions. A type is implicitly marked as abstract if it has
-unimplemented abstract members. In the above example, the type \type{A} is abstract
+unimplemented abstract members. In example presented in \csref{typescope2.junta}, 
+the type \type{A} is abstract
 since its member \constant{constantA} is abstract. Likewise, the type
 \type{B} is abstract because it extends \type{A}, but doesn't implement the abstract
 member of \type{A}. The type \type{C} on the other hand is not abstract, since it
 implements the abstract constant. Abstract types can't be constructed, albeit the
 constructor for an abstract type has to be used when extending the type (after the
-\keyword{extends}-keyword).
+\keyword{extends} keyword).
 
 When instantiating type \type{C}, several things happen. First \type{C}'s parent
 is instantiated using the actual parameters $2$ and $4$. Then \type{B}'s parent
-is instantiated using the value of $\variable{b} + \variable{c}$. It is worth
+is instantiated using the value of $\variable{b}\; \texttt{+}\; \variable{c}$. It is worth
 noting that, when calling the parent constructor, it is not possible to access
 constants or data from within the type. In \figref{fig:scopes} a
 visualisation of the scopes of a type definition is shown.
@@ -256,7 +260,8 @@ overriding constant has the same signature as the original. Since
 \item If the original member is a method with $n$ formal parameters, then the
   overriding method must have $n$ formal parameters as well
 \end{nlist}
-So unlike in the global scope, there is a small difference between constants and
+
+So, unlike in the global scope, there is a small difference between constants and
 functions (methods). For abstract members, the same constraints hold.
 
 \subsubsection{Big-step semantics}
@@ -277,11 +282,12 @@ again due to the fact that we have some optional arguments.
 The $5$-tuple is ordered as follows:
 
 \begin{nlist}
-\item $\mathbf{T_{k}}$ -- current type
+\item $\mathbf{T_{1}}$ -- current type
   \item $\mathbf{X}$ -- current type's formal parameters
   \item $\mathbf{D_{M}}$ -- member definitions
   \item $\mathbf{L}$ -- super type's parameters
-  \item $\mathbf{T_{k+1}}$ -- super type
+  \item $\mathbf{T_{2}}$ -- super type
 \end{nlist}
 
-Throughout the transition rules we use the $5$-tuple to update the type environment.
+Throughout the transition rules we use the $5$-tuple to update the type
+environment, $env_T$.
