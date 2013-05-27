@@ -6,9 +6,9 @@ import dk.aau.cs.d402f13.utilities.gameapi.Action;
 import dk.aau.cs.d402f13.widgets.Widget;
 
 public abstract class ActionSelector {
-	SimulatedGame game = null;
+	Simulator game = null;
 	
-	ActionSelector( SimulatedGame game ){
+	ActionSelector( Simulator game ){
 		this.game = game;
 	}
 	

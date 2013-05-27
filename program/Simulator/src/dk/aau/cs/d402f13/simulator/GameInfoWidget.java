@@ -18,13 +18,13 @@ import dk.aau.cs.d402f13.widgets.ScaleContainer;
 import dk.aau.cs.d402f13.widgets.ScrollContainer;
 
 public class GameInfoWidget extends ScaleContainer {
-	private SimulatedGame game;
+	private Simulator game;
 	private ScrollContainer historyList;
 	
 	private Label title;
 	private Label player;
 	
-	GameInfoWidget( SimulatedGame game ) throws StandardError{
+	GameInfoWidget( Simulator game ) throws StandardError{
 		super( true );
 		//We want to use the image dimensions as the size, however,
 		//as an Image in Slick can't be loaded before an OpenGl context
