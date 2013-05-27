@@ -115,15 +115,15 @@ The production for the assignment expression was presented in
 The production specifies that any assignment must begin with the keyword
 \gter{let} and end with the keyword \gter{in} followed by an expression. In
 between these beginning and ending keywords, the production consists of at least
-one sequence of a variable followed by an assignment-operator followed by an
+one sequence of a variable followed by an assignment operator followed by an
 expression. The production specifies that it is possible to have zero, one, or
-more of these variable-expression pairs (comma separated) following the first
+more of these variable expression pairs (comma separated) following the first
 pair.
 
 \input{content/implementation/abstractnodetypes/assign}
 
 Figure \ref{ast:assignment} illustrates this with an ANT that omits the
-keywords, commas and the assignment-operators, which can make it rather complex
+keywords, commas and the assignment operators, which can make it rather complex
 to look at. The figure actually states that an assignment consists of variables
 and expression where an expression can be many different things, including
 another assignment. So, this means that it is possible to have assignments
