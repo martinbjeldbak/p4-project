@@ -15,7 +15,7 @@ similar to each other. The rest of the ANTs are in \apref{ap:ant}.
 
 \subsection{Difference between an abstract syntax tree and a parse tree}
 When a piece of code is parsed by a parser that understands the specific programming 
-language, the output of the parser will be an AST which consists of the abstract node 
+language, the output of the parser will be an AST, which consists of the abstract node 
 types of each program part. The difference between an AST and a parse tree is that a 
 parse tree contains every detail of the input code. A parse tree includes for instance
 the parentheses and keywords where an AST does not contain anything other than the 
@@ -80,7 +80,7 @@ them. This means that the sequence should for instance look like the following:
 
 So, in the above example the RHS is $eq\_sequence$ and the operator is
 $\gter{and}$. In \figref{ast:operation} we do not show the operators, which can
-make it a bit cryptic to look at and understand. If there is only one RHS then
+make it a bit cryptic to look at and understand. If there is only one RHS, then
 the node is not constructed but the next production will be evaluated. Otherwise
 the AST would end up with many single-child nodes. This bad implementation is 
 illustrated in \figref{ast:badexample}.
@@ -88,9 +88,9 @@ illustrated in \figref{ast:badexample}.
 \input{content/implementation/abstractnodetypes/badexample}
 
 Figure \ref{ast:badexample} illustrates very clearly that the AST quickly would
-end up with mant single child nodes. If we do not expect two RHS then We will 
+end up with many single child nodes. If we do not expect two RHS then we will 
 end up with a long list, which is not necessary and it will just make it less 
-efficient to read the AST. With our implementation we will have a more efficient 
+efficient to traverse the AST. With our implementation we will have a more efficient 
 and more compact AST.
 
 The grammar specified earlier in this section presented that the last operation
@@ -103,9 +103,6 @@ in \secref{sec:operatorsandcalls}.
 %\grule{negation}{element}
 %\galt{\gter{-} \gcat negation}
 %\end{ebnf}
-
-This production is not illustrated with any ANT because it is simply one root
-with one child.
 
 \subsection{Abstract node type for let expressions}
 The production for the assignment expression was presented in
