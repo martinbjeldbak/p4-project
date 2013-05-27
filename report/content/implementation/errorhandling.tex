@@ -1,19 +1,20 @@
 \section{Error handling}
 \label{sec:errorhandling}
 
-In the different phases of the interpreter a lot of errors can occur. In the
-scanning phase for instance a scanning error can occur if the scanner detects a
-string, which doesn't correspond to one of \productname{}'s specified lexemes. In
-the parsing phase a syntax error can occur if two or more tokens are not set up
-syntactically correct according to our grammar. In order to catch these errors
-we have implemented error handlers, which extends the built-in Java class
-\classref{Exception} (\classref{Java.lang.Exception}). 
+In the different phases of the interpreter many different errors can occur.
+In the scanning phase for instance, a scanning error can occur and be
+thrown if the scanner detects a string, which doesn't correspond to one
+of \productname{}'s specified lexemes. In the parsing phase a syntax
+error can occur if two or more tokens are not set up syntactically
+correct according to our grammar. In order to catch these errors we
+have implemented error handlers, which extends the built-in Java class
+\classref{Exception} (\classref{Java.lang.Exception}).
 
 An error can cause serious flaws and is annoying for a programmer if no
-information of what caused it is provided. So, the function of the error
+information of what caused it is provided. The function of the error
 handlers are to give the programmer of \productname{} games a better chance of
 figuring out what has been done wrong and make it easier to correct the errors
-by for instance referring to where in the source code an error has occurred and
+by, for instance, referring to where in the source code an error has occurred and
 what caused it. We have created an error hierarchy in order to give an overview
 of our different error handlers. The hierarchy is illustrated in
 \figref{ast:errorhierarchy}. 
@@ -31,9 +32,10 @@ of our different error handlers. The hierarchy is illustrated in
   the Java throw statement.
   \cite{throwable}
 
-\item[\textbf{Error}] extends the \classref{Exception} class. \classref{Error}
-  is an abstract class which contains two abstract methods:
-  \methodref{getColumn()} and \methodref{getLine()}.
+\item[\textbf{Error}] extends the \classref{Exception} class.
+  \classref{Error} is an abstract class which contains two abstract
+  methods: \methodref{getColumn()} and \methodref{getLine()}, allowing
+  subclasses to provide more detailed error messages.
 
 \item[\textbf{SyntaxError}] extends the \classref{Error} class and is used in
   the parser to handle syntactic errors. A syntactic error occurs if a token

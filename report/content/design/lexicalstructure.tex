@@ -4,7 +4,7 @@
 This section presents the low-level non-terminals of \productname{}.
 We begin by describing the conventions we use throughout the report. Then we
 describe the contents of the lexical structure of \productname{}, such as the
-different reserved keywrods, identifiers, and literals that \productname{} contains.
+different reserved keywords, identifiers, and literals that \productname{} contains.
 
 \subsection{Notational Conventions}
 We use a variant of Extended Backus-Naur Form (EBNF) to express the context-free
@@ -67,19 +67,19 @@ unicode character besides a quotation mark or a backslash.
 In \productname{} a single-line comment begins with a sequence of at least two
 forward slashes (\texttt{//}). The comment ends at the next newline. Everything
 after the first two forward slashes and until the first next newline is
-completely ignored at the leve of lexical analysis. Comments are valid
-whitespace.
+completely ignored at the leave of lexical analysis. Comments are valid
+white space.
 
 The following example shows a valid comment within an expression:
 
 \codesample{validcomment.junta}
 
 Unlike other programming languages, \productname{} does not have support for
-multi-line comments (such as \texttt{/* */} in C-like languages).
+multi-line comments (such as \texttt{/* */} in $C$-like languages).
 
 \subsection{Reserved keywords}
 
-The following list presents the keywords which are reserved in
+The following list presents reserved keywords in
 \productname{}. These keywords cannot be used as identifiers in the language,
 which is apparent in the following section.
 

@@ -1,12 +1,13 @@
 \PassOptionsToPackage{table}{xcolor}
 \documentclass[openright,twoside,10pt]{memoir}
 \usepackage{fontspec}
+\synctex=1
 
 % DOCUMENT LAYOUT
 \setromanfont[Ligatures=TeX,Numbers={Lining}]{Garamond}
 \setmonofont[Scale=0.8]{Consolas}
 \setsansfont[Scale=0.9]{Optima}
-%\usepackage[protrusion=true,factor=2000]{microtype} need beta 2.5 for XeTeX support
+\usepackage[protrusion=true,factor=2000]{microtype} 
 
 
 % TABLE OF CONTENTS
@@ -69,7 +70,7 @@
 \usepackage{multicol}
 \usepackage{array}
 \usepackage{listings}	%for code examples
-\usepackage{microtype}
+%\usepackage{microtype}
 \usepackage{caption}
 \usepackage{hyperref}
 

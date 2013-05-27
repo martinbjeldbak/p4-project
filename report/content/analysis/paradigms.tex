@@ -1,17 +1,19 @@
 \section{Overview of the four main programming paradigms}
 \label{sec:paradigms}
 
-In this section we will present the four main programming paradigms; imperative,
-object-oriented, declarative, and functional programming. It is not
-inconsequential to just develop a programming language before having a good
-understanding of the paradigms behind these languages. We can simplify this
-argument by saying that each paradigm has its own area of expertise.
+In this section we will present the four main programming paradigms:
+imperative, object-oriented, declarative, and functional programming.
+It is not inconsequential to just develop a programming language
+before having a good understanding of the paradigms behind these
+languages, because we can learn a lot from them and use them to inspire
+\productname{}. We can simplify this argument by saying that each
+paradigm has its own area of expertise.
 
 A programming paradigm describes a method and style of computer programming.
 While some programming languages strictly follow one paradigm, there are many
 so-called multi-paradigm languages, that implement several paradigms and
 therefore allow multiple styles of programming. Examples of multi-paradigm
-languages include C\# and Java. It is essential for us to be aware of these
+languages include \CS{} and Java. It is essential for us to be aware of these
 different paradigms, since it may help us to find a good style of programming
 for the design of \productname{}.
 
@@ -29,7 +31,7 @@ The four main paradigms are described as follows:\cite{fourparadigms}
   are objects, classes, methods, encapsulation, polymorphism, inheritance. An
   example of a pure object-oriented languages is Smalltalk, while many other
   languages are either primarily designed for object-oriented programming (such
-  as Java and C\#) or have support for object-oriented programming (such as PHP
+  as Java and \CS{}) or have support for object-oriented programming (such as PHP
   and Perl).
 \item[Declarative programming] describes computational logic without describing
   control flow, i.e. describing {\em what} a program does rather than {\em how}
@@ -40,22 +42,22 @@ The four main paradigms are described as follows:\cite{fourparadigms}
   functions and seeks to avoid program state and mutable data. Purely functional
   functions have no side effects, and the result is constant in relation to the
   parameters (e.g. $add(2, 4)$ always returns $6$). An example of a purely
-  function programming languages is Haskell. Other examples of languages
-  designed for functional programming are Erlang, F\# and Lisp, while it is
+  functional programming languages is Haskell. Other examples of languages
+  designed for functional programming are Erlang, F$^\sharp$ and Lisp, while it is
   possible to apply functional programming concepts to many other languages.
 \end{description}
 
 
-While general-purpose languages such as C\# and Java generally tend to lean
+While general-purpose languages such as \CS{} and Java generally tend to lean
 towards the imperative and object-oriented paradigms, a domain-specific
 language with very specific goals in design may benefit from other paradigms,
-e.g. declarative programming. We want to be able to have complete control
+e.g.\ declarative programming. We want to be able to have complete control
 over state changes in board games so following the functional paradigm
 and preventing side-effects will make it easier to manage state changes
 and the movement history of a game. Also, the object-oriented paradigm,
 has proved to be very useful for describing many real-word systems. Allowing
 the use of classes and objects may make it easier to create board games
-(e.g. an instance of class \emph{Board} consists of many \emph{Squares} 
+(e.g.\ an instance of class \emph{Board} consists of many \emph{Squares} 
 containing \emph{Pieces} belonging to \emph{Players}). Combining these two
 paradigms we will get a functional object-oriented programming language
 for describing board games.

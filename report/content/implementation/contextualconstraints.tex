@@ -89,28 +89,32 @@ which is used greatly by the visitor described in
 
 \subsection{TypeMemberPropagator}
 \label{sec:TypeMemberPropagator}
-Some of the later checks that will be performed requires us to determine whether
-or not a type member (constant or function) with a specific name is visible in a
-given type. This requires searching in the given type and recursively in all
-super types for the member. When this kind of lookup is done many times on the
-same member, the traversal of the same long chains of parent references become
-inefficient which results in clumsy code. To simplify and speed up this process
-the \classref{TypeMemberPropagator} ensures that all members of a type A are
-also present in a type C, if A is a super type of C. With this approach,
-checking if a member is visible in type C, only requires looking in C instead of
-following the chain parent types.
+Some of the later checks that will be performed requires us to determine
+whether or not a type member (constant or function) with a specific
+name is visible in a given type. This requires searching in the given
+type and recursively in all super types for the member. When this
+kind of lookup is done many times on the same member, the traversal
+of the same long chains of parent references become inefficient which
+results in clumsy code. To simplify and speed up this process, the
+\classref{TypeMemberPropagator} ensures that all members of a type A
+are also present in a type \type{C}, if \type{A} is a super type of
+\type{C}. With this approach, checking if a member is visible in type
+\type{C}, only requires looking in \type{C} instead of following the
+chain parent types.
 
-This propagation of members is done by first doing a topological sort on the
-\classref{TypeSymbolInfo} objects, such that when iterating over the type table,
-any type yielded will always appear before all of its subtypes. This makes the
-afterwards propagation of members possible in linear time by iterating over the
-topologically sorted types. If a type C is met, the members in its parent type B
-are put in C as well. If B has a parent A, we know that B has already the
-members from A due to the topological sorting.
+This propagation of members is done by first topologically sort the
+\classref{TypeSymbolInfo} objects, such that when iterating over the
+type table, any type yielded will always appear before all of its
+subtypes. This makes the afterwards propagation of members possible
+in linear time by iterating over the topologically sorted types. If a
+type \type{C} is met, the members in its parent type \type{B} are put
+in \type{C} as well. If \type{B} has a parent \type{A}, we know that
+\type{B} has already the members from \type{A} due to the topological
+sorting.
 
 The topological sorting is done using the algorithm that goes by the same name, from the book Introduction
 to Algorithms \cite[p. 612]{ad} working on a graph $G = (V, E)$. Each type
-represents a vertex $v$. An edge $e$ exist from $v_1$ to $v_2$ if the type $v_2$
+represents a vertex $v$. An edge $e$ exists from $v_1$ to $v_2$ if the type $v_2$
 is a parent of the type $v_1$. However this results in a topological order where
 a type always appears before its super types. This problem is quickly solved
 simply by reversing the list.
@@ -240,12 +244,12 @@ enforce the rule that the member \texttt{B} must exist in at least one type.
 For any variable, a declaration must always exist before it is used. A variable
 can only declared in four ways:
 
-\begin{dlist}
+\begin{nlist}
   \item As a type constructor
   \item As a formal parameter in a function declaration
   \item In a lambda expression
   \item In a \texttt{let-in} expression
-\end{dlist}
+\end{nlist}
 
 In all cases the \productname{} semantics require that a new scope is opened, in
 which the declared variable is known while the body of the expression is
@@ -260,7 +264,7 @@ inside other scopes are implemented.
 
 \codesample{openscopeexpressions.junta}
 
-Notice how the four code samples in in the above code sample all result in the same
+Notice how the four code samples above all result in the same
 scope checking routine, which can be seen in \figref{fig:scope1}; First, a new
 symbol table is instantiated in which the variables \$a and \$b are put in. The
 symbol table's parent reference is updated so it points to the current symbol
@@ -292,18 +296,20 @@ declaration of \$a.
 
 \fig[height=5em]{scope2}{The variable \$a declared in two different scopes.}
 
-This is completely valid and is caused by the following code sample. If only a
-single symbol table was used, an incorrect double declaration would be detected.
+This is completely valid and is caused by the following code sample. If
+only a single symbol table was used, an incorrect double declaration
+would be detected. See \secref{sec:letexpressions} for more details
+about hiding.
 
 \codesample{scope2.junta}
 
 \subsubsection{Data members}
-When visiting a type body a new scope is opened and the data members of
+When visiting a type body, a new scope is opened and the data members of
 \classref{TypeSymbolInfo} \varref{currentType} are immediately inserted into that
-scope. The children of the type body is then visited and the scope is closed.
+scope. The children of the type body are then visited and the scope is closed.
 This ensures that the data members of a type can be used anywhere in the type
 body but in that type body only. When exiting that type body and closing the
-scope the symbol table containing the data members are no longer visible.
+scope, the symbol table containing the data members are no longer visible.
 
 \subsection{Summary of scope checking}
 Many different static semantic checks are implemented in the scope checker.

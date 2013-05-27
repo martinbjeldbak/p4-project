@@ -1,20 +1,20 @@
 \section{The interpretation and code generation phases}
 \label{sec:codegenerationandinterpretation}
 
-In this section we present a brief overview of the phases of
-translators. Along with the design of the programming language
+In this section, we present a brief overview of the phases of
+translators. Along with the design of our programming language
 \productname{}, we also want to make it possible for programmers who
-write games in \productname{} to actually play them afterwards. There
-are a number of ways we can make that happen. These are presented in the
-following sections.
+wish to write games in \productname{} to actually have the computer
+understand what they write. There are a number of ways we can make that
+happen. These are presented in the following sub-sections.
 
 We begin by presenting the translation process followed by a
 presentation of what intermediate languages (IL) are and what they can
 be used for. In the subsequent section we present interpretation. Then
-we present a hybrid solution based upon compilation and interpretation
-combined. Lastly, we present what it will mean to have the game and
-engine separate, followed by a short summary, where we take some
-decisions based on the what we decide is important for our language.
+we present a hybrid solution based upon compilation and interpretation.
+Lastly, we present what it will mean to have the game and engine
+separate, followed by a short summary, where we take some decisions
+based on the what we decide is important for our language.
 
 %\subsection{The translation process}
 %\label{sec:translationprocess}
@@ -36,20 +36,21 @@ decisions based on the what we decide is important for our language.
 \subsection{Compilation}
 \label{sec:compilation}
 With compilation, an executable file is created for a specific platform
-which contains all the code required to play the game. Since games have
+that contains all the code required to play the game. Since games have
 common aspects, a game engine containing all the common aspects such
 as user interface, AI and/or network connection would most likely be
-written. This engine would then be included directly in the executable.
+written. This engine would then be included directly in the executable
+upon compilation.
 
-The translation process is typically not a simple task, therefore
-it is often split into different phases, which is shown in
-\figref{fig:compileroverview}. The process can be split into many
-or few stages, depending on how detailed a process is desired. In
-\figref{fig:compileroverview} the lexical and syntax analysers make
-a lookup in a symbol table. Then the semantic analyser and the
-code generator use the symbol table to generate the correct code.
-Optimisation is optional in the phase of semantic analysis. \cite[p.
-46]{sebesta2013}
+The translation process is typically not a simple task,
+therefore it is often split into different phases, shown in
+\figref{fig:compileroverview}. The process can be split into many or
+few stages, depending on how detailed a process is desired and if an
+optimisation is done. In \figref{fig:compileroverview}, the lexical and
+syntactical analysers make a lookup in a symbol table. Then the semantic
+analyser and the code generator use the symbol table to generate
+the correct code. Optimisation is optional in the phase of semantic
+analysis. \cite[p. 46]{sebesta2013}
 
 \input{figures/compileroverview}
 
@@ -61,18 +62,18 @@ platform makes it possible to create optimized code which runs faster.
 \subsubsection{An intermediate language}
 \label{sec:intermediatelanguage}
 A middle step between compiling or interpretation and generating
-executable machine code is to translate source code to an IL, which is
-then interpreted or compiled further. IL are usually more low-level than
-the initial source code, which would make it possible to optimize code
-for higher efficiency in later stages, such as eliminating superfluous
-node types and dead code.
+executable machine code is to translate source code to an intermediate
+language (IL), which is then interpreted or compiled further. IL are
+usually more low-level than the initial source code, which would make it
+possible to optimize code for higher efficiency in later stages, such as
+eliminating superfluous node types and dead code.
 
 Furthermore, one can compile to an intermediate language such as Java
-bytecode and the compiled code can be run on every machine that supports
-Java by having a Java virtual machine installed, which is very useful
+bytecode, executable on every machine that supports
+Java by having a Java virtual machine installed. This is very useful
 because the programmer, whom is developing a compiler for a language,
 does not have to construct a compiler for every platform; just one
-that translates to Java bytecode, which can be translated further many
+that translates to Java bytecode, that can then be translated further many
 supported platforms. This way the programmer must only construct a
 single compiler. If one does not compile
 to an intermediate language, then the programmer must construct a
@@ -87,16 +88,16 @@ illustrated in \figref{fig:mtimesn}.
 
 Now it is also possible to optimise the compiled source code before
 further translation. This way all
-code that has been compiled can be optimised, which gives better
+code that has been compiled can be optimised, yielding better
 efficiency by noticing common patterns. An intermediate language also
-gives the possibility to support multiple platforms and architectures
+gives the possibility to support multiple platforms and architectures,
 if you choose a popular and well supported IL. A well supported IL is a
 language that already has a compiler/interpreter built for the target
 platforms, saving the programmer from having to write them. Examples
 of such ILs can be high-level languages such as $C$, or low-level
 languages such as Microsoft's Common Intermediate Language bytecode or
-Java bytecode that abstract away from platform-specific instructions and
-registers, that other languages such as assembly language use.
+Java bytecode, that abstract away from platform-specific instructions and
+registers that other languages, such as assembly language use.
 
 When compiling to an intermediate language before compiling to the target
 language (often the object code), it is possible to make optimisations on the
@@ -106,9 +107,9 @@ language and results in more efficient executable code.
 Instead of compiling to native machine code it could be compiled to an
 intermediate format such as Java bytecode which is supported on many platforms.
 While Java bytecode is interpreted and therefore slower, modern interpreters
-use sophisticated methods such as Just-in-Time compilation (JIT) which at
+use sophisticated methods such as Just-in-Time compilation (JIT), which at
 run-time compiles intermediate code into native machine code. This process of
-course adds an overhead, however the speed differences are not that great
+course adds an overhead, and the speed differences are not that great
 anymore. \cite{java-speed}
 
 \subsubsection{An intermediate format}
@@ -128,27 +129,28 @@ compiled or interpreted so the machine understands it.
 
 \subsection{Interpretation}
 \label{sec:interpretation}
-An interpreter takes the original source code and executes each instruction at
-each translation. This means that a program will be parsed and executed
-on-the-fly when using an interpreter. It is required that the end-user has the
-interpreter. Different games written in our language would then use the same
-copy of the interpreter instead of having a copy of the engine for each
-executable. This separation will be further explored in
-\secref{subsec:engineseperation}. The execution speed will however suffer and
-while techniques such as JIT exists to improve this, it is beyond the scope of
-this project.
+An alternative option is to write an interpreter. Interpreters take the
+original source code and execute each instruction at each translation.
+This means that a program will be parsed and executed on-the-fly
+when using an interpreter. It is required that the end-user has the
+interpreter. Different games written in our language would then use
+the same copy of the interpreter instead of having a copy of the
+engine for each executable. This separation will be further explored
+in \secref{subsec:engineseperation}. The execution speed will however
+suffer and while techniques such as JIT exists to improve this, it is
+beyond the scope of this project.
 
 A pure interpretation of a program lies at the opposite end from compilation in
-regard to methods of implementation. With this approach, which is illustrated in
+regards to methods of implementation. With this approach, which is illustrated in
 \figref{fig:compileroverviewinterpretation}, no translation is performed at all.
 
 \input{figures/compileroerviewinterpretation}
 
-An interpreter is interpreting a program written in the targeted language. It
+An interpreter literally ``interprets'' a program written in the targeted language. It
 acts like a virtual machine where instructions are statements of a high-level
-language. By purely using interpretation a source code debugger can easily be
-implemented. Various errors that might occur can once they are detected easily
-refer to the location of faulty source code that caused the error. The debugging is
+language. By purely using interpretation, a source code debugger can easily be
+implemented. Various errors that might occur can once they are detected, easily
+refer to the location of faulty source code that caused the error. Debugging is
 eased because the interpreter works like a software implementation of a virtual
 machine, thus the state of the machine and the value of a specific variable can
 be outputted at any time when requested. This will of course lead to the
@@ -158,16 +160,16 @@ that of a compiler.
 \cite[p. 48]{sebesta2013}
 
 \subsection{Hybrid compilation and interpretation}
-The compiling or interpreting approach can be combined to form a hybrid
-implementation system. This method is illustrated in
-\figref{fig:compileroverviewhybrid}, where a program is compiled into an
-intermediate code which is then interpreted. By using this approach errors in a
-program can be detected before interpretation which can save much time for a
-programmer. Great portability can also be achieved when using hybrid system.
-The initial implementation of Java was hybrid and allowed Java to be compiled to
-an intermediate code that could run on any platform which had an implementation
-of Java Virtual Machine.
-\cite[p. 50]{sebesta2013}
+The compiling or interpreting approach can be combined to form
+a hybrid implementation system. This method is illustrated in
+\figref{fig:compileroverviewhybrid}, where a program is compiled into
+an intermediate code which is then interpreted. By using this approach,
+errors in a program can be detected before interpretation, saving time
+for the programmer, since the error will most likely ruin later stages
+anyway. Great portability can also be achieved when using hybrid system.
+The initial implementation of Java was hybrid and allowed Java to be
+compiled to an intermediate code that could run on any platform which
+had an implementation of Java Virtual Machine. \cite[p. 50]{sebesta2013}
 
 \input{figures/compileroverviewhybrid}
 
@@ -189,18 +191,18 @@ engine, however the engine developers would have to support games written for
 every version released.
 
 \subsection{Summary of code generation and interpretation}
-The advantage of compilation is that the outputted code will run faster because 
-a complete list of instructions will be ready to be executed. Although,
-a disadvantage is the time it takes to compile the code will take longer because
-the complete source code must be translated.
+The advantage of compilation is that the outputted code will run faster
+because a complete list of instructions will be ready to be executed.
+Although, a disadvantage is the time it takes to compile the code will
+take longer because the complete source code must be translated, though
+only once before executing the program can be done any number of times.
 
 The advantage of interpretation is that it is possible to begin executing the
 program quickly because each instruction is interpreted on-the-fly which makes
-it faster than compiling the complete code. A disadvantage of interpretation is
-that it is usually $10$ to $100$ times slower than compilation.
+it faster than compiling the complete code. 
 
-If code is translated to an IL and then further translated this takes a
-lot of work away when talking about generating compilers to machine code
+If code is translated to an IL and then further translated, a lot of
+work away when talking about generating compilers to machine code
 because these compilers are platform dependant. If we say that we have
 $n$ compilers and $m$ platforms, then when compiling to an IL we only
 have to develop $n+m$ compilers instead of $n*m$ because when compiling
@@ -211,3 +213,7 @@ It is possible to combine compilation and interpretation. The program is
 compiled to intermediate code which is then interpreted. By using this approach,
 errors in a program can be detected before interpretation which can save much
 time for a programmer.
+
+We chose to interpret, because speed of executing a game is not a
+factor, and we want to be able to support the programmer as much as
+possible, providing detailed error messages if any exist.

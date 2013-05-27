@@ -1,7 +1,7 @@
 \chapter{Requirements}
 \label{chap:requirements}
 This chapter presents the requirements for our programming language which we
-have reached through our analysis. The requirements has been structured using a
+have reached through our analysis. The requirements have been structured using a
 method published by Stig Andersen \cite{requirementsGuide}. The requirements are
 used throughout the development phases and requirements are added as the project
 moves along and new challenges arise. 
@@ -12,7 +12,7 @@ moves along and new challenges arise.
 
 The following list of requirements is mainly useful for us as designers to make
 sure that the solution meets some requirements which express what the
-programming language must/can/should contain. The list does not express how to
+programming language must/can/should contain. The list does not tell us we wish
 accomplish this goal.
 
 The requirements specification consists of three main points: functional
@@ -34,8 +34,8 @@ conclude on our work at the end of the project.
 \begin{nlist}
   \item The programming language will be used to program board games
   \begin{nlist}
-    \item It must be possible to implement chess including the special rules of
-      chess
+    \item It must be possible to implement Chess, including the special rules of
+      Chess
   \end{nlist}
   \item It must be possible to define what pieces the game consists of
   \item It must be possible to define which pieces a specific player controls
@@ -46,20 +46,20 @@ conclude on our work at the end of the project.
     \item It must be possible to perform list unions
     \item It must be possible to perform list intersections
   \end{nlist}
-  \item It must be possible to use the language’s built-in functions to do the
+  \item It must be possible to use the language's built-in functions to do the
     following:
   \begin{nlist}
-    \item determine if a square is empty
-    \item determine if a square is occupied, and by who
-    \item check a condition for all objects in a collection
-    \item find all squares that match a specific pattern
-    \item combine lists
-    \item perform a lambda expression on each element in a list
-    \item move a piece to a square
-    \item capture the old piece on a specific square while moving a new piece to
+    \item Determine if a square is empty
+    \item Determine if a square is occupied, and by who
+    \item Check a condition for all objects in a collection
+    \item Find all squares that match a specific pattern
+    \item Combine lists
+    \item Perform a lambda expression on each element in a list
+    \item Move a piece to a square
+    \item Capture the old piece on a specific square while moving a new piece to
       the same square
-    \item return which players turn it is
-    \item check if the current move about to be made for a piece is the first
+    \item Return which players turn it is
+    \item Check if the current move about to be made for a piece is the first
       move made by that piece
   \end{nlist}
   \item It must be possible to determine which legal moves a player has
@@ -94,8 +94,8 @@ conclude on our work at the end of the project.
   \end{nlist}
 \end{nlist}
 
-The list of requirements also have \textbf{non-functional requirements} which is
-split into two topics - performance limitations and project limitations.
+The list of requirements also has \textbf{non-functional requirements}, which is
+split into two topics -- performance limitations and project limitations.
 
 \paragraph*{Performance limitations:}
 \begin{nlist}
@@ -115,8 +115,8 @@ split into two topics - performance limitations and project limitations.
 \paragraph*{Project limitations:}
 \begin{nlist}
   \item The programming language must be functional and operable no later than
-    29th of May 2013
-  \item The group has approximately 20 hours per week to work on the project
+    $29$th of May, $2013$
+  \item The group has approximately $20$ hours per week to work on the project
   \item The project is limited by the group members' skill in the design and
     development of programming languages
   \item The project (and hence the programming language) must have a catchy name
@@ -143,6 +143,6 @@ means that there cannot be any global variables. A side effect can happen when a
 global variable is manipulated in a function while the same global variable
 might be used outside the manipulating function. 
 
-Another thing about functions is that they must be first-class citizins, which
+Another thing about functions is that they must be first-class citizens, which
 means that they can be passed as arguments to other functions or as a return
 value.
