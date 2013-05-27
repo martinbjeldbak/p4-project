@@ -20,7 +20,7 @@ requirements, non-functional requirements and solution goals. Functional
 requirements define what the final system should be able to do. Non-functional
 requirements define different constraints and boundaries for the entire project.
 Lastly, solution goals are overall requirements that help the project group
-define the correct solution to our problem statement \cite{requirementsGuide}.
+define the correct solution\cite{requirementsGuide}.
 
 Every requirement has been given a number so that it is possible later in the
 report to reference each requirement. This is for instance useful when we must
@@ -31,7 +31,7 @@ conclude on our work at the end of the project.
 %won’t have)
 
 \paragraph*{Functional requirements:}
-\begin{nlist}
+\begin{enumerate}[noitemsep]
   \item The programming language will be used to program board games
   \begin{nlist}
     \item It must be possible to implement Chess, including the special rules of
@@ -92,28 +92,27 @@ conclude on our work at the end of the project.
     \end{nlist}
   \item It must be possible to play over a network
   \end{nlist}
-\end{nlist}
+\end{enumerate}
 
 The list of requirements also has \textbf{non-functional requirements}, which is
 split into two topics -- performance limitations and project limitations.
 
 \paragraph*{Performance limitations:}
-\begin{nlist}
+\begin{enumerate}[noitemsep,resume]
 % How do we follow up on the requirement below?
   \item It must be easy to learn how to program in the programming language
   \item The programmer must be able to implement board games with relatively few
     lines of code
   \item The programming language must not be an extension of another programming
     language
-  \item The board games should as a minimum consist of two players
+  \item It must be possible to have an arbitrary number of players
   \item The source code of a single board game must be written in one file
-  \item The formal definition of the programming language must be described in
-    Extended Backus-Naur Form (EBNF)
+  \item The programming language must be formally defined
   \item The programming language will be interpreted (not compiled)
-\end{nlist}
+\end{enumerate}
 
 \paragraph*{Project limitations:}
-\begin{nlist}
+\begin{enumerate}[noitemsep,resume]
   \item The programming language must be functional and operable no later than
     $29$th of May, $2013$
   \item The group has approximately $20$ hours per week to work on the project
@@ -121,15 +120,14 @@ split into two topics -- performance limitations and project limitations.
     development of programming languages
   \item The project (and hence the programming language) must have a catchy name
     and logo
-\end{nlist}
+\end{enumerate}
 
 \paragraph*{Solution goals:}
-\begin{nlist}
+\begin{enumerate}[noitemsep,resume]
   \item The programming language must make it easy and quick for programmers to
-    develop board games which are within the scope of the defined problem
-    statement
+    develop board games
   \item The board games must be playable on different operating systems
-\end{nlist}
+\end{enumerate}
 
 
 %not a requirement to print anything.
