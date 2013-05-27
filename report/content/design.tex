@@ -25,7 +25,6 @@ type can be instantiated using its \emph{constructor}, this creates an
 instances of types.
 
 \subsection*{Code example}
-\label{codesample}
 
 \productname{} is a purely functional object-oriented programming language
 designed explicitly for creating board games. We have developed \productname{}
@@ -76,7 +75,7 @@ and width of the board as parameters) of $3 \times 3$ squares. In other
 programming languages the override keyword is used when implementing methods
 from a super class but in \productname{} the override functionality
 already exists in the define keyword. For instance in
-\csref{noughtandcrosses.game} \constant{players} and \constant{initialBoard} are
+\csref{noughtsandcrosses.game} \constant{players} and \constant{initialBoard} are
 overridden in line four and eight, respectively.
 
 %A second type \type{NacPlayer}, is declared which extends the built-in
@@ -115,7 +114,7 @@ don't have to implement all the functionality themselves.
 In \secref{sec:typesystemanalysis} we analysed the two main type system
 approaches.  We chose the dynamic type system due to the fact that it increases
 the writability of our programming language. As seen in the above code example
-\secref{codesample} a Noughts and Crosses game can be created in only
+above a Noughts and Crosses game can be created in only
 approximately $20$ lines of code.
 
 The type system in \productname{} comprises a number of simple types, from which
