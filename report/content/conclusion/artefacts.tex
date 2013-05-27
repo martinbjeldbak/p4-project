@@ -1,11 +1,7 @@
 \subsection{Artefacts}
 \label{sec:artefacts}
 
-In \productname{} games it is not possible to have dice, cards or similar artefacts due to the 
-fact that random number generation is not supported. This is a big limitation which decreases the
-amount of games possible to program in \productname{} significantly. A game like snake
-where a kind of food shows up at random locations on the board or monopoly where a dice decides how
-far a player can move and play cards add unforeseen surprises are examples of games which are not possible 
-to create. In our game environment described in \secref{sec:gameenvironment} 
-many board game related types, constants and functions are implemented. Here it would be natural to also include a
-dice type and a card type and related constants like number of eyes on the dice etc.    
+In \productname{}, the type of games that can be implemented are limited by the fact that randomness is not supported. 
+A game like minesweeper cannot be implemented with randomly generated levels. The board game monopoly would need randomness 
+to implement a good die. A random card cannot be drawn and a deck of card cannot be shuffled. In our game environment described in \secref{sec:gameenvironment} many board game related types, constants and functions are implemented. Here it would be natural to also include types like
+a die type, a card type, and a type that can generate random numbers. If the random type would generate random numbers based on a seed, some kind of system time constant should also be available in \productname{}. Another approach would be to automatically seed the random type based on a system time constant every time a game is loaded. 
