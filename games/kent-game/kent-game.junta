@@ -1,31 +1,31 @@
 type KentGame[] extends Game["Kents Spil"] {
   define players = [Solo[]]
   define initialBoard = GridBoard[5, 5]
-    .addPieces[White[players[0]], [A1, A2, A3, B1, B2, B3, C1, C2]]
-    .addPieces[Black[players[0]], [C4, C5, D3, D4, D5, E3, E4, E5]]
+    .addPieces[Blue[players[0]], [A1, A2, A3, B1, B2, B3, C1, C2]]
+    .addPieces[Red[players[0]], [C4, C5, D3, D4, D5, E3, E4, E5]]
     .setSquaresAt[Wall[], [D1, D2, E1, E2, A4, A5, B4, B5]]
 }
 type Solo[] extends Player["Solo"] {
   define winCondition[$gameState] =
     $gameState.matchSquares[
       [A1, A2, A3, B1, B2, B3, C1, C2],
-      /Black/
+      /Red/
     ]
 }
-type White[$player] extends Piece[$player] {
-  define actions[$gameState] =
-    moveActions[this, union[
-      $gameState.findSquares[/empty !Wall w|s this/],
-      $gameState.findSquares[/empty !Wall w Black w this/],
-      $gameState.findSquares[/empty !Wall s Black s this/]
-    ]]
-}
-type Black[$player] extends Piece[$player] {
+type Red[$player] extends Piece[$player] {
   define actions[$gameState] =
     moveActions[this, union[
       $gameState.findSquares[/empty !Wall e|n this/],
-      $gameState.findSquares[/empty !Wall e White e this/],
-      $gameState.findSquares[/empty !Wall n White n this/]
+      $gameState.findSquares[/empty !Wall e Blue e this/],
+      $gameState.findSquares[/empty !Wall n Blue n this/]
+    ]]
+}
+type Blue[$player] extends Piece[$player] {
+  define actions[$gameState] =
+    moveActions[this, union[
+      $gameState.findSquares[/empty !Wall w|s this/],
+      $gameState.findSquares[/empty !Wall w Red w this/],
+      $gameState.findSquares[/empty !Wall s Red s this/]
     ]]
 }
 type Wall[] extends Square[] {
