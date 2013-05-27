@@ -4,9 +4,10 @@
 In order to write programs in a programming language, it is often necessary to use a number of built-in
 functions and types. \productname{} provides a number of built-in functions and constants, as well as 
 a number of simple types for representing values such as integers and strings. \productname{} also provides
-a type-hierarchy designed for implementing and expressing board games. The built-ins will in many cases make
-the lives of \productname{}-programmers easier since he/she won't have to implement the functionality the built-ins
-provide for themselves. 
+a type hierarchy designed for implementing and expressing board games. The built-ins will in many cases make
+the lives of \productname{} programmers easier since they won't have to
+implement the functionality the built-ins
+provide for themselves.
 
 Since \productname{} doesn't have a module, package or name space system, the distinction between a standard-
 and game environment doesn't actually exist in the language, and all types and constants exist in the same
@@ -63,7 +64,7 @@ for instance the numeral exceeds the highest possible value a \classref{TypeErro
   \item \type{List}[\variable{list} : \type{List}]\\
     The standard environment provides the \type{List} type. A list object can contain a mix of any types: strings, integers, other lists, game objects etc.
   This has both advantages and disadvantages. It increases the orthogonality of the programming language but it increases the risk of getting
-  errors, which doesn't show until at run-time. The List type is similar to the \classref{ArrayList} of Java and it's resizeable, which means that types can be added to the List. The type comes with a number of built-in constants and functions. 
+  errors, which don't show until at run time. The List type is similar to the \classref{ArrayList} of Java and it's resizeable, which means that types can be added to the List. The type comes with a number of built-in constants and functions. 
   \item \constant{size} : \type{Integer}\\
   The size constant returns the number of elements in the list, which is an integer value. For example [``hi'', 2, 4].size = 3.
   \item \constant{sort}[\variable{comparator} : \type{Function}] : \type{List} \\
@@ -249,7 +250,7 @@ The \type{Game} type contains all information to describe a board game at a spec
 \end{dlist}
 
 \subsubsection{Square}
-\type{Square} describes a position on the \type{Board} where 0-to-many \type{Piece}s can be placed.
+\type{Square} describes a position on the \type{Board} where zero-to-many \type{Piece}s can be placed.
 
 \begin{dlist}
 	\item \type{Square}[]\\
