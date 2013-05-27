@@ -27,7 +27,7 @@ syntax tree traversed by the interpreter. The interpreter and its
 information is then used when getting the main game wrapper. The class
 is also complimented by the method \methodref{getGame}, called after
 instantiating the \classref{GameAbstractionLayer}. This method returns a
-\classref{GameWrapper} (described in the next sub-section), containing
+\classref{GameWrapper} (described in the next subsection), containing
 all the needed information about the written game.
 
 This class is what's called and used by the simulator when starting up,
@@ -71,7 +71,7 @@ standard environment. All wrapper classes have the following signature:
 
 Where $xx$ is one of the $12$ wrappers and $yy$ is the matching
 interface. The root class \classref{Wrapper} houses a series of methods
-used by all the wrapper sub-classes that retrieve different values in
+used by all the wrapper subclasses that retrieve different values in
 the type the specific wrapper abstracts over (as in the implemented
 interface).
 
