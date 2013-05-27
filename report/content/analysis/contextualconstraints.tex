@@ -1,4 +1,4 @@
-\section{Contextual constraints for context-free grammars}
+\subsubsection{Contextual constraints for context-free grammars}
 \label{sec:contextualconstraints}
 
 Context-free grammars (CFGs) cannot describe syntax which can only be
@@ -18,11 +18,11 @@ These contextual constraints are i.e.\:
 % Scope and their importance
 % Semantics at compile-time
 
-\subsection{The issue of remembering}
+\subsubsection*{The issue of remembering}
 
 %declaration before use
 The rule that variables must be declared before they can be used is impossible
-to express with CFGs. It would require that the CFG was able remember things,
+to express with CFGs. It would require that the CFG was able to remember things,
 particularly those variables that have been declared, which it cannot. 
 
 %scope rules
@@ -44,7 +44,7 @@ is not possible because the CFG must remember method names, formal
 parameters, and return value to be able to formulate a production to
 make it possible to override the methods, which is not possible.
 
-\subsection{Solutions to this problem}
+\subsubsection*{Solutions to this problem}
 The big issue for CFGs is to remember things. Are there any grammars
 that solve this issue? Yes there are. There exists different kinds of
 grammars which are able to describe the semantics of a given language
@@ -67,7 +67,7 @@ taken much into account.
 
 \cite{attrgrammar}
 
-\subsection{Summary for contextual constraints}
+\subsubsection*{Summary for contextual constraints}
 The issue is that CFGs cannot remember what they have met in the past, and
 which context a given production must be in to be true. This makes is impossible
 to declare rules as declaration before use, scope rules, type rules, etc.
