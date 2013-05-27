@@ -37,7 +37,7 @@ manage other \classref{Widget}s, while others provide visual and interactive
 content. The game \classref{Widget}s provide visual and interactive intefaces to
 GAL.
 
-To work with graphics and input, the game framework slick2d is used. \todo{kilde på slick2d}
+To work with graphics and input, the game framework slick2d is used\cite{slick2d}.
 \classref{SimulatedGame} is used to bind slick2d, \classref{Widget}s, and GAL
 together to provide a complete system.
 
@@ -176,7 +176,9 @@ you to move a \classref{Piece} from one \classref{Square} to another, Click\&Sel
 will work on any two \classref{Square}s whether or not it contains any
 \classref{Piece}s. It will go through all available \classref{Action}s and find
 the ones which are related to those Squares. To help ease this process, usable
-\classref{Square}s are hinted as shown in \todo{ add screenshot }.
+\classref{Square}s are hinted as shown in \figref{fig:multiple-moves}.
+
+\fig[width=0.7\textwidth]{multiple-moves}{The Square at E2 was selected and shows the 4 pieces which can move there.}
 
 In reality we have two \classref{Widget}s: \classref{BoardWidget} and
 \classref{GridBoardWidget} which are specialisations of \classref{BoardWidget}.
