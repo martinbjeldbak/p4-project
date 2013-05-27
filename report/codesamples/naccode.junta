@@ -1,0 +1,19 @@
+type NacGame[] extends Game["Noughts and Crosses"] {
+  define players = [
+    NacPlayer[Crosses, "Crosses"],
+    NacPlayer[Noughts, "Noughts"]
+  ]
+  define initialBoard = GridBoard[3, 3]
+}
+type NacPlayer[$pieceType, $name] extends Player[$name] {
+  define winCondition[$gameState] =
+    $gameState.findSquares[/friend (n friend n)   |
+                                   (e friend e)   |
+                                   (nw friend nw) |
+                                   (ne friend ne ) friend/].size != 0
+  define tieCondition[$gameState] = $gameState.board.isFull
+  define actions[$gameState] = addActions[$pieceType[/this/],
+                                          $gameState.board.emptySquares]
+}
+type Crosses[$owner] extends Piece[$owner]
+type Noughts[$owner] extends Piece[$owner]
