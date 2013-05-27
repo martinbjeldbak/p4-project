@@ -1,0 +1,73 @@
+\section{Writing games in \productname{}}
+We have written a handful of games in the final version \productname{}
+to gain a better practical understanding of writing in the language
+along with finding possible holes and features that may exist. The games
+vary from classic board games to small, unknown puzzle games invented by
+individual group members. All game screenshots in this section are taken
+from the simulator while running an implementation of a particular game.
+
+This section introduces four of those games, namely Noughts and Crosses,
+Connect Four, Ice, and Kent's game. Some of these have their source code
+listed to show the simplicity of \productname{}.
+
+Chess could be listed here, but it is not as simple and doesn't provide
+the overview of our language we wish to create with this section. It is
+possible to see the source code of Chess in the games folder in this
+project's repository.
+
+\subsection{Noughts and Crosses}
+The first game implemented in \productname{} is Noughts and
+Crosses. A picture of a possible board layout is shown below in
+\figref{fig:nacsimulated}. The source code for the entire game is seen
+after in \csref{naccode}:
+
+\fig[scale=0.3]{nacsimulated}{An implementation of Noughts and Crosses
+  in \productname{}, played in the simulator.}
+
+\codesample{naccode.junta}
+
+\subsection{Connect Four}
+The famous Connect Four game was written in approximately $5$ minutes
+using the Noughts And Crosses implementation as a template, modifying
+board set up, win condition, etc. The game loaded in the simulator can
+be seen in \figref{fig:connect4simulated}. The source code is shown in
+\csref{connect4code.junta} underneath.
+
+\fig[scale=0.3]{connect4simulated}{An implementation of Connect Four
+  \productname{}, played in the simulator.}
+
+\codesample{connect4code.junta}
+
+\subsection{Ice}
+The Ice game is a single-player puzzle game partly invented by one
+of the group members. Partly here means that it is not based on any
+particular game, but the game mechanics is used in many other puzzle
+games. The goal is to move the player (the ring-shaped piece) onto the
+green square. The player can move continuously in one of the directions
+north, east, west, or south until he meets a black wall. He cannot stop
+halfway on the path. A screenshot of the game loaded in the simulator
+can be seen in \figref{fig:icesimulated}. The red numbers show the moves
+needed to solve the puzzle, they are not visible in the game.
+
+\fig[scale=0.3]{icesimulated}{A \productname{} implementation of a custom puzzle game, Ice, played in the simulator.}
+
+\subsection{Kent's Game}
+Kent's Game is another game invented by the group.
+\figref{fig:kentgamesimulated} shows the initial board set up. The
+goal is to swap the position of all red and blue pieces. A blue piece
+can move one square north or one square east if it lands on an empty
+square. It can however move two squares north or two squares east by
+jumping over a red piece, landing on an empty field. The moves of a
+red piece are identical to those of a blue piece, where moving is
+mirrored in the opposite direction. The game is hard to solve because
+pieces can never move back, and the narrow passage in the middle allows
+only one piece to pass at once. One of the group members liked the
+game idea and implemented it in JavaScript so he could post it on his
+website. He included a backtracking solver which verified that the
+game is solvable with multiple solutions after dozens of moves. The
+source code is not listed here, but is only about $35$ lines. Below, in
+\figref{fig:kentgamesimulated}, the initial board setup in the simulator
+is shown.
+
+\fig[scale=0.3]{kentgamesimulated}{A \productname{} implementation of a
+custom puzzle game, Kent's Game, played in the simulator.}
