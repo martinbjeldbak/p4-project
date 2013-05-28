@@ -259,7 +259,7 @@ public class Simulator extends BasicGame {
 			Action a = actions[ actions.length-1 ];
 			
 			undoneActions.add( a );
-			game = game.undoAction( a );
+			game = game.undoAction();
 			System.out.println( "Undoing" );
 		}
 	}
