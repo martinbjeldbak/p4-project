@@ -1,1 +1,32 @@
-Eclipse
+# Junta source code (CD-ROM)
+This CD-ROM includes the source code and a collection of games
+implemented in Junta. Included are the following packages:
+
+  - GAL: Game Abstraction Layer
+  - IJunta: An interactive console interface to the scanner, parser, and
+    interpreter
+  - Interpreter: The actual interpreter. Creates and evaluates values
+    based on AST, fed AST
+  - Parser: The parser, creates AST, fed tokens
+  - Scanner: The scanner, fed an input stream, creates a token stream
+  - ScopeChecker: The scope checker, checks and modifies the AST, fed AST
+  - Simulator: GUI building on top of GAL, fed a file
+  - Utilities: Includes various classes used by other projects.
+
+To play with Junta, run the Interactive class in the IJunta package or the Simulator class in the Simulator package.
+
+When running the simulator, run with the VM options:
+  - For OS X: -Djava.library.path=lib/lwjgl-2.9.1/native/macosx
+  - For Windows: -Djava.library.path=lib/lwjgl-2.9.1/native/windows
+  - For Linux: -Djava.library.path=lib/lwjgl-2.9.1/native/linux
+
+And supply it with a program argument, such as:
+  - games/ice/ice.junta
+
+An example of such a call is:
+  - java -jar Simulator.jar
+      -Djava.library.path=lib/lwjgl-2.9.1/native/linux
+      games/ice/ice.junta
+
+Enjoy,
+  d402f13@cs.aau.dk
