@@ -163,17 +163,34 @@ The following global constants are available:
 \subsubsection{Type}
 \begin{dlist}
   \item \type{Type}[\variable{type} : \type{Type}]\\
-    \todo{finish this?}
+    The \type{Type} type is the meta type of \productname{}, all types,
+    including \type{Type} itself, are instance of this type. The constructor for
+    \type{Type} accepts one parameter, a type, an essentially just returns that
+    type. This can be used for casting instances of subtypes of \type{Type}.
+  \item \constdef{isSubtypeOf}{[\farg{other}{Type}]}{Boolean}\\
+    Returns true if this type is a subtype of the other type. False otherwise.
+  \item \constdef{isSupertypeOf}{[\farg{other}{Type}]}{Boolean}\\
+    Returns true if this type is a super type of the other type. False
+    otherwise.
 \end{dlist}
 
 \subsubsection{Function}
 \begin{dlist}
+  \item \constructor{Function{[\farg{function}{Function}]}\\
+    This type represents a callable function. Instances of this type are
+    returned by lambda expressions and functions/methods are referred to by
+    name.
   \item \constdef{call}{[\farg{parameters}{List}]}{\opstar}\\
-    Calls the function with the specified parameter list. \todo{Is this done?}
+    Calls the function with the specified parameter list. This can be used
+    instead of the \texttt{func[]} method, for instance in order to create a
+    list of actual parameters dynamically.
 \end{dlist}
 
 \subsubsection{Pattern}
-\todo{finish this?}
+\begin{dlist}
+  \item \constructor{Pattern}[\farg{pattern}{Pattern}]}\\
+    This type represents a pattern used for pattern matching on a \type{Game} object.
+\end{dlist}
 
 \subsection{Game environment}
 \label{sec:gameenvironment}
@@ -218,7 +235,7 @@ The \type{Game} type contains all information needed to describe a board game.
   \constant{currentPlayer} set to \constant{turnOrder}[0].
   
   \item \constant{players} : \type{List}\\
-  List of all \type{Player} types which are a part of this game.
+  List of all \type{Player} objects that are a part of this game.
   
   \item \constant{currentPlayer} : \type{Player}\\
   The \type{Player} type from \constant{players} which currently have the turn.
@@ -484,4 +501,8 @@ describe rectangular \type{Board}s.
 \end{dlist}
 
 \subsubsection{TestCase}
-An abstract type for unit testing.
+An abstract type for unit testing within a \productname{} program. It doesn't
+provide any methods or constants. Its only purpose is to make it possible to
+identify unit testing types. If a type extends \type{TestCase}, then each
+constant within that type is evaluated, and if a \type{Boolean} true value
+isn't returned, then the test is considered unsuccessful.
