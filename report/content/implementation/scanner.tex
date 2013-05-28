@@ -19,22 +19,22 @@ will be treated as an \tokenref{ID} token. The name of the identifier will
 then be saved as a value belonging to the particular token.
 
 \tab[8cm]{lexemestotokens}{1}{Analysing an input stream for lexemes and tokens.}
-                 {						}
-       {Lexemes	}{\textbf{Tokens}		}{
-\tabrow{Black 	}{ IDENTIFIER (Black)	}
-\tabrow{\{    	}{ LBRACE 				}
-\tabrow{Pawn  	}{ IDENTIFIER (Pawn)	}
-\tabrow{$[$    	}{ LBRACKET				}
-\tabrow{A7    	}{ COORD\_LIT(A7)		}
-\tabrow{B7    	}{ COORD\_LIT(B7)		}
-\tabrow{C7    	}{ COORD\_LIT(C7)		}
-\tabrow{D7    	}{ COORD\_LIT(D7)		}
-\tabrow{E7    	}{ COORD\_LIT(E7)		}
-\tabrow{F7    	}{ COORD\_LIT(F7)		}
-\tabrow{G7    	}{ COORD\_LIT(G7)		}
-\tabrow{H7    	}{ COORD\_LIT(H7)		}
-\tabrow{$]$		}{ RBRACKET 			}
-\tabrow{\}    	}{ RBRACE				}
+                 {		     }
+       {Lexemes	}{\textbf{Tokens}    }{
+\tabrow{Black 	}{ IDENTIFIER (Black)}
+\tabrow{\{    	}{ LBRACE 	     }
+\tabrow{Pawn  	}{ IDENTIFIER (Pawn) }
+\tabrow{$[$    	}{ LBRACKET	     }
+\tabrow{A7    	}{ COORD\_LIT(A7)    }
+\tabrow{B7    	}{ COORD\_LIT(B7)    }
+\tabrow{C7    	}{ COORD\_LIT(C7)    } 
+\tabrow{D7    	}{ COORD\_LIT(D7)    }
+\tabrow{E7    	}{ COORD\_LIT(E7)    }
+\tabrow{F7    	}{ COORD\_LIT(F7)    }
+\tabrow{G7    	}{ COORD\_LIT(G7)    }
+\tabrow{H7    	}{ COORD\_LIT(H7)    }
+\tabrow{$]$	}{ RBRACKET 	     }
+\tabrow{\}    	}{ RBRACE	     }
 }
 
 Our scanner consists of two classes: \classref{Scanner} and
@@ -82,33 +82,21 @@ for determining whether the lexeme is a \tokenref{type} or a
 with an upper case character in \productname{}. This is depicted in
 \tableref{table:scanner}.
 
-
-\tab[14cm]{scanner}{2}{The different groupings of characters, the method responsible for handling them and the possible returned token types}
-                 		 {Action and output												}
-       {First character	}{Responsible function	& Token type							}{
-\tabrow{White space 	}{						& \textit{ignored}						}
-\tabrow{End of file    	}{						& EOF									}
-\tabrow{Digit		  	}{scanNumeric()			& LIT\_INT								}
-\tabrow{Uppercase    	}{scanUppercase()		& LIT\_COORD, TYPE						}
-\tabrow{''			   	}{scanString()			& LIT\_STRING							}
-\tabrow{\$    			}{scanVar()				& VAR									}
-\tabrow{Operator    	}{scanOperator()		& OP\_PLUS, OP\_MINUS, OP\_MULT,
-												  OP\_DIV, OP\_MODULO, OP\_ASSIGN, 
-												  OP\_EQUALS, OP\_GREATER\_THAN,
-												  OP\_GREATER\_OR\_EQUALS, OP\_LESS\_THAN,
-												  OP\_LESS\_OR\_EQUALS, OP\_NOT\_EQUALS, 
-												  OP\_LAMPDA, LAMBDA\_BEGIN,
-												  LBRACKET, RBRACKET, LBRACE, RBRACE, 
-												  LPAREN, RPAREN, OP\_PATTERN\_QUESTION, 
-												  OP\_PATTERN\_NOT, OP\_PATTERN\_OR, COMMA,
-												  OP\_DOT, OP\_DOT\_DOT\_DOT 			}
-\tabrow{Lowercase   	}{scanKeyword()			& KEY\_THIS, KEY\_SUPER, KEY\_DEFINE,
-												  KEY\_ABSTRACT, KEY\_EXTENDS, KEY\_TYPE,
-												  KEY\_SET, KEY\_DATA, KEY\_PATTERN, 
-												  OP\_IS, OP\_OR, OP\_AND, OP\_NOT, LET, IN, IF, THEN,
-												  ELSE, LIT\_DIR						}
+\tab[14cm]{scanner}{2}{The different groupings of characters, the method
+responsible for handling them and the possible returned token types.}
+                         {Action and output					            }
+       {First character	}{Responsible function	& Token type				    }{
+\tabrow{White space 	}{			& \textit{ignored}			    }
+\tabrow{End of file    	}{			& EOF					    }
+\tabrow{Digit		}{scanNumeric()		& LIT\_INT				    }
+\tabrow{Uppercase    	}{scanUppercase()	& LIT\_COORD, TYPE		 	    }
+\tabrow{''		}{scanString()		& LIT\_STRING				    }
+\tabrow{\$    		}{scanVar()		& VAR					    }
+\tabrow{Operator    	}{scanOperator()	& OP\_PLUS, OP\_MINUS, OP\_MULT,
+						  OP\_DIV, OP\_MODULO, OP\_ASSIGN, $\ldots$ }
+\tabrow{Lowercase   	}{scanKeyword()		& KEY\_THIS, KEY\_SUPER, KEY\_DEFINE,
+						  KEY\_ABSTRACT, KEY\_EXTENDS, $\ldots$	    }
 }
-
 
 Two variables, \typeref{int} \varref{offset} and \typeref{int}
 \varref{line} keep track of where in the source file the next input
