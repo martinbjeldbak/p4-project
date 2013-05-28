@@ -11,7 +11,7 @@ public interface Game {
   public Player[] getTurnOrder() throws StandardError;
   public Game nextTurn() throws StandardError;
   public Game applyAction(Action action) throws StandardError;
-  public Game undoAction(Action action) throws StandardError;
+  public Game undoAction() throws StandardError;
   public Action[] getActions() throws StandardError;
   public Action[] getHistory() throws StandardError;
 }

@@ -55,7 +55,7 @@ inherits members of the \type{Game} type.  \type{Game}'s constructor takes the
 title of the game as input and it contains many useful constants and
 functions, described further in \secref{sec:predefined}. 
 
-\codesample{noughtandcrosses.game}
+\bigcodesample{noughtandcrosses.game}
 
 Constants and functions can be thought of as subprograms similar to methods.
 They distinguish themselves from each other by the fact that constants cannot
@@ -123,7 +123,7 @@ every other type can be created. The simple types are: integers, character
 strings, booleans, lists, directions (vectors), coordinates (points), patterns,
 functions and types. Unlike in other programming languages, both functions and
 types in \productname{} are first-class citizens, this means that they can
-be passed like any other value. This adds even more
+be used like any other value. This adds even more
 flexibility to the language. For instance in the Noughts and Crosses example
 (see \csref{noughtandcrosses.game}) both the types \type{Noughts} and
 \type{Crosses} are passed as values to the constructor of \type{NacPlayer}. The
@@ -145,10 +145,9 @@ reason for this functionality, is to prevent side-effects, since randomly
 changing objects, could have undesirable influence on other functions or types
 that depend on these objects.
 
-The type system of \productname{} supports single inheritance, meaning that a
-user of type \type{B} can extend the type \type{A} and inherit all members. \productname{} 
-supports single inheritance between types. An inheriting type will
-inherit all the members of its super type(s) (if \type{C} extends \type{B}, which
+The type system of \productname{} supports single inheritance.
+An inheriting type will inherit all the members of its super type(s) (if
+\type{C} extends \type{B}, which
 extends \type{A}, then \type{C} inherits all members from both \type{B} and
 \type{A}). Visibility in \productname{} is implicit, in that all
 constants/methods are public (they can be accessed from anywhere as long as an
