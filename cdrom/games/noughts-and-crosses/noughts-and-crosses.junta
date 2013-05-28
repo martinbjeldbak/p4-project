@@ -1,0 +1,62 @@
+type NacGame[] extends Game["Noughts and Crosses"] {
+  define players = [
+    NacPlayer[Crosses, "Crosses"],
+    NacPlayer[Noughts, "Noughts"]
+  ]
+  define initialBoard = GridBoard[3, 3]
+}
+type NacPlayer[$pieceType, $name] extends Player[$name] {
+  define winCondition[$gameState] =
+    $gameState.findSquares[
+      /friend (n friend n) | (e friend e) |
+      (nw friend nw) | (ne friend ne ) friend/].size != 0
+  define tieCondition[$gameState] =
+    $gameState.board.isFull
+  define actions[$gameState] =
+    addActions[$pieceType[this], $gameState.board.emptySquares]
+}
+type Crosses[$owner] extends Piece[$owner]
+type Noughts[$owner] extends Piece[$owner]
+
+type NacTest[] extends TestCase[] {
+  data $state1 = NacGame[]
+  define testTitle = $state1.title == "Noughts and Crosses"
+  define testPlayersLength = $state1.players.size == 2
+  define testPlayersNotEqual = $state1.players[0] != $state1.players[1]
+  define testCurrentPlayer1 = $state1.currentPlayer == $state1.players[0]
+  data $state2 = $state1.nextTurn[]
+  define testCurrentPlayer2 = $state2.currentPlayer == $state2.players[1]
+  data $state3 = $state2.nextTurn[]
+  define testCurrentPlayer3 = $state3.currentPlayer == $state3.players[0]
+  define testImmutablePlayers = $state1.players == $state2.players
+    and $state2.players == $state3.players
+  define testEmptySquares1 = $state1.board.emptySquares.size == 9
+  define testPlayerActions1 = $state1.players[0].actions[$state1].size == 9
+  data $state4 = $state1.applyAction[$state1.players[0].actions[$state1][0]]
+  define testEmptySquares2 = $state4.board.emptySquares.size == 8
+  define testPlayerActions2 = $state4.players[1].actions[$state4].size == 8
+  data $state5 = $state4.applyAction[$state4.players[0].actions[$state4][0]]
+  define testEmptySquares3 = $state5.board.emptySquares.size == 7
+  data $state6 = $state1.setBoard[
+    $state1.board.addPieces[Crosses[$state1.players[0]],
+      [A1, A2, A3, B1, B2, B3, C1, C2, C3]
+    ]
+  ]
+  define testBoardFull1 = $state6.board.isFull
+  define testBoardFull2 = $state6.board.emptySquares == []
+  define testTieCondition = $state6.players[0].tieCondition[$state6]
+  data $state7 = $state6.applyAction[
+    RemoveAction[$state6.board.squareAt[B3].pieces[0]]
+  ]
+  define testBoardNotFull = not $state7.board.isFull
+  define testRemovedSquare = $state7.board.emptySquares[0].position == B3
+  define testHistorySize = $state7.history.size == 1
+  define testUndoFull = $state7.undoAction[$state7.history[-1]].board.isFull
+}
+
+
+define main = let
+  $g = NacGame[],
+  $p = $g.players[0],
+  $gB = $g.applyAction[AddAction[Crosses[$p], $g.board.squareAt[A1]]]
+    in $gB.board.emptySquares.size
