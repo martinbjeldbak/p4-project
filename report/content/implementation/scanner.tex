@@ -3,12 +3,11 @@
 This section presents our implementation of a scanner for our programming language.
 
 Our scanner takes raw source code in the form of a program written in
-\productname{} as input. It validates the lexical correctness of a
-\productname{} program, which means that it tries to determine if the
-input is in the language of \productname{}. It does so by identifying
+\productname{} as input and validates the lexical correctness of a
+\productname{} program. It does so by identifying
 tokens defined in \productname{} from the input. If an input is met
 which cannot be recognized as a valid token, the source code is not
-a valid program in \productname{}, hence an exception is thrown, and
+a valid program in \productname{}, hence an exception is thrown and
 scanning stops. The exception contains information about the line and
 offset at which the input was determined to be incorrect.
 
@@ -38,49 +37,40 @@ then be saved as a value belonging to the particular token.
 }
 
 Our scanner consists of two classes: \classref{Scanner} and
-\classref{Token}. \classref{Token} contains an enum named
-\classref{Type} that includes all the types of tokens in \productname{}.
+\classref{Token}. \classref{Token} contains an instance variable of the 
+type \classref{Type} which is an enumerate describing the kind of token.
 
 When a lexeme is found in the input stream, the scanner analyses which
 token type it belongs to. A new token is then instantiated and returned
 by the scanner. The constructor for \classref{Token} takes the following
-arguments: (\classref{Token.Type}, \textit{line}, \textit{offset}). The
-\textit{line} and \textit{offset} represent where in the source code the
+arguments: (\classref{Type} \varref{tokenType}, \classref{String} \varref{value}, \classref{int} \textit{line}, \classref{int} \textit{offset}). 
+\varref{value} is used in some cases for saving the lexeme the token was made from. For instance, the value of an \tokenref{INT\_LIT} (integer) or the name of an \tokenref{ID} (identifier) must be kept. The \textit{line} and \textit{offset} represent where in the source code the
 lexeme of any token was found. This is essential if an error is found,
 since it is possible for the scanner to inform the programmer where in
 the source code an error exists.
 
 When an input is to be analysed the scanner looks at the first symbol
 of the input, which is not a blank or white space character. Based on
-the first character, it makes a jump to a method. The method is
-then responsible for determining which kind of token that is supposed to
-be generated. With this approach we have constructed a DFA with explicit
-control. The explicit control means that the transitions are handled
-``manually'' using conditional jumps to method rather than having
-a table driven automaton with defined states and a transition table.
+the first character met it transfers control to a particular method which is responsible for determining which kind of token that corresponds to the lexeme. This is much easier to implement and maintain rather than having a single, big and clumsy method that handles the conversion from lexeme to token.
+This is actually an implementation of an explicitly controlled finite automaton\cite{explicitcontrolledfinitautomaton}. 
+The explicit control means that the transitions are handled
+``manually'' by transferring control to appropriate methods rather than using a table driven automaton where lookups in a transition table causes a change of state.
 
-In \lstref{lst:scan} you can see many methods of the style
-\methodref{is{\textit{Something}}()} for instace \methodref{isDigit()}
-and \methodref{isOperator()}. These functions check the first character
-in an input and checks if the next symbol in the input stream is
-that ``\textit{Something}''. \methodref{isWhitespace()} checks if
-the next input character (\varref{nextChar}) is a white space.
-While true \methodref{pop()} dequeues the next symbol in the input
-stream and updates \varref{nextChar}. Therefore, the while loop with
-\methodref{isWhitespace()} removes all initial white spaces before a
-next token is found. If, at any time, the scanner has reached the end of
-the input stream it returns a \tokenref{EOF} so succeeding parts of the
-parser knows where the program ends.
+In \lstref{lst:scan} you can see many methods named 
+\methodref{is{\textit{$\ldots$}}()} for instance \methodref{isDigit()}
+and \methodref{isOperator()}. These are the functions which control is 
+transferred to when the first character of a lexeme is a digit or a operator. 
+If at any time the scanner has reached the end of
+the input stream, it returns a \tokenref{EOF} so succeeding parts of the
+parser knows where the program ends. 
+The method \methodref{isWhitespace()} is simply used to pop all white spaces between lexemes.
 
-Beside the \methodref{isWhitespace()} function, all other functions
-of the form \methodref{is{\textit{Something}}()} are responsible for
-returning a token based on their evaluation of the input stream.
-For example, if the first symbol of a lexeme is an upper case
-character, the function \methodref{scanUppercase()} is responsible
+Note that a method which the control is transferred to will not always return the same type of token. 
+For instance, the method \methodref{scanUppercase()} is responsible
 for determining whether the lexeme is a \tokenref{type} or a
 \tokenref{coordinate} because they are the only two tokens starting
 with an upper case character in \productname{}. This is depicted in
-\tableref{table:scanner}.
+\tableref{table:scanner}. 
 
 \tab[14cm]{scanner}{2}{The different groupings of characters, the method
 responsible for handling them and the possible returned token types.}
@@ -100,23 +90,16 @@ responsible for handling them and the possible returned token types.}
 
 Two variables, \classref{int} \varref{offset} and \classref{int}
 \varref{line} keep track of where in the source file the next input
-character is taken from. The function \methodref{pop()} will pop
-the first character from the input stream and assign the value of
-the new first character to the variable \varref{nextChar}. The
-\methodref{is{\textit{Something}}()} functions use the \varref{nextChar}
-to check what kind of character the next one is. The \methodref{pop()}
-function will additionally increment \varref{offset} by one. If
-the next input symbol is a new line character, it assigns zero to
-\varref{offset} and increments \varref{line} by one. If an unexpected
-input symbol is met, a \classref{SyntaxError} exception is thrown. An
+character is taken from. If an unexpected input symbol is met, 
+a \classref{SyntaxError} exception is thrown. An
 example could be a \$ character followed by white space. \$ is used as
 prefix for variables, and expects to be followed by an identifier, e.g.\
-\$\varref{varName}. For more information on our error handling, refer to
+\$\varref{varName}. For more information on our error handling, see 
 \secref{sec:errorhandling}.
  
 \lstinputlisting[caption={The scan() method from the \productname{} scanner.}, label=lst:scan, language=Java]{listings/scan.java}
 
-When a syntactically correct program is accepted by the scanner, a
+When a lexically correct program is accepted by the scanner, a
 stream of tokens is created. These tokens are then fed to the parser,
 which analyses them and creates an abstract syntax tree of nodes based
-upon the supplied tokens.
+on the supplied tokens.
