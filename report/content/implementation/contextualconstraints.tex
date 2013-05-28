@@ -245,14 +245,14 @@ can only declared in four ways:
   \item As a type constructor
   \item As a formal parameter in a function declaration
   \item In a lambda expression
-  \item In a \texttt{let-in} expression
+  \item In a let expression
 \end{nlist}
 
 In all cases the \productname{} semantics require that a new scope is opened, in
 which the declared variable is known while the body of the expression is
 executed. When the scope closes the declared variables are removed. The body of
-an expression can also contain new variable declarations, e.g. a \texttt{let-in}
-expression in the body of a \texttt{let-in} expression. 
+an expression can also contain new variable declarations, e.g. a let
+expression in the body of a let expression. 
 
 The scope checker uses a \classref{SymbolTable} class which is basically a
 symbol table with a list of variable names and a reference to a parent symbol
@@ -263,7 +263,7 @@ inside other scopes are implemented.
 
 Notice how the four code samples above all result in the same
 scope checking routine, which can be seen in \figref{fig:scope1}. First, a new
-symbol table is instantiated in which the variables \$a and \$b are put in. The
+symbol table is instantiated in which the variables \variable{a} and \variable{b} are put in. The
 symbol table's parent reference is updated so it points to the current symbol
 table, which is referred by \classref{SymbolTable} \varref{currentST}. Next, the
 current symbol table is updated to the newly created symbol table, and the body
@@ -291,7 +291,7 @@ declaration exists if a symbol table contains the same variable twice. Notice
 how \figref{fig:scope2} contains two symbol tables, each containing a
 declaration of \$a. 
 
-\fig[height=5em]{scope2}{The variable \$a declared in two different scopes.}
+\fig[height=5em]{scope2}{The variable \variable{a} declared in two different scopes.}
 
 This is completely valid and is caused by the following code sample. If
 only a single symbol table was used, an incorrect double declaration
