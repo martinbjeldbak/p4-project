@@ -4,7 +4,7 @@
 This section illustrates how we have chosen to implement the grammar described
 throughout \chapref{chap:design} into abstract syntax trees (ASTs). 
 We have split every program part into their own subsections with an abstract
-node type (ANT) that presents the program parts construction when it is parsed into an
+node type (ANT) that presents the program parts' construction when they are parsed into an
 AST. Each node type corresponds to a production in the grammar. These ANTs can
 then be combined to form the AST when some piece of code has been parsed.
 
@@ -50,7 +50,7 @@ In this section we introduce the five different groupings of operations such as
 logical operators, equality operators, etc., and finally we present the
 production called negation. We illustrate the five groupings of operators but we
 have omitted the negation node, because it is merely a root with one child. The
-grammar for this expression was presented in \secref{sec:operatorsandcalls}.
+grammar for this expression is presented in \secref{sec:operatorsandcalls}.
 
 %\begin{ebnf}
 %\grule{lo\_sequence}{eq\_sequence \gcat \grep{\ggrp{\gter{and} \gor \gter{or}} \gcat eq\_sequence}}
@@ -60,19 +60,18 @@ grammar for this expression was presented in \secref{sec:operatorsandcalls}.
 %\grule{md\_sequence}{negation \gcat \grep{\ggrp{\gter{*} \gor \gter{/} \gor{\%}} \gcat negation}}
 %\end{ebnf}
 
-To refresh the readers memory, the sequences are intentionally placed in this
-specific order to ensure the correct precedence for these operators.
+The sequences are intentionally placed in specific orders to ensure the
+correct precedence for these operators.
 
-Since the productions look a lot like each other we will only illustrate an
-ANT which shows how we have implemented the different operations.
-Figure \ref{ast:operation} shows this.
+Since the productions look a lot like each other we will only illustrate an ANT
+which shows how we have implemented the different operations.  Figure
+\ref{ast:operation} illustrates that the ANT for each production, with the
+left-hand side (LHS) of the production as the root, will only be constructed if
+there is at least two of the right-hand sides (RHS) with one operator between
+them. This means that the sequence should for instance look like the following:
 
 \input{content/implementation/abstractnodetypes/operation}
 
-Figure \ref{ast:operation} illustrates that the ANT for each production, with
-the left-hand side (LHS) of the production as the root, will only be constructed
-if there is at least two of the right-hand sides (RHS) with one operator between
-them. This means that the sequence should for instance look like the following:
 
 \begin{ebnf}
 \grule{lo\_sequence}{eq\_sequence \gcat \gter{and} \gcat eq\_sequence}
@@ -96,7 +95,7 @@ and more compact AST.
 The grammar specified earlier in this section presented that the last operation
 ($md\_sequence$) consists of negations and the choice to add an operator between
 negations. The negation production can be an element or begin with the \gter{-}
-symbol followed by another negation. The production for a negation was presented
+symbol followed by another negation. The production for a negation is presented
 in \secref{sec:operatorsandcalls}.
 
 %\begin{ebnf}
@@ -105,14 +104,16 @@ in \secref{sec:operatorsandcalls}.
 %\end{ebnf}
 
 \subsection{Abstract node type for let expressions}
-The production for the assignment expression was presented in
-\secref{sec:letexpressions}.
+The production for the let expression is presented in
+\secref{sec:letexpressions}. Let expressions were named ``assignment'' in the
+Java implementation of the parser because the expression is a bit similar to an
+assignment. When we refer to an assignment expression we mean a let expression.
 
 %\begin{ebnf}
 %\grule{assignment}{\gter{let} \gcat variable \gcat \gter{=} \gcat expression \gcat \grep{\gter{,} \gcat variable \gcat \gter{=} \gcat expression} \gcat \gter{in} \gcat expression}
 %\end{ebnf}
 
-The production specifies that any assignment must begin with the keyword
+The production specifies that any let expression must begin with the keyword
 \gter{let} and end with the keyword \gter{in} followed by an expression. In
 between these beginning and ending keywords, the production consists of at least
 one sequence of a variable followed by an assignment operator followed by an
@@ -123,15 +124,16 @@ pair.
 \input{content/implementation/abstractnodetypes/assign}
 
 Figure \ref{ast:assignment} illustrates this with an ANT that omits the
-keywords, commas and the assignment operators, which can make it rather complex
-to look at. The figure actually states that an assignment consists of variables
+keywords, commas, and the assignment operators, which can make it rather complex
+to look at. The figure actually states that a let expression consists of variables
 and expressions where an expression can be many different things, including
-another assignment. So, this means that it is possible to have assignments
-nested within each other. 
+another let expression. So, this means that it is possible to have let
+expressions nested within each other. 
 
-We have chosen to implement the optional additional variable declarations as new assignment nodes
-which each has two nodes that are not optional. These nested assignments are
-connected to the parent with dashed edges which mean that they are optional and
-it is possible to have zero, one, or more of these following each other.
+We have chosen to implement the optional additional variable declarations as new
+let expression nodes which each have two nodes that are not optional. These
+nested let expressions are connected to the parent with dashed edges which mean
+that they are optional and it is possible to have zero, one, or more of these
+following each other.
 
 The rest of the ANTs are very uniform and they can be found in \apref{ap:ant}.
