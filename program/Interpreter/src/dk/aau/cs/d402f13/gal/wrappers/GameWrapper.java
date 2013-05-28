@@ -91,18 +91,8 @@ public class GameWrapper extends Wrapper implements Game {
   }
 
   @Override
-  public GameWrapper undoAction(Action action) throws StandardError {
-    Wrapper actionWrapper;
-    if (action instanceof UnitActionWrapper) {
-      actionWrapper = (UnitActionWrapper)action;
-    }
-    else if (action instanceof ActionSequenceWrapper) {
-      actionWrapper = (ActionSequenceWrapper)action;
-    }
-    else {
-      throw new InternalError("Invalid action class: " + action.getClass());
-    }
-    return new GameWrapper(env, callMember("undoAction", env.gameType(), actionWrapper.object));
+  public GameWrapper undoAction() throws StandardError {
+    return new GameWrapper(env, callMember("undoAction", env.gameType()));
   }
 
   @Override

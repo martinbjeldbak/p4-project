@@ -1,0 +1,50 @@
+
+\begin{figure}[ht]
+  \begin{center}
+    \begin{tikzpicture}      
+      \node [rectangle,draw,rounded corners,thick,text width=7cm,text centered,]
+      (a) {\textbf{Simulator}};
+      \node [rectangle,draw,rounded corners,thick,text width=7cm,text
+      centered,yshift=-1cm,text centered,] (b) {\textbf{Game Abstraction
+      Layer}};
+      \node [rectangle,draw,rounded corners,thick,yshift=-2cm,xshift=-2.95cm,text
+      centered,] (c) {\textbf{Scanner}};
+      \node [rectangle,draw,rounded corners,thick,yshift=-2cm,xshift=-1.3cm,text
+      centered,] (d) {\textbf{Parser}};
+      \node [rectangle,draw,rounded corners,thick,yshift=-2cm,xshift=0.6cm,text
+      centered,] (e) {\textbf{Scope checker}};
+      \node [rectangle,draw,rounded corners,thick,yshift=-2cm,xshift=2.8cm,text
+      centered,] (f) {\textbf{Interpreter}};
+
+      \node[rectangle,xshift=-5cm] (invis1) { };
+      \node[rectangle,xshift=5cm] (invis2) { };
+
+      \draw[line] ($(a.south)-(-2.95,0)$) |- ($(b.north)-(-2.95,0)$) 
+        node [midway, xshift=0.9em,yshift=0.7em] {11};
+      \draw[line] ($(b.north)-(3.1,0)$) |- ($(a.south)-(3.1,0)$)
+        node [midway, xshift=-0.8em,yshift=-0.7em] {2};
+      \draw[line] ($(b.south)-(2.8,0)$) |- ($(c.north)-(-0.15,0)$) 
+        node [midway, xshift=0.7em,yshift=0.7em] {4};
+      \draw[line] ($(c.north)-(0.15,0)$) |- ($(b.south)-(3.1,0)$)
+        node [midway, xshift=-0.7em,yshift=-0.7em] {3};
+      \draw[line] ($(b.south)-(1.15,0)$) |- ($(d.north)-(-0.15,0)$) 
+        node [midway, xshift=0.7em,yshift=0.7em] {6};
+      \draw[line] ($(d.north)-(0.15,0)$) |- ($(b.south)-(1.45,0)$)
+        node [midway, xshift=-0.7em,yshift=-0.7em] {5};
+      \draw[line] ($(b.south)-(-0.8,0)$) |- ($(e.north)-(-0.2,0)$) 
+        node [midway, xshift=0.7em,yshift=0.7em] {8};
+      \draw[line] ($(e.north)-(0.3,0)$) |- ($(b.south)-(-0.3,0)$)
+        node [midway, xshift=-0.7em,yshift=-0.7em] {7};
+      \draw[line] ($(b.south)-(-2.95,0)$) |- ($(f.north)-(-0.15,0)$) 
+        node [midway, xshift=0.7em,yshift=0.7em] {10};
+      \draw[line] ($(f.north)-(0.15,0)$) |- ($(b.south)-(-2.65,0)$)
+        node [midway, xshift=-0.7em,yshift=-0.7em] {9};
+      \draw[line] (a) -- (invis1) node [midway, sloped, above] {1};
+      \draw[line] (invis2) -- (a) node [midway, sloped, above] {12};
+    \end{tikzpicture}
+  \end{center}
+  \capt{A diagram showing the components of \productname{} and how they are
+connected.}
+  \label{fig:cake}
+\end{figure}
+
