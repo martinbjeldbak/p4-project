@@ -1,7 +1,8 @@
 \chapter{The context-free grammar}
 \label{ap:CFG}
+This appendix presents the full context-free grammar of \productname{}
 
-Program structure:
+\textbf{Program structure:}
 
 \begin{ebnf}
 \grule{program}{\grep{definition}}
@@ -23,7 +24,7 @@ variable} \gcat \gopt{\gter{,} \gcat vars} \gor vars} \gcat \gter{]}}
 \grule{vars}{\gter{...} \gcat variable}  
 \end{ebnf}
 
-Identifiers:
+\textbf{Identifiers:}
 
 \begin{ebnf}
 \grule{constant}{\ggrp{lowercase \gcat \grep{alphanum}} \gex \ggrp{reserved \gor direction}}
@@ -31,7 +32,7 @@ Identifiers:
 \grule{variable}{\gter{\$} \gcat alphanum \gcat \grep{alphanum}}
 \end{ebnf}
 
-Expressions:
+\textbf{Expressions:}
 
 \begin{ebnf}
 \grule{expression}{let\_expr}
@@ -71,7 +72,7 @@ Expressions:
 \grule{list}{\gter{[} \gcat \gopt{expression \gcat \grep{\gter{,} \gcat expression}} \gcat \gter{]}}
 \end{ebnf}
 
-Patterns:
+\textbf{Patterns:}
 
 \begin{ebnf}
 \grule{pattern}{pattern\_expr \gcat \grep{pattern\_expr}}
