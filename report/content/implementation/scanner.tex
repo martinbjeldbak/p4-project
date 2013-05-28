@@ -17,49 +17,55 @@ typically contain many different identifiers, which in \productname{}
 will be treated as an \tokenref{ID} token. The name of the identifier will
 then be saved as a value belonging to the particular token.
 
-\tab[8cm]{lexemestotokens}{1}{Analysing an input stream for lexemes and tokens.}
-                 {		     }
-       {Lexemes	}{\textbf{Tokens}    }{
-\tabrow{Black 	}{ IDENTIFIER (Black)}
-\tabrow{\{    	}{ LBRACE 	     }
-\tabrow{Pawn  	}{ IDENTIFIER (Pawn) }
-\tabrow{$[$    	}{ LBRACKET	     }
-\tabrow{A7    	}{ COORD\_LIT(A7)    }
-\tabrow{B7    	}{ COORD\_LIT(B7)    }
-\tabrow{C7    	}{ COORD\_LIT(C7)    } 
-\tabrow{D7    	}{ COORD\_LIT(D7)    }
-\tabrow{E7    	}{ COORD\_LIT(E7)    }
-\tabrow{F7    	}{ COORD\_LIT(F7)    }
-\tabrow{G7    	}{ COORD\_LIT(G7)    }
-\tabrow{H7    	}{ COORD\_LIT(H7)    }
-\tabrow{$]$	}{ RBRACKET 	     }
-\tabrow{\}    	}{ RBRACE	     }
-}
+%\tab[8cm]{lexemestotokens}{1}{Analysing an input stream for lexemes and tokens.}
+%                 {		     }
+%       {Lexemes	}{\textbf{Tokens}    }{
+%\tabrow{Black 	}{ IDENTIFIER (Black)}
+%\tabrow{\{    	}{ LBRACE 	     }
+%\tabrow{Pawn  	}{ IDENTIFIER (Pawn) }
+%\tabrow{$[$    	}{ LBRACKET	     }
+%\tabrow{A7    	}{ COORD\_LIT(A7)    }
+%\tabrow{B7    	}{ COORD\_LIT(B7)    }
+%\tabrow{C7    	}{ COORD\_LIT(C7)    } 
+%\tabrow{D7    	}{ COORD\_LIT(D7)    }
+%\tabrow{E7    	}{ COORD\_LIT(E7)    }
+%\tabrow{F7    	}{ COORD\_LIT(F7)    }
+%\tabrow{G7    	}{ COORD\_LIT(G7)    }
+%\tabrow{H7    	}{ COORD\_LIT(H7)    }
+%\tabrow{$]$	}{ RBRACKET 	     }
+%\tabrow{\}    	}{ RBRACE	     }
+%}
 
 Our scanner consists of two classes: \classref{Scanner} and
 \classref{Token}. \classref{Token} contains an instance variable of the 
 type \classref{Type} which is an enumerate describing the kind of token.
 
-When a lexeme is found in the input stream, the scanner analyses which
-token type it belongs to. A new token is then instantiated and returned
-by the scanner. The constructor for \classref{Token} takes the following
-arguments: (\classref{Type} \varref{tokenType}, \classref{String} \varref{value}, \classref{int} \textit{line}, \classref{int} \textit{offset}). 
-\varref{value} is used in some cases for saving the lexeme the token was made from. For instance, the value of an \tokenref{INT\_LIT} (integer) or the name of an \tokenref{ID} (identifier) must be kept. The \textit{line} and \textit{offset} represent where in the source code the
-lexeme of any token was found. This is essential if an error is found,
-since it is possible for the scanner to inform the programmer where in
-the source code an error exists.
+When a lexeme is found in the input stream, the scanner analyses which token
+type it belongs to. A new token is then instantiated and returned by the
+scanner. The constructor for \classref{Token} takes the following arguments:
+(\classref{Type} \varref{tokenType}, \classref{String} \varref{value},
+\classref{int} \textit{line}, \classref{int} \textit{offset}).  \varref{value}
+is used in some cases for saving the lexeme the token was made from. For
+instance, the value of an \tokenref{INT\_LIT} (integer) or the name of an
+\tokenref{ID} (identifier) must be kept. The \textit{line} and \textit{offset}
+represent where in the source code the lexeme of any token was found. This is
+essential if an error is found, since it is possible for the scanner to inform
+the programmer where in the source code an error exists.
 
 When an input is to be analysed the scanner looks at the first symbol
 of the input, which is not a blank or white space character. Based on
-the first character met it transfers control to a particular method which is responsible for determining which kind of token that corresponds to the lexeme. This is much easier to implement and maintain rather than having a single, big and clumsy method that handles the conversion from lexeme to token.
-This is actually an implementation of an explicitly controlled finite automaton\cite{explicitcontrolledfinitautomaton}. 
-The explicit control means that the transitions are handled
-``manually'' by transferring control to appropriate methods rather than using a table driven automaton where lookups in a transition table causes a change of state.
+the first character met it transfers control to a particular method which is
+responsible for determining which kind of token that corresponds to the lexeme.
+This is actually an implementation of an explicitly controlled finite
+automaton\cite{explicitcontrolledfinitautomaton}. The explicit control means
+that the transitions are handled ``manually'' by transferring control to
+appropriate methods rather than using a table driven automaton where lookups in
+a transition table causes a change of state.
 
 In \lstref{lst:scan} you can see many methods named 
 \methodref{is{\textit{$\ldots$}}()} for instance \methodref{isDigit()}
 and \methodref{isOperator()}. These are the functions which control is 
-transferred to when the first character of a lexeme is a digit or a operator. 
+transferred to when the first character of a lexeme is a digit or an operator. 
 If at any time the scanner has reached the end of
 the input stream, it returns a \tokenref{EOF} so succeeding parts of the
 parser knows where the program ends. 
@@ -89,7 +95,7 @@ responsible for handling them and the possible returned token types.}
 }
 
 Two variables, \classref{int} \varref{offset} and \classref{int}
-\varref{line} keep track of where in the source file the next input
+\varref{line}, keep track of where in the source file the next input
 character is taken from. If an unexpected input symbol is met, 
 a \classref{SyntaxError} exception is thrown. An
 example could be a \$ character followed by white space. \$ is used as
