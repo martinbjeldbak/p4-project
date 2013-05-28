@@ -189,7 +189,7 @@ public class GameEnvironment extends StandardEnvironment {
     else {
       throw new TypeError("Unknown action type: " + actionObject.getType().getName());
     }
-    return (ObjectValue)gameState.setAttribute("board", currentBoard);
+    return (ObjectValue)gameState.callMember("setBoard", game, interpreter, currentBoard);
   }
   
   public GameEnvironment() {
@@ -378,13 +378,20 @@ public class GameEnvironment extends StandardEnvironment {
         }
       }
     }));
-    game.addTypeMember("undoAction", new Member(1, false, new Callable() {
+    game.addTypeMember("undoAction", new Member(0, false, new Callable() {
       @Override
       public Value call(Interpreter interpreter, Value... actualParameters)
           throws StandardError {
         ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
-        TypeValue.expect(actualParameters, 0, action);
-        ObjectValue actionObject = (ObjectValue)actualParameters[0];
+        ListValue history = (ListValue)object.getAttributeAs("history", ListValue.type());
+        if (history.getValues().length < 1) {
+          throw new ArgumentError("Cannot undo. History is empty.");
+        }
+        Value actionObjectVal = history.call(interpreter, new IntValue(-1));
+        TypeValue.expect(actionObjectVal, action);
+        ObjectValue actionObject = (ObjectValue)actionObjectVal;
+        history = (ListValue)history.call(interpreter, new IntValue(0), new IntValue(-2));
+        object = (ObjectValue)object.setAttribute("history", history);
         if (actionObject.is(actionSequence)) {
           Value[] sequence = object.getMemberList("actions", action, 1);
           for (int i = sequence.length - 1; i >= 0; i--) {

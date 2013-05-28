@@ -1,7 +1,21 @@
-\subsection{Artefacts}
+\subsection{Random values}
 \label{sec:artefacts}
 
-In \productname{}, the type of games that can be implemented are limited by the fact that randomness is not supported. 
-A game like minesweeper cannot be implemented with randomly generated levels. The board game monopoly would need randomness 
-to implement a good die. A random card cannot be drawn and a deck of card cannot be shuffled. In our game environment described in \secref{sec:gameenvironment} many board game related types, constants and functions are implemented. Here it would be natural to also include types like
-a die type, a card type, and a type that can generate random numbers. If the random type would generate random numbers based on a seed, some kind of system time constant should also be available in \productname{}. Another approach would be to automatically seed the random type based on a system time constant every time a game is loaded. 
+In \productname{}, the type of games that can be implemented are limited
+by the fact that randomness is not supported. A game like minesweeper
+cannot be implemented with randomly generated levels. The board game
+monopoly would need randomness to implement a good die. A random card
+cannot be drawn, and a deck of card cannot be shuffled. In our game
+environment, described in \secref{sec:gameenvironment}, many board game
+related types are described, such as constants and functions. Here it
+would be natural to also include types like a die type, a card type,
+and most importantly, a type that can generate random numbers. If the
+random type would generate random numbers based on a seed, some kind
+of system time constant should also be available in \productname{}.
+Another approach would be to automatically seed the random type based on
+a system time constant every time a game is loaded.
+
+Randomness is not implemented in \productname{} because it is not a
+functional language trait, since the function wouldn't always return the
+same value. Hence an implementation with seeding described above could
+be a possible solution.
