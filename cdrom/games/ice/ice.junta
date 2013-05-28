@@ -1,0 +1,31 @@
+type ArkadeGame[] extends Game["Arkade"] {
+  define players = [Solo[]]
+  define initialBoard = GridBoard[8, 8]
+    .addPieces[Man[players[0]], [G2]]
+    .setSquaresAt	[Wall[], [	A1, A2, A3, A4, A5, A6, A7, A8,
+								H1, H2, H3, H4, H5, H6, H7, H8,	
+									B1, C1, D1, E1, F1, G1, 
+									B8, C8, D8, E8, F8, G8	]]
+	.setSquaresAt	[Wall[], [B2, B4, B7, C6, D2, E7, F5, G3, G5]]
+	.setSquaresAt[WinSquare[], [E5]]
+}
+type Solo[] extends Player["Solo"] {
+  define winCondition[$gameState] =
+    $gameState.findSquares[/Man WinSquare/].size != 0
+}
+type Man[$player] extends Piece[$player] {
+  define actions[$gameState] =
+    moveActions[this, union[
+      $gameState.findSquares[/!this e Wall (w !Wall)* this/],
+      $gameState.findSquares[/!this w Wall (e !Wall)* this/],
+      $gameState.findSquares[/!this s Wall (n !Wall)* this/],
+	  $gameState.findSquares[/!this n Wall (s !Wall)* this/]
+    ]]
+}
+
+type Wall[] extends Square[] {
+  define isOccupied = true
+  define isEmpty = false
+}
+type WinSquare[] extends Square[] {
+}
