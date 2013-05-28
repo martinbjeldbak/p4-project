@@ -3,8 +3,7 @@
 We need an abstraction layer to act as the glue between the interpreter
 and simulator, allowing a simulator access to different elements in a
 written program. This has caused us to write an abstraction layer on top
-of the interpreter, offering interfaces such as our graphical simulator
-the player access to elements in the game.
+of the interpreter, offering interfaces such as our graphical simulator.
 
 There are three different packages relating to the game abstraction
 layer. The first is the central class in the Game Abstraction Layer
@@ -54,7 +53,7 @@ with \productname{}.
 Wrappers provide a way of accessing the values created by the
 interpreter, allowing a simulator to use the properties of these
 values to, for example, display the game's title, supply information
-about the winning conditions, squares \& pieces, actions \& move
+about the winning conditions, squares and pieces, actions and move
 history, and so on. The wrappers implement the interfaces in the
 API described above. The main wrapper returned from the method
 \methodref{getGame} provides access to all the other wrappers
