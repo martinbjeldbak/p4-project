@@ -1,43 +1,100 @@
 \section{Requirements evaluation}
 \label{sec:requirementsevaluation}
 
-In \chapref{chap:requirements} we formulated a series of requirements. The chapter featured requirements for the functionality and performance of \productname{} and also requirements for the final solution. In the following section we will evaluate the requirements. Those we find most interesting and essential for the project are evaluated more detailed than those which are less relevant. 
+In \chapref{chap:requirements}, we formulated a series of requirements.
+The chapter featured requirements for the functionality and performance
+of \productname{} and also requirements for the final solution. In the
+following section we will evaluate the requirements. Those we find most
+interesting and essential for the project are evaluated more detailed
+than those which are less relevant.
 
 \begin{description}
-\item[\textbf{Requirement 1.a:}]
-One of the major requirements of the project is requirement 1.a: ``It must be possible to implement Chess, including the special rules of Chess''. This however has not been possible to do due to time pressure. The special rules of Chess and especially the \emph{En Passant} and \emph{Castling} moves proves to be difficult challenges which requires a good amount of time to get implemented though we believe that \productname{} provides the features to get it done.
+  \item[\textbf{Requirement $1$a:}]
+    One of the major requirements of the project is requirement
+    $1$a: ``It must be possible to implement Chess, including the
+    special rules of Chess''. This however has not been possible,
+    due to time pressure. The special rules of Chess, and especially
+    \emph{En Passant} and \emph{Castling} moves proves to be difficult
+    challenges, requiring a good amount of time to get implemented. We
+    do though believe that \productname{} provides the features write a
+    complex game such as chess.
 
-\item[\textbf{Requirement 2-5:}]
-Are all accomplished
+  \item[\textbf{Requirements $2$-$5$:}]
+    Are all accomplished.
 
-\item[\textbf{Requirement 6:}]
-Are all accomplished. Requirement 6.j: ``Check if the current move about to be made for a piece is the first move made by that piece'' is not directly implemented but can be accomplished by for example using a counter, \variable{Moves}, which counts one up for every move taken by the piece and checking if this is bigger than one.
+  \item[\textbf{Requirement $6$:}]
+    Are all accomplished. Requirement $6$j: ``Check if the current move
+    about to be made for a piece is the first move made by that piece'' is
+    not directly implemented, but can be accomplished by for example using a
+    counter, \variable{Moves}, which counts one up for every move taken by
+    the piece and checking if this is larger than one.
 
-\item[\textbf{Requirement 7-15:}]
-Are all accomplished
+  \item[\textbf{Requirements $7$-$16$:}]
+    Are all accomplished.
 
-\item[\textbf{Requirement 16:}]
-\todo{something clever about this requirement}
+  \item[\textbf{Requirement $17$:}]
+    The requirement states: ``The created board games must be playable
+    in a graphical simulator''. We have provided an API that our
+    simulator builds on top of, proving that this is possible. If one
+    wished to create a graphical interface for playing board games in
+    Android, they would simply need to manipulate the object returned by
+    our API, just like our simulator does.
 
-\item[\textbf{Requirement 17:}]
-The requirement states that  ``The created board games must be playable in a graphical simulator''. This is accomplished and description of how this
-simulator functions is found in \secref{sec:simulator-impl}.
+  \item[\textbf{Requirement $18$:}]
+    The requirement and its sub points are not accomplished. Requirement
+    $18$a and $18$ state that ``It must be possible to save the move
+    history'' and ``It must be possible to start a game from a saved
+    move history''. In the right hand side of our simulator, the game
+    info widget is located, displaying the current moves taken other
+    information. So the requirements could be accomplished indirectly by
+    saving this history in a screen shot for instance, restart the game
+    and then perform all the moves that one wants to keep again. This
+    is a clumsy and very manual solution. A better solution would be to
+    save the game in its current state as a file for every action taken.
+    Nothing hinders this solution from being accomplished, the solution
+    has been down-prioritised. Requirement $18$c that stated: ``It must
+    be possible to play over a network'' is a ``could-have'' feature,
+    which has also been down-prioritized.
 
-\item[\textbf{Requirement 18:}]
-The requirement is not accomplished. Requirement 18.b and 18.b.I states that ``It must be possible to save the move history'' and ``It must be possible to start a game from a saved move history''. In the right hand side of the simulator the game info widget is located which displays the current moves taken amongst other information. So the requirements could be accomplished indirectly by saving this history in a screen shot for instance, restart the game and then perform all the moves that one wants to keep again. This is a clumsy solution though. A better solution would be if it was possible to save the game in it's current state as a file. Nothing hinders this solution from being accomplished but as for now it has been down prioritised. Requirement 18.c that stated: ``It must be possible to play over a network'' is a ``could-have'' feature which has also been down prioritized. 
+  \item[\textbf{Requirement $19$:}]
+    The requirement states that ``The programmer must be able to
+    implement board games with relatively few lines of code''. Based on
+    the games currently programmed in \productname{}, it is difficult to
+    make a quality comparison with other programming languages, since
+    two of the board games are invented by group members and therefore
+    haven't been programmed in other languages. Noughts and Crosses
+    and Connect Four are however well-known board games and these were
+    possible to create in around $20$ - $25$ lines of code, which, when
+    compared to Zillions of Game's implementations of the two games
+    ($38$ and $40$ lines, respectively), is quite favourable.
 
-\item[\textbf{Requirement 19:}]
-The requirement states that ``The programmer must be able to implement board games with relatively few lines of code''. Based on the games currently programmed in \productname{} it is difficult to make a quality comparison with other programming languages, since two of the board games are invented by group members and therefore hasn't been programmed in other languages. Noughts and crosses and connect four are however well-known board games and these were possible to create in around 20 lines of code and 22 lines of code respectively which can be considered as relatively few lines of code.
+  \item[\textbf{Requirements $20$-$24$:}]
+    Are all accomplished.
 
-\item[\textbf{Requirement 20-24:}]
-Are all accomplished
+  \item[\textbf{Requirements $25$-$27$:}]
+    These requirements can not be evaluated as they are merely a listing
+    of project limitations.
 
-\item[\textbf{Requirement 25-27:}]
-These requirements can not be evaluated as they are merely a listing of project limitations. 
+  \item[\textbf{Requirement $28$:}]
+    The requirement states that ``The programming language must make
+    it easy and quick for programmers to develop board games''. In
+    \secref{sec:connectfour}, we describe how a game of Connect Four
+    was created in approximately $5$ minutes. The speed of which a
+    game can be created in a programming language depends on a number
+    of parameters. First of all, the programmer's familiarity with
+    the programming language and the programmer's experience with a
+    programming mindset. Also, the programming language's support for
+    relevant functionality and its overall writability is a parameter.
+    The fact that we were able to create a fully functional Connect Four
+    game in $5$ minutes can be considered as quick and supports that it
+    must be easy to develop board games in \productname{}.
 
-\item[\textbf{Requirement 28:}]
-The requirement states that ``The programming language must make it easy and quick for programmers to develop board games''. In \secref{sec:connectfour} we described how a game of Connect Four was created in approximately 5 minutes using the already programmed Noughts and Crosses game as a template. The speed of which a game can be created in a programming language depends on a number of parameters. First of all the programmers familiarity with the programming language and the programmers experience with programming overall. Also the programming languages support for relevant functionality and it's overall writability is a parameter. The fact that we were able to create a fully functional Connect Four game in 5 minutes can be considered as quick and witnesses that it must be easy to develop board games in \productname{}.
-
-\item[\textbf{Requirement 29:}]
-The requirement is accomplished. Since all of the modules (the scanner, the parser, the scope checker, the interpreter etc.) of \productname{} are compiled to Java byte code, every system supporting the Java virtual machine is able to run \productname{} games.   
+  \item[\textbf{Requirement $29$:}]
+    The requirement is accomplished. Since all of the modules (the
+    scanner, parser, scope checker, interpreter, etc.) of \productname{}
+    are compiled to Java byte code, and hence every system supporting
+    the Java virtual machine is able to run \productname{} games. The
+    simulator on the other hand is implemented using a Java library,
+    that only works on personal computers due to the graphics library
+    used (openGL).
 \end{description} 
