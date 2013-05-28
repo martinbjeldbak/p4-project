@@ -280,9 +280,9 @@ The \type{Game} type contains all information needed to describe a board game.
   \variable{action} and where \variable{action} is appended to
   \constant{history}.
   
-  \item \constant{undoAction}[ \variable{action} : \type{Action} ] : \type{Game}\\
-  A \type{Game} where \constant{board} has been reset to its state before
-  \type{Action} was applied and with \constant{history} updated accordingly.
+  \item \constant{undoAction}[] : \type{Game}\\
+  A \type{Game} where \constant{board} has been reset to its state before the last action
+  in the history was applied and with \constant{history} updated accordingly.
   
   \item \constant{setHistory}[ \variable{history} : \type{List} ] : \type{Game}\\
   A \type{Game} where \constant{history} is equal to \variable{history}.
