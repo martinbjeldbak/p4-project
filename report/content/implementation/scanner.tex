@@ -98,7 +98,7 @@ responsible for handling them and the possible returned token types.}
 						  KEY\_ABSTRACT, KEY\_EXTENDS, $\ldots$	    }
 }
 
-Two variables, \typeref{int} \varref{offset} and \typeref{int}
+Two variables, \classref{int} \varref{offset} and \classref{int}
 \varref{line} keep track of where in the source file the next input
 character is taken from. The function \methodref{pop()} will pop
 the first character from the input stream and assign the value of
@@ -108,7 +108,7 @@ to check what kind of character the next one is. The \methodref{pop()}
 function will additionally increment \varref{offset} by one. If
 the next input symbol is a new line character, it assigns zero to
 \varref{offset} and increments \varref{line} by one. If an unexpected
-input symbol is met, a \typeref{SyntaxError} exception is thrown. An
+input symbol is met, a \classref{SyntaxError} exception is thrown. An
 example could be a \$ character followed by white space. \$ is used as
 prefix for variables, and expects to be followed by an identifier, e.g.\
 \$\varref{varName}. For more information on our error handling, refer to
