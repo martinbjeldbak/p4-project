@@ -4,9 +4,9 @@
 In this section we present \productname{}'s handwritten parser. We have
 written a top-down recursive descent parser, which is within the class
 of LL($1$) parsers. The grammar for \productname{} is suited for this
-because e.g.\ it does not have left-recursive productions. In the end of
+because it does not have left-recursive productions. In the end of
 the section we present our work with SableCC and the reason why we choose
-not to continue working with this tool.
+not to use this tool to make our scanner and parser.
 
 \subsection{Constructing the parser}
 %structured as the grammar
@@ -16,8 +16,8 @@ expresses that the next set of terminals must begin with a left bracket (`['),
   then the parser will expect the next token to be a \tokenref{LBRACKET} which
   is the token name for a left bracket. If the grammar then expects a
   non-terminal, then the parser simply calls the method for that non-terminal,
-  allowing it to finish, possibly calling more non-terminals and expecting
-  terminals, before continuing parsing the next part of the rule.
+  which may in terms have the effect of calling more non-terminals and expecting terminals (which are recognised as tokens) at some points, 
+  before continuing parsing the next part of the rule.
 
 %discuss the if expression
 In \lstref{lst:ifexpr}, we give an example of how this structure looks like in
@@ -52,10 +52,11 @@ of the node is the boolean expression, and the next two siblings of that
 child are the expression branches of the if expression.
 
 \subsubsection{Terminal and nonterminals}
-Every grammar has a finite set of nonterminals and terminals that
-constitute the productions of the grammar. We have defined tokens in the
+Every grammar has a finite set of nonterminals and terminals. 
+A production rule specifies a nonterminal as a sequence of nonterminals and terminals. 
+We have defined tokens in the
 parser for every nonterminal in our grammar. The if expression has the
-token name of \tokenref{IF\_EXPR}.
+token name \tokenref{IF\_EXPR}.
 
 In the production for the if expression, we have three terminals: the \gter{if},
 \gter{then}, and the \gter{else}. These are all required in the method for any
@@ -68,8 +69,8 @@ whole if expression.
 \subsection{Looking ahead in the input}
 %lookAhead methods - atomic
 We mentioned earlier that the parser is an LL($1$) parser, which means that the
-parser is able to look ahead in the sequence of tokens. We have shown the
-\methodref{lookAhead} method to determine if the next token is part of an
+parser only needs to look at the first token in the input stream before deciding what production rule to apply. 
+We have shown the \methodref{lookAheadAtomic} method which determines if the next token is part of an
 atomic expression. The production for the atomic expression is presented in
 \secref{sec:atomicexpressions}.
 
@@ -98,8 +99,8 @@ language=Java]{listings/method_lookAheadAtomic.java}
 
 The method \methodref{lookAheadAtomic} makes use of two methods to figure out if
 the next token is part of an atomic expression. The first method is the
-\methodref{lookAhead} method that takes a token as an argument and figures out
-if the next token in the sequence of tokens are equal to each other. The second
+\methodref{lookAhead} method that takes a token as argument and figures out if it equals 
+the next token in the sequence of tokens. The second
 method is the \methodref{lookAheadLiteral} method which is similar to the method 
 in \lstref{lst:lookaheadatomic} but instead of checking for atomic expressions it 
 checks for literals. All these methods return true or false.
@@ -128,35 +129,33 @@ language=Java]{listings/example_lookAheadAtomic.java}
 The code presented in \lstref{lst:examplelookahead} is a small section of the
 \methodref{expression} method. We have removed code from the section which is
 not relevant for the example we are trying to give. The removed code is
-presented as \{\ldots\}. In \lstref{lst:examplelookahead} we wish to present how
-the \methodref{lookAhead} methods are used.
+presented as \{\ldots\}. An example is the code left out in the bottom which is 
+just related to error handling.
 
 An assignment begins with the reserved word \gter{let} and the first
-\methodref{lookAhead} method peeks for exactly that token to determine
+\methodref{lookAhead} method peeks for that particular token to determine
 if the next production is an assignment. If the method returns true, then
 the next token is in fact the \gter{let} word, and the parser enters a
-new method, namely the \methodref{assignment} method which checks to
-determine if the rest of the production is correctly written. The same
+new method, namely the \methodref{assignment} method which parses the assignment and checks that the 
+next tokens from the input complies with the production rule of an assignemnt. The same
 is done for the if expression, lambda expression and operations which
 begins with the ``loSequence()'' (logical operators).
 
 The operation production is a bit different, because it needs two lookAhead
-methods to determine if the next production is an operation. An operation can
+methods to determine if the next production is an operation (notice that this does not mean that it looks two tokens ahead). An operation can
 begin with either an atomic value or a minus operator. So the code uses a
 \methodref{lookAheadAtomic} and a regular \methodref{lookAhead} with the
 specific token as a parameter to check if the next production is an operation.
 
-The methods return nodes which are connected with each other to form
-a complete AST. When the parser has parsed every token of the input,
-it can produce an AST that corresponds to the program written in
-\productname{}. This shows that the parser is built systematically
-according to the grammar, producing an unambiguous parse tree consisting of AST
-nodes.
+The methods return nodes that may have children nodes. These nodes are all connected to form a tree with a single root. 
+This tree is called an AST and consists of nodes for all nonterminals and leaves for all terminals, which is the tokens generated by the scanner. 
+When the AST has been constructed, it can be examined to verify that the input program has been parsed correct. The class 
+\classref{PrettyPrinter} has been implemented to output the structure and contents of an AST, making it easier to verify that the parser parses correct.
 
 \subsection{SableCC}
 We have also implemented a scanner and parser using a
-compiler/interpreter generator, or a compiler compiler
-known as SableCC\cite{sableccdoc}. As described in
+compiler/interpreter generator, also known as a compiler compiler, namely
+SableCC\cite{sableccdoc}. As described in
 \secref{subsec:generatedparsers}, it is an automated scanner and
 LALR($1$) parser generator written in Java, with support for making
 compilers and interpreters. We have implemented an early version of
@@ -166,16 +165,15 @@ compilers and interpreters. We have implemented an early version of
 We chose SableCC instead of various other popular tools such as
 ANTLR\cite{antlr} and JavaCC\cite{javacc}. Though ANTLR and JavaCC are
 far more well-documented than SableCC, we still choose to work with
-this tool because its parser generates a LALR($1$) parser, whereas
-ANTLR and JavaCC create simpler LL($k$) parsers, which our handwritten
-implementation already takes advantage of. Therefore, we felt LALR($1$)
-parsing to be more interesting, since it also supports more powerful
-grammars, such as left-recursion.
+this tool because its parser generates a LALR($1$) parser which is generally a 
+stronger parser than the LL(1) parser we wrote by hand or the LL($k$) parsers 
+generated by ANTLR and JavaCC. One of the major advantages is the LALR-parser's 
+ability to handle left-recursion, which obviates left-factorising.
 
 SableCC outputs an abstract syntax node type for each alternation
 in every rule in the grammar specifications file, which is merely a
 simple text file with EBNF-like syntax. It's then possible to iterate
-over these nodes via extending the visitor pattern SableCC also
+over these nodes by extending the visitor pattern that SableCC also
 supplies, generating code or directly interpreting a syntactically
 correct program. This is all done in classes separate from the grammar
 specifications, which is also desirable and different from ANTLR
@@ -185,7 +183,7 @@ it would work well with the rest of the project, written in Java.
 
 \subsubsection{Experience with SableCC}
 Our experience with the tool has been rather cumbersome, in that it took
-quite a while to read the documentation before and during writing the
+quite a while to read the documentation before and while writing the
 specifications, as it simply isn't just copy/pasting EBNF grammar
 into a file. An example of the if-expression rule is seen below:
 
@@ -211,10 +209,8 @@ similar to the EBNF for expressions and if expressions seen in
 \secref{sec:expressions}, with a few additions. As long as you know
 the special syntax and how helpers, tokens, and productions works, it
 is possible to create scanners and parsers very quickly. This was not
-our case, as no one had experience with any form of compiler-compiler.
-Given that it generates a LALR parser, it grants the ability to have
-more powerful grammar than what we had designed. Lastly, the fact that
-there's a clear and clean separation between automated, generated code
+our case, as no one had experience in using a compiler-compiler. 
+The fact that there's a clear and clean separation between automated, generated code
 and user code makes the grammar and compilation/interpretation parts
 easier to maintain. When adding new features to the language, you simply
 have to update the specifications file and generate a new scanner/parser
@@ -226,14 +222,14 @@ to be change in order to implement the new feature.
 Even though SableCC looks like a prime candidate to continue
 interpretation with, we chose not to use the tool. This is because it
 took an unreasonable amount of time to figure out how to precisely
-define the grammar to keep it from being ambiguous. And with poor
-documentation, it took even longer. Also, it offers less control and
+define the grammar correctly in SableCC due to their poor
+documentation. Also, it offers less control and
 customisability, compared to writing our own from scratch. As an
 example, the tool offers an application-specific interface to tree
 walking the AST nodes with the visitor pattern, requiring knowledge of
 how SableCC implements it. SableCC also generates around \num{17000} lines
 of Java code, even for our simple grammar, which seems superfluous
-compared our handwritten scanner and parser, consisting of ``only''
+compared to our handwritten scanner and parser, consisting of ``only''
 around \num{1500} lines of code.
 %  - Don't learn as much about different parser techniques
 %  - Old project, not as active anymore
@@ -243,7 +239,7 @@ We chose not to continue using SableCC on our updated grammar, due
 to the weight of cons against pros, and the fact that the time spent
 working on implementing SableCC was also spent making the handwritten
 scanner and parser and making them work exactly the way we want them to.
-It might not be as easy to modify our language with this solution, but
+It might not be as quick to make changes to our language with this solution, but
 the time spent on modifying and adding features to our language with the
 use of a handwritten scanner and parser is not wasted time, as it was
 spent learning, which gives us better understanding of their underlying
