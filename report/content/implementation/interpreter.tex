@@ -40,10 +40,6 @@ upon when needed. This symbol table is unaffiliated with the scope
 checker's symbol table, which is constructed differently, and hence does
 not share any information with it at all.
 
-As an example of how the symbol table is operated, an example of
-visiting a let expression node, which utilizes some of these
-features, is shown below:
-
 \lstinputlisting[caption={Code taken from the interpreter to
 show how the symbol table is used when visiting let-expressions.},
 label={lst:let}, language=Java]{listings/visitAssignment.java}
@@ -51,17 +47,19 @@ label={lst:let}, language=Java]{listings/visitAssignment.java}
 Listing \ref{lst:let} shows how let expressions are evaluated
 when the abstract node type shown in \secref{sec:letexpressions} is
 visited. A new scope is pushed onto the current stack of scopes,
-and hereafter the variables are pushed into the scope that was
-just opened. Because let expressions, like all \productname{}'s
-expressions, return a \classref{Value}, this value is retrieved after
-the body of the assignment is computed but before the scope is closed,
-as we will most likely need the values of the different variables.
+where after the variables are pushed into the newly opened scope. 
+Because let expressions, like all \productname{}'s
+expressions, return a \classref{Value}, this value is retrieved by visiting 
+the body of the assignment. When visiting the body, the variables of the assignment and their values 
+are known, because they were put in the active symbol table immediately before visiting the assignment body.
+After having visited the assignment body, the symbol table is popped off the stack of 
+symbol tables by calling \varref{symbolTable}.\methodref{closeScope()}.
 
 \subsection{Values and their operators}
 \label{sec:valuesandtheiroperators}
-Each one of the base values offered by \productname{} is represented
-internally by a class written in the interpreter. These classes are
-all subclasses of a general class \classref{Value}, that offers the
+Each of the base values offered by \productname{} is represented
+internally by a class with the name of the base value appended by \textit{Value}. 
+These classes are all subclasses of a general class \classref{Value}, that offers the
 subclasses an interface to implement various different operations, such
 as comparison, addition, calling, and so on, throwing an error if trying
 to use the operator between incompatible values or if the operation
@@ -76,11 +74,9 @@ completeness, the implementation of coordinates, types, and
 functions are discussed below.
 
 Most properties (variables) of values are declared as Java
-\classref{final}, due to the fact that \productname{} is functional and
-that the result of an expression always results in a new instance of an
-object. This means that a simple plus operation yields a new value, so
-the interpreter constantly instantiates these new values without ever
-needing to update a specific property, possibly leaving many young, dead
+\classref{final}, due to the fact that \productname{} is functional and cannot 
+modify the variables contained in a value. Instead, a new value is returned with the 
+modifications of the original object. This may over time leave many dead
 objects on the heap for Java's garbage collection to deallocate.
 
 \subsubsection{Coordinates}
@@ -234,7 +230,7 @@ actual parameters, all possibly being effected by the function.
 \subsection{Pattern matching}
 \label{sec:patternmatching}
 Patterns in \productname{} are a very important feature, being used in pretty
-much everyone of our test programs to evaluate winning conditions, find squares
+much every one of our test programs to evaluate winning conditions, find squares
 or actions that have a specific property, and various other constructs.
 
 \subsubsection{Failed implementation with finite automaton}
@@ -277,7 +273,7 @@ moves one square north, the other moves one square west. The two branches are
 then united to a single branch containing the set of coordinates \{B3, A2\} The
 next digested part of the pattern is the \texttt{empty} keyword. The
 \texttt{empty} keyword causes all coordinates in the current branch to be
-removed if the square on the board on that coordinate is not empty.
+removed if the square on the board on that coordinate is not empty.  
 \end{quote}
 
 The pattern is now fully digested, and if the current branch still contains any
