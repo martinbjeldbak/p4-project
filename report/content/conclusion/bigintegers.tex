@@ -1,4 +1,35 @@
-\subsection{Big integers}
+\subsection{Alternative integer and decimal data structures}
 \label{sec:bigintegers}
 
-Our primitive data type to represent numerals with, called Integer, corresponds to Java's primitive data type that goes by the same name. We do not however have an alternative for representing decimal numbers or for representing arbitrary-precision integers if for instance a number is exceeding what's possible to represent with a 32-bit signed two's complement integer. It is imaginable that a programmer of a board game would want to use decimals or very big numbers and therefore implementing this to a later version of \productname{} could be an idea. A possible solution could be a sort of implementation like the bigint and bigdecimal data types of Java. The bigint data type provides analogues to all of Java's primitive integer operators as the primitive data type integer \cite{javabigint} but at the same time it can represent arbitrary-precision integers. That is integers of any size limited only by the memory of the computer. 
+Our only primitive data type to represent numerals with, \type{Integer},
+corresponds to Java's primitive data type, going by the same name. We
+do not however have an alternative for representing decimal numbers
+or for representing arbitrary-precision integers, if for instance a
+number exceeds what's possible to represent with a $32$-bit signed
+two's complement integer (Java's specification). It is imaginable
+that a programmer of a board game would want to use decimals or very
+big numbers, and therefore implementing this in a later version of
+\productname{} could be an idea. A possible solution could be a sort of
+implementation like \classref{BigInteger} and \classref{BigDecimal} data
+types of Java, maybe even using these as underlying data structures.
+The \classref{BigInteger} data type provides analogues to all of Java's
+primitive integer operators, exactly the same as the primitive data
+type \classref{Integer} \cite{javabigint}, but at the same time it
+can represent arbitrary-precision integers. That is integers of any
+size limited only by the memory of the computer. The same holds for
+\classref{BigDecimal}s.
+
+Decimals do not exist in \productname{}, due to the fact that from all
+of the board games we've analysed and discussed, not one uses floating
+point numbers to represent any aspect of the game. We have also chosen
+not to use either of these, because we do not see a specific need to use
+such massive numbers. And given that our \productname{} implementation
+is already slow, using these arbitrary-length data strutures will
+only bog it farther down. It would be rather simple if we ever wished
+to implement floating point numerals, we would need to update the
+\methodref{isDigit} method in the Scanner to continue picking up numbers
+when seeing a period. The parser would then need to create a new type
+of node for it, feeding it to the newly updated Interpreter that builds
+a new type when seeing a floating point node (granted, the operations
+and types we wish to support floating points on would need to be updated
+too).
