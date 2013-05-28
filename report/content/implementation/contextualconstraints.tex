@@ -152,13 +152,13 @@ amount of arguments when calling the parent's constructor. A constructor can hav
 $x$ arguments and may or may not contain a variable amount of additional
 arguments. Consider the type constructor \texttt{Type A[\$var1, \$var2, \dots
 \$varargs]}. When calling the constructor from another type, e.g. \texttt{Type
-B[] extends A[5, 2, 7, 4]}, it must be checked that the type B provides \textit{at
+B[] extends A[5, 2, 7, 4]}, it must be checked that the type B provides \emph{at
 least} the number of arguments in A's constructor (not counting the variable
 amount of extra arguments). If A does not have a variable amount of additional
 arguments, the argument count must match exactly. The implemented code for doing
 this check can be seen in \lstref{lst:tscc}.
 
-\lstinputlisting[caption={\emph{How the TypeSuperCallChecker is implemented.}},
+\lstinputlisting[caption={How the TypeSuperCallChecker is implemented.},
 label=lst:tscc, language=Java]{listings/typeSuperCallChecker.java}
 
 \subsection{UsesAreDeclaredVisitor}

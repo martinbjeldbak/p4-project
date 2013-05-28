@@ -103,7 +103,7 @@ for drawing sub-\classref{Widget}s, so the inherited class only needs to worry
 about itself. An overview of \texttt{draw()} is given in
 \lstref{lst:simulatorDraw}.
 
-\lstinputlisting[caption={\emph{Pseudocode for the \texttt{draw()} method.}},
+\lstinputlisting[caption={Pseudocode for the \texttt{draw()} method.},
 label={lst:simulatorDraw}, language=Java]{listings/simulatorDraw.java}
 
 To further ease development, the coordinate system is translated so
@@ -123,8 +123,8 @@ The same pattern is used for mouse input, but here we use it to determine which
 \classref{Widget} is responsible for handling it. An overview is given in
 \lstref{lst:simulatorMouseClicked}.
 
-\lstinputlisting[caption={\emph{Pseudocode for the \texttt{mouseClicked()}
-method.}}, label={lst:simulatorMouseClicked},
+\lstinputlisting[caption={Pseudocode for the \texttt{mouseClicked()}
+method.}, label={lst:simulatorMouseClicked},
 language=Java]{listings/simulatorMouseClicked.java}
 
 Like with drawing, we translate coordinates into local coordinates, however
