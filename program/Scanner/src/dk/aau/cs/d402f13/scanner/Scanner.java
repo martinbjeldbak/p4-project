@@ -265,7 +265,7 @@ public class Scanner {
       pop();
     }
     
-    if (t.value.length() < 0) {
+    if (t.value.length() < 1) {
       throw new ScannerError("Invalid variable: " + t.value, token(Type.EOF));
     }
     return t;
