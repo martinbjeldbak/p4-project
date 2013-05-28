@@ -91,7 +91,7 @@ responsible for handling them and the possible returned token types.}
 Two variables, \classref{int} \varref{offset} and \classref{int}
 \varref{line} keep track of where in the source file the next input
 character is taken from. If an unexpected input symbol is met, 
-a \typeref{SyntaxError} exception is thrown. An
+a \classref{SyntaxError} exception is thrown. An
 example could be a \$ character followed by white space. \$ is used as
 prefix for variables, and expects to be followed by an identifier, e.g.\
 \$\varref{varName}. For more information on our error handling, see 
