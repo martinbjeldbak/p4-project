@@ -44,7 +44,7 @@ When a lexeme is found in the input stream, the scanner analyses which
 token type it belongs to. A new token is then instantiated and returned
 by the scanner. The constructor for \classref{Token} takes the following
 arguments: (\classref{Type} \varref{tokenType}, \classref{String} \varref{value}, \classref{int} \textit{line}, \classref{int} \textit{offset}). 
-\varref{value} is used in some cases for saving the lexeme the token was made from. For instance, the value of an \tokenref{INT_LIT} (integer) or the name of an \tokenref{ID} (identifier) must be kept. The \textit{line} and \textit{offset} represent where in the source code the
+\varref{value} is used in some cases for saving the lexeme the token was made from. For instance, the value of an \tokenref{INT\_LIT} (integer) or the name of an \tokenref{ID} (identifier) must be kept. The \textit{line} and \textit{offset} represent where in the source code the
 lexeme of any token was found. This is essential if an error is found,
 since it is possible for the scanner to inform the programmer where in
 the source code an error exists.
@@ -91,7 +91,7 @@ responsible for handling them and the possible returned token types.}
 Two variables, \classref{int} \varref{offset} and \classref{int}
 \varref{line} keep track of where in the source file the next input
 character is taken from. If an unexpected input symbol is met, 
-a \typeref{SyntaxError} exception is thrown. An
+a \classref{SyntaxError} exception is thrown. An
 example could be a \$ character followed by white space. \$ is used as
 prefix for variables, and expects to be followed by an identifier, e.g.\
 \$\varref{varName}. For more information on our error handling, see 
