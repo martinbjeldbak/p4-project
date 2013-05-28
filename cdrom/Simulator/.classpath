@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Utilities"/>
+	<classpathentry kind="lib" path="lib/lwjgl-2.8.5/jar/jinput.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-2.8.5/jar/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-2.8.5/jar/lwjgl.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Simulator/lib/lwjgl-2.8.5/native"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/slick.jar"/>
+	<classpathentry kind="src" path="/GAL"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Simulator lib"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Interpreter"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
