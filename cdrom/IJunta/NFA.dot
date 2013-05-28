@@ -1,0 +1,11 @@
+digraph NFA {
+  node[shape = circle];
+  1721410547 [label="0"];
+  847371045 [label="1"];
+  1801090058 [label="2"];
+  2138600341 [label="3"] [shape = doublecircle];
+
+  1721410547 -> 847371045 [label="&#949;"];
+  847371045 -> 1801090058 [label="&#949;"];
+  1801090058 -> 2138600341 [label="Game[$title]"];
+}
