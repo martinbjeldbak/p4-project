@@ -11,4 +11,9 @@ over-generalizing will be counter productive with the idea of using a
 domain specific language. However if cards were pieces, new action types
 would not need to be created and learned by the user.
 
-Instead of generalizing the artefacts, we could generalize actions. For example, instead of \type{AddAction} adding a \type{Piece}, \type{AddAction} could add any type and \type{MoveAction} could move both pieces and cards. However now \type{MoveAction} can depend on an \type{AddAction} having created an instance of a type, which is not expressed well in \type{ActionSequence}.
+Instead of generalizing the artefacts, we could generalize actions. For example,
+instead of \type{AddAction} adding a \type{Piece}, \type{AddAction} could add
+any type and \type{MoveAction} could move both pieces and cards. However now
+\type{MoveAction} can depend on an \type{AddAction} having created an instance
+of a type, which is not expressed well in \type{ActionSequence}.
+
