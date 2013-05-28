@@ -1,9 +1,21 @@
 \subsection{Board types}
 \label{sec:boardtypes}
 
-The game environment of \productname{} makes it easy for programmers to create grid boards, which is a
-very basic kind of board defined by a width and a height. But what if the programmer wanted to create a
-circular kind of square or a hexagonal square? This is currently not possible but it would be practical 
-in a future version of \productname{}. A possible solution would be a graphical representation of the board where
-the edges represent squares and transitions represent the border between squares.
-   
+The game environment of \productname{} makes it easy for programmers
+to create grid-shaped boards, which is a very basic kind of board
+defined by a width and a height filled in with squares. But what if the
+programmer wanted to create a circular kind of square or a hexagonal
+square? This is currently not possible, but it would be practical in
+a future version of \productname{}. A possible solution would be a
+graph representation of the board, where the edges represent squares
+and transitions represent the border between squares. This would
+allow greater expressibility and technically allowing every kind of
+imagionable board, even those expanding over time, such as Carcassone.
+
+Patterns, as they are implemented now, only work on grid-shaped boards
+because programmers can't define custom \type{Direction} types. To
+support all kinds of boards, patterns would have to be able to support
+these custom \type{Direction} types. \type{Direction}s would have to be
+rewritten so that it'd be possible to define how a certain square is
+relative to another (i.e.\ the \type{Direction} would be the label on
+an edge going from one square to another).
