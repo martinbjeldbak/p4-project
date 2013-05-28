@@ -99,7 +99,7 @@ The following global constants are available:
   \item \constant{sort}[\variable{comparator} : \type{Function}] : \type{List} \\
     The \constant{sort} function sorts a list using a function that must take
     two parameters as input and return an integer value. For instance, the
-    following will sort a list in acsending order;
+    following will sort a list in acsending order:
     \texttt{[}\literal{1}, \literal{6}, \literal{2}, \literal{5}, \literal{4},
     \literal{3}\texttt{]}.\constant{sort}\texttt{[}\texttt{\#[}\variable{a},
     \variable{b}\texttt{]} \texttt{=>} \type{if} \variable{a} \texttt{>}
@@ -107,15 +107,17 @@ The following global constants are available:
     \variable{b} \type{then} \literal{0} \type{else} \literal{-1}\texttt{]}. 
     The result will be \texttt{[}\literal{1}, \literal{2}, \literal{3},
     \literal{4}, \literal{5}, \literal{6}\texttt{]}. 
-    \todo{ascending = .\constant{sort}\texttt{[\#[}\variable{a},
-    \variable{b}\texttt{] =>} \variable{a} \texttt{-} \variable{b}\texttt{]}?}
+    As shorter expression for sorting in ascending order is the following lambda
+    expressions which gives the same result as the previous example with the if
+    expression: \texttt{[\#[}\variable{a},\variable{b}\texttt{] =>} \variable{a}
+    \texttt{-} \variable{b}\texttt{]}
   \item \constant{map}[\variable{mapper} : \type{Function}] : \type{List} \\
     The \constant{map} function maps each element of the list with a function of
     style \texttt{\#[}\variable{a}\texttt{] =>} \variable{a}. The function must
     take one parameter.  For example \texttt{[}\literal{1}, \literal{2},
     \literal{3}, \literal{4}, \literal{5},
     \literal{6}].\constant{map}\texttt{[\#[}\variable{a}\texttt{] =>}
-    \variable{a} \texttt{+} \literal{1}\texttt{]} will return the list;
+    \variable{a} \texttt{+} \literal{1}\texttt{]} will return the list:
     \texttt{[}\literal{2}, \literal{3}, \literal{4}, \literal{5}, \literal{6},
     \literal{7}\texttt{]}.
   \item \constant{filter}[\variable{filter} : \type{Function}] : \type{List} \\
@@ -134,9 +136,9 @@ The following global constants are available:
 \begin{dlist}
   \item \type{Direction}[\variable{direction} : \type{Direction}]\\
     The standard environment provides the \type{Direction} type, which can be
-    compared to a vector. There are eight different directions: \identifier{n}
-    (north), \identifier{s} (south), \identifier{w} (west), \identifier{e}
-    (east), \identifier{nw}, \identifier{ne}, \identifier{sw}, \identifier{se}.
+    compared to a vector. There are eight different directions: \literal{n}
+    (north), \literal{s} (south), \literal{w} (west), \literal{e}
+    (east), \literal{nw}, \literal{ne}, \literal{sw}, \literal{se}.
     The type consist of an $x$ value and a $y$ value. For example \identifier{n}
     has value $y = 1$ and $x = 0$, \identifier{s} has value $y = -1$ and $x =
     0$, \identifier{w} has value $y = 0$ and $x = -1$, etc. The \type{Direction}
@@ -157,7 +159,6 @@ The following global constants are available:
     grid-formed board. Coordinate values must be positive, as negative $x$ and
     $y$ values make no sense representing coordinates off of the board.
 \end{dlist}
-\todo{er \literal{ABCD1234} en coordinate?}
 
 \subsubsection{Type}
 \begin{dlist}
