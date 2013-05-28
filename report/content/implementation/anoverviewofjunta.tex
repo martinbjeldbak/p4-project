@@ -1,12 +1,11 @@
 \section{An overview of the implementation of \productname{}}
 \label{anoverviewofjunta}
 
-The intention of this section is to give a concise overview of \productname{}'s
-components and how they are connected, as a conclusion for this chapter. In the
-previous sections we introduced all these components and explained them
-thoroughly.
-
-Figure \ref{fig:cake} presents how these components actually are connected.
+Now that the implementation of the different constructs that make up our
+implementation of \productname{} have been described, we wish to provide
+an overview of how they fit together, attempting to provide a concise
+overview. Figure \ref{fig:cake} presents how these components actually
+are connected.
 
 \input{figures/cake}
 
@@ -28,22 +27,28 @@ The following enumeration explains what each number the arrows have:
 \item Abstract Syntax Tree
 \item Symbol table and Abstract Syntax Tree
 \item Symbol table
-\item Game
+\item A game object 
 \item Fun with playable board games
 \end{nlist}
 
-The Simulator begins by accepting a file location as input. Then the Game
-Abstraction Layer (GAL) receives a stream of characters from this file at that
-location. The GAL forwards the stream of characters to the Scanner, which scans
-the input and outputs a stream of tokens to the GAL. The GAL again forwards the
-stream of tokens to the Parser, which parses the input and outputs an Abstract
-Syntax Tree (AST) to the GAL. The GAL once again forwards the AST to the Scope
-checker, which checks the AST for errors and outputs the checked AST to the GAL.
-One last time, the GAL forwards the AST (now with a symbol table) to the 
-Interpreter, which vists every node and interprets the input. The Interpreter
-outputs the symbol table to GAL, and GAL sends a playable game to the Simulator,
-which now makes it possible to play the board game.
+The simulator begins by accepting a file location as input. Then the
+game abstraction layer (GAL) receives a stream of characters from
+this file at that location (the simulator opens the file and reads
+it, instantiating GAL with the input stream). The GAL forwards the
+stream of characters to the scanner, which scans the input and outputs
+a stream of tokens to the GAL. The GAL again forwards the stream of
+tokens to the parser, which parses the input and outputs an abstract
+syntax tree (AST) to the GAL. The GAL once again forwards the AST to
+the scope checker, which checks the AST for errors and passes the
+checked (and possibly a modified) AST back to the GAL. One last time,
+the GAL forwards the AST to the interpreter (instantiated with the game
+environment), which visits every node and takes action depending on the
+node types, meanwhile building up its symbol table. The interpreter
+outputs the symbol table to GAL, and GAL sends an object with information
+about the game to the simulator, which now makes it possible to play the
+board game.
 
-All this can of course be interrupted if there is an error in the program. In
-this case a suitable error will be thrown. If no errors are encountered then it
-is possible to see the game in the Simulator and the visualised game can be played.
+All this can of course be interrupted an error is thrown in one of the
+stages. It is up to the simulator to handle these errors. If no errors
+are encountered, then it is possible to see the game in the simulator and
+the visualised game can be played.
