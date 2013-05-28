@@ -1,8 +1,8 @@
 \section{Simulator}
 \label{sec:simulator-impl}
 
-In this section, we begin by giving an overview of the relations of classes in
-the Simulator in \secref{sec:overview}. Afterwards, we present
+In this section, we begin by giving an overview of the set of classes in
+the Simulator and their relations, in \secref{sec:overview}. Afterwards, we present
 \classref{Widget}s and their properties in \secref{sec:widget}. We also explain
 the different actions that are available in \secref{sec:actions}. Furthermore,
 we explain how the different \classref{Widget}s communicate with each other in
@@ -33,10 +33,10 @@ The result is a Java application with a graphical user interface, which takes a
 The implementation is based around the class \classref{Widget}, which simplifies the
 process of distributing drawings and handling input. Some \classref{Widget}s
 manage other \classref{Widget}s, while others provide visual and interactive
-content. The game \classref{Widget}s provide visual and interactive intefaces to
+content. The game \classref{Widget}s provide visual and interactive interfaces to
 GAL.
 
-To work with graphics and input, the game framework slick2d is used\cite{slick2d}.
+To work with graphics and input, the game framework slick2d is used \cite{slick2d}.
 \classref{SimulatedGame} is used to bind slick2d, \classref{Widget}s, and GAL
 together to provide a complete system.
 
@@ -44,7 +44,7 @@ Figure \ref{fig:simulator-overview} shows all these components and their most
 important relationships.
 
 \fig[width=0.7\textwidth]{simulator-overview}{Generalised overview of classes in
-the Simulator and their relations. Triangles means inheriance, while arrows means that one class makes use of the one it points to.}
+the Simulator and their relations. Triangles means inheritance, while arrows means that one class makes use of the one it points to.}
 
 \subsection{Widget}
 \label{sec:widget}
@@ -52,7 +52,7 @@ the Simulator and their relations. Triangles means inheriance, while arrows mean
 \classref{Widget} specifies an object which can have a size and a position, can be
 drawn, take mouse input, and send messages to each other. The most important
 property of \classref{Widget} however is that a \classref{Widget} can contain
-several sub-\classref{Widget}s which each can contain futher sub-\classref{Widget}s. 
+several sub-\classref{Widget}s which each can contain further sub-\classref{Widget}s. 
 We use this tree structure to control how drawing and mouse input is handled.
 
 \subsubsection{Placement}
@@ -75,7 +75,7 @@ independent of the window and board size.
 
 \classref{ScaleContainer} is such a container \classref{Widget} and positions
 \classref{Widget}s along an axis. For \classref{Widget}s whose size is dynamic,
-the remaining available space is distributed evenly amoung them. An example is
+the remaining available space is distributed evenly among them. An example is
 shown in \figref{fig:ScaleContainer}. The top-level \classref{Widget} is a
 \classref{ScaleContainer} set to position \classref{Widget}s vertically. It does
 not affect its own size, only its sub-\classref{Widget}s. The second
@@ -113,7 +113,7 @@ coordinates.  Furthermore, we apply clipping, so that any drawing outside the
 \classref{Widget}s can't mess with other \classref{Widget}s.
 
 We enforce this by restricting the \texttt{draw()} method with Java's final
-keyword so it can't be overwridden, and \texttt{handleDraw()} is protected, so
+keyword so it can't be overwritten, and \texttt{handleDraw()} is protected, so
 the calling class can't call \texttt{handleDraw()} instead of \texttt{draw()} by
 accident.
 
@@ -130,14 +130,14 @@ language=Java]{listings/simulatorMouseClicked.java}
 Like with drawing, we translate coordinates into local coordinates, however
 notice that it returns a boolean which is used to determine if the event was
 handled, and it will stop as soon as any callee returns true. A second
-difference is that in constrast to drawing, input is handled bottom up. The
+difference is that in contrast to drawing, input is handled bottom up. The
 reasoning is that the lower we get in the hierarchy, the more specific the
 behaviour of each \classref{Widget} is. Thus, we try to see if the more specific
 \classref{Widget}s will handle the input and if not, less and less specific
 \classref{Widget}s are tried.
 
 When mouse buttons are pushed and released, it will only try \classref{Widget}s
-which contain the position at which the mouse is currently pointioned at. For
+which contain the position at which the mouse is currently positioned at. For
 mouse dragging the situation is different, it will try any \classref{Widget}
 which has initiated a drag, even if the mouse has moved outside it. If this was
 not the case, a scrollbar for example would only move if we kept the mouse
@@ -167,16 +167,16 @@ the use of either Drag\&Drop or Click\&Select. While Drag\&Drop only allows
 you to move a \classref{Piece} from one \classref{Square} to another, Click\&Select 
 will work on any two \classref{Square}s whether or not it contains any
 \classref{Piece}s. It will go through all available \classref{Action}s and find
-the ones which are related to those Squares. To help ease this process, usable
+the ones which are related to those \classref{Square}s. To help ease this process, usable
 \classref{Square}s are hinted as shown in \figref{fig:multiple-moves}.
 
-\fig[width=0.7\textwidth]{multiple-moves}{The Square at E2 was selected and shows the 4 pieces which can move there.}
+\fig[width=0.7\textwidth]{multiple-moves}{The Square at E2 was selected and the 4 pieces which can move there gets highlighted.}
 
 In reality we have two \classref{Widget}s: \classref{BoardWidget} and
-\classref{GridBoardWidget} which are specialisations of \classref{BoardWidget}.
+\classref{GridBoardWidget} which is a specialisations of \classref{BoardWidget}.
 While it is not necessary at this point, it is an attempt to generalise
-\classref{GirdBoard} so that a future addition with new \classref{Board} types
-will be easier to implement.
+\classref{GridBoard} so that a future addition with new \classref{Board} types
+will be easier to implement. This is further described in \secref{sec:boardtypes}.
 
 \subsection{Binding everything together}
 \label{sec:connection}
@@ -196,7 +196,7 @@ the game object changes each time an \classref{Action} is applied, which
 requires us to update it in every game object each time. Instead we pass a
 reference to this instance of \classref{SimulatedGame} and the game
 \classref{Widget}s must
-then access the game object through its accessor methods directly, without
+then access the game object through its accessor's methods directly, without
 caching it.
 
 One final task of \classref{SimulatedGame} is to handle any exceptions in GAL or
