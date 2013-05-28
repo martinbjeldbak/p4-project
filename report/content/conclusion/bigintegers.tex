@@ -14,7 +14,7 @@ implementation like \classref{BigInteger} and \classref{BigDecimal} data
 types of Java, maybe even using these as underlying data structures.
 The \classref{BigInteger} data type provides analogues to all of Java's
 primitive integer operators, exactly the same as the primitive data
-type \classref{Integer} \cite{javabigint}, but at the same time it
+type \classref{Integer}\cite{javabigint}, but at the same time it
 can represent arbitrary-precision integers. That is integers of any
 size limited only by the memory of the computer. The same holds for
 \classref{BigDecimal}s.
@@ -25,11 +25,11 @@ point numbers to represent any aspect of the game. We have also chosen
 not to use either of these, because we do not see a specific need to use
 such massive numbers. And given that our \productname{} implementation
 is already slow, using these arbitrary-length data strutures will
-only bog it farther down. It would be rather simple if we ever wished
+only bog it further down. It would be rather simple if we ever wished
 to implement floating point numerals, we would need to update the
 \methodref{isDigit} method in the Scanner to continue picking up numbers
 when seeing a period. The parser would then need to create a new type
-of node for it, feeding it to the newly updated Interpreter that builds
+of node for it, feeding it to the newly updated \classref{Interpreter} that builds
 a new type when seeing a floating point node (granted, the operations
 and types we wish to support floating points on would need to be updated
 too).
