@@ -1,0 +1,91 @@
+digraph ast {
+  N0 [label="PROGRAM\n"]
+  N0 -> N1
+  N1 [label="CONSTANT_DEF\n"]
+  N1 -> N2
+  N2 [label="CONSTANT\nbA"]
+  N1 -> N3
+  N3 [label="CALL_SEQUENCE\n"]
+  N3 -> N4
+  N4 [label="TYPE\nGridBoard"]
+  N3 -> N5
+  N5 [label="LIST\n"]
+  N5 -> N6
+  N6 [label="INT_LIT\n1"]
+  N5 -> N7
+  N7 [label="INT_LIT\n1"]
+  N0 -> N8
+  N8 [label="CONSTANT_DEF\n"]
+  N8 -> N9
+  N9 [label="CONSTANT\np"]
+  N8 -> N10
+  N10 [label="CALL_SEQUENCE\n"]
+  N10 -> N11
+  N11 [label="TYPE\nPiece"]
+  N10 -> N12
+  N12 [label="LIST\n"]
+  N12 -> N13
+  N13 [label="CALL_SEQUENCE\n"]
+  N13 -> N14
+  N14 [label="TYPE\nPlayer"]
+  N13 -> N15
+  N15 [label="LIST\n"]
+  N15 -> N16
+  N16 [label="STRING_LIT\nNiels"]
+  N0 -> N17
+  N17 [label="CONSTANT_DEF\n"]
+  N17 -> N18
+  N18 [label="CONSTANT\nbB"]
+  N17 -> N19
+  N19 [label="ELEMENT\n"]
+  N19 -> N20
+  N20 [label="CONSTANT\nbA"]
+  N19 -> N21
+  N21 [label="MEMBER_ACCESS\n"]
+  N21 -> N22
+  N22 [label="CONSTANT\naddPiece"]
+  N21 -> N23
+  N23 [label="LIST\n"]
+  N23 -> N24
+  N24 [label="CONSTANT\np"]
+  N23 -> N25
+  N25 [label="COORD_LIT\nA1"]
+  N0 -> N26
+  N26 [label="CONSTANT_DEF\n"]
+  N26 -> N27
+  N27 [label="CONSTANT\nmain"]
+  N26 -> N28
+  N28 [label="LIST\n"]
+  N28 -> N29
+  N29 [label="ELEMENT\n"]
+  N29 -> N30
+  N30 [label="CONSTANT\np"]
+  N29 -> N31
+  N31 [label="MEMBER_ACCESS\n"]
+  N31 -> N32
+  N32 [label="CONSTANT\nonBoard"]
+  N28 -> N33
+  N33 [label="ELEMENT\n"]
+  N33 -> N34
+  N34 [label="CONSTANT\nbB"]
+  N33 -> N35
+  N35 [label="MEMBER_ACCESS\n"]
+  N35 -> N36
+  N36 [label="CONSTANT\nsquareAt"]
+  N35 -> N37
+  N37 [label="LIST\n"]
+  N37 -> N38
+  N38 [label="COORD_LIT\nA2"]
+  N33 -> N39
+  N39 [label="MEMBER_ACCESS\n"]
+  N39 -> N40
+  N40 [label="CONSTANT\npieces"]
+  N39 -> N41
+  N41 [label="LIST\n"]
+  N41 -> N42
+  N42 [label="INT_LIT\n0"]
+  N33 -> N43
+  N43 [label="MEMBER_ACCESS\n"]
+  N43 -> N44
+  N44 [label="CONSTANT\nposition"]
+}
