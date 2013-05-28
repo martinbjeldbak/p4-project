@@ -64,7 +64,7 @@ To refresh the readers memory, the sequences are intentionally placed in this
 specific order to ensure the correct precedence for these operators.
 
 Since the productions look a lot like each other we will only illustrate an
-abstract ANT which shows how we have implemented the different operations.
+ANT which shows how we have implemented the different operations.
 Figure \ref{ast:operation} shows this.
 
 \input{content/implementation/abstractnodetypes/operation}
@@ -125,12 +125,12 @@ pair.
 Figure \ref{ast:assignment} illustrates this with an ANT that omits the
 keywords, commas and the assignment operators, which can make it rather complex
 to look at. The figure actually states that an assignment consists of variables
-and expression where an expression can be many different things, including
+and expressions where an expression can be many different things, including
 another assignment. So, this means that it is possible to have assignments
 nested within each other. 
 
-We have chosen to implement the comma separated nodes as new assignment nodes
-which has two nodes that are not optional. These nested assignments are
+We have chosen to implement the optional additional variable declarations as new assignment nodes
+which each has two nodes that are not optional. These nested assignments are
 connected to the parent with dashed edges which mean that they are optional and
 it is possible to have zero, one, or more of these following each other.
 
