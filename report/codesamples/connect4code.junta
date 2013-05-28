@@ -1,7 +1,7 @@
 type ConnectFour[] extends Game["Connect Four"] {
   define players = [
-    ConnectPlayer[Crosses, Crosses],
-    ConnectPlayer[Noughts, Noughts]
+    ConnectPlayer[Crosses, "Crosses"],
+    ConnectPlayer[Noughts, "Noughts"]
   ]
   define initialBoard = GridBoard[8, 8]
     .setSquaresAt[Bottom[],

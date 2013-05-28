@@ -5,6 +5,9 @@ import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
@@ -48,6 +51,8 @@ public class Simulator extends BasicGame {
 	GameAbstractionLayer gal;
 	Game game;
 	String gameFolder;
+	
+	List<Action> undoneActions = new ArrayList<Action>();
 	
 	
 	public Simulator(String path){
@@ -104,6 +109,7 @@ public class Simulator extends BasicGame {
 	 */
 	public void applyAction( Action a ) throws StandardError{
 		game = game.applyAction( a );
+		undoneActions.clear();
 	}
 	
 	public void nextTurn() throws StandardError{
@@ -225,12 +231,18 @@ public class Simulator extends BasicGame {
 	@Override
 	public void update( GameContainer gc, int arg1 ) throws SlickException {
 		Input in = new Input(arg1); //TODO: what in constructor?
-		if( in.isKeyDown(Input.KEY_F5) )
-			try {
+		try {
+			if( in.isKeyDown(Input.KEY_F5) )
 				restartGame();
-			} catch (StandardError e) {
-				handleStandardError( e );
+			else if( in.isKeyDown( Input.KEY_F6 ) ){
+				undoMove();
 			}
+			else if( in.isKeyDown( Input.KEY_F7 ) ){
+				redoMove();
+			}
+		} catch (StandardError e) {
+			handleStandardError( e );
+		}
 	}
 
 	/**
@@ -239,6 +251,27 @@ public class Simulator extends BasicGame {
 	 */
 	public void restartGame() throws StandardError {
 		game = gal.getGame();
+	}
+	
+	public void undoMove() throws StandardError{
+		Action[] actions = game.getHistory(); 
+		if( actions.length > 0 ){
+			Action a = actions[ actions.length-1 ];
+			
+			undoneActions.add( a );
+			game = game.undoAction();
+			System.out.println( "Undoing" );
+		}
+	}
+	
+	public void redoMove() throws StandardError{
+		int pos = undoneActions.size() - 1;
+		if( pos >= 0 ){
+			game = game.applyAction( undoneActions.get( pos ) );
+			game = game.nextTurn();
+			undoneActions.remove( pos );
+			System.out.println( "redoing" );
+		}
 	}
 }
 

@@ -1,5 +1,5 @@
 \newcommand{\productname}{
-  \raisebox{-0.025cm}{\fontspec{OptimusPrinceps}Junta}
+  \raisebox{-0.025cm}{\juntafont{}Junta}
 }
 \newcommand{\CS}{C$\sharp$}
 
@@ -37,6 +37,12 @@
   \end{tabularx}
   \end{center}
   \vspace{-0.4cm}
+}
+
+\newcommand{\bigcodesample}[1]{
+  \begin{table}
+    \codesample{#1}
+  \end{table}
 }
 
 %big-step-semantic

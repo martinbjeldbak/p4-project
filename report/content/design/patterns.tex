@@ -24,12 +24,12 @@ grammar shows how a pattern is constructed:
 
 A pattern is checked on a particular square, and returns either true or false.
 An example of a pattern is \texttt{/n n e empty/}. This pattern can be checked on
-the board seen in \figref{fig:patternboard} on the field \textbf{A1}. The pattern
+the board seen in \figref{fig:patternboard} on the field \literal{A1}. The pattern
 says ``move one square north, move one square north, move one square east, check if
-square is empty''. This means that the square \textbf{B3} will be checked if it
+square is empty''. This means that the square \literal{B3} will be checked if it
 is empty. Since the square is occupied by a piece, the pattern will return
-false if checked on \textbf{A1}. However, the same pattern matched on
-\textbf{C1} will return true since the square at \textbf{D3} is empty.
+false if checked on \literal{A1}. However, the same pattern matched on
+\literal{C1} will return true since the square at \literal{D3} is empty.
 
 \fig[scale=1.5]{patternboard}{A simple $4 \times 4$ board with $3$ pieces.}
 
@@ -53,14 +53,12 @@ minor understanding of regular expressions, see \cite{regex}\cite{perlRegex}.
   \tabrow{\texttt{|}                             }{or}
   \tabrow{\texttt{!}                             }{not}
   \tabrow{\texttt{(} \textit{pattern} \texttt{)} }{encapsulation}
-  \tabrow{\texttt{friend}                        }{current square contains at
+  \tabrow{\keyword{friend}                        }{current square contains at
   least one friendly piece of the current player}
-  \tabrow{\texttt{foe}                           }{current square contains at
+  \tabrow{\keyword{foe}                           }{current square contains at
   least one enemy piece of the current player}
-  \tabrow{\texttt{type}                          }{the current square is of the
+  \tabrow{\keyword{type}                          }{the current square is of the
 given type, or a piece of the given type is residing on the current square}
-  \tabrow{\texttt{this}                          }{current square contains the
-  piece for which the check is being performed}
 }
 
 \subsection{Pattern examples}
@@ -71,82 +69,82 @@ matching on a particular square is given. The first check returns true and the
 second check returns false.
 
 \begin{enumerate}[noitemsep]
-  \item On \textbf{A1}: the pattern matching \texttt{/empty/} returns true because
-    \textbf{A1} is empty
-  \item On \textbf{B2}: the pattern matching \texttt{/empty/} returns false because
-    \textbf{B2} is not empty
-  \item On \textbf{A1}: the pattern matching \texttt{/n empty/} returns true
-    because \textbf{A2} is empty
-  \item On \textbf{B1}: the pattern matching \texttt{/n empty/} returns false
-    because \textbf{B2} is not empty
-  \item On \textbf{C3}: the pattern mathcing \texttt{/e empty/} returns true
-    because \textbf{C4} is empty
-  \item On \textbf{C4}: the pattern matching \texttt{/e empty/} returns false
-    because \textbf{C5} is out of board
-  \item On \textbf{A1}: the pattern matching \texttt{/n* n e empty/}
-  returns true because moving north $2$ times to \textbf{A3}, then north
-  and east hits an empty square on \textbf{B4}
+  \item On \literal{A1}: the pattern matching \texttt{/empty/} returns true because
+    \literal{A1} is empty
+  \item On \literal{B2}: the pattern matching \texttt{/empty/} returns false because
+    \literal{B2} is not empty
+  \item On \literal{A1}: the pattern matching \texttt{/n empty/} returns true
+    because \literal{A2} is empty
+  \item On \literal{B1}: the pattern matching \texttt{/n empty/} returns false
+    because \literal{B2} is not empty
+  \item On \literal{C3}: the pattern mathcing \texttt{/e empty/} returns true
+    because \literal{C4} is empty
+  \item On \literal{C4}: the pattern matching \texttt{/e empty/} returns false
+    because \literal{C5} is out of board
+  \item On \literal{A1}: the pattern matching \texttt{/n* n e empty/}
+  returns true because moving north $2$ times to \literal{A3}, then north
+  and east hits an empty square on \literal{B4}
 \end{enumerate}
 
 Notice that the \texttt{*} operator causes many branches to be made. The
-previous pattern \texttt{/n* n e empty/} done on \textbf{A1}  has a branch checking
-\texttt{/n e empty/}. The branch dies because \textbf{B2} is not empty. If just one
+previous pattern \texttt{/n* n e empty/} done on \literal{A1}  has a branch checking
+\texttt{/n e empty/}. The branch dies because \literal{B2} is not empty. If just one
 branch survives, the pattern matching returns true. In the example, the only branch
 surviving is the \texttt{n n n e empty} branch. The same rules for branching
 counts for the \texttt{+}, \texttt{?}, and \texttt{|} operators. When a branch
 moves out of board it dies immediately.
 
 \begin{enumerate}[noitemsep,resume]
-  \item On \textbf{C3}: the pattern matching \texttt{/n* s s !empty/} returns
-    false because neither \textbf{A1} nor \textbf{A2} contains a piece
-  \item On \textbf{A1}: the pattern matching \texttt{/n+ e empty/} returns true
-    only because \textbf{B4} is empty. Notice how this pattern matching is
+  \item On \literal{C3}: the pattern matching \texttt{/n* s s !empty/} returns
+    false because neither \literal{A1} nor \literal{A2} contains a piece
+  \item On \literal{A1}: the pattern matching \texttt{/n+ e empty/} returns true
+    only because \literal{B4} is empty. Notice how this pattern matching is
     equivalent to the pattern matching in bullet 7
-  \item On \textbf{B1}: the pattern matching \texttt{/n+ empty e !empty/}
-    returns false because \textbf{B4} is the only empty square north of
-    \textbf{B1} and \textbf{C4} is empty
-  \item On \textbf{B3}: the pattern matching \texttt{/s? e empty/} returns true
-    only because \textbf{C2} is empty 
-  \item On \textbf{C2}: the pattern matching \texttt{/n? w empty/} returns false
-    because neither \textbf{B2} nor \textbf{B3} is empty
-  \item On \textbf{A2}: the pattern matching \texttt{/(n | e) empty/} returns
-    true only because \textbf{A3} is empty
-  \item On \textbf{C2}: the pattern matching \texttt{/e | w empty/} returns
-    false because neither \textbf{B2} nor \textbf{C3} is empty
-  \item On \textbf{B1}: the pattern matching \texttt{/(n n | e e) empty/}
-    returns true only because \textbf{D1} is empty
-  \item On \textbf{A1}: the pattern matching \texttt{/(n w)* empty/} returns
-    true both because \textbf{A1} is empty and because \textbf{D4} is empty
+  \item On \literal{B1}: the pattern matching \texttt{/n+ empty e !empty/}
+    returns false because \literal{B4} is the only empty square north of
+    \literal{B1} and \literal{C4} is empty
+  \item On \literal{B3}: the pattern matching \texttt{/s? e empty/} returns true
+    only because \literal{C2} is empty 
+  \item On \literal{C2}: the pattern matching \texttt{/n? w empty/} returns false
+    because neither \literal{B2} nor \literal{B3} is empty
+  \item On \literal{A2}: the pattern matching \texttt{/(n | e) empty/} returns
+    true only because \literal{A3} is empty
+  \item On \literal{C2}: the pattern matching \texttt{/e | w empty/} returns
+    false because neither \literal{B2} nor \literal{C3} is empty
+  \item On \literal{B1}: the pattern matching \texttt{/(n n | e e) empty/}
+    returns true only because \literal{D1} is empty
+  \item On \literal{A1}: the pattern matching \texttt{/(n w)* empty/} returns
+    true both because \literal{A1} is empty and because \literal{D4} is empty
 \end{enumerate}
 
 \subsubsection{Pattern keywords}
 
-The \texttt{friend} keyword is evaluated based on the current player. Suppose
+The \keyword{friend} keyword is evaluated based on the current player. Suppose
 that we have a player called Green, who owns the green piece. If it is Green's
 turn to move, any branch of a pattern matching will return false whenever it
-meets a keyword \texttt{friend} on a square that does not contain any of Green's
-pieces. On \textbf{B2}, the pattern matching \texttt{/n | e | (n e) friend/}
-will return true if it is Green's turn, since \textbf{C3} contains a friendly
-piece of Green. On \textbf{C3}, the pattern matching \texttt{/(e | w)+/} will
+meets a keyword \keyword{friend} on a square that does not contain any of Green's
+pieces. On \literal{B2}, the pattern matching \texttt{/n | e | (n e) friend/}
+will return true if it is Green's turn, since \literal{C3} contains a friendly
+piece of Green. On \literal{C3}, the pattern matching \texttt{/(e | w)+/} will
 return false if it is Green's turn, since no square containing a green piece can
-be reached by going east or west from \textbf{C3} one or more times.
+be reached by going east or west from \literal{C3} one or more times.
 
-The \texttt{foe} keyword does the opposite of \texttt{friend}. It makes a branch
+The \keyword{foe} keyword does the opposite of \keyword{friend}. It makes a branch
 continue only if its current square contains at least one piece not owned by the
 current player's turn.
 
-Just like \texttt{foe} and \texttt{friend}, the name of a piece or square type
-defined in a \productname{} game can also be used. E.g. the keyword
-\texttt{White} can be used if a piece or square type with the name has been
+Just like \keyword{foe} and \keyword{friend}, the name of a piece or square type
+defined in a \productname{} game can also be used. E.g. the type identifier
+\type{White} can be used if a piece or square type with the name has been
 defined. In such a case, a branch survives only if its current square is of type
-\textit{White} or if the square contains a piece of type \textit{White}.
+\type{White} or if the square contains a piece of type \type{White}.
 
 A pattern can also match if a specific piece exists on a specific square. This
-is done using the \texttt{this} keyword. Before this matching can be achieved,
+is done using the \keyword{this} keyword. Before this matching can be achieved,
 the pattern must be matched regarding to a specific piece. Suppose that we on
-\textbf{A3} make the pattern matching \texttt{/empty e this/}. If this matching
-is done in relation to the black piece on \textbf{B3} it returns true. However,
-in relation to the black piece on \textbf{B2}, the pattern matching returns
+\literal{A3} make the pattern matching \texttt{/empty e this/}. If this matching
+is done in relation to the black piece on \literal{B3} it returns true. However,
+in relation to the black piece on \literal{B2}, the pattern matching returns
 false. 
 
 To understand how this function works and why this is useful, consider
