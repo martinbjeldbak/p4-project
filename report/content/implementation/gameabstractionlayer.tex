@@ -18,7 +18,7 @@ The entire program package offered by \productname{} is encapsulated by
 the class \classref{GameAbstractionLayer}. This small class is basically
 only defined by its constructor, seen below in \lstref{lst:gal}:
 
-\lstinputlisting[language=Java,label={lst:gal},caption={\emph{The game abstraction layer's constructor, initializing different constructs based off of an input of characters.}}]{listings/gal.java}
+\lstinputlisting[language=Java,label={lst:gal},caption={The game abstraction layer's constructor, initializing different constructs based off of an input of characters.}]{listings/gal.java}
 
 Here all the constructs are tied together: The handwritten scanner
 is instantiated with the input provided in the constructor, creating
@@ -38,7 +38,7 @@ interface that wishes to access and modify a game's state.
 \subsection{The application programming interface}
 The application programming interface (API) provided is simply a collection of interfaces used by the wrappers. This means that classes implementing these interfaces guarantees different methods are available. As an example, the \classref{Square} interface is seen in \lstref{lst:squareinterface} below:
 
-\lstinputlisting[language=Java,label={lst:squareinterface},caption={\emph{The \classref{Square} interface, one among many such interfaces provided by \productname{}.}}]{listings/squareInterface.java}
+\lstinputlisting[language=Java,label={lst:squareinterface},caption={The \classref{Square} interface, one among many such interfaces provided by \productname{}.}]{listings/squareInterface.java}
 
 Currently $12$ such interfaces exist for different aspects of a game,
 such as getting information about the game itself, its players, board,
@@ -65,7 +65,7 @@ of class \classref{GameAbstractionLayer}, an instance of the interpreter
 is passed to the method, which means full access to the symbol table and
 standard environment. All wrapper classes have the following signature:
 
-\begin{lstlisting}[language=Java,caption={\emph{The signaure of all API wrapper classes.}}]
+\begin{lstlisting}[language=Java,caption={The signaure of all API wrapper classes.}]
   public class xxWrapper extends Wrapper implements yy { ... }
 \end{lstlisting}
 
