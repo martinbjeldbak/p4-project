@@ -189,7 +189,7 @@ public class GameEnvironment extends StandardEnvironment {
     else {
       throw new TypeError("Unknown action type: " + actionObject.getType().getName());
     }
-    return (ObjectValue)gameState.setAttribute("board", currentBoard);
+    return (ObjectValue)gameState.callMember("setBoard", game, interpreter, currentBoard);
   }
   
   public GameEnvironment() {
@@ -383,7 +383,6 @@ public class GameEnvironment extends StandardEnvironment {
       public Value call(Interpreter interpreter, Value... actualParameters)
           throws StandardError {
         ObjectValue object = (ObjectValue)interpreter.getSymbolTable().getThis();
-        TypeValue.expect(actualParameters, 0, action);
         ListValue history = (ListValue)object.getAttributeAs("history", ListValue.type());
         if (history.getValues().length < 1) {
           throw new ArgumentError("Cannot undo. History is empty.");
