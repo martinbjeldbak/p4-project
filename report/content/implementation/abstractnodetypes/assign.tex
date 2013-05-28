@@ -6,14 +6,14 @@
 level 1/.style={sibling distance = 39mm},
 level 2/.style={sibling distance = 20mm}]
 
-\node [square] {Assignment}
+\node [square] {Let expression}
   child {node [square,xshift=3cm] (a) {Variable}}
   child {node [square,xshift=1.2cm] (b) {\textit{Expression}}}
-  child {node [square,xshift=-0.5cm] (c) {Assignment} edge from parent[dashed]
+  child {node [square,xshift=-0.5cm] (c) {Let expression} edge from parent[dashed]
   	child {node [square, xshift=-1cm] (x) {Variable} edge from parent[solid]}
   	child {node [square,solid,xshift=-1cm] (y) {\textit{Expression}} edge from parent[solid]}
   }
-  child {node [square,xshift=-1.5cm] (d) {Assignment} edge from parent[dashed]
+  child {node [square,xshift=-1.5cm] (d) {Let expression} edge from parent[dashed]
   	child {node [square,xshift=1cm] (o) {Variable} edge from parent[solid]}
   	child {node [square,solid,xshift=1cm] (p) {\textit{Expression}} edge from parent[solid]}
   }
@@ -22,6 +22,6 @@ level 2/.style={sibling distance = 20mm}]
 \path (c)--(d) node [midway] {$\cdots$};
 \end{tikzpicture}
 \end{center}
-\capt{The abstract syntax tree for the assignment node.}
+\capt{The abstract syntax tree for the let expression node.}
 \label{ast:assignment}
 \end{figure}

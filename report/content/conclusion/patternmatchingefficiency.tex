@@ -29,7 +29,8 @@ intuitive approach.
 Consider the green piece placed at the square D5 in
 \figref{fig:efficientpatterns}. The $8$ arrows show the moves a knight
 can make. An easy way to find these squares is simply to start at
-the knight's square (D5), move two squares in an arbitrary direction
+the knight's square (D5), move two squares in on of the following directions:
+north, south, east, or west,
 and then one square in an orthogonal direction. This also seems
 like a quite efficient approach. This can implemented by modifying
 the pattern matching to take a square as input and return a list of
@@ -60,8 +61,8 @@ slide to. Generally, patterns containing the pattern-value \texttt{*} or
 
 \subsection{Additional functionality with pattern matching}
 Many different functionalities could be included in the
-pattern matching. You may have noticed the black row of black
-squares in the bottom of the connect Connect Four game in
+pattern matching. You may have noticed the row of black
+squares in the bottom of the Connect Four game in
 \figref{fig:connect4simulated}. These black squares are put there so the
 pattern check can allow a piece to be dropped one square north of these
 squares. If a pattern keyword \texttt{outofboard} existed that matched
