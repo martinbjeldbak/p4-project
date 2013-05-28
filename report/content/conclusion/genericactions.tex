@@ -1,6 +1,14 @@
 \subsection{Stronger action system}
 \label{sec:strongeractionsystem}
 
-The actions provide everything needed for working with pieces, however when new artifacts are added actions which affects those are needed. An actions to take a card from a deck, an action to play a card, etc. Some artifacts could be generalized: a card could be a \type{Piece} and a deck could be a \type{Square} where the order of multiple pieces is given significance. Generalizing should be done with care though, over-generalizing will be counter productive with the idea of using a domain specific language. However if cards were pieces, new action types would not need to be created and learned by the user.
+The actions provide everything needed for working with pieces, however
+when new artefacts are added, actions which effect those are needed.
+An action to take a card from a deck, an action to play a card, etc.
+Some artefacts could be generalized: a card could be a \type{Piece}
+and a deck could be a \type{Square}, where the order of multiple pieces
+is given significance. Generalizing should be done with care though, as
+over-generalizing will be counter productive with the idea of using a
+domain specific language. However if cards were pieces, new action types
+would not need to be created and learned by the user.
 
-Instead of generalizing the artifacts, we could generalize actions. For example, instead of \type{AddAction} adding a \type{Piece}, \type{AddAction} could add any type and \type{MoveAction} could move both pieces and cards. However now \type{MoveAction} can depend on an \type{AddAction} having created an instance of a type, which is not expressed well in \type{ActionSequence}.
+Instead of generalizing the artefacts, we could generalize actions. For example, instead of \type{AddAction} adding a \type{Piece}, \type{AddAction} could add any type and \type{MoveAction} could move both pieces and cards. However now \type{MoveAction} can depend on an \type{AddAction} having created an instance of a type, which is not expressed well in \type{ActionSequence}.
