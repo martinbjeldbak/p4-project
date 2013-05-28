@@ -84,40 +84,37 @@ The \classref{TypeSymbolInfo} objects only contain the name of their super type
 as a \classref{String} or a null value if there is no super type. By making a
 lookup in the \classref{TypeTable} on the parent name, the real object
 references can be found and stored for faster and more convenient parent lookups
-which is used greatly by the visitor described in 
+which is used greatly by the visitor described in
 \secref{sec:usesaredeclaredvisitor}.
 
 \subsection{TypeMemberPropagator}
 \label{sec:TypeMemberPropagator}
-Some of the later checks that will be performed requires us to determine
-whether or not a type member (constant or function) with a specific
-name is visible in a given type. This requires searching in the given
-type and recursively in all super types for the member. When this
-kind of lookup is done many times on the same member, the traversal
-of the same long chains of parent references become inefficient which
-results in clumsy code. To simplify and speed up this process, the
-\classref{TypeMemberPropagator} ensures that all members of a type A
-are also present in a type \type{C}, if \type{A} is a super type of
-\type{C}. With this approach, checking if a member is visible in type
-\type{C}, only requires looking in \type{C} instead of following the
-chain parent types.
+Some of the later checks that will be performed requires us to determine whether
+or not a type member (constant or function) with a specific name is visible in a
+given type. This requires searching in the given type and recursively in all
+super types for the member. When this kind of lookup is done many times on the
+same member, the traversal of the same long chains of parent references become
+inefficient which results in clumsy code. To simplify and speed up this process,
+the \classref{TypeMemberPropagator} ensures that all members of a type A are
+also present in a type \type{C}, if \type{A} is a super type of \type{C}. With
+this approach, checking if a member is visible in type \type{C}, only requires
+looking in \type{C} instead of following the chain parent types.
 
 This propagation of members is done by first topologically sort the
-\classref{TypeSymbolInfo} objects, such that when iterating over the
-type table, any type yielded will always appear before all of its
-subtypes. This makes the afterwards propagation of members possible
-in linear time by iterating over the topologically sorted types. If a
-type \type{C} is met, the members in its parent type \type{B} are put
-in \type{C} as well. If \type{B} has a parent \type{A}, we know that
-\type{B} has already the members from \type{A} due to the topological
+\classref{TypeSymbolInfo} objects, such that when iterating over the type table,
+any type yielded will always appear before all of its subtypes. This makes the
+afterwards propagation of members possible in linear time by iterating over the
+topologically sorted types. If a type \type{C} is met, the members in its parent
+type \type{B} are put in \type{C} as well. If \type{B} has a parent \type{A}, we
+know that \type{B} has already the members from \type{A} due to the topological
 sorting.
 
-The topological sorting is done using the algorithm that goes by the same name, from the book Introduction
-to Algorithms \cite[p. 612]{ad} working on a graph $G = (V, E)$. Each type
-represents a vertex $v$. An edge $e$ exists from $v_1$ to $v_2$ if the type $v_2$
-is a parent of the type $v_1$. However this results in a topological order where
-a type always appears before its super types. This problem is quickly solved
-simply by reversing the list.
+The topological sorting is done using the algorithm that goes by the same name,
+from the book Introduction to Algorithms\cite[p. 612]{ad} working on a graph $G
+= (V, E)$. Each type represents a vertex $v$. An edge $e$ exists from $v_1$ to
+$v_2$ if the type $v_2$ is a parent of the type $v_1$. However this results in a
+topological order where a type always appears before its super types. This
+problem is quickly solved simply by reversing the list.
 
 Given the graph in \figref{fig:topological}, the following sequences are examples
 of correct and wrong topologically sorted orders after the list has been reversed:
@@ -325,5 +322,4 @@ the types and errors associated with the use of them. It is important to realise
 that everything cannot always be inferred, for instance an algorithm could be so
 complex that it would need to be executed to determine all possible outcomes.
 Running the algorithm is not possible since you cannot know if the algorithm
-will ever halt.
-\cite[p. 173]{itttoc}
+will ever halt\cite[p. 173]{itttoc}.
