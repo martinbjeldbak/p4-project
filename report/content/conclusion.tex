@@ -1,25 +1,30 @@
 \chapter{Conclusion}
 \label{chap:conclusion}
 
-The goal of the project was to define, design and implement a programming language. 
-We have accomplished this goal with the creation of \productname{} - a functional and object oriented programming
-language in which it is possible to program board games in. In the process we have defined, 
-designed and implemented a scanner, a parser, a scope checker and an interpreter. 
-Furthermore we have implemented a simulator which through a game abstraction layer 
-communicates with the interpreter and in which it's possible to visualise and play Junta games in.
+The goal of the project was to define, design, and implement a programming
+language.  We have accomplished this goal with the creation of \productname{} --
+a functional object-oriented programming language in which it is possible to
+program board games. In the process we have defined, designed, and implemented
+a scanner, a parser, a scope checker, and an interpreter. Furthermore, we have
+implemented a simulator which through a game abstraction layer communicates with
+the interpreter and in which it is possible to visualise and play
+\productname{} games in.
 
-In the analysis chapter (\chapref{chap:analysis}), we
-have accounted for different techniques for constructing compilers and interpreters 
-and further analysed the phases they consist of. In the design
-chapter (\chapref{chap:design}) and the implementation chapter
-(\chapref{chap:implementation}), we have documented formally and
-informally how we have designed, defined, and implemented \productname{}.
+In the analysis chapter (\chapref{chap:analysis}), we have accounted for
+different techniques for constructing compilers and interpreters and further
+analysed the phases they consist of. In the design chapter
+(\chapref{chap:design}) and the implementation chapter
+(\chapref{chap:implementation}), we have documented formally and informally how
+we have designed, defined, and implemented \productname{}.
 
-In \chapref{chap:requirements} we formulated a list of requirements which \productname{} and the final solution should be
-able to fulfil. In \secref{sec:requirementsevaluation} we evaluated the requirements and the vast majority of them has been fulfilled. Unfortunately it was not possible to implement chess due to the special rules of the game.
-The \textit{En Passant} and \textit{Castling} moves turned out to be more
-difficult to implement than we had expected. Although, we still believe that \productname{} provides the features 
-necessary to get them implemented.
+In \chapref{chap:requirements} we formulated a list of requirements which
+\productname{} and the final solution should be able to fulfil. In
+\secref{sec:requirementsevaluation} we evaluated the requirements and the vast
+majority of them has been fulfilled. Unfortunately, it was not possible to
+implement Chess due to the special rules of the game. The ``En Passant''
+and ``Castling'' moves turned out to be more difficult to implement than we
+had expected. Although, we still believe that \productname{} provides the
+features necessary to get them implemented.
 
 Several well-known board games has already been programmed in \productname{} e.g. Noughts and
 Crosses and Connect Four. The games were created in $19$ lines of code and $22$ lines of code respectively (including cosmetic line breaks). We think this clearly shows that it is possible to program board games in \productname{} using only few lines of code.
