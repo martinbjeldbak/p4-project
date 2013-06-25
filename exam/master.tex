@@ -1,0 +1,46 @@
+\documentclass[xetex,mathserif,serif,paper=screen,draft]{beamer}
+\synctex=1
+\PassOptionsToPackage{silent}{fontspec}
+\usepackage{xltxtra}
+\setromanfont[Ligatures=TeX,Numbers={Lining},BoldFont={Libre Baskerville Bold},BoldItalicFont={Libre Baskerville Bold},BoldItalicFeatures={Scale=0.7,FakeSlant=0.2},BoldFeatures={Scale=0.7}]{EB Garamond}
+\setmonofont[Scale=0.8]{Consolas}
+\setsansfont[Scale=0.9]{Optima}
+\newfontfamily\juntafont[AutoFakeSlant=0.2]{OptimusPrinceps}
+\usepackage[protrusion=true,factor=2000,verbose=silent]{microtype} 
+\usepackage{fixltx2e}
+
+\parskip=5pt plus 2pt minus 1pt
+\parindent=0pt
+
+\input{macros}
+
+
+
+% Input table of contents with the current section at every \section{}
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\usetheme{Copenhagen}
+
+\author{d402f13}
+\title{\productname}
+\subtitle{Turbaseret brætspilsprogrammering}
+
+\date[2013]{28.\ juni, 2013\\
+$8.30$ -- $13.00$}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+  \frametitle{Indholdsfortegnelse}
+  \tableofcontents[currentsection]
+\end{frame}
+
+\end{document}
