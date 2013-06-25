@@ -2,12 +2,15 @@
 *.log
 *.out
 report/*.pdf
+exam/*.pdf
 *.toc
 *.bak
 *.synctex.gz
 *.bbl
 *.blg
 *.class
+*.nav
+*.snm
 docs/gruppekontrakt.pdf
 /games/test.junta
 /program/IG/ast.dot
