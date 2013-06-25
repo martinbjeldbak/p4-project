@@ -1,0 +1,141 @@
+\newcommand{\productname}{\raisebox{-0.025cm}{\juntafont{}Junta}}
+\newcommand{\CS}{C$\sharp$}
+
+\newcommand{\secref}[1]{section \ref{#1}}
+\newcommand{\chapref}[1]{chapter \ref{#1}}
+\newcommand{\figref}[1]{figure \ref{#1}}
+\newcommand{\lstref}[1]{listing \ref{#1}}
+\newcommand{\apref}[1]{appendix \ref{#1}}
+\newcommand{\tableref}[1]{table \ref{#1}}
+\newcommand{\itemref}[1]{element \ref{#1}}
+\newcommand{\pseudoref}[1]{algorithm \ref{#1}}
+\newcommand{\capt}[1]{\caption{\emph{#1}}}
+\newcommand{\csref}[1]{code sample (\ref{cs:#1})}
+
+%code-like refs
+\newcommand{\tokenref}[1]{{\textbf{#1}}}
+\newcommand{\classref}[1]{\textbf{{#1}}}
+\newcommand{\methodref}[1]{\textbf{{#1}}}
+\newcommand{\varref}[1]{\textbf{{#1}}}
+
+\newcommand{\todo}[1]{\colorbox{yellow}{\color{red}\textbf{TODO:} \hspace{1ex} #1}}
+
+\newcommand{\codesample}[1]{
+  \vspace{-0.6cm}
+  \begin{center}
+  \begin{tabularx}{0.9\textwidth}{m{9cm} X m{2cm} }
+  \parbox[t]{8cm}{
+    \vspace{-0.1cm}
+    \input{codesamples/#1}}
+    & &
+    \parbox{2cm}{\hfill
+      \begin{equation}\label{cs:#1}
+      \end{equation}
+    } 
+  \end{tabularx}
+  \end{center}
+  \vspace{-0.4cm}
+}
+
+\newcommand{\bigcodesample}[1]{
+  \begin{table}
+    \codesample{#1}
+  \end{table}
+}
+
+%big-step-semantic
+\newcommand{\infrule}[2]
+           {\parbox{4.5cm}{$$ \frac{#1}{#2}\hspace{.5cm}$$}}
+	
+\newcommand{\ra}{\rightarrow}
+\newcommand{\lag}{\langle}
+\newcommand{\rag}{\rangle}
+
+
+%itemize
+\newenvironment{dlist}{
+\begin{itemize}[noitemsep]
+}{
+\end{itemize}
+}
+
+%enumerate
+\newenvironment{nlist}{
+\begin{enumerate}[noitemsep]
+}{
+\end{enumerate}
+}
+
+\newcommand{\literal}[1]{\texttt{\color[rgb]{0.400 0.000 0.933}#1}}
+\newcommand{\type}[1]{\texttt{\color[rgb]{0.000 0.200 0.400}#1}}
+\newcommand{\identifier}[1]{\texttt{\color[rgb]{0.000 0.200 0.400}#1}}
+\newcommand{\variable}[1]{\texttt{\color[rgb]{0.694 0.537 0.384}\$#1}}
+\newcommand{\constant}[1]{\texttt{\color[rgb]{0.012 0.408 0.733}#1}}
+\newcommand{\function}[1]{\texttt{\color[rgb]{0.012 0.408 0.733}#1}}
+\newcommand{\keyword}[1]{\texttt{\color[rgb]{0.000 0.529 0.000}#1}}
+\newcommand{\numeral}[1]{\texttt{\color[rgb]{0.400 0.000 0.933}#1}}
+
+\newcommand{\operator}[4][]{\texttt{\type{#1} \textbf{\color{nicered}#2} \type{#3} $\rightarrow$ \type{#4}}}
+
+\newcommand{\constdef}[3]{\texttt{\constant{#1}#2 : \type{#3}}}
+\newcommand{\constructor}[2]{\texttt{\type{#1}#2}}
+\newcommand{\farg}[2]{\variable{#1} : \type{#2}}
+\newcommand{\typedef}[3]{\texttt{\type{#1} \variable{#2} : \type{#3}}}
+
+\newcommand{\opstar}{$*$}
+
+\newcommand{\fig}[3][scale=1.0]{\begin{figure}[ht]
+  \center
+  \includegraphics[#1]{pictures/#2}
+  \capt{#3}
+  \label{fig:#2}
+\end{figure}}
+
+\newenvironment{ebnf} {
+  \begin{center}
+    \begin{tabular}{>{\hfill}p{2.5cm} c p{9cm}}
+}{
+  \end{tabular}
+\end{center}
+}
+
+%rules for ebnf
+\newcommand{\grule}[2]{$#1$ & $\rightarrow$ & \parbox[t]{9cm}{$#2$} \\}
+\newcommand{\gnl}{$\\$}
+\newcommand{\galt}[1]{& | & $#1$ \\}
+\newcommand{\grange}{\cdots}
+\newcommand{\gcomment}[1]{\textrm{#1}}
+\newcommand{\gtsq}{\texttt{"'"}}
+\newcommand{\gtbs}{\texttt{"\textbackslash"}}
+\newcommand{\gtdq}{\texttt{'"'}}
+\newcommand{\gor}{ \: | \: }
+\newcommand{\grep}[1]{\{#1\} \: }
+\newcommand{\gopt}[1]{[\: #1 \:] \: }
+\newcommand{\ggrp}[1]{(\: #1 \:) \: }
+\newcommand{\gter}[1]{\texttt{"#1"}}
+\newcommand{\gex}{\: - \:}
+\newcommand{\gcat}{ \; }
+
+%rules for formation rules
+\newcommand{\for}{ \: | \: }
+
+% Table
+\newcommand{\tab}[8][\textwidth]{
+\begin{table}[ht]
+  \centering
+  \rowcolors{3}{white}{lightgray}
+    \begin{tabularx}{#1}{ r | >{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X } %Errr, doesn't seem to give any errors, but fix it if possible
+  \hiderowcolors
+  \hline
+  & \multicolumn{#3}{>{\columncolor[rgb]{1,1,1}}c}{\textbf{#5}} \\
+   \textbf{#6}    & #7 \\ \hline
+   \showrowcolors
+	#8
+	\hline
+    \end{tabularx}
+    \capt{#4}
+    \label{table:#2}
+\end{table}
+}
+
+\newcommand{\tabrow}[2]{ #1 & #2 \\ }
