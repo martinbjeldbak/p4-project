@@ -1,5 +1,18 @@
 task :default => [:compile]
 
+task :quick do
+  root = "master"
+  compiler = "xelatex"
+  options = "-interaction=nonstopmode"
+
+  compileStr = "#{compiler} #{options} #{root}.tex"
+
+  system(compileStr + " > output")
+
+  task(:findErrors).invoke("output")
+  task(:clean).invoke
+end
+
 task :compile do
   root = "master"
   compiler = "xelatex"
