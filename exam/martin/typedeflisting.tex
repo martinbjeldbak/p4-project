@@ -1,0 +1,25 @@
+\begin{lstlisting}[language=Java,escapechar=!]
+protected Value !\textcolor{red}{visitTypeDef(AstNode node)}! throws StandardError {
+    TypeValue type;
+    String name = node.!\textcolor{red}{getFirst()}!.value;
+    if (node.size() > 3) {
+      type = new TypeValue(name, node.!\textcolor{red}{get(1)}!, node.!\textcolor{red}{get(2)}!.value, !\textcolor{red}{node.get(3)}!);
+    }
+    else {
+      type = new TypeValue(name, node.!\textcolor{red}{get(1)}!);
+    }
+    if (node.!\textcolor{red}{getLast()}!.type == AstNode.Type.TYPE_BODY) {
+      for (AstNode defNode : node.!\textcolor{red}{getLast()}!) {
+        if (defNode.type == Type.DATA_DEF) {
+          type.addAttribute(defNode.!\textcolor{red}{getFirst()}!.value, new Member(defNode));
+        }
+        else {
+          type.addTypeMember(defNode.!\textcolor{red}{getFirst()}!.value, new Member(defNode));
+        }
+      }
+    }
+    !\textcolor{red}{symbolTable.addType(name, type);}!
+    
+    return null;
+  }
+\end{lstlisting}
