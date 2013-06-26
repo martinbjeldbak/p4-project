@@ -1,0 +1,10 @@
+\begin{figure}[ht]
+  \begin{center} \scalebox{0.7}{
+\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] {Constant definition}
+  child {node [square] {Constant}}
+  child {node [square] {Variable list} edge from parent [dashed]}
+  child {node [square] {\textit{Expression}}};
+\end{tikzpicture}}
+\end{center}
+\end{figure}

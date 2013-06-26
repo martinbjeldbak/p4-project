@@ -10,10 +10,8 @@
 \newfontfamily\juntafont[AutoFakeSlant=0.2]{OptimusPrinceps}
 \usepackage[protrusion=true,factor=2000,verbose=silent]{microtype} 
 \usepackage{fixltx2e}
-\usepackage{enumitem}
 \usepackage{listings}
 \usepackage{xcolor}
-
 % TIKZ---------------------------
 \usepackage{tikz}
 \usetikzlibrary{calc,trees,positioning,arrows,chains,shapes.geometric,%
@@ -42,6 +40,7 @@
 }
 \tikzstyle{square}=[rectangle, draw, rounded corners=1mm, solid]
 
+
 %---------------------------
 
 \parskip=5pt plus 2pt minus 1pt
@@ -55,7 +54,7 @@
 % Nope, ubrugeligt og uoverskueligt\ldots
 %\AtBeginSection[]
 %{
-%  \begin{frame}
+%  \begin{frame}:
 %    \frametitle{Disposition}
 %    \tableofcontents[currentsection]
 %  \end{frame}
@@ -93,7 +92,7 @@
 
 \begin{frame}
   \frametitle{Disposition}
-  \tableofcontents
+  \tableofcontents[hideallsubsections]
 \end{frame}
 
 \input{elias/root}

@@ -1,0 +1,16 @@
+
+\begin{figure}[ht]
+  \begin{center}\scalebox{0.7}{
+\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] {Type definition}
+  child {node [square]  {Type}}
+  child {node [square]  {Variable list}}
+  child {node [rectangle] {\textbf{Extends}} edge from parent[dashed]
+    child {node [square] {Type} edge from parent[solid]}
+    child {node [square] {List} edge from parent[solid]}
+  }
+  child {node [square] {\textit{Type body}} edge from parent[dashed];};
+  
+\end{tikzpicture}}
+\end{center}
+\end{figure}
