@@ -29,7 +29,7 @@ end
 
 task :clean do
   rm = 'rm -rf'
-  tmpAll = %w[aux log nav snm synctex.gz toc].map{|f| "*." + f}.join(' ')
+  tmpAll = %w[aux log nav snm synctex.gz toc vrb].map{|f| "*." + f}.join(' ')
   tmpFull = %w[output].join(' ')
 
   system("#{rm} #{tmpAll} #{tmpFull}") 

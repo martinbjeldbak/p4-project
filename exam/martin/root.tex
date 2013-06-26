@@ -1,11 +1,62 @@
-\section{Fortolkning}
+\section{Fortolker}
 
-\begin{frame}{Symboltabel}
-  Hej med dig.
-  
+\setbeamercovered{transparent}
+
+\begin{frame}{Opbygning af fortolker}
+  \begin{itemize}[<+->]
+  \item Visitormønstret
+  \item Valuetyper
+    \begin{itemize}
+    \item Funktioner
+    \item Patterns
+    \item Typer
+    \item $\cdots \times 19$
+    \end{itemize}
+  \item Symboltabel
+  \item Game environment
+  \item Interne hjælpeklasser og interfaces
+  \end{itemize}
 \end{frame}
 
-\begin{frame}{Scopes}
+
+\begin{frame}{Symboltabel}
+  \begin{columns}[c]
+    %--- LEFT COL
+    \column{.3\textwidth}
+    \begin{itemize}
+      \item<1-> Brug
+      \item<2-> Opslag og lagring 
+      \item<3-> Scopes
+    \end{itemize}
+    %---- RIGHT COL
+    \column{.7\textwidth}
+    \only<2>{\texttt{symbolTable.openScope()}\\
+                \texttt{symbolTable.closeScope()}\\
+                \texttt{symbolTable.addConstant(name, value)}\\
+                \texttt{symbolTable.addVariable(name, value)}\\
+                \texttt{symbolTable.addType(name, value)}\\
+                \texttt{symbolTable.getType(name)}\\
+                \texttt{symbolTable.getVariable(name)}\\
+                \texttt{symbolTable.getConstant(name)}\\
+                \texttt{symbolTable.getThis()}}
+
+    \only<3>{\texttt{currentScope.addVariable(name, value)}\\
+             \texttt{currentScope.getVariable(name)}\\
+             \texttt{currentScope.getThis()}\\
+             \texttt{currentScope.getParent()}}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Typedefinitioner: AST}
+  \input{martin/typedef}
+\end{frame}
+
+\begin{frame}{Typedefinitioner: Code}
+  \fontsize{7pt}{7.2}\selectfont
+\input{martin/typedeflisting}
+\end{frame}
+
+\begin{frame}{Rekursionopdagelse}
   Hej med dig.
   
 \end{frame}

@@ -1,0 +1,342 @@
+\section{Kontekstuelle begrænsninger}
+
+\begin{frame}
+\frametitle{Kontekstuelle begrænsninger}
+\begin{center}
+\begin{itemize}
+\item Hvad er kontekstuelle begrænsninger?
+\item Hvad kræver Junta?
+\item ScopeChecker
+\end{itemize}
+\end{center}
+\end{frame}
+
+%***TYPER***
+
+%DET KAN VI
+\begin{frame}[fragile]
+\frametitle{Typer}
+\begin{lstlisting}
+define foo = A[].bar
+type A[]{
+  define bar = 10
+}
+\end{lstlisting}
+\begin{center}
+\begin{itemize}                                  
+\item Anvendte typer kan bindes til én og kun én erklæring
+\item Typer har de medlemmer, der tilgås
+\end{itemize}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+\input{billeder/tikz/typedef}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Typer}
+\begin{lstlisting}
+define foo = A.bar[3, 7]
+type A[]{
+  define bar = 10
+}
+\end{lstlisting}
+\begin{center}
+\textcolor{red}{
+\begin{itemize}                                  
+\item Tjekke korrespondance mellem formelle / aktuelle parametre
+\end{itemize}
+}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Typer}
+\begin{lstlisting}
+define foo = let $a = B[]
+               in $a.bar
+type A[]{
+  define bar = 10
+}
+type B[]{
+
+}
+\end{lstlisting}
+\begin{center}
+\textcolor{red}{
+\begin{itemize}                                  
+\item Inferere en variabels type
+\end{itemize}
+}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Typer}
+\begin{lstlisting}
+define someObject = A[1, 2]
+type A[$a, $b]
+type B[] extends A[1, 2]
+\end{lstlisting}
+\begin{center}
+\begin{itemize}                                  
+\item Instantiering foregår med korrekt antal parametre
+\item Subtype kalder supertype med korrekt antal parametre
+\item Supertype eksisterer!
+\end{itemize}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Typer}
+\begin{lstlisting}
+type A[] extends B[]
+type B[] extends C[]
+type C[] extends A[]
+\end{lstlisting}
+
+\begin{center}                                 
+\item Ingen cyklisk nedarvning
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{figure}[ht]
+  \begin{center}
+    \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]      
+      \node [square] (a) {A};
+      \node [square, yshift=-4em, xshift=-2.5em] (b) {B};
+      \node [square, yshift=-4em, xshift=2.5em] (d) {D};
+      \node [square, yshift=-8em, xshift=-5em] (c) {C};
+      \node [square, yshift=0em, xshift=12em] (e) {E};
+      \node [square, yshift=-4em, xshift=12em] (f) {F};
+
+      \draw[<-, thick,] (a) -- (b);
+      \draw[<-, thick,] (b) -- (c);
+      \draw[<-, thick,] (a) -- (d);
+      \draw[<-, thick,] (e) -- (f);
+    \end{tikzpicture}
+  \end{center}
+  \capt{En pil går fra X til Y hvis X er en subtype af Y.}
+  \label{fig:topological}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{figure}[ht]
+  \begin{center}
+    \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]      
+      \node [square] (a) {$A_2$};
+      \node [square, yshift=-4em, xshift=-2.5em] (b) {$B_1$};
+      \node [square, yshift=-4em, xshift=2.5em] (d) {$D_0$};
+      \node [square, yshift=-8em, xshift=-5em] (c) {$C_0$};
+      \node [square, yshift=0em, xshift=12em] (e) {$E_1$};
+      \node [square, yshift=-4em, xshift=12em] (f) {$F_0$};
+
+      \draw[<-, thick,] (a) -- (b);
+      \draw[<-, thick,] (b) -- (c);
+      \draw[<-, thick,] (a) -- (d);
+      \draw[<-, thick,] (e) -- (f);
+    \end{tikzpicture}
+  \end{center}
+  \capt{En pil går fra X til Y hvis X er en subtype af Y.}
+  \label{fig:topological}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{figure}[ht]
+  \begin{center}
+    \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]      
+      \node [square] (a) {$A_1$};
+      \node [square, yshift=-4em, xshift=-2.5em] (b) {$B_0$};
+      \node [square, yshift=0em, xshift=12em] (e) {$E_0$};
+
+      \draw[<-, thick,] (a) -- (b);
+    \end{tikzpicture}
+  \end{center}
+  \capt{En pil går fra X til Y hvis X er en subtype af Y.}
+  \label{fig:topological}
+\end{figure}
+ Topologisk sorteret sekvens: C, D, F
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{figure}[ht]
+  \begin{center}
+    \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]      
+      \node [square] (a) {$A_0$};
+    \end{tikzpicture}
+  \end{center}
+  \capt{En pil går fra X til Y hvis X er en subtype af Y.}
+  \label{fig:topological}
+\end{figure}
+ Topologisk sorteret sekvens: C, D, F, B, E
+\end{frame}
+
+\begin{frame}[fragile] 
+ Topologisk sorteret sekvens: C, D, F, B, E, A
+ 
+ 	\begin{figure}[ht]
+  \begin{center}
+    \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]      
+      \node [square] (a) {$A_1$};
+      \node [square, yshift=-4em, xshift=-2.5em] (b) {$B_1$};
+      \node [square, yshift=-4em, xshift=+2.5em] (c) {$C_1$};
+      
+      \draw[<-, thick,] (a) -- (b);
+      \draw[<-, thick,] (b) -- (c);
+      \draw[<-, thick,] (c) -- (a);
+    \end{tikzpicture}
+  \end{center}
+  \capt{Hvad med cyklisk nedarvning?}
+  \label{fig:topological}
+\end{figure}
+
+ Omvendt: A, E, B, F, D, C
+\end{frame}
+
+
+\begin{frame}[fragile] 
+\begin{table}[h]
+\begin{tabular}{|l|l|l|}
+ \cline{1-1} \cline{3-3} 
+Figur          &  & KantFigur : Figur    \\ \cline{1-1} \cline{3-3} 
+\textcolor{gray}{areal} &  &                      \\
+               &  &  \textcolor{gray}{antalKanter} \\
+               &  &                      \\
+               &  &                      \\ \cline{1-1} \cline{3-3} 
+\end{tabular}
+\end{table}
+\begin{table}[h]
+\begin{tabular}{|l|l|l|}
+ \cline{1-1} \cline{3-3} 
+Firkant : KantFigur &  & AnvendtFirkant       \\ \cline{1-1} \cline{3-3} 
+areal      &  &                      \\
+antalKanter     &  &                      \\
+\textcolor{gray}{h}          &  & h               \\
+\textcolor{gray}{b}          &  & b              \\ \cline{1-1} \cline{3-3} 
+\end{tabular}
+\end{table}
+\end{frame}
+
+\begin{frame}[fragile] 
+\begin{table}[h]
+\begin{tabular}{|l|l|l|}
+ \cline{1-1} \cline{3-3} 
+Figur          &  & KantFigur : Figur    \\ \cline{1-1} \cline{3-3} 
+\textcolor{gray}{areal} &  & \textcolor{gray}{areal}       \\
+               &  & \textcolor{gray}{antalKanter} \\
+               &  &                      \\
+               &  &                      \\ \cline{1-1} \cline{3-3} 
+\end{tabular}
+\end{table}
+\begin{table}[h]
+\begin{tabular}{|l|l|l|}
+ \cline{1-1} \cline{3-3} 
+Firkant : KantFigur &  & AnvendtFirkant       \\ \cline{1-1} \cline{3-3} 
+areal               &  &                      \\
+antalKanter         &  &                      \\
+\textcolor{gray}{h}          &  & h                    \\
+\textcolor{gray}{b}          &  & b                    \\ \cline{1-1} \cline{3-3} 
+\end{tabular}
+\end{table}
+\end{frame}
+
+\begin{frame}[fragile] 
+\begin{table}[h]
+\begin{tabular}{|l|l|l|}
+ \cline{1-1} \cline{3-3} 
+Figur          &  & KantFigur : Figur    \\ \cline{1-1} \cline{3-3} 
+\textcolor{gray}{areal} &  & \textcolor{gray}{areal}       \\
+               &  & \textcolor{gray}{antalKanter} \\
+               &  &                      \\
+               &  &                      \\ \cline{1-1} \cline{3-3} 
+\end{tabular}
+\end{table}
+\begin{table}[h]
+\begin{tabular}{|l|l|l|}
+ \cline{1-1} \cline{3-3} 
+Firkant : KantFigur &  & AnvendtFirkant       \\ \cline{1-1} \cline{3-3} 
+areal               &  & areal                \\
+antalKanter         &  & antalKanter          \\
+\textcolor{gray}{h}          &  & h                    \\
+\textcolor{gray}{b}          &  & b                    \\ \cline{1-1} \cline{3-3} 
+\end{tabular}
+\end{table}
+\end{frame}
+
+\begin{frame}[fragile] 
+\begin{table}[h]
+\begin{tabular}{|l|l|l|}
+ \cline{1-1} \cline{3-3} 
+Figur          &  & KantFigur : Figur    \\ \cline{1-1} \cline{3-3} 
+\textcolor{gray}{areal} &  & \textcolor{gray}{areal}       \\
+               &  & \textcolor{gray}{antalKanter} \\
+               &  &                      \\
+               &  &                      \\ \cline{1-1} \cline{3-3} 
+\end{tabular}
+\end{table}
+\begin{table}[h]
+\begin{tabular}{|l|l|l|}
+ \cline{1-1} \cline{3-3} 
+Firkant : KantFigur &  & AnvendtFirkant       \\ \cline{1-1} \cline{3-3} 
+areal               &  & areal                \\
+antalKanter         &  & antalKanter          \\
+\textcolor{gray}{h}          &  & h                    \\
+\textcolor{gray}{b}          &  & b                    \\ \cline{1-1} \cline{3-3} 
+\end{tabular}
+\end{table}
+\begin{center}
+\texttt{AnvendtFirkant[].areal} $\rightarrow$ ok
+
+\texttt{Firkant[].h} $\rightarrow$ \textcolor{red}{ikke tilladt}
+
+Abstrakte typer identificeres
+\end{center}
+\end{frame}
+
+%CONSTANTS
+\begin{frame}[fragile]
+\frametitle{Variabler}
+\begin{lstlisting}
+let $a = 2, $b = 3 
+  in ...
+
+add[$a, $b] = ...
+
+#[$a, $b] => ...
+
+type A[]{
+ data $a
+ data $b
+ ...
+}
+\end{lstlisting}
+\begin{center}
+\begin{itemize}                                  
+\item Åbner nyt scope
+\item Variabler tilføjes til nuværende scope
+\end{itemize}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Variabler}
+\begin{lstlisting}
+let $a = 2, $b = 3 in 
+  let $a = 5, $f = 7 in
+    $a + $b + $f
+\end{lstlisting}
+\begin{center}
+\fig[height=5em]{../../report/pictures/scope2}{En stak af symboltabeller, tillader nestede let-in-udtryk}
+
+Variabel erklæres, som allerede findes i aktivt scope = \textcolor{red}{ScopeError}.
+
+\end{center}
+\end{frame}
+
+%VARIABLER
+
+
