@@ -1,4 +1,5 @@
-\documentclass[xetex,mathserif,serif,paper=screen,draft]{beamer}
+\documentclass[xetex,mathserif,serif]{beamer}
+\usepackage[danish]{babel}
 \synctex=1
 \PassOptionsToPackage{silent}{fontspec}
 \usepackage{xltxtra}
@@ -17,32 +18,49 @@
 
 
 % Input table of contents with the current section at every \section{}
-\AtBeginSection[]
-{
-  \begin{frame}
-    \frametitle{Indholdsfortegnelse}
-    \tableofcontents[currentsection]
-  \end{frame}
+% Nope, ubrugeligt og uoverskueligt\ldots
+%\AtBeginSection[]
+%{
+%  \begin{frame}
+%    \frametitle{Disposition}
+%    \tableofcontents[currentsection]
+%  \end{frame}
+%}
+\AtBeginSection{
+  \frame{\sectionpage}
 }
 
-\usetheme{Copenhagen}
+\deftranslation[to=danish]{Section}{Del}
 
-\author[\href{d402f13@cs.aau.dk}{d402f13}]
-  {Sebastian Wahl\\
-   Simon Buus Jensen\\
-   Elias Khazen Obeid\\
-   Niels Sonnich Poulsen\\
-   Kent Munthe Caspersen\\
-   Martin Bjeldbak Madsen}
+
+\usetheme{intridea}
+
+%\author[\href{d402f13@cs.aau.dk}{d402f13}]
+%  {Sebastian Wahl\\
+%   Simon Buus Jensen\\
+%   Elias Khazen Obeid\\
+%   Niels Sonnich Poulsen\\
+%   Kent Munthe Caspersen\\
+%   Martin Bjeldbak Madsen}
+\author[Gruppe d402f13]{\juntafont Kent M. C.     \and
+        Sebastian W.   \and
+        Elias K. O.        \and\\
+        Simon B. J.         \and
+        Niels S. P.     \and
+        Martin B. M.}
 \title{\productname}
 \subtitle{Brætspilsprogrammering}
 
-\date[2013]{28.\ juni, 2013\\
-$8.30$ -- $13.00$}
+\date[2013]{\juntafont 28.\ juni 2013}
 
 \begin{document}
 
 \frame{\titlepage}
+
+\begin{frame}
+  \frametitle{Disposition}
+  \tableofcontents
+\end{frame}
 
 \input{elias/root}
 \input{kent/root}
