@@ -1,0 +1,14 @@
+
+\begin{figure}[ht]
+  \begin{center}\scalebox{0.7}{
+\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] {Element}
+  child {node [square, xshift=-1cm] {Call sequence}}
+  child {node [square, xshift=-0.3cm] {Member access}}
+  child {node [square,xshift=0.3cm] (b) {Member access} edge from parent[dashed]}
+  child {node [square,xshift=1cm] (c) {Member access} edge from parent[dashed]};
+  
+\path (b)--(c) node [midway] {$\cdots$};
+\end{tikzpicture}}
+\end{center}
+\end{figure}
