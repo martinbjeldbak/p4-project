@@ -1,4 +1,5 @@
 \documentclass[xetex,mathserif,serif]{beamer}
+\usepackage[danish]{babel}
 \synctex=1
 \PassOptionsToPackage{silent}{fontspec}
 \usepackage{xltxtra}
@@ -17,13 +18,20 @@
 
 
 % Input table of contents with the current section at every \section{}
-\AtBeginSection[]
-{
-  \begin{frame}
-    \frametitle{Disposition}
-    \tableofcontents[currentsection]
-  \end{frame}
+% Nope, ubrugeligt og uoverskueligt\ldots
+%\AtBeginSection[]
+%{
+%  \begin{frame}
+%    \frametitle{Disposition}
+%    \tableofcontents[currentsection]
+%  \end{frame}
+%}
+\AtBeginSection{
+  \frame{\sectionpage}
 }
+
+\deftranslation[to=danish]{Section}{Del}
+
 
 \usetheme{intridea}
 
@@ -48,6 +56,11 @@
 \begin{document}
 
 \frame{\titlepage}
+
+\begin{frame}
+  \frametitle{Disposition}
+  \tableofcontents
+\end{frame}
 
 \input{elias/root}
 \input{kent/root}
