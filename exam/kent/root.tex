@@ -1,11 +1,12 @@
-\section{Contextual constraints}
+\section{Kontekstuelle begrænsninger}
 
 \begin{frame}
-\frametitle{Contextual constraints}
+\frametitle{Kontekstuelle begrænsninger}
 \begin{center}
 \begin{itemize}
-\item Hvad er contextual constraints?
-\item Hvad tilbyder Junta?
+\item Hvad er kontekstuelle begrænsninger?
+\item Hvad kræver Junta?
+\item ScopeChecker
 \end{itemize}
 \end{center}
 \end{frame}
@@ -202,8 +203,8 @@ type C[] extends A[]
 \begin{tabular}{|l|l|l|}
  \cline{1-1} \cline{3-3} 
 Figur          &  & KantFigur : Figur    \\ \cline{1-1} \cline{3-3} 
-abstract areal &  &                      \\
-               &  & abstract antalKanter \\
+\textcolor{gray}{areal} &  &                      \\
+               &  &  \textcolor{gray}{antalKanter} \\
                &  &                      \\
                &  &                      \\ \cline{1-1} \cline{3-3} 
 \end{tabular}
@@ -212,10 +213,10 @@ abstract areal &  &                      \\
 \begin{tabular}{|l|l|l|}
  \cline{1-1} \cline{3-3} 
 Firkant : KantFigur &  & AnvendtFirkant       \\ \cline{1-1} \cline{3-3} 
-areal = h * b       &  &                      \\
-antalKanter = 4     &  &                      \\
-abstract h          &  & h = 10               \\
-abstract b          &  & b = 20               \\ \cline{1-1} \cline{3-3} 
+areal      &  &                      \\
+antalKanter     &  &                      \\
+\textcolor{gray}{h}          &  & h               \\
+\textcolor{gray}{b}          &  & b              \\ \cline{1-1} \cline{3-3} 
 \end{tabular}
 \end{table}
 \end{frame}
@@ -225,8 +226,8 @@ abstract b          &  & b = 20               \\ \cline{1-1} \cline{3-3}
 \begin{tabular}{|l|l|l|}
  \cline{1-1} \cline{3-3} 
 Figur          &  & KantFigur : Figur    \\ \cline{1-1} \cline{3-3} 
-abstract areal &  & abstract areal       \\
-               &  & abstract antalKanter \\
+\textcolor{gray}{areal} &  & \textcolor{gray}{areal}       \\
+               &  & \textcolor{gray}{antalKanter} \\
                &  &                      \\
                &  &                      \\ \cline{1-1} \cline{3-3} 
 \end{tabular}
@@ -235,10 +236,10 @@ abstract areal &  & abstract areal       \\
 \begin{tabular}{|l|l|l|}
  \cline{1-1} \cline{3-3} 
 Firkant : KantFigur &  & AnvendtFirkant       \\ \cline{1-1} \cline{3-3} 
-areal = h * b       &  &                      \\
-antalKanter = 4     &  &                      \\
-abstract h          &  & h = 10               \\
-abstract b          &  & b = 20               \\ \cline{1-1} \cline{3-3} 
+areal               &  &                      \\
+antalKanter         &  &                      \\
+\textcolor{gray}{h}          &  & h                    \\
+\textcolor{gray}{b}          &  & b                    \\ \cline{1-1} \cline{3-3} 
 \end{tabular}
 \end{table}
 \end{frame}
@@ -248,8 +249,8 @@ abstract b          &  & b = 20               \\ \cline{1-1} \cline{3-3}
 \begin{tabular}{|l|l|l|}
  \cline{1-1} \cline{3-3} 
 Figur          &  & KantFigur : Figur    \\ \cline{1-1} \cline{3-3} 
-abstract areal &  & abstract areal       \\
-               &  & abstract antalKanter \\
+\textcolor{gray}{areal} &  & \textcolor{gray}{areal}       \\
+               &  & \textcolor{gray}{antalKanter} \\
                &  &                      \\
                &  &                      \\ \cline{1-1} \cline{3-3} 
 \end{tabular}
@@ -258,10 +259,10 @@ abstract areal &  & abstract areal       \\
 \begin{tabular}{|l|l|l|}
  \cline{1-1} \cline{3-3} 
 Firkant : KantFigur &  & AnvendtFirkant       \\ \cline{1-1} \cline{3-3} 
-areal = h * b       &  & areal                \\
-antalKanter = 4     &  & antalKanter          \\
-abstract h          &  & h = 10               \\
-abstract b          &  & b = 20               \\ \cline{1-1} \cline{3-3} 
+areal               &  & areal                \\
+antalKanter         &  & antalKanter          \\
+\textcolor{gray}{h}          &  & h                    \\
+\textcolor{gray}{b}          &  & b                    \\ \cline{1-1} \cline{3-3} 
 \end{tabular}
 \end{table}
 \end{frame}
@@ -271,8 +272,8 @@ abstract b          &  & b = 20               \\ \cline{1-1} \cline{3-3}
 \begin{tabular}{|l|l|l|}
  \cline{1-1} \cline{3-3} 
 Figur          &  & KantFigur : Figur    \\ \cline{1-1} \cline{3-3} 
-abstract areal &  & abstract areal       \\
-               &  & abstract antalKanter \\
+\textcolor{gray}{areal} &  & \textcolor{gray}{areal}       \\
+               &  & \textcolor{gray}{antalKanter} \\
                &  &                      \\
                &  &                      \\ \cline{1-1} \cline{3-3} 
 \end{tabular}
@@ -281,10 +282,10 @@ abstract areal &  & abstract areal       \\
 \begin{tabular}{|l|l|l|}
  \cline{1-1} \cline{3-3} 
 Firkant : KantFigur &  & AnvendtFirkant       \\ \cline{1-1} \cline{3-3} 
-areal = h * b       &  & areal                \\
-antalKanter = 4     &  & antalKanter          \\
-abstract h          &  & h = 10               \\
-abstract b          &  & b = 20               \\ \cline{1-1} \cline{3-3} 
+areal               &  & areal                \\
+antalKanter         &  & antalKanter          \\
+\textcolor{gray}{h}          &  & h                    \\
+\textcolor{gray}{b}          &  & b                    \\ \cline{1-1} \cline{3-3} 
 \end{tabular}
 \end{table}
 \begin{center}
@@ -298,7 +299,7 @@ Abstrakte typer identificeres
 
 %CONSTANTS
 \begin{frame}[fragile]
-\frametitle{Typer}
+\frametitle{Variabler}
 \begin{lstlisting}
 let $a = 2, $b = 3 
   in ...
@@ -322,7 +323,7 @@ type A[]{
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Typer}
+\frametitle{Variabler}
 \begin{lstlisting}
 let $a = 2, $b = 3 in 
   let $a = 5, $f = 7 in
@@ -330,6 +331,9 @@ let $a = 2, $b = 3 in
 \end{lstlisting}
 \begin{center}
 \fig[height=5em]{../../report/pictures/scope2}{En stak af symboltabeller, tillader nestede let-in-udtryk}
+
+Variabel erklæres, som allerede findes i aktivt scope = \textcolor{red}{ScopeError}.
+
 \end{center}
 \end{frame}
 
