@@ -1,15 +1,1 @@
-
-\begin{figure}[ht]
-\begin{center}
-\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
-\node [square] {Type definition}
-  child {node [square,xshift=1.7cm]  {Type}}
-  child {node [square,xshift=0.5cm]  {Variable list}}
-  child {node [rectangle,xshift=-0.5cm] {\textbf{Extends}} edge from parent[dashed]
-    child {node [square] {Type} edge from parent[solid]}
-    child {node [square] {List} edge from parent[solid]}
-  }
-  child {node [square,xshift=-1.7cm] {\textit{Type body}} edge from parent[dashed];};
-\end{tikzpicture}
-\end{center}
-\end{figure}
+\input{billeder/tikz/typedef}
