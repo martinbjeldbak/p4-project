@@ -3,6 +3,7 @@
 \begin{frame}
 \frametitle{Programmørens omgivelser}
 \begin{itemize}
+  \item Formål: At implementere brugbare funktioner og typer
 \item Standard Environment
 \item Game Environment
 \end{itemize}
@@ -62,8 +63,8 @@
 \frametitle{Standard Environment}
 \framesubtitle{Specielle typer}
 \begin{itemize}
-\item \type{Type} repræsenterer en typeværdi, dette er f.eks. resultatet når man skriver navnet på en type.
-\item \pause\type{Function} repræsenterer en funktionsværdi, dette er resultatet når man skriver navnet på en funktion. Eller et lambda-udtryk:
+\item \type{Type} repræsenterer en typeværdi, dette er f.eks. resultatet når man skriver navnet på en type.\pause
+\item \type{Function} repræsenterer en funktionsværdi, dette er resultatet når man skriver navnet på en funktion. Eller et lambda-udtryk:
 \item \texttt{\#[\variable{a}, \variable{b}] => \variable{a} + \variable{b}}
 \end{itemize}
 \end{frame}
@@ -71,7 +72,7 @@
 \begin{frame}
 \frametitle{Game Environment}
 \begin{itemize}
-\item Et klassehieraki til beskrivelse af brætspil.
+\item Et klassehierarki til beskrivelse af brætspil.
 \item \type{Game}-typen repræsenterer f.eks. et brætspil. Man nedarver fra \type{Game} for at implementere sit brætspil.
 \end{itemize}
 \begin{center}
