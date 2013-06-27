@@ -4,7 +4,9 @@
 \begin{frame}
   \frametitle{GameAbstractionLayer klasse}
 
-  %Indsæt kode for konstruktor
+ 	\begin{figure}
+    	\includegraphics[width=0.8\linewidth]{billeder/gal_constructor_code.png}
+ 	\end{figure}
 \end{frame}
 
 \begin{frame}
@@ -20,15 +22,17 @@
   \frametitle{Game interface}
 
   %TODO: Lav som tabel
-  \begin{itemize}
-    \item players  - getPlayers
-	 \item board	-	getBoard
-	 \item title - getTitle
-	 \item history - getHistory
-	 \item applyAction - applyAction
-	 \item nextTurn - nextTurn
-	 \item  - getActions
-  \end{itemize}
+  \begin{tabular}{ c | c }
+    Game & interface \\
+    \hline
+    players & getPlayers \\
+    board & getBoard \\
+    title & getTitle \\
+    history & getHistory \\
+    applyAction & applyAction \\
+    nextTurn & nextTurn \\
+     & getActions \\
+  \end{tabular}
 \end{frame}
 
 \section{Simulator}
