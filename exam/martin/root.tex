@@ -3,18 +3,19 @@
 \setbeamercovered{transparent}
 
 \begin{frame}{Opbygning af fortolker}
-  \begin{itemize}[<+->]
-  \item Visitormønstret
-  \item Valuetyper
+  \begin{itemize}
+  \item<1-> Visitormønstret
+  \item<2-> Valuetyper
     \begin{itemize}
     \item Funktioner
     \item Patterns
     \item Typer
     \item $\cdots \times 19$
     \end{itemize}
-  \item Symboltabel
-  \item Game environment
-  \item Interne hjælpeklasser og interfaces
+  \item<3-> Symboltabel
+  \item<4-> Game environment
+  \item<5-> Interne hjælpeklasser og interfaces
+  \item<6-> Optimeringer
   \end{itemize}
 \end{frame}
 
@@ -47,17 +48,24 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Typedefinitioner: AST}
+\begin{frame}{Typedefinitioner}
+  \framesubtitle{AST}
   \input{martin/typedef}
+  \begin{itemize}
+    \item Optional undernodes
+    \item Håndtering af hver node
+  \end{itemize}
 \end{frame}
 
-\begin{frame}{Typedefinitioner: Code}
+\begin{frame}{Typedefinitioner}
+  \framesubtitle{Code}
   \fontsize{7pt}{7.2}\selectfont
 \input{martin/typedeflisting}
 \end{frame}
 
-\begin{frame}{Rekursionopdagelse}
-  Hej med dig.
-  
-\end{frame}
+%\begin{frame}{Rekursionopdagelse}
+%  \begin{itemize}
+%    \item Kald af metoder i funktionsværdier
+%  \end{itemize}
+%\end{frame}
 
