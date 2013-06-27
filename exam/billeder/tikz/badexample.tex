@@ -1,0 +1,18 @@
+
+\begin{figure}[ht]
+\begin{center}
+\begin{tikzpicture}[level 3/.style={sibling distance = 20mm}]
+
+\node [square] {LHS}
+  child {node [square] {RHS}
+    child {node [square] {RHS}
+      child {node [square] {RHS}}
+      child {node [square] (a) {RHS} edge from parent[dashed]}
+      child {node [square] (b) {RHS} edge from parent[dashed]}
+    }
+  }; 
+
+\path (a)--(b) node [midway] {$\cdots$};
+\end{tikzpicture}
+\end{center}
+\end{figure}
