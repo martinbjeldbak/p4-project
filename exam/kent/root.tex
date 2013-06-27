@@ -16,18 +16,16 @@
 %DET KAN VI
 \begin{frame}[fragile]
 \frametitle{Typer}
-\begin{lstlisting}
-define foo = A[].bar
-type A[]{
-  define bar = 10
-}
-\end{lstlisting}
-\begin{center}
+
+\keyword{define} \constant{foo} = \type{A}[].\constant{bar} \\
+\keyword{type} \type{A}[]\{ \\
+  \quad  \keyword{define} \constant{bar} = \numeral{10} \\
+\}
+
 \begin{itemize}                                  
 \item Anvendte typer kan bindes til én og kun én erklæring
 \item Typer har de medlemmer, der tilgås
 \end{itemize}
-\end{center}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -36,68 +34,60 @@ type A[]{
 
 \begin{frame}[fragile]
 \frametitle{Typer}
-\begin{lstlisting}
-define foo = A.bar[3, 7]
-type A[]{
-  define bar = 10
-}
-\end{lstlisting}
-\begin{center}
+
+\keyword{define} \constant{foo} = \type{A}[].\constant{bar}[\numeral{3},
+\numeral{7}] \\
+\keyword{type} \type{A}[]\{ \\
+  \quad  \keyword{define} \constant{bar} = \numeral{10} \\
+\}
 
 \begin{itemize}                                  
 \item \textcolor{red}{Tjekke korrespondance mellem formelle / aktuelle parametre}
 \end{itemize}
-\end{center}
+
 \end{frame}
 
 \begin{frame}[fragile]
 \frametitle{Typer}
-\begin{lstlisting}
-define foo = let $a = B[]
-               in $a.bar
-type A[]{
-  define bar = 10
-}
-type B[]{
+\keyword{define} \constant{foo} = \keyword{let} \variable{a} = \type{B}[] \\
+\qquad \qquad \qquad \keyword{in} \variable{a}.\constant{bar} \\
+\keyword{type} \type{A}[]\{ \\
+  \quad \keyword{define} \constant{bar} = \numeral{10} \\
+\} \\
+\keyword{type} \type{B}[]\{\\
 
-}
-\end{lstlisting}
-\begin{center}
+\}
 
 \begin{itemize}                                  
 \item \textcolor{red}{Inferere en variabels type}
 \end{itemize}
 
-\end{center}
 \end{frame}
 
 \begin{frame}[fragile]
 \frametitle{Typer}
-\begin{lstlisting}
-define someObject = A[1, 2]
-type A[$a, $b]
-type B[] extends A[1, 2]
-\end{lstlisting}
-\begin{center}
+
+\keyword{define} \constant{someobject} = \type{A}[\numeral{1}, \numeral{2}]\\
+\keyword{type} \type{A}[\variable{a}, \variable{b}]\\
+\keyword{type} \type{B}[] \keyword{extends} \type{A}[\numeral{1}, \numeral{2}]\\
+
 \begin{itemize}                                  
 \item Instantiering foregår med korrekt antal parametre
 \item Subtype kalder supertype med korrekt antal parametre
 \item Supertype eksisterer!
 \end{itemize}
-\end{center}
+
 \end{frame}
 
 \begin{frame}[fragile]
 \frametitle{Typer}
-\begin{lstlisting}
-type A[] extends B[]
-type B[] extends C[]
-type C[] extends A[]
-\end{lstlisting}
+\keyword{type} \type{A}[] \keyword{extends} \type{B}[]\\
+\keyword{type} \type{B}[] \keyword{extends} \type{C}[]\\
+\keyword{type} \type{C}[] \keyword{extends} \type{A}[]\\
 
-\begin{center}                                 
+\begin{itemize}                                 
 \item Ingen cyklisk nedarvning
-\end{center}
+\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -297,45 +287,45 @@ Abstrakte typer identificeres
 %CONSTANTS
 \begin{frame}[fragile]
 \frametitle{Variabler}
-\begin{lstlisting}
-let $a = 2, $b = 3 
-  in ...
 
-add[$a, $b] = ...
+\keyword{let} \variable{a} = \numeral{2}, \variable{b} = \numeral{3}\\ 
+\quad \keyword{in} \ldots\\
+\vspace{0.25cm}
+\constant{add}[\variable{a}, \variable{b}] = \ldots\\
+\vspace{0.25cm}
+\texttt{\#}[\variable{a}, \variable{b}] \texttt{=>} \ldots\\
+\vspace{0.25cm}
+\keyword{type} \type{A}[]\{\\
+\quad \keyword{data} \variable{a}\\
+\quad \keyword{data} \variable{b}\\
+\quad \ldots\\
+\}
 
-#[$a, $b] => ...
-
-type A[]{
- data $a
- data $b
- ...
-}
-\end{lstlisting}
-\begin{center}
 \begin{itemize}                                  
 \item Åbner nyt scope
 \item Variabler tilføjes til nuværende scope
 \end{itemize}
-\end{center}
+
 \end{frame}
 
 \begin{frame}[fragile]
 \frametitle{Variabler}
-\begin{lstlisting}
-let $a = 2, $b = 3 in 
-  let $a = 5, $f = 7 in
-    $a + $b + $f
-\end{lstlisting}
-\begin{center}
-\includegraphics[height=5em]{../report/pictures/scope2}
+\keyword{let} \variable{a} = \numeral{2}, \variable{b} = \numeral{3}
+\keyword{in} \\
+\quad  \keyword{let} \variable{a} = \numeral{5}, \variable{f} = \numeral{7}
+\keyword{in}\\
+\quad \quad \variable{a} + \variable{b} + \variable{f}
 
+\begin{center}
+\includegraphics[height=1.5cm]{../report/pictures/scope2}
+\end{center}
 \begin{itemize}
   \item Variabel erklæres, som allerede findes i aktivt scope = \textcolor{red}{ScopeError}
-  \end{itemize}
+\end{itemize}
 
-\end{center}
 \end{frame}
 
 %VARIABLER
+
 
 

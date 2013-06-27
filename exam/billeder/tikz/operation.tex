@@ -1,0 +1,14 @@
+
+\begin{figure}[ht]
+  \begin{center}\scalebox{0.8}{
+\begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]
+\node [square] {\textit{Niveau 5}}
+  child {node [square] {\textit{Niveau 4}}}
+  child {node [square] {\textit{Niveau 4}}}
+  child {node [square] (a) {\textit{Niveau 4}} edge from parent[dashed];}
+  child {node [square] (b) {\textit{Niveau 4}} edge from parent[dashed];};
+  
+\path (a)--(b) node [midway] {$\cdots$};
+\end{tikzpicture}}
+\end{center}
+\end{figure}
