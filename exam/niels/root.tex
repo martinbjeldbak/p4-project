@@ -11,7 +11,7 @@
 \begin{frame}
 \frametitle{Standard Environment}
 \framesubtitle{Globale konstanter}
-\begin{itemize}
+\begin{itemize}[<+->]
 \item \constant{typeOf[]} er en funktion, som returnerer et givet objekts type
 \item \constant{union[]} er en funktion, som returnerer foreningsmængden af to eller flere lister
 \item \constant{true} og \constant{false} er boolske konstanter
@@ -31,7 +31,7 @@
 \begin{frame}
 \frametitle{Standard Environment}
 \framesubtitle{Lister}
-\begin{itemize}
+\begin{itemize}[<+->]
 \item En ordnet liste af vilkårlige objekter: \texttt{[\literal{2}, "hej", \constant{true}]}
 \item Kan være tom: \texttt{[]}
 \item \constant{.size} er listens størrelse
@@ -44,7 +44,7 @@
 \begin{frame}
 \frametitle{Standard Environment}
 \framesubtitle{Simple brætspilsrelaterede typer}
-\begin{itemize}
+\begin{itemize}[<+->]
 \item \type{Coordinate} er en vektor som repræsenterer et felt på et bræt: \literal{C5} og \literal{M27}
 \item \type{Direction} er en vektor som repræsenterer et flyt: \literal{n}, \literal{nw} og \texttt{\literal{n} + \literal{ne}}
 \item \type{Pattern} er et mønster
@@ -63,7 +63,7 @@
 \framesubtitle{Specielle typer}
 \begin{itemize}
 \item \type{Type} repræsenterer en typeværdi, dette er f.eks. resultatet når man skriver navnet på en type.
-\item \type{Function} repræsenterer en funktionsværdi, dette er resultatet når man skriver navnet på en funktion. Eller et lambda-udtryk:
+\item \pause\type{Function} repræsenterer en funktionsværdi, dette er resultatet når man skriver navnet på en funktion. Eller et lambda-udtryk:
 \item \texttt{\#[\variable{a}, \variable{b}] => \variable{a} + \variable{b}}
 \end{itemize}
 \end{frame}
@@ -82,7 +82,7 @@
 \begin{frame}
 \frametitle{Game Environment}
 \framesubtitle{Actions}
-\begin{itemize}
+\begin{itemize}[<+->]
 \item Håndtering af tilstandsændringer i brætspil, dvs. træk.
 \item F.eks. returner \type{Player}-typens \constant{actions[]}-metode en liste af \type{Action}-objekter, dvs. en liste af mulige træk.
 \item \type{AddAction}, \type{RemoveAction} og \type{MoveAction} tillader manipulering af brikker på brættet: Tilføj, fjern, flyt.
