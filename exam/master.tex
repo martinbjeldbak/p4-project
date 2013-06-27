@@ -48,7 +48,9 @@
 
 \input{macros}
 
-
+\makeatletter
+\patchcmd{\beamer@sectionintoc}{\vskip1.5em}{\vskip0.5em}{}{}
+\makeatother
 
 % Input table of contents with the current section at every \section{}
 % Nope, ubrugeligt og uoverskueligt\ldots
