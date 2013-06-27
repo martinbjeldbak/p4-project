@@ -104,12 +104,12 @@ type C[] extends A[]
 \begin{figure}[ht]
   \begin{center}
     \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]      
-      \node [square] (a) {A};
-      \node [square, yshift=-4em, xshift=-2.5em] (b) {B};
-      \node [square, yshift=-4em, xshift=2.5em] (d) {D};
-      \node [square, yshift=-8em, xshift=-5em] (c) {C};
-      \node [square, yshift=0em, xshift=12em] (e) {E};
-      \node [square, yshift=-4em, xshift=12em] (f) {F};
+      \node [square] (a) {$\mathbf{A}$};
+      \node [square, yshift=-4em, xshift=-2.5em] (b) {$\mathbf{B}$};
+      \node [square, yshift=-4em, xshift=2.5em] (d) {$\mathbf{D}$};
+      \node [square, yshift=-8em, xshift=-5em] (c) {$\mathbf{C}$};
+      \node [square, yshift=0em, xshift=12em] (e) {$\mathbf{E}$};
+      \node [square, yshift=-4em, xshift=12em] (f) {$\mathbf{F}$};
 
       \draw[<-, thick,] (a) -- (b);
       \draw[<-, thick,] (b) -- (c);
@@ -117,8 +117,6 @@ type C[] extends A[]
       \draw[<-, thick,] (e) -- (f);
     \end{tikzpicture}
   \end{center}
-  \capt{En pil går fra X til Y hvis X er en subtype af Y.}
-  \label{fig:topological}
 \end{figure}
 \end{frame}
 
@@ -126,12 +124,12 @@ type C[] extends A[]
 \begin{figure}[ht]
   \begin{center}
     \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]      
-      \node [square] (a) {$A_2$};
-      \node [square, yshift=-4em, xshift=-2.5em] (b) {$B_1$};
-      \node [square, yshift=-4em, xshift=2.5em] (d) {$D_0$};
-      \node [square, yshift=-8em, xshift=-5em] (c) {$C_0$};
-      \node [square, yshift=0em, xshift=12em] (e) {$E_1$};
-      \node [square, yshift=-4em, xshift=12em] (f) {$F_0$};
+      \node [square] (a) {$\mathbf{A_2}$};
+      \node [square, yshift=-4em, xshift=-2.5em] (b) {$\mathbf{B_1}$};
+      \node [square, yshift=-4em, xshift=2.5em] (d) {$\mathbf{D_0}$};
+      \node [square, yshift=-8em, xshift=-5em] (c) {$\mathbf{C_0}$};
+      \node [square, yshift=0em, xshift=12em] (e) {$\mathbf{E_1}$};
+      \node [square, yshift=-4em, xshift=12em] (f) {$\mathbf{F_0}$};
 
       \draw[<-, thick,] (a) -- (b);
       \draw[<-, thick,] (b) -- (c);
@@ -139,8 +137,6 @@ type C[] extends A[]
       \draw[<-, thick,] (e) -- (f);
     \end{tikzpicture}
   \end{center}
-  \capt{En pil går fra X til Y hvis X er en subtype af Y.}
-  \label{fig:topological}
 \end{figure}
 \end{frame}
 
@@ -148,52 +144,54 @@ type C[] extends A[]
 \begin{figure}[ht]
   \begin{center}
     \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]      
-      \node [square] (a) {$A_1$};
-      \node [square, yshift=-4em, xshift=-2.5em] (b) {$B_0$};
-      \node [square, yshift=0em, xshift=12em] (e) {$E_0$};
+      \node [square] (a) {$\mathbf{A_1}$};
+      \node [square, yshift=-4em, xshift=-2.5em] (b) {$\mathbf{B_0}$};
+      \node [square, yshift=0em, xshift=12em] (e) {$\mathbf{E_0}$};
 
       \draw[<-, thick,] (a) -- (b);
     \end{tikzpicture}
   \end{center}
-  \capt{En pil går fra X til Y hvis X er en subtype af Y.}
-  \label{fig:topological}
 \end{figure}
- Topologisk sorteret sekvens: C, D, F
+\begin{itemize}
+ \item Topologisk sorteret sekvens: C, D, F
+ \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
 \begin{figure}[ht]
   \begin{center}
     \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]      
-      \node [square] (a) {$A_0$};
+      \node [square] (a) {$\mathbf{A_0}$};
     \end{tikzpicture}
   \end{center}
-  \capt{En pil går fra X til Y hvis X er en subtype af Y.}
-  \label{fig:topological}
 \end{figure}
- Topologisk sorteret sekvens: C, D, F, B, E
+\begin{itemize}
+  \item Topologisk sorteret sekvens: C, D, F, B, E
+  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile] 
- Topologisk sorteret sekvens: C, D, F, B, E, A
+  \begin{itemize}
+    \item Topologisk sorteret sekvens: C, D, F, B, E, A
+    \end{itemize}
  
  	\begin{figure}[ht]
   \begin{center}
     \begin{tikzpicture}[level/.style={sibling distance=30mm/#1}]      
-      \node [square] (a) {$A_1$};
-      \node [square, yshift=-4em, xshift=-2.5em] (b) {$B_1$};
-      \node [square, yshift=-4em, xshift=+2.5em] (c) {$C_1$};
+      \node [square] (a) {$\mathbf{A_1}$};
+      \node [square, yshift=-4em, xshift=-2.5em] (b) {$\mathbf{B_1}$};
+      \node [square, yshift=-4em, xshift=+2.5em] (c) {$\mathbf{C_1}$};
       
       \draw[<-, thick,] (a) -- (b);
       \draw[<-, thick,] (b) -- (c);
       \draw[<-, thick,] (c) -- (a);
     \end{tikzpicture}
   \end{center}
-  \capt{Hvad med cyklisk nedarvning?}
-  \label{fig:topological}
 \end{figure}
 
- Omvendt: A, E, B, F, D, C
+\begin{itemize}
+  \item Omvendt: A, E, B, F, D, C
+  \end{itemize}
 \end{frame}
 
 
@@ -240,7 +238,7 @@ antalKanter         &  &                      \\
 \textcolor{gray}{h}          &  & h                    \\
 \textcolor{gray}{b}          &  & b                    \\ \cline{1-1} \cline{3-3} 
 \end{tabular}
-\end{table}
+\end{table} 	
 \end{frame}
 
 \begin{frame}[fragile] 
@@ -331,7 +329,9 @@ let $a = 2, $b = 3 in
 \begin{center}
 \includegraphics[height=5em]{../report/pictures/scope2}
 
-Variabel erklæres, som allerede findes i aktivt scope = \textcolor{red}{ScopeError}.
+\begin{itemize}
+  \item Variabel erklæres, som allerede findes i aktivt scope = \textcolor{red}{ScopeError}
+  \end{itemize}
 
 \end{center}
 \end{frame}
